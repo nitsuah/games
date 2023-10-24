@@ -3,8 +3,8 @@ import React, { useRef, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
-import Controls from "./Controls";
-import Player from "./Player";
+import Controls from "./_comps/Controls";
+import Player from "../../fps/_comps/Player";
 import Floor from "./objects/Floor";
 import Cube from "./objects/Cube";
 
