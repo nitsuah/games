@@ -1,4 +1,4 @@
-# games
+# games //SECTION - Next.js
 
 A collection of three.js configuration files for various controls, objects, and scenes.
 
