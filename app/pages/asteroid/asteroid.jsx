@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, PointerLockControls } from '@react-three/drei';
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 // import tr3b from '../../../models/TR-3B.glb';
 
@@ -43,7 +43,7 @@ const Target = ({ position, updateHitCount, updateMissCount }) => {
 
   return (
     <mesh ref={ref} position={position} onClick={(event) => handleClick(event)}>
-      <boxBufferGeometry args={[1, 1, 1]} />
+      <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color={hit ? 'red' : 'green'} />
     </mesh>
   );
@@ -53,6 +53,7 @@ const ShootingRange = () => {
   const [ship, setShip] = useState(null);
   const [hitCount, setHitCount] = useState(0);
   const [missCount, setMissCount] = useState(0);
+  const wasTargetHit = useRef(false);
 
 /*   useEffect(() => {
     // Load the ship model
@@ -65,11 +66,21 @@ const ShootingRange = () => {
   }, []); */
 
   const updateHitCount = () => {
+    wasTargetHit.current = true;
     setHitCount((prevCount) => prevCount + 1);
   };
 
   const updateMissCount = () => {
     setMissCount((prevCount) => prevCount + 1);
+  };
+
+  const handleCanvasPointerDown = () => {
+    // If no target was hit, count as a miss
+    if (!wasTargetHit.current) {
+      updateMissCount();
+    }
+    // Reset for next click
+    wasTargetHit.current = false;
   };
 
   const accuracy = (hitCount / (hitCount + missCount)) * 100;
@@ -83,6 +94,9 @@ const ShootingRange = () => {
           right: 0,
           zIndex: 1,
           color: 'white',
+          background: 'rgba(0,0,0,0.6)',
+          padding: '12px 18px',
+          borderRadius: '8px 0 0 0',
           pointerEvents: 'none',
         }}
       >
@@ -90,8 +104,67 @@ const ShootingRange = () => {
         <p>Misses: {missCount}</p>
         <p>Accuracy: {accuracy.toFixed(2)}%</p>
       </div>
-      <Canvas>
-        <OrbitControls />
+      <div
+        style={{
+          position: 'absolute',
+          top: 20,
+          left: 0,
+          width: '100%',
+          textAlign: 'center',
+          color: 'white',
+          zIndex: 2,
+          pointerEvents: 'none',
+          fontWeight: 'bold',
+          textShadow: '0 0 8px #000',
+        }}
+      >
+        <span>Click to lock pointer and control camera</span>
+      </div>
+      {/* Crosshair */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          width: '32px',
+          height: '32px',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 3,
+          pointerEvents: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            width: '2px',
+            height: '20px',
+            background: 'white',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '1px',
+            opacity: 0.8,
+          }}
+        />
+        <div
+          style={{
+            width: '20px',
+            height: '2px',
+            background: 'white',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '1px',
+            opacity: 0.8,
+          }}
+        />
+      </div>
+      <Canvas onPointerDown={handleCanvasPointerDown}>
+        <PointerLockControls />
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={0.5} />
         {/*
