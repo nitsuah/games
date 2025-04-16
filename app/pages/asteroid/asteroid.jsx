@@ -103,11 +103,6 @@ const AsteroidPage = () => {
         <CrosshairVertical />
         <CrosshairHorizontal />
       </Crosshair>
-      <StatsPanel>
-        <p>Hits: {hitCount}</p>
-        <p>Misses: {missCount}</p>
-        <p>Accuracy: {accuracy}%</p>
-      </StatsPanel>
       <Game onHit={handleHit} onMiss={handleMiss} />
     </GameContainer>
   );

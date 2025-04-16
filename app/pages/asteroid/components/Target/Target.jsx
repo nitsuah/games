@@ -2,11 +2,11 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const Target = ({ position, onHit }) => {
+const Target = ({ position, targetId, onHit }) => {
   const meshRef = useRef();
   const [isHit, setIsHit] = useState(false);
-  const [rotationSpeed] = useState(() => Math.random() * 0.02 - 0.01);
   const [hovered, setHovered] = useState(false);
+  const [rotationSpeed] = useState(() => Math.random() * 0.02 - 0.01);
   const [size] = useState(() => Math.random() * 0.5 + 0.5);
   const [movementSpeed] = useState(() => new THREE.Vector3(
     (Math.random() - 0.5) * 0.02,
@@ -17,6 +17,14 @@ const Target = ({ position, onHit }) => {
     min: new THREE.Vector3(-10, -10, -10),
     max: new THREE.Vector3(10, 10, 10)
   }));
+
+  useEffect(() => {
+    if (meshRef.current) {
+      meshRef.current.userData.isTarget = true;
+      meshRef.current.userData.targetId = targetId;
+      meshRef.current.userData.isHit = false;
+    }
+  }, [targetId]);
 
   useFrame(() => {
     if (meshRef.current && !isHit) {
@@ -40,10 +48,12 @@ const Target = ({ position, onHit }) => {
     }
   });
 
-  const handleClick = () => {
+  const handleClick = (event) => {
+    event.stopPropagation();
     if (!isHit) {
       setIsHit(true);
-      onHit();
+      meshRef.current.userData.isHit = true;
+      onHit(targetId);
     }
   };
 
@@ -52,13 +62,19 @@ const Target = ({ position, onHit }) => {
       ref={meshRef}
       position={position}
       onClick={handleClick}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
+      onPointerOver={(event) => {
+        event.stopPropagation();
+        setHovered(true);
+      }}
+      onPointerOut={(event) => {
+        event.stopPropagation();
+        setHovered(false);
+      }}
       scale={[size, size, size]}
     >
       <octahedronGeometry args={[1, 0]} />
       <meshStandardMaterial
-        color={isHit ? '#ff0000' : hovered ? '#ffff00' : '#00ff00'}
+        color={isHit ? '#ff0000' : hovered ? '#ffaa00' : '#00ff00'}
         metalness={0.5}
         roughness={0.2}
         transparent={isHit}

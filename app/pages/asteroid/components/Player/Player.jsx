@@ -6,7 +6,7 @@ import { useThree } from '@react-three/fiber';
 const Player = () => {
   const meshRef = useRef();
   const { camera } = useThree();
-  const [velocity, setVelocity] = useState(new THREE.Vector3());
+  const velocityRef = useRef(new THREE.Vector3());
   const [keys, setKeys] = useState({
     forward: false,
     backward: false,
@@ -18,16 +18,23 @@ const Player = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isPointerLocked, setIsPointerLocked] = useState(false);
 
-  // Thrust constants - increased values for more responsive movement
-  const MAIN_THRUST = 0.5;      // Forward thrust
-  const REVERSE_THRUST = 0.4;   // Reverse thrust
-  const STRAFE_THRUST = 0.3;    // Sideways thrust
-  const DRAG = 0.98;            // Slightly reduced drag for more floaty feel
-  const MAX_SPEED = 2.0;        // Increased max speed
+  // Physics constants
+  const ACCELERATION = 20.0;     // Base acceleration
+  const MAX_VELOCITY = 15.0;     // Maximum velocity
+  const ROTATION_SPEED = 0.002;  // Mouse sensitivity
+  const DAMPING = 0.98;         // Velocity damping (lower = more drag)
+
+  // Thrust multipliers for different directions
+  const THRUST_MULTIPLIERS = {
+    forward: 1.0,
+    backward: 0.85,
+    strafe: 0.95,
+    vertical: 0.75
+  };
 
   useEffect(() => {
-    // Set initial camera position
     camera.position.set(0, 0, 0);
+    camera.rotation.order = 'YXZ'; // Important for proper FPS-style rotation
 
     const handleKeyDown = (e) => {
       switch (e.key.toLowerCase()) {
@@ -58,8 +65,8 @@ const Player = () => {
       const movementY = e.movementY || 0;
       
       setMousePosition(prev => ({
-        x: prev.x + movementX * 0.002,
-        y: prev.y + movementY * 0.002 // Removed angle limits for full 360 rotation
+        x: prev.x + movementX * ROTATION_SPEED,
+        y: Math.max(Math.min(prev.y - movementY * ROTATION_SPEED, Math.PI / 2), -Math.PI / 2)
       }));
     };
 
@@ -91,58 +98,52 @@ const Player = () => {
   useFrame((state, delta) => {
     if (!meshRef.current) return;
 
-    // Update camera rotation based on mouse position
+    // Update camera rotation
     camera.rotation.y = -mousePosition.x;
     camera.rotation.x = mousePosition.y;
 
-    // Calculate movement direction based on camera orientation
-    const direction = new THREE.Vector3();
-    const cameraDirection = new THREE.Vector3();
-    const cameraRight = new THREE.Vector3();
-    const cameraUp = new THREE.Vector3();
+    // Get camera's orientation vectors
+    const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+    const up = new THREE.Vector3(0, 1, 0);
 
-    // Get camera's forward direction
-    camera.getWorldDirection(cameraDirection);
-    cameraDirection.normalize();
+    // Calculate acceleration based on input
+    const acceleration = new THREE.Vector3(0, 0, 0);
 
-    // Get camera's right direction
-    cameraRight.crossVectors(new THREE.Vector3(0, 1, 0), cameraDirection).normalize();
-
-    // Get camera's up direction
-    cameraUp.crossVectors(cameraDirection, cameraRight).normalize();
-
-    // Apply thrust based on keys
     if (keys.forward) {
-      velocity.addScaledVector(cameraDirection, MAIN_THRUST * delta);
+      acceleration.add(forward.multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.forward));
     }
     if (keys.backward) {
-      velocity.addScaledVector(cameraDirection, -REVERSE_THRUST * delta);
-    }
-    if (keys.left) {
-      velocity.addScaledVector(cameraRight, STRAFE_THRUST * delta);
+      acceleration.add(forward.multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.backward));
     }
     if (keys.right) {
-      velocity.addScaledVector(cameraRight, -STRAFE_THRUST * delta);
+      acceleration.add(right.multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.strafe));
+    }
+    if (keys.left) {
+      acceleration.add(right.multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.strafe));
     }
     if (keys.up) {
-      velocity.addScaledVector(cameraUp, STRAFE_THRUST * delta);
+      acceleration.add(up.multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.vertical));
     }
     if (keys.down) {
-      velocity.addScaledVector(cameraUp, -STRAFE_THRUST * delta);
+      acceleration.add(up.multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.vertical));
     }
 
-    // Apply drag
-    velocity.multiplyScalar(DRAG);
+    // Apply acceleration to velocity
+    velocityRef.current.add(acceleration.multiplyScalar(delta));
 
-    // Limit speed
-    if (velocity.length() > MAX_SPEED) {
-      velocity.normalize().multiplyScalar(MAX_SPEED);
+    // Apply damping
+    velocityRef.current.multiplyScalar(DAMPING);
+
+    // Limit maximum velocity
+    if (velocityRef.current.length() > MAX_VELOCITY) {
+      velocityRef.current.normalize().multiplyScalar(MAX_VELOCITY);
     }
 
-    // Update camera position
-    camera.position.add(velocity);
+    // Update position
+    camera.position.add(velocityRef.current.clone().multiplyScalar(delta));
 
-    // Make player mesh follow camera exactly
+    // Update mesh to match camera
     meshRef.current.position.copy(camera.position);
     meshRef.current.rotation.copy(camera.rotation);
   });
