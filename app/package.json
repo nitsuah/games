@@ -3,6 +3,7 @@
     "@react-three/drei": "^10.0.6",
     "@react-three/fiber": "^9.1.2",
     "next": "^15.3.0",
+    "styled-components": "^6.1.17",
     "three": "^0.175.0"
   },
   "scripts": {
