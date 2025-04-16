@@ -54,6 +54,40 @@ const ShootingRange = () => {
   const [hitCount, setHitCount] = useState(0);
   const [missCount, setMissCount] = useState(0);
   const wasTargetHit = useRef(false);
+  const [keys, setKeys] = useState({ w: false, a: false, s: false, d: false });
+  const { camera } = useThree();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key.toLowerCase() === 'w') setKeys(prev => ({ ...prev, w: true }));
+      if (e.key.toLowerCase() === 'a') setKeys(prev => ({ ...prev, a: true }));
+      if (e.key.toLowerCase() === 's') setKeys(prev => ({ ...prev, s: true }));
+      if (e.key.toLowerCase() === 'd') setKeys(prev => ({ ...prev, d: true }));
+    };
+
+    const handleKeyUp = (e) => {
+      if (e.key.toLowerCase() === 'w') setKeys(prev => ({ ...prev, w: false }));
+      if (e.key.toLowerCase() === 'a') setKeys(prev => ({ ...prev, a: false }));
+      if (e.key.toLowerCase() === 's') setKeys(prev => ({ ...prev, s: false }));
+      if (e.key.toLowerCase() === 'd') setKeys(prev => ({ ...prev, d: false }));
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  useFrame(() => {
+    const moveSpeed = 0.1;
+    if (keys.w) camera.position.z -= moveSpeed;
+    if (keys.s) camera.position.z += moveSpeed;
+    if (keys.a) camera.position.x -= moveSpeed;
+    if (keys.d) camera.position.x += moveSpeed;
+  });
 
 /*   useEffect(() => {
     // Load the ship model
@@ -134,6 +168,7 @@ const ShootingRange = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          color: 'red',
         }}
       >
         <div
