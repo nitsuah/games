@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
 import Player from '../Player/Player';
 import Target from '../Target/Target';
 import ScoreDisplay from '../UI/ScoreDisplay';
@@ -88,7 +87,6 @@ const Game = () => {
             onHit={() => handleTargetHit(target.id)}
           />
         ))}
-        <OrbitControls />
       </Canvas>
       <ScoreDisplay score={score} />
       {gameOver && (
