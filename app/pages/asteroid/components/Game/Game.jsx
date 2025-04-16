@@ -119,6 +119,9 @@ const Game = () => {
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [highScore, setHighScore] = useState(0);
+  const [bestAccuracy, setBestAccuracy] = useState(0);
+  const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [targets, setTargets] = useState([
     { id: 1, position: [5, 0, 0] },
     { id: 2, position: [-5, 0, 0] },
@@ -126,32 +129,84 @@ const Game = () => {
     { id: 4, position: [0, -5, 0] },
   ]);
 
+  // Load high scores from localStorage on client side
+  useEffect(() => {
+    const savedHighScore = window.localStorage.getItem('asteroidHighScore');
+    const savedBestAccuracy = window.localStorage.getItem('asteroidBestAccuracy');
+    
+    if (savedHighScore) {
+      setHighScore(parseInt(savedHighScore, 10));
+    }
+    if (savedBestAccuracy) {
+      setBestAccuracy(parseFloat(savedBestAccuracy));
+    }
+  }, []);
+
+  const calculateScore = useCallback((hits, misses, baseScore) => {
+    const accuracy = hits + misses > 0 ? hits / (hits + misses) : 0;
+    // Base score + (Base score * accuracy bonus)
+    // This means at 100% accuracy you get double points
+    return Math.round(baseScore + (baseScore * accuracy));
+  }, []);
+
   const handleTargetHit = useCallback((targetId) => {
     if (!gameOver) {
-      setScore(prevScore => prevScore + 100);
-      setHits(prevHits => prevHits + 1);
+      const newHits = hits + 1;
+      setHits(newHits);
+      
+      // Calculate new score with accuracy bonus
+      const baseScore = (newHits * 100); // 100 points per hit
+      const newScore = calculateScore(newHits, misses, baseScore);
+      setScore(newScore);
+
       setTargets(prevTargets => {
         const newTargets = prevTargets.filter(target => target.id !== targetId);
         if (newTargets.length === 0) {
           setGameOver(true);
-          document.exitPointerLock(); // Release the mouse when game is over
+          document.exitPointerLock();
         }
         return newTargets;
       });
     }
-  }, [gameOver]);
+  }, [gameOver, hits, misses, calculateScore]);
 
   const handleMiss = useCallback(() => {
     if (!gameOver) {
-      setMisses(prevMisses => prevMisses + 1);
+      const newMisses = misses + 1;
+      setMisses(newMisses);
+      
+      // Recalculate score with new accuracy
+      const baseScore = (hits * 100);
+      const newScore = calculateScore(hits, newMisses, baseScore);
+      setScore(newScore);
     }
-  }, [gameOver]);
+  }, [gameOver, hits, misses, calculateScore]);
+
+  const accuracy = hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
+
+  // Update high score and best accuracy when game is over
+  useEffect(() => {
+    if (gameOver && typeof window !== 'undefined') {
+      if (score > highScore) {
+        setIsNewHighScore(true);
+        setHighScore(score);
+        window.localStorage.setItem('asteroidHighScore', score.toString());
+      }
+      
+      const currentAccuracy = parseFloat(accuracy);
+      if (currentAccuracy > bestAccuracy) {
+        setBestAccuracy(currentAccuracy);
+        window.localStorage.setItem('asteroidBestAccuracy', currentAccuracy.toString());
+      }
+    }
+  }, [gameOver, score, accuracy, highScore, bestAccuracy]);
 
   const restartGame = useCallback(() => {
     setScore(0);
     setHits(0);
     setMisses(0);
     setGameOver(false);
+    setIsNewHighScore(false);
     setTargets([
       { id: 1, position: [5, 0, 0] },
       { id: 2, position: [-5, 0, 0] },
@@ -159,8 +214,6 @@ const Game = () => {
       { id: 4, position: [0, -5, 0] },
     ]);
   }, []);
-
-  const accuracy = hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
 
   return (
     <GameContainer>
@@ -184,16 +237,18 @@ const Game = () => {
       </Canvas>
       <Crosshair />
       <ScoreDisplay score={score} />
-      <StatsDisplay>
-        Hits: {hits}<br />
-        Misses: {misses}<br />
-        Accuracy: {accuracy}%
-      </StatsDisplay>
+{/*       <StatsDisplay>
+        Score: {score} | High Score: {highScore}<br />
+        Hits: {hits} | Misses: {misses}<br />
+        Accuracy: {accuracy}% | Best: {bestAccuracy.toFixed(1)}%
+      </StatsDisplay> */}
       {gameOver && (
         <GameOverOverlay>
           <h2>Game Over!</h2>
-          <p>Final Score: {score}</p>
-          <p>Final Accuracy: {accuracy}%</p>
+          <p>Final Score: {score} {isNewHighScore && '🏆 New High Score!'}</p>
+          <p>Final Accuracy: {accuracy}% {parseFloat(accuracy) > bestAccuracy && '🎯 New Best!'}</p>
+          <p>High Score: {highScore}</p>
+          <p>Best Accuracy: {bestAccuracy.toFixed(1)}%</p>
           <RestartButton onClick={restartGame}>
             Play Again
           </RestartButton>
