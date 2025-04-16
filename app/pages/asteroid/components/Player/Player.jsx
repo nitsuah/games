@@ -2,11 +2,13 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
+import { useSound } from '@/utils/audio/useSound';
 
 const Player = () => {
   const meshRef = useRef();
   const { camera } = useThree();
   const velocityRef = useRef(new THREE.Vector3());
+  const acceleration = useRef(new THREE.Vector3());
   const [keys, setKeys] = useState({
     forward: false,
     backward: false,
@@ -17,6 +19,7 @@ const Player = () => {
   });
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isPointerLocked, setIsPointerLocked] = useState(false);
+  const { playSound, setThrusterVolume } = useSound();
 
   // Physics constants
   const ACCELERATION = 20.0;     // Base acceleration
@@ -37,24 +40,50 @@ const Player = () => {
     camera.rotation.order = 'YXZ'; // Important for proper FPS-style rotation
 
     const handleKeyDown = (e) => {
-      switch (e.key.toLowerCase()) {
-        case 'w': setKeys(prev => ({ ...prev, forward: true })); break;
-        case 's': setKeys(prev => ({ ...prev, backward: true })); break;
-        case 'a': setKeys(prev => ({ ...prev, left: true })); break;
-        case 'd': setKeys(prev => ({ ...prev, right: true })); break;
-        case ' ': setKeys(prev => ({ ...prev, up: true })); break;
-        case 'x': setKeys(prev => ({ ...prev, down: true })); break;
+      e.preventDefault(); // Prevent default browser actions
+      switch (e.code) {
+        case 'KeyW':
+          setKeys(prev => ({ ...prev, forward: true }));
+          break;
+        case 'KeyS':
+          setKeys(prev => ({ ...prev, backward: true }));
+          break;
+        case 'KeyA':
+          setKeys(prev => ({ ...prev, left: true }));
+          break;
+        case 'KeyD':
+          setKeys(prev => ({ ...prev, right: true }));
+          break;
+        case 'Space':
+          setKeys(prev => ({ ...prev, up: true }));
+          break;
+        case 'ShiftLeft':
+          setKeys(prev => ({ ...prev, down: true }));
+          break;
       }
     };
 
     const handleKeyUp = (e) => {
-      switch (e.key.toLowerCase()) {
-        case 'w': setKeys(prev => ({ ...prev, forward: false })); break;
-        case 's': setKeys(prev => ({ ...prev, backward: false })); break;
-        case 'a': setKeys(prev => ({ ...prev, left: false })); break;
-        case 'd': setKeys(prev => ({ ...prev, right: false })); break;
-        case ' ': setKeys(prev => ({ ...prev, up: false })); break;
-        case 'x': setKeys(prev => ({ ...prev, down: false })); break;
+      e.preventDefault(); // Prevent default browser actions
+      switch (e.code) {
+        case 'KeyW':
+          setKeys(prev => ({ ...prev, forward: false }));
+          break;
+        case 'KeyS':
+          setKeys(prev => ({ ...prev, backward: false }));
+          break;
+        case 'KeyA':
+          setKeys(prev => ({ ...prev, left: false }));
+          break;
+        case 'KeyD':
+          setKeys(prev => ({ ...prev, right: false }));
+          break;
+        case 'Space':
+          setKeys(prev => ({ ...prev, up: false }));
+          break;
+        case 'ShiftLeft':
+          setKeys(prev => ({ ...prev, down: false }));
+          break;
       }
     };
 
@@ -77,6 +106,9 @@ const Player = () => {
     const handleClick = () => {
       if (!isPointerLocked) {
         document.body.requestPointerLock();
+      } else {
+        // Play shooting sound
+        playSound('shoot');
       }
     };
 
@@ -93,10 +125,10 @@ const Player = () => {
       document.removeEventListener('pointerlockchange', handlePointerLockChange);
       document.removeEventListener('click', handleClick);
     };
-  }, [isPointerLocked, camera]);
+  }, [isPointerLocked, camera, playSound]);
 
   useFrame((state, delta) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || !isPointerLocked) return;
 
     // Update camera rotation
     camera.rotation.y = -mousePosition.x;
@@ -108,29 +140,29 @@ const Player = () => {
     const up = new THREE.Vector3(0, 1, 0);
 
     // Calculate acceleration based on input
-    const acceleration = new THREE.Vector3(0, 0, 0);
+    const currentAcceleration = new THREE.Vector3(0, 0, 0);
 
     if (keys.forward) {
-      acceleration.add(forward.multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.forward));
+      currentAcceleration.add(forward.clone().multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.forward));
     }
     if (keys.backward) {
-      acceleration.add(forward.multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.backward));
+      currentAcceleration.add(forward.clone().multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.backward));
     }
     if (keys.right) {
-      acceleration.add(right.multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.strafe));
+      currentAcceleration.add(right.clone().multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.strafe));
     }
     if (keys.left) {
-      acceleration.add(right.multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.strafe));
+      currentAcceleration.add(right.clone().multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.strafe));
     }
     if (keys.up) {
-      acceleration.add(up.multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.vertical));
+      currentAcceleration.add(up.clone().multiplyScalar(ACCELERATION * THRUST_MULTIPLIERS.vertical));
     }
     if (keys.down) {
-      acceleration.add(up.multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.vertical));
+      currentAcceleration.add(up.clone().multiplyScalar(-ACCELERATION * THRUST_MULTIPLIERS.vertical));
     }
 
     // Apply acceleration to velocity
-    velocityRef.current.add(acceleration.multiplyScalar(delta));
+    velocityRef.current.add(currentAcceleration.multiplyScalar(delta));
 
     // Apply damping
     velocityRef.current.multiplyScalar(DAMPING);
@@ -146,6 +178,14 @@ const Player = () => {
     // Update mesh to match camera
     meshRef.current.position.copy(camera.position);
     meshRef.current.rotation.copy(camera.rotation);
+
+    // Calculate thruster volume based on total movement
+    const isMoving = keys.forward || keys.backward || keys.left || keys.right || keys.up || keys.down;
+    const movement = velocityRef.current.length();
+    const normalizedMovement = Math.min(movement / MAX_VELOCITY, 1);
+    
+    // Set thruster volume based on movement
+    setThrusterVolume(isMoving ? normalizedMovement * 0.3 : 0);
   });
 
   return (

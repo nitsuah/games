@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import Player from '../Player/Player';
 import Target from '../Target/Target';
 import ScoreDisplay from '../UI/ScoreDisplay';
+import { useSound } from '@/utils/audio/useSound';
 import styled from 'styled-components';
 
 const GameContainer = styled.div`
@@ -83,15 +84,16 @@ const StatsDisplay = styled.div`
 const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
   const { camera, scene } = useThree();
   const raycaster = new THREE.Raycaster();
-  const mousePosition = new THREE.Vector2(0, 0); // Center of screen
+  const mousePosition = new THREE.Vector2(0, 0);
+  const { playSound } = useSound();
 
   useEffect(() => {
     const handleShoot = () => {
       if (document.pointerLockElement && !isGameOver) {
+        playSound('shoot');
         raycaster.setFromCamera(mousePosition, camera);
         const intersects = raycaster.intersectObjects(scene.children, true);
         
-        // Find the first target hit
         const targetHit = intersects.find(intersect => {
           const parent = intersect.object.parent;
           return parent?.userData?.isTarget && !parent?.userData?.isHit;
@@ -100,8 +102,10 @@ const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
         if (targetHit) {
           const targetId = targetHit.object.parent.userData.targetId;
           targetHit.object.parent.userData.isHit = true;
+          playSound('hit');
           onHit(targetId);
         } else {
+          playSound('miss');
           onMiss();
         }
       }
@@ -109,7 +113,72 @@ const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
 
     window.addEventListener('click', handleShoot);
     return () => window.removeEventListener('click', handleShoot);
-  }, [camera, scene, onHit, onMiss, isGameOver]);
+  }, [camera, scene, onHit, onMiss, isGameOver, playSound]);
+
+  return null;
+};
+
+const MovementControls = () => {
+  const { camera } = useThree();
+  const moveSpeed = 0.1;
+  const keys = useRef({});
+  const { setThrusterVolume } = useSound();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => keys.current[e.code] = true;
+    const handleKeyUp = (e) => keys.current[e.code] = false;
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    const moveCamera = () => {
+      if (!document.pointerLockElement) return;
+
+      const direction = new THREE.Vector3(0, 0, 0);
+      const frontVector = new THREE.Vector3();
+      const sideVector = new THREE.Vector3();
+      const upVector = new THREE.Vector3(0, 1, 0);
+
+      // Get camera's front direction (excluding vertical rotation)
+      camera.getWorldDirection(frontVector);
+      frontVector.y = 0; // Keep movement horizontal
+      frontVector.normalize();
+      sideVector.crossVectors(upVector, frontVector);
+
+      // Track if any movement key is pressed
+      const isMoving = keys.current['KeyW'] || keys.current['KeyS'] || 
+                      keys.current['KeyA'] || keys.current['KeyD'] ||
+                      keys.current['Space'] || keys.current['ShiftLeft'];
+
+      // Set thruster volume based on movement
+      setThrusterVolume(isMoving ? 0.3 : 0);
+
+      // Only add movement when keys are pressed
+      if (keys.current['KeyW']) direction.add(frontVector.multiplyScalar(moveSpeed));
+      if (keys.current['KeyS']) direction.sub(frontVector.multiplyScalar(moveSpeed));
+      if (keys.current['KeyA']) direction.add(sideVector.multiplyScalar(moveSpeed));
+      if (keys.current['KeyD']) direction.sub(sideVector.multiplyScalar(moveSpeed));
+      if (keys.current['Space']) direction.add(upVector.multiplyScalar(moveSpeed));
+      if (keys.current['ShiftLeft']) direction.sub(upVector.multiplyScalar(moveSpeed));
+
+      camera.position.add(direction);
+    };
+
+    const animate = () => {
+      moveCamera();
+      requestAnimationFrame(animate);
+    };
+
+    const animationId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationId);
+  }, [camera, setThrusterVolume]);
 
   return null;
 };
@@ -128,6 +197,9 @@ const Game = () => {
     { id: 3, position: [0, 5, 0] },
     { id: 4, position: [0, -5, 0] },
   ]);
+  const { playSound } = useSound();
+  const [crosshairVisible, setCrosshairVisible] = useState(false);
+  const [muted, setMuted] = useState(false);
 
   // Load high scores from localStorage on client side
   useEffect(() => {
@@ -142,22 +214,46 @@ const Game = () => {
     }
   }, []);
 
-  const calculateScore = useCallback((hits, misses, baseScore) => {
-    const accuracy = hits + misses > 0 ? hits / (hits + misses) : 0;
-    // Base score + (Base score * accuracy bonus)
-    // This means at 100% accuracy you get double points
-    return Math.round(baseScore + (baseScore * accuracy));
+  // Play background music when game starts
+  useEffect(() => {
+    const handlePointerLock = () => {
+      if (document.pointerLockElement) {
+        playSound('bgm');
+      }
+    };
+
+    document.addEventListener('pointerlockchange', handlePointerLock);
+    
+    // Start background music immediately if pointer is already locked
+    if (document.pointerLockElement) {
+      playSound('bgm');
+    }
+
+    return () => {
+      document.removeEventListener('pointerlockchange', handlePointerLock);
+    };
+  }, [playSound]);
+
+  const calculateScore = useCallback((hits, misses) => {
+    // Each hit is worth 100 base points
+    const baseScore = hits * 100;
+    
+    // Calculate accuracy (as a decimal between 0 and 1)
+    const accuracy = hits + misses > 0 ? hits / (hits + misses) : 1;
+    
+    // Apply accuracy bonus (up to 2x multiplier at 100% accuracy)
+    return Math.round(baseScore * (1 + accuracy));
   }, []);
 
   const handleTargetHit = useCallback((targetId) => {
     if (!gameOver) {
-      const newHits = hits + 1;
-      setHits(newHits);
-      
-      // Calculate new score with accuracy bonus
-      const baseScore = (newHits * 100); // 100 points per hit
-      const newScore = calculateScore(newHits, misses, baseScore);
-      setScore(newScore);
+      setHits(prev => {
+        const newHits = prev + 1;
+        // Calculate new score based on updated hits and current misses
+        const newScore = calculateScore(newHits, misses);
+        setScore(newScore);
+        return newHits;
+      });
 
       setTargets(prevTargets => {
         const newTargets = prevTargets.filter(target => target.id !== targetId);
@@ -168,19 +264,19 @@ const Game = () => {
         return newTargets;
       });
     }
-  }, [gameOver, hits, misses, calculateScore]);
+  }, [gameOver, misses, calculateScore]);
 
   const handleMiss = useCallback(() => {
     if (!gameOver) {
-      const newMisses = misses + 1;
-      setMisses(newMisses);
-      
-      // Recalculate score with new accuracy
-      const baseScore = (hits * 100);
-      const newScore = calculateScore(hits, newMisses, baseScore);
-      setScore(newScore);
+      setMisses(prev => {
+        const newMisses = prev + 1;
+        // Recalculate score with new misses count
+        const newScore = calculateScore(hits, newMisses);
+        setScore(newScore);
+        return newMisses;
+      });
     }
-  }, [gameOver, hits, misses, calculateScore]);
+  }, [gameOver, hits, calculateScore]);
 
   const accuracy = hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
 
@@ -222,6 +318,7 @@ const Game = () => {
         style={{ background: '#000000' }}
       >
         <PointerLockControls />
+        <MovementControls />
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
         <Player />

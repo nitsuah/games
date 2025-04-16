@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import Game from './components/Game/Game';
 import styled from 'styled-components';
+import { playSound } from '@/utils/audio/useSound';
+import { setThrusterVolume } from '@/utils/audio/useSound';
 
 const Crosshair = styled.div`
   position: absolute;
@@ -81,11 +83,13 @@ const AsteroidPage = () => {
   const handleHit = () => {
     wasTargetHit.current = true;
     setHitCount(prev => prev + 1);
+    playSound('hit');
   };
 
   const handleMiss = () => {
     if (!wasTargetHit.current) {
       setMissCount(prev => prev + 1);
+      playSound('miss');
     }
     wasTargetHit.current = false;
   };

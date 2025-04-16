@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
 import Controls from "./_comps/Controls";
-import Player from "../../fps/_comps/Player";
+import Player from "./_comps/Player";
 import Floor from "./objects/Floor";
 import Cube from "./objects/Cube";
 
