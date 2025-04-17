@@ -1,8 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Game from './components/Game/Game';
 import styled from 'styled-components';
-import { playSound } from '@/utils/audio/useSound';
-import { setThrusterVolume } from '@/utils/audio/useSound';
+import { useSound } from '@/utils/audio/useSound'; // Use the hook instead of importing playSound directly
 
 const Crosshair = styled.div`
   position: absolute;
@@ -43,18 +42,6 @@ const CrosshairHorizontal = styled.div`
   opacity: 0.8;
 `;
 
-const StatsPanel = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  color: white;
-  background: rgba(0,0,0,0.6);
-  padding: 12px 18px;
-  border-radius: 8px 0 0 0;
-  pointer-events: none;
-`;
-
 const Instructions = styled.div`
   position: absolute;
   top: 20px;
@@ -78,25 +65,17 @@ const GameContainer = styled.div`
 const AsteroidPage = () => {
   const [hitCount, setHitCount] = useState(0);
   const [missCount, setMissCount] = useState(0);
-  const wasTargetHit = useRef(false);
+  const { playSound } = useSound(); // Use the hook to access playSound
 
   const handleHit = () => {
-    wasTargetHit.current = true;
-    setHitCount(prev => prev + 1);
+    setHitCount((prev) => prev + 1);
     playSound('hit');
   };
 
   const handleMiss = () => {
-    if (!wasTargetHit.current) {
-      setMissCount(prev => prev + 1);
-      playSound('miss');
-    }
-    wasTargetHit.current = false;
+    setMissCount((prev) => prev + 1);
+    playSound('miss');
   };
-
-  const accuracy = hitCount + missCount > 0 
-    ? ((hitCount / (hitCount + missCount)) * 100).toFixed(2)
-    : '0.00';
 
   return (
     <GameContainer>

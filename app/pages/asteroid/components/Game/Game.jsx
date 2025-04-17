@@ -93,15 +93,16 @@ const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
         playSound('shoot');
         raycaster.setFromCamera(mousePosition, camera);
         const intersects = raycaster.intersectObjects(scene.children, true);
-        
-        const targetHit = intersects.find(intersect => {
+
+        // Only call one of onHit or onMiss per shot
+        const targetIntersect = intersects.find((intersect) => {
           const parent = intersect.object.parent;
           return parent?.userData?.isTarget && !parent?.userData?.isHit;
         });
 
-        if (targetHit) {
-          const targetId = targetHit.object.parent.userData.targetId;
-          targetHit.object.parent.userData.isHit = true;
+        if (targetIntersect) {
+          const targetId = targetIntersect.object.parent.userData.targetId;
+          targetIntersect.object.parent.userData.isHit = true;
           playSound('hit');
           onHit(targetId);
         } else {
@@ -125,8 +126,8 @@ const MovementControls = () => {
   const { setThrusterVolume } = useSound();
 
   useEffect(() => {
-    const handleKeyDown = (e) => keys.current[e.code] = true;
-    const handleKeyUp = (e) => keys.current[e.code] = false;
+    const handleKeyDown = (e) => (keys.current[e.code] = true);
+    const handleKeyUp = (e) => (keys.current[e.code] = false);
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
@@ -146,21 +147,21 @@ const MovementControls = () => {
       const sideVector = new THREE.Vector3();
       const upVector = new THREE.Vector3(0, 1, 0);
 
-      // Get camera's front direction (excluding vertical rotation)
       camera.getWorldDirection(frontVector);
-      frontVector.y = 0; // Keep movement horizontal
+      frontVector.y = 0;
       frontVector.normalize();
       sideVector.crossVectors(upVector, frontVector);
 
-      // Track if any movement key is pressed
-      const isMoving = keys.current['KeyW'] || keys.current['KeyS'] || 
-                      keys.current['KeyA'] || keys.current['KeyD'] ||
-                      keys.current['Space'] || keys.current['ShiftLeft'];
+      const isMoving =
+        keys.current['KeyW'] ||
+        keys.current['KeyS'] ||
+        keys.current['KeyA'] ||
+        keys.current['KeyD'] ||
+        keys.current['Space'] ||
+        keys.current['ShiftLeft'];
 
-      // Set thruster volume based on movement
       setThrusterVolume(isMoving ? 0.3 : 0);
 
-      // Only add movement when keys are pressed
       if (keys.current['KeyW']) direction.add(frontVector.multiplyScalar(moveSpeed));
       if (keys.current['KeyS']) direction.sub(frontVector.multiplyScalar(moveSpeed));
       if (keys.current['KeyA']) direction.add(sideVector.multiplyScalar(moveSpeed));
@@ -183,7 +184,7 @@ const MovementControls = () => {
   return null;
 };
 
-const Game = () => {
+const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
@@ -192,167 +193,129 @@ const Game = () => {
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [targets, setTargets] = useState([
-    { id: 1, position: [5, 0, 0] },
-    { id: 2, position: [-5, 0, 0] },
-    { id: 3, position: [0, 5, 0] },
-    { id: 4, position: [0, -5, 0] },
+    { id: 1, x: 5, y: 0, z: 0, isHit: false },
+    { id: 2, x: -5, y: 0, z: 0, isHit: false },
+    { id: 3, x: 0, y: 5, z: 0, isHit: false },
+    { id: 4, x: 0, y: -5, z: 0, isHit: false },
   ]);
   const { playSound } = useSound();
-  const [crosshairVisible, setCrosshairVisible] = useState(false);
-  const [muted, setMuted] = useState(false);
 
-  // Load high scores from localStorage on client side
   useEffect(() => {
     const savedHighScore = window.localStorage.getItem('asteroidHighScore');
     const savedBestAccuracy = window.localStorage.getItem('asteroidBestAccuracy');
-    
-    if (savedHighScore) {
-      setHighScore(parseInt(savedHighScore, 10));
-    }
-    if (savedBestAccuracy) {
-      setBestAccuracy(parseFloat(savedBestAccuracy));
-    }
+
+    if (savedHighScore) setHighScore(parseInt(savedHighScore, 10));
+    if (savedBestAccuracy) setBestAccuracy(parseFloat(savedBestAccuracy));
   }, []);
 
-  // Play background music when game starts
   useEffect(() => {
-    const handlePointerLock = () => {
-      if (document.pointerLockElement) {
-        playSound('bgm');
+    // Update score whenever hits or misses change
+    setScore(hits * 100 + Math.round((hits / (hits + misses || 1)) * 100));
+  }, [hits, misses]);
+
+  // Game over effect: triggers when all targets are hit
+  useEffect(() => {
+    if (targets.length > 0 && targets.every(t => t.isHit)) {
+      setGameOver(true);
+      document.exitPointerLock();
+      // Save high score and accuracy
+      const accuracy = hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0;
+      if (score > highScore) {
+        setHighScore(score);
+        window.localStorage.setItem('asteroidHighScore', score);
+        setIsNewHighScore(true);
       }
-    };
-
-    document.addEventListener('pointerlockchange', handlePointerLock);
-    
-    // Start background music immediately if pointer is already locked
-    if (document.pointerLockElement) {
-      playSound('bgm');
+      if (accuracy > bestAccuracy) {
+        setBestAccuracy(accuracy);
+        window.localStorage.setItem('asteroidBestAccuracy', accuracy);
+      }
     }
-
-    return () => {
-      document.removeEventListener('pointerlockchange', handlePointerLock);
-    };
-  }, [playSound]);
-
-  const calculateScore = useCallback((hits, misses) => {
-    // Each hit is worth 100 base points
-    const baseScore = hits * 100;
-    
-    // Calculate accuracy (as a decimal between 0 and 1)
-    const accuracy = hits + misses > 0 ? hits / (hits + misses) : 1;
-    
-    // Apply accuracy bonus (up to 2x multiplier at 100% accuracy)
-    return Math.round(baseScore * (1 + accuracy));
-  }, []);
+  }, [targets, hits, misses, score, highScore, bestAccuracy]);
 
   const handleTargetHit = useCallback((targetId) => {
-    if (!gameOver) {
-      setHits(prev => {
-        const newHits = prev + 1;
-        // Calculate new score based on updated hits and current misses
-        const newScore = calculateScore(newHits, misses);
-        setScore(newScore);
-        return newHits;
-      });
-
-      setTargets(prevTargets => {
-        const newTargets = prevTargets.filter(target => target.id !== targetId);
-        if (newTargets.length === 0) {
-          setGameOver(true);
-          document.exitPointerLock();
-        }
-        return newTargets;
-      });
-    }
-  }, [gameOver, misses, calculateScore]);
+    setTargets((prevTargets) => {
+      const updatedTargets = prevTargets.map((target) =>
+        target.id === targetId && !target.isHit ? { ...target, isHit: true } : target
+      );
+      // Only proceed if this target was not already hit
+      const justHit = prevTargets.find(t => t.id === targetId && !t.isHit);
+      if (!justHit) return prevTargets;
+      return updatedTargets;
+    });
+    setHits((prevHits) => prevHits + 1);
+    if (onHit) onHit();
+  }, [onHit]);
 
   const handleMiss = useCallback(() => {
-    if (!gameOver) {
-      setMisses(prev => {
-        const newMisses = prev + 1;
-        // Recalculate score with new misses count
-        const newScore = calculateScore(hits, newMisses);
-        setScore(newScore);
-        return newMisses;
-      });
-    }
-  }, [gameOver, hits, calculateScore]);
+    setMisses((prevMisses) => prevMisses + 1);
+    if (onMiss) onMiss();
+  }, [onMiss]);
 
-  const accuracy = hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
-
-  // Update high score and best accuracy when game is over
-  useEffect(() => {
-    if (gameOver && typeof window !== 'undefined') {
-      if (score > highScore) {
-        setIsNewHighScore(true);
-        setHighScore(score);
-        window.localStorage.setItem('asteroidHighScore', score.toString());
-      }
-      
-      const currentAccuracy = parseFloat(accuracy);
-      if (currentAccuracy > bestAccuracy) {
-        setBestAccuracy(currentAccuracy);
-        window.localStorage.setItem('asteroidBestAccuracy', currentAccuracy.toString());
-      }
-    }
-  }, [gameOver, score, accuracy, highScore, bestAccuracy]);
-
-  const restartGame = useCallback(() => {
+  const restartGame = () => {
     setScore(0);
     setHits(0);
     setMisses(0);
     setGameOver(false);
     setIsNewHighScore(false);
     setTargets([
-      { id: 1, position: [5, 0, 0] },
-      { id: 2, position: [-5, 0, 0] },
-      { id: 3, position: [0, 5, 0] },
-      { id: 4, position: [0, -5, 0] },
+      { id: 1, x: 5, y: 0, z: 0, isHit: false },
+      { id: 2, x: -5, y: 0, z: 0, isHit: false },
+      { id: 3, x: 0, y: 5, z: 0, isHit: false },
+      { id: 4, x: 0, y: -5, z: 0, isHit: false },
     ]);
-  }, []);
+  };
 
   return (
     <GameContainer>
-      <Canvas
-        camera={{ position: [0, 0, 10], fov: 75 }}
-        style={{ background: '#000000' }}
-      >
+      <Canvas camera={{ position: [0, 0, 10], fov: 75 }} style={{ background: '#000000' }}>
         <PointerLockControls />
         <MovementControls />
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
-        <Player />
-        <ShootingSystem onHit={handleTargetHit} onMiss={handleMiss} isGameOver={gameOver} />
-        {targets.map(target => (
+        <Player targets={targets} onTargetHit={handleTargetHit} />
+        <ShootingSystem
+          onHit={handleTargetHit}
+          onMiss={handleMiss}
+          isGameOver={gameOver}
+        />
+        {targets.map((target) => (
           <Target
             key={target.id}
-            position={target.position}
+            position={[target.x, target.y, target.z]}
             targetId={target.id}
+            isHit={target.isHit}
             onHit={handleTargetHit}
           />
         ))}
       </Canvas>
       <Crosshair />
       <ScoreDisplay score={score} />
-{/*       <StatsDisplay>
-        Score: {score} | High Score: {highScore}<br />
-        Hits: {hits} | Misses: {misses}<br />
-        Accuracy: {accuracy}% | Best: {bestAccuracy.toFixed(1)}%
-      </StatsDisplay> */}
+      <StatsDisplay>
+        Score: {score} | High Score: {highScore}
+        <br />
+        Hits: {hits} | Misses: {misses}
+        <br />
+        Accuracy: {hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0'}% | Best:{' '}
+        {bestAccuracy.toFixed(1)}%
+      </StatsDisplay>
       {gameOver && (
         <GameOverOverlay>
           <h2>Game Over!</h2>
-          <p>Final Score: {score} {isNewHighScore && '🏆 New High Score!'}</p>
-          <p>Final Accuracy: {accuracy}% {parseFloat(accuracy) > bestAccuracy && '🎯 New Best!'}</p>
+          <p>
+            Final Score: {score} {isNewHighScore && '🏆 New High Score!'}
+          </p>
+          <p>
+            Final Accuracy: {hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0'}%{' '}
+            {parseFloat(hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0') >
+              bestAccuracy && '🎯 New Best!'}
+          </p>
           <p>High Score: {highScore}</p>
           <p>Best Accuracy: {bestAccuracy.toFixed(1)}%</p>
-          <RestartButton onClick={restartGame}>
-            Play Again
-          </RestartButton>
+          <RestartButton onClick={restartGame}>Play Again</RestartButton>
         </GameOverOverlay>
       )}
     </GameContainer>
   );
 };
 
-export default Game; 
+export default Game;

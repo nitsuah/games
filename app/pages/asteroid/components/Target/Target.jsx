@@ -2,9 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const Target = ({ position, targetId, onHit }) => {
+const Target = ({ position, targetId, isHit, onHit }) => {
   const meshRef = useRef();
-  const [isHit, setIsHit] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [rotationSpeed] = useState(() => Math.random() * 0.02 - 0.01);
   const [size] = useState(() => Math.random() * 0.5 + 0.5);
@@ -22,9 +21,9 @@ const Target = ({ position, targetId, onHit }) => {
     if (meshRef.current) {
       meshRef.current.userData.isTarget = true;
       meshRef.current.userData.targetId = targetId;
-      meshRef.current.userData.isHit = false;
+      meshRef.current.userData.isHit = isHit;
     }
-  }, [targetId]);
+  }, [targetId, isHit]);
 
   useFrame(() => {
     if (meshRef.current && !isHit) {
@@ -50,9 +49,7 @@ const Target = ({ position, targetId, onHit }) => {
 
   const handleClick = (event) => {
     event.stopPropagation();
-    if (!isHit) {
-      setIsHit(true);
-      meshRef.current.userData.isHit = true;
+    if (!isHit && onHit) {
       onHit(targetId);
     }
   };
@@ -84,4 +81,4 @@ const Target = ({ position, targetId, onHit }) => {
   );
 };
 
-export default Target; 
+export default Target;

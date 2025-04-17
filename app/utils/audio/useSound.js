@@ -11,7 +11,9 @@ export const useSound = () => {
         const audio = new Audio();
         
         audio.addEventListener('canplaythrough', () => {
-          console.log(`✅ Audio loaded: ${src}`);
+          if (process.env.NODE_ENV === 'development') {
+            //console.log(`✅ Audio loaded: ${src}`);
+          }
           resolve(audio);
         });
 
@@ -133,7 +135,7 @@ export const useSound = () => {
         // For other sounds, reset and play
         sound.currentTime = 0;
         await sound.play();
-        console.log(`✅ Played sound: ${name}`);
+        // console.log(`✅ Played sound: ${name}`);
       }
     } catch (error) {
       console.error(`❌ Failed to play ${name}:`, error);
@@ -143,9 +145,11 @@ export const useSound = () => {
   const setThrusterVolume = (volume) => {
     if (thruster.current) {
       thruster.current.volume = volume;
-      console.log(`✅ Set thruster volume to: ${volume}`);
+      if (process.env.NODE_ENV === 'development') {
+        // console.log(`✅ Set thruster volume to: ${volume}`);
+      }
     }
   };
 
   return { playSound, setThrusterVolume };
-}; 
+};
