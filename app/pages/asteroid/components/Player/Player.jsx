@@ -19,10 +19,10 @@ const Player = ({ targets, onTargetHit }) => {
   const { setThrusterVolume } = useSound();
 
   // Physics constants
-  const ACCELERATION = 20.0;     // Base acceleration
-  const MAX_VELOCITY = 15.0;     // Maximum velocity
-  const ROTATION_SPEED = 0.002;  // Mouse sensitivity
-  const DAMPING = 0.98;          // Velocity damping (lower = more drag)
+  const ACCELERATION = 0.08;     // Lower acceleration for more inertia
+  const MAX_VELOCITY = 0.5;     // Lower max velocity for slower movement
+  const ROTATION_SPEED = 0.002; // Mouse sensitivity
+  const DAMPING = 0.95;       // Much higher = much more floaty
 
   useEffect(() => {
     camera.position.set(0, 1.5, 0); // Start camera slightly above ground
@@ -108,6 +108,11 @@ const Player = ({ targets, onTargetHit }) => {
 
     // Apply damping to velocity (drag)
     velocityRef.current.multiplyScalar(DAMPING);
+
+    // Stop drifting if velocity is very low
+    if (velocityRef.current.length() < 0.001) {
+      velocityRef.current.set(0, 0, 0);
+    }
 
     // Limit maximum velocity
     if (velocityRef.current.length() > MAX_VELOCITY) {

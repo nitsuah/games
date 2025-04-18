@@ -123,7 +123,8 @@ const MovementControls = () => {
   const { camera } = useThree();
   const moveSpeed = 0.1;
   const keys = useRef({});
-  const { setThrusterVolume } = useSound();
+  const { setThrusterVolume = () => {} } = useSound();
+  const isMovingRef = useRef(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => (keys.current[e.code] = true);
@@ -159,7 +160,10 @@ const MovementControls = () => {
         keys.current['KeyD'] ||
         keys.current['Space'] ||
         keys.current['ShiftLeft'];
-
+      if (isMovingRef.current !== isMoving) {
+        setThrusterVolume(isMoving ? 0.3 : 0);
+        isMovingRef.current = isMoving;
+      }
       setThrusterVolume(isMoving ? 0.3 : 0);
 
       if (keys.current['KeyW']) direction.add(frontVector.multiplyScalar(moveSpeed));
@@ -198,7 +202,8 @@ const Game = ({ onHit, onMiss }) => {
     { id: 3, x: 0, y: 5, z: 0, isHit: false },
     { id: 4, x: 0, y: -5, z: 0, isHit: false },
   ]);
-  const { playSound } = useSound();
+  const { playSound, pauseSound } = useSound();
+  const soundsRef = useRef(null);
 
   useEffect(() => {
     const savedHighScore = window.localStorage.getItem('asteroidHighScore');
@@ -212,13 +217,19 @@ const Game = ({ onHit, onMiss }) => {
     // Update score whenever hits or misses change
     setScore(hits * 100 + Math.round((hits / (hits + misses || 1)) * 100));
   }, [hits, misses]);
-
-  // Game over effect: triggers when all targets are hit
+  
   useEffect(() => {
+    // Play background music on mount
+    playSound('bgm');
+  }, [playSound]);
+
+  useEffect(() => {
+    // Game over effect: triggers when all targets are hit
     if (targets.length > 0 && targets.every(t => t.isHit)) {
       setGameOver(true);
       document.exitPointerLock();
-      // Save high score and accuracy
+      // Pause BGM on game over
+      pauseSound('bgm');
       const accuracy = hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0;
       if (score > highScore) {
         setHighScore(score);
@@ -230,7 +241,7 @@ const Game = ({ onHit, onMiss }) => {
         window.localStorage.setItem('asteroidBestAccuracy', accuracy);
       }
     }
-  }, [targets, hits, misses, score, highScore, bestAccuracy]);
+  }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound]);
 
   const handleTargetHit = useCallback((targetId) => {
     setTargets((prevTargets) => {
@@ -243,6 +254,7 @@ const Game = ({ onHit, onMiss }) => {
       return updatedTargets;
     });
     setHits((prevHits) => prevHits + 1);
+    setMisses((prevMisses) => prevMisses > 0 ? prevMisses - 1 : 0); // Remove a miss on hit
     if (onHit) onHit();
   }, [onHit]);
 
@@ -292,11 +304,6 @@ const Game = ({ onHit, onMiss }) => {
       <ScoreDisplay score={score} />
       <StatsDisplay>
         Score: {score} | High Score: {highScore}
-        <br />
-        Hits: {hits} | Misses: {misses}
-        <br />
-        Accuracy: {hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0'}% | Best:{' '}
-        {bestAccuracy.toFixed(1)}%
       </StatsDisplay>
       {gameOver && (
         <GameOverOverlay>
@@ -319,3 +326,4 @@ const Game = ({ onHit, onMiss }) => {
 };
 
 export default Game;
+
