@@ -125,10 +125,10 @@ const Game = ({ onHit, onMiss }) => {
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [targets, setTargets] = useState([
-    { id: 1, x: 5, y: 0, z: 0, isHit: false },
-    { id: 2, x: -5, y: 0, z: 0, isHit: false },
-    { id: 3, x: 0, y: 5, z: 0, isHit: false },
-    { id: 4, x: 0, y: -5, z: 0, isHit: false },
+    { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
+    { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
+    { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
+    { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
   ]);
   const { playSound, pauseSound } = useSound();
   const soundsRef = useRef(null);
@@ -176,55 +176,62 @@ const Game = ({ onHit, onMiss }) => {
     setTargets((prevTargets) => {
       const updatedTargets = prevTargets.flatMap((target) => {
         if (target.id === targetId && !target.isHit) {
-          if (target.size > 1) { // Limit the minimum size
+          const meshRef = targetRefs.current[targetId];
+          const currentX = meshRef?.current?.position.x || target.x;
+          const currentY = meshRef?.current?.position.y || target.y;
+          const currentZ = meshRef?.current?.position.z || target.z;
+
+          if (target.size > 1) {
             const newSize = target.size * 0.5;
+            const newSpeed = target.speed * 1.5; // Incrementally increase speed for smaller fragments
             const newColor =
-              newSize > 4 ? '#0000ff' : // Blue for first split
-              newSize > 2 ? '#ff00ff' : // Magenta for second split
-              newSize > 1 ? '#800080' : // Purple for third split
-              '#00ffff'; // Cyan for last split
-  
+              newSize > 4 ? '#0000ff' :
+              newSize > 3 ? '#800080' :
+              newSize > 2 ? '#ff4500' :
+              newSize > 1 ? '#00ffff' :
+              '#ffff00';
+
+            const offsetRange = 1.0;
             const splitTargets = [
               {
                 id: `${target.id}-1`,
-                x: target.x + Math.random() * 1 - 0.5,
-                y: target.y + Math.random() * 1 - 0.5,
-                z: target.z + Math.random() * 1 - 0.5,
+                x: currentX + Math.random() * offsetRange - offsetRange / 2,
+                y: currentY + Math.random() * offsetRange - offsetRange / 2,
+                z: currentZ + Math.random() * offsetRange - offsetRange / 2,
                 isHit: false,
                 size: newSize,
+                speed: newSpeed, // Pass updated speed
                 color: newColor,
               },
               {
                 id: `${target.id}-2`,
-                x: target.x + Math.random() * 1 - 0.5,
-                y: target.y + Math.random() * 1 - 0.5,
-                z: target.z + Math.random() * 1 - 0.5,
+                x: currentX + Math.random() * offsetRange - offsetRange / 2,
+                y: currentY + Math.random() * offsetRange - offsetRange / 2,
+                z: currentZ + Math.random() * offsetRange - offsetRange / 2,
                 isHit: false,
                 size: newSize,
+                speed: newSpeed, // Pass updated speed
                 color: newColor,
               },
             ];
-  
+
             return splitTargets; // Replace the hit target with its splits
           }
-  
-          // Delay removal to allow animation to complete
+
           setTimeout(() => {
             setTargets((currentTargets) =>
               currentTargets.filter((t) => t.id !== targetId)
             );
-          }, 500); // Adjust delay as needed for animation
+          }, 500);
           return [{ ...target, isHit: true }];
         }
-        return target; // Keep other targets unchanged
+        return target;
       });
       return updatedTargets;
     });
-  
-    // Increment the hit count
+
     setHits((prevHits) => prevHits + 1);
-  
-    // Call the onHit callback if provided
+
     if (onHit) onHit();
   }, [onHit]);
 
@@ -241,11 +248,18 @@ const Game = ({ onHit, onMiss }) => {
     setMisses(0);
     setGameOver(false);
     setTargets([
-      { id: 1, x: 5, y: 0, z: 0, isHit: false, size: 10, color: '#00ff00' },
-      { id: 2, x: -5, y: 0, z: 0, isHit: false, size: 10, color: '#00ff00' },
-      { id: 3, x: 0, y: 5, z: 0, isHit: false, size: 10, color: '#00ff00' },
-      { id: 4, x: 0, y: -5, z: 0, isHit: false, size: 10, color: '#00ff00' },
+      { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
+      { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
+      { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
+      { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
     ]);
+  };
+
+  // HANDLE REFS
+  const targetRefs = useRef({});
+
+  const handleRefCallback = (targetId, ref) => {
+    targetRefs.current[targetId] = ref;
   };
 
   return (
@@ -269,7 +283,9 @@ const Game = ({ onHit, onMiss }) => {
           isHit={target.isHit}
           onHit={handleTargetHit}
           size={target.size}
-          color={target.color || '#00ff00'} // Default to green if no color is set
+          speed={target.speed} // Pass the speed property
+          color={target.color || '#00ff00'}
+          refCallback={handleRefCallback}
         />
       ))}
       </Canvas>
@@ -301,4 +317,3 @@ const Game = ({ onHit, onMiss }) => {
 };
 
 export default Game;
-

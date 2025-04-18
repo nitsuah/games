@@ -2,19 +2,25 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00' }) => {
+const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00', speed = 1, refCallback }) => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
   const [rotationSpeed] = useState(() => Math.random() * 0.02 - 0.01);
-  const [movementSpeed] = useState(() => new THREE.Vector3(
-      (Math.random() - 0.5) * 0.02,
-      (Math.random() - 0.5) * 0.02,
-      (Math.random() - 0.5) * 0.02
-    ));
+  const movementSpeed = useRef(new THREE.Vector3(
+    (Math.random() - 0.5) * 0.02,
+    (Math.random() - 0.5) * 0.02,
+    (Math.random() - 0.5) * 0.02
+  ));
   const [bounds] = useState(() => ({
-    min: new THREE.Vector3(-10, -10, -10),
-    max: new THREE.Vector3(10, 10, 10),
+    min: new THREE.Vector3(-100, -100, -100),
+    max: new THREE.Vector3(100, 100, 100),
   }));
+
+  useEffect(() => {
+    if (refCallback) {
+      refCallback(targetId, meshRef); // Pass the meshRef to the parent
+    }
+  }, [targetId, refCallback]);
 
   useEffect(() => {
     if (isHit && meshRef.current) {
@@ -32,31 +38,35 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
 
   useFrame(() => {
     if (meshRef.current && !isHit) {
+      // Log the speed for debugging
+      console.log(`Target ID: ${targetId}, Speed: ${speed}`);
+  
       // Rotate the target
       meshRef.current.rotation.x += rotationSpeed;
       meshRef.current.rotation.y += rotationSpeed;
-
-      // Move the target
-      meshRef.current.position.add(movementSpeed);
-
+  
+      // Dynamically scale movement speed by the current speed property
+      const scaledMovement = movementSpeed.current.clone().multiplyScalar(speed);
+      meshRef.current.position.add(scaledMovement);
+  
       // Bounce off boundaries
       if (
         meshRef.current.position.x < bounds.min.x ||
         meshRef.current.position.x > bounds.max.x
       ) {
-        movementSpeed.x *= -1;
+        movementSpeed.current.x *= -1;
       }
       if (
         meshRef.current.position.y < bounds.min.y ||
         meshRef.current.position.y > bounds.max.y
       ) {
-        movementSpeed.y *= -1;
+        movementSpeed.current.y *= -1;
       }
       if (
         meshRef.current.position.z < bounds.min.z ||
         meshRef.current.position.z > bounds.max.z
       ) {
-        movementSpeed.z *= -1;
+        movementSpeed.current.z *= -1;
       }
     }
   });
@@ -72,6 +82,7 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     <mesh
       ref={meshRef}
       position={position}
+      scale={[size, size, size]}
       onClick={handleClick}
       onPointerOver={(event) => {
         event.stopPropagation();
@@ -81,7 +92,6 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
         event.stopPropagation();
         setHovered(false);
       }}
-      scale={[size, size, size]} // Use size prop here to set scale
     >
       <octahedronGeometry args={[1, 0]} />
       <meshStandardMaterial
