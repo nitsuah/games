@@ -1,0 +1,72 @@
+.gameContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+  }
+  
+  .crosshair::before,
+  .crosshair::after {
+    content: '';
+    position: absolute;
+    background: white;
+  }
+  
+  .crosshair::before {
+    width: 2px;
+    height: 20px;
+    left: 9px;
+  }
+  
+  .crosshair::after {
+    width: 20px;
+    height: 2px;
+    top: 9px;
+  }
+  
+  .gameOverOverlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    color: white;
+  }
+  
+  .restartButton {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background 0.3s;
+  }
+  
+  .restartButton:hover {
+    background: #45a049;
+  }
+  
+  .statsDisplay {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: right;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  }

@@ -6,80 +6,8 @@ import Player from '../Player/Player';
 import Target from '../Target/Target';
 import ScoreDisplay from '../UI/ScoreDisplay';
 import { useSound } from '@/utils/audio/useSound';
+import styles from './Game.module.css';
 import styled from 'styled-components';
-
-const GameContainer = styled.div`
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-`;
-
-const Crosshair = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    background: white;
-  }
-
-  &::before {
-    width: 2px;
-    height: 20px;
-    left: 9px;
-  }
-
-  &::after {
-    width: 20px;
-    height: 2px;
-    top: 9px;
-  }
-`;
-
-const GameOverOverlay = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.8);
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-  color: white;
-`;
-
-const RestartButton = styled.button`
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: background 0.3s;
-
-  &:hover {
-    background: #45a049;
-  }
-`;
-
-const StatsDisplay = styled.div`
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  color: white;
-  font-family: Arial, sans-serif;
-  text-align: right;
-  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
-`;
 
 const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
   const { camera, scene } = useThree();
@@ -243,16 +171,19 @@ const Game = ({ onHit, onMiss }) => {
     }
   }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound]);
 
+  // HANDLE HIT
   const handleTargetHit = useCallback((targetId) => {
     setTargets((prevTargets) => {
       const updatedTargets = prevTargets.flatMap((target) => {
         if (target.id === targetId && !target.isHit) {
-          // Check if the target can still split
-          if (target.splitCount > 0) {
-            const newSize = target.size * 0.5; // Reduce size for split targets
-            const newSplitCount = target.splitCount - 1; // Decrease split count
+          if (target.size > 1) { // Limit the minimum size
+            const newSize = target.size * 0.5;
+            const newColor =
+              newSize > 4 ? '#0000ff' : // Blue for first split
+              newSize > 2 ? '#ff00ff' : // Magenta for second split
+              newSize > 1 ? '#800080' : // Purple for third split
+              '#00ffff'; // Cyan for last split
   
-            // Create two smaller targets
             const splitTargets = [
               {
                 id: `${target.id}-1`,
@@ -261,7 +192,7 @@ const Game = ({ onHit, onMiss }) => {
                 z: target.z + Math.random() * 1 - 0.5,
                 isHit: false,
                 size: newSize,
-                splitCount: newSplitCount,
+                color: newColor,
               },
               {
                 id: `${target.id}-2`,
@@ -270,32 +201,55 @@ const Game = ({ onHit, onMiss }) => {
                 z: target.z + Math.random() * 1 - 0.5,
                 isHit: false,
                 size: newSize,
-                splitCount: newSplitCount,
+                color: newColor,
               },
             ];
   
-            return [{ ...target, isHit: true }, ...splitTargets];
+            return splitTargets; // Replace the hit target with its splits
           }
   
-          // If the target cannot split further, just mark it as hit
+          // Delay removal to allow animation to complete
+          setTimeout(() => {
+            setTargets((currentTargets) =>
+              currentTargets.filter((t) => t.id !== targetId)
+            );
+          }, 500); // Adjust delay as needed for animation
           return [{ ...target, isHit: true }];
         }
-        return target;
+        return target; // Keep other targets unchanged
       });
       return updatedTargets;
     });
   
+    // Increment the hit count
     setHits((prevHits) => prevHits + 1);
+  
+    // Call the onHit callback if provided
     if (onHit) onHit();
   }, [onHit]);
-  
+
+  // HANDLE MISS
   const handleMiss = useCallback(() => {
     setMisses((prevMisses) => prevMisses + 1);
     if (onMiss) onMiss(); // Call the onMiss prop if it exists
   }, [onMiss]);
 
+  // HANDLE RESTART
+  const restartGame = () => {
+    setScore(0);
+    setHits(0);
+    setMisses(0);
+    setGameOver(false);
+    setTargets([
+      { id: 1, x: 5, y: 0, z: 0, isHit: false, size: 10, color: '#00ff00' },
+      { id: 2, x: -5, y: 0, z: 0, isHit: false, size: 10, color: '#00ff00' },
+      { id: 3, x: 0, y: 5, z: 0, isHit: false, size: 10, color: '#00ff00' },
+      { id: 4, x: 0, y: -5, z: 0, isHit: false, size: 10, color: '#00ff00' },
+    ]);
+  };
+
   return (
-    <GameContainer>
+    <div className={styles.gameContainer}>
       <Canvas camera={{ position: [0, 0, 10], fov: 75 }} style={{ background: '#000000' }}>
         <PointerLockControls />
         <MovementControls />
@@ -307,23 +261,25 @@ const Game = ({ onHit, onMiss }) => {
           onMiss={handleMiss}
           isGameOver={gameOver}
         />
-        {targets.map((target) => (
-          <Target
-            key={target.id}
-            position={[target.x, target.y, target.z]}
-            targetId={target.id}
-            isHit={target.isHit}
-            onHit={handleTargetHit}
-          />
-        ))}
+      {targets.map((target) => (
+        <Target
+          key={target.id}
+          position={[target.x, target.y, target.z]}
+          targetId={target.id}
+          isHit={target.isHit}
+          onHit={handleTargetHit}
+          size={target.size}
+          color={target.color || '#00ff00'} // Default to green if no color is set
+        />
+      ))}
       </Canvas>
-      <Crosshair />
+      <div className={styles.crosshair}></div>
       <ScoreDisplay score={score} />
-      <StatsDisplay>
+      <div className={styles.statsDisplay}>
         Score: {score} | High Score: {highScore}
-      </StatsDisplay>
+      </div>
       {gameOver && (
-        <GameOverOverlay>
+        <div className={styles.gameOverOverlay}>
           <h2>Game Over!</h2>
           <p>
             Final Score: {score} {isNewHighScore && '🏆 New High Score!'}
@@ -335,10 +291,12 @@ const Game = ({ onHit, onMiss }) => {
           </p>
           <p>High Score: {highScore}</p>
           <p>Best Accuracy: {bestAccuracy.toFixed(1)}%</p>
-          <RestartButton onClick={restartGame}>Play Again</RestartButton>
-        </GameOverOverlay>
+          <button className={styles.restartButton} onClick={restartGame}>
+            Play Again
+          </button>
+        </div>
       )}
-    </GameContainer>
+    </div>
   );
 };
 
