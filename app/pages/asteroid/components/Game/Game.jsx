@@ -245,37 +245,54 @@ const Game = ({ onHit, onMiss }) => {
 
   const handleTargetHit = useCallback((targetId) => {
     setTargets((prevTargets) => {
-      const updatedTargets = prevTargets.map((target) =>
-        target.id === targetId && !target.isHit ? { ...target, isHit: true } : target
-      );
-      // Only proceed if this target was not already hit
-      const justHit = prevTargets.find(t => t.id === targetId && !t.isHit);
-      if (!justHit) return prevTargets;
+      const updatedTargets = prevTargets.flatMap((target) => {
+        if (target.id === targetId && !target.isHit) {
+          // Check if the target can still split
+          if (target.splitCount > 0) {
+            const newSize = target.size * 0.5; // Reduce size for split targets
+            const newSplitCount = target.splitCount - 1; // Decrease split count
+  
+            // Create two smaller targets
+            const splitTargets = [
+              {
+                id: `${target.id}-1`,
+                x: target.x + Math.random() * 1 - 0.5,
+                y: target.y + Math.random() * 1 - 0.5,
+                z: target.z + Math.random() * 1 - 0.5,
+                isHit: false,
+                size: newSize,
+                splitCount: newSplitCount,
+              },
+              {
+                id: `${target.id}-2`,
+                x: target.x + Math.random() * 1 - 0.5,
+                y: target.y + Math.random() * 1 - 0.5,
+                z: target.z + Math.random() * 1 - 0.5,
+                isHit: false,
+                size: newSize,
+                splitCount: newSplitCount,
+              },
+            ];
+  
+            return [{ ...target, isHit: true }, ...splitTargets];
+          }
+  
+          // If the target cannot split further, just mark it as hit
+          return [{ ...target, isHit: true }];
+        }
+        return target;
+      });
       return updatedTargets;
     });
+  
     setHits((prevHits) => prevHits + 1);
-    setMisses((prevMisses) => prevMisses > 0 ? prevMisses - 1 : 0); // Remove a miss on hit
     if (onHit) onHit();
   }, [onHit]);
-
+  
   const handleMiss = useCallback(() => {
     setMisses((prevMisses) => prevMisses + 1);
-    if (onMiss) onMiss();
+    if (onMiss) onMiss(); // Call the onMiss prop if it exists
   }, [onMiss]);
-
-  const restartGame = () => {
-    setScore(0);
-    setHits(0);
-    setMisses(0);
-    setGameOver(false);
-    setIsNewHighScore(false);
-    setTargets([
-      { id: 1, x: 5, y: 0, z: 0, isHit: false },
-      { id: 2, x: -5, y: 0, z: 0, isHit: false },
-      { id: 3, x: 0, y: 5, z: 0, isHit: false },
-      { id: 4, x: 0, y: -5, z: 0, isHit: false },
-    ]);
-  };
 
   return (
     <GameContainer>

@@ -2,11 +2,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const Target = ({ position, targetId, isHit, onHit }) => {
+const Target = ({ position, targetId, isHit, onHit, size = 1 }) => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
   const [rotationSpeed] = useState(() => Math.random() * 0.02 - 0.01);
-  const [size] = useState(() => Math.random() * 0.5 + 0.5);
   const [movementSpeed] = useState(() => new THREE.Vector3(
     (Math.random() - 0.5) * 0.02,
     (Math.random() - 0.5) * 0.02,
@@ -14,7 +13,7 @@ const Target = ({ position, targetId, isHit, onHit }) => {
   ));
   const [bounds] = useState(() => ({
     min: new THREE.Vector3(-10, -10, -10),
-    max: new THREE.Vector3(10, 10, 10)
+    max: new THREE.Vector3(10, 10, 10),
   }));
 
   useEffect(() => {
@@ -67,7 +66,7 @@ const Target = ({ position, targetId, isHit, onHit }) => {
         event.stopPropagation();
         setHovered(false);
       }}
-      scale={[size, size, size]}
+      scale={[size, size, size]} // Use size prop here to set scale
     >
       <octahedronGeometry args={[1, 0]} />
       <meshStandardMaterial
