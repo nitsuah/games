@@ -2,15 +2,29 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00', setTargets, refCallback, speed = 1 }) => {
+const Target = ({
+  position,
+  targetId,
+  isHit,
+  onHit,
+  size = 10,
+  color = '#00ff00',
+  setTargets,
+  refCallback,
+  speed = 1,
+}) => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
+  const [flash, setFlash] = useState(false);
+  const [opacity, setOpacity] = useState(1);
   const [rotationSpeed] = useState(() => Math.random() * 0.02 - 0.01);
-  const movementSpeed = useRef(new THREE.Vector3(
-    (Math.random() - 0.5) * 0.02,
-    (Math.random() - 0.5) * 0.02,
-    (Math.random() - 0.5) * 0.02
-  ));
+  const movementSpeed = useRef(
+    new THREE.Vector3(
+      (Math.random() - 0.5) * 0.02,
+      (Math.random() - 0.5) * 0.02,
+      (Math.random() - 0.5) * 0.02
+    )
+  );
   const [bounds] = useState(() => ({
     min: new THREE.Vector3(-50, -50, -50),
     max: new THREE.Vector3(50, 50, 50),
@@ -23,16 +37,14 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
   }, [targetId, refCallback]);
 
   useEffect(() => {
-    if (isHit && meshRef.current) {
-      const scaleDown = () => {
-        if (meshRef.current && meshRef.current.scale.x > 0) {
-          meshRef.current.scale.x -= 0.1;
-          meshRef.current.scale.y -= 0.1;
-          meshRef.current.scale.z -= 0.1;
-          requestAnimationFrame(scaleDown);
-        }
-      };
-      scaleDown();
+    if (isHit) {
+      setFlash(true);
+      setOpacity(1);
+      // Flash white, then fade out
+      setTimeout(() => setFlash(false), 80);
+      setTimeout(() => setOpacity(0.2), 120);
+    } else {
+      setOpacity(1);
     }
   }, [isHit]);
 
@@ -104,11 +116,19 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     >
       <octahedronGeometry args={[1, 0]} />
       <meshStandardMaterial
-        color={isHit ? '#808080' : hovered ? '#ffaa00' : color} // Grey for hit targets
+        color={
+          isHit
+            ? flash
+              ? '#ffffff'
+              : '#808080'
+            : hovered
+            ? '#ffaa00'
+            : color
+        }
         metalness={0.5}
         roughness={0.2}
-        transparent={isHit}
-        opacity={isHit ? 0.2 : 1} // Semi-transparent when hit
+        transparent={true}
+        opacity={opacity}
       />
     </mesh>
   );
