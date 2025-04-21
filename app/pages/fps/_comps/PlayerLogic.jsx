@@ -1,35 +1,34 @@
-import React, { forwardRef, useEffect, useImperativeHandle } from "react";
-import { useBox } from "@react-three/cannon";
+import React, { useRef, useEffect } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
+import * as THREE from "three";
 
-const Player = forwardRef((props, ref) => {
-  const [playerRef, api] = useBox(() => ({
-    mass: 50,
-    position: [1, 5, 0],
-    rotation: [0, 0, 0],
-    linearDamping: 0.98, // Smooth movement
-    angularDamping: 0.98,
-    // Only pass serializable data here
-  }));
+const PlayerLogic = ({ onPositionChange }) => {
+  const meshRef = useRef(); // Blue square (hitbox)
+  const { camera } = useThree();
 
-  // Expose the `api` to the parent via the `ref`
-  useImperativeHandle(ref, () => ({
-    api,
-  }));
+  useFrame(() => {
+    if (meshRef.current) {
+      // Update the hitbox position to match the camera's position
+      const offset = new THREE.Vector3(0, -1, 0); // Offset hitbox slightly below the camera
+      meshRef.current.position.copy(camera.position).add(offset);
 
-  // Log hitbox coordinates to the console
-  useEffect(() => {
-    const unsubscribe = api.position.subscribe(([x, y, z]) => {
-      console.log(`HITBOX X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}, Z: ${z.toFixed(2)}`);
-    });
-    return unsubscribe;
-  }, [api.position]);
+      // Update the hitbox rotation to match the camera's rotation
+      meshRef.current.quaternion.copy(camera.quaternion);
+
+      // Notify parent of the updated position
+      if (onPositionChange) {
+        onPositionChange(camera.position.toArray());
+      }
+    }
+  });
 
   return (
-    <mesh receiveShadow castShadow ref={playerRef}>
-      <boxGeometry />
-      <meshLambertMaterial attach="material" color="blue" />
+    <mesh ref={meshRef}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="blue" />
     </mesh>
   );
-});
+};
 
-export default Player;
+export default PlayerLogic;

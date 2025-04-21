@@ -5,7 +5,7 @@ import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
 import * as THREE from "three"; // Import THREE
 import Controls from "./_comps/Controls";
-import Player from "./_comps/PlayerLogic"; // Update import
+import PlayerLogic from "./_comps/PlayerLogic"; // Update import
 import Floor from "../../_components/objects/Floor";
 import Cube from "../../_components/objects/Cube";
 import styled from "styled-components"; // Add this import for styling
@@ -52,7 +52,7 @@ function Range() {
         style={{ background: '#000000', width: "99vw", height: "98vh" }} // Ensure full viewport
       >
         <color attach="background" args={["grey"]} />
-        <Physics gravity={[0, -20, 0]}> {/* Increased gravity for tank behavior */}
+        <Physics gravity={[0, -20, 0]}> {/* Physics provider */}
           <Stats />
           <Controls playerRef={playerRef} />
           <hemisphereLight intensity={0.35} />
@@ -63,7 +63,7 @@ function Range() {
             intensity={2}
             castShadow
           />
-          <Player ref={playerRef} onPositionChange={setPlayerPosition} /> {/* Track player position */}
+          <PlayerLogic ref={playerRef} onPositionChange={setPlayerPosition} /> {/* Track player position */}
           <Cube position={[0, 10, -2]} color="rebeccapurple" />
           <Cube position={[0, 20, -2]} color="pink" />
           <Cube position={[0, 30, -2]} color="darkorange" />
@@ -74,6 +74,40 @@ function Range() {
           <Target position={[0, 1, -15]} color="blue" type="default" onHit={handleTargetHit} />
 
           <Floor size={[500, 500]} color="black" />
+
+          {/* Render bullets */}
+          {bullets.map((bullet) => (
+            <Bullet
+              key={bullet.id}
+              start={bullet.start}
+              end={bullet.end}
+              onComplete={() =>
+                setBullets((prev) => prev.filter((b) => b.id !== bullet.id))
+              }
+            />
+          ))}
+
+          {/* Render explosions 
+          {explosions.map((explosion) => (
+            <Explosion
+              key={explosion.id}
+              position={explosion.position}
+              onComplete={() =>
+                setExplosions((prev) =>
+                  prev.filter((e) => e.id !== explosion.id)
+                )
+              }
+            />
+          ))} */}
+
+          {/* Render decals
+          {decals.map((decal) => (
+            <Decal
+              key={decal.id}
+              position={decal.position}
+              normal={decal.normal}
+            />
+          ))}  */}
 
           {/* Shooting handler */}
           <ShootingHandler

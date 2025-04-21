@@ -12,7 +12,7 @@ const ShootingHandler = ({ playerPosition, setBullets, setExplosions, setDecals 
 
     if (intersects.length > 0) {
       const target = intersects[0];
-      const start = new THREE.Vector3(...playerPosition);
+      const start = camera.position.clone(); // Use the player's camera position as the starting point
       const end = target.point;
 
       // Add bullet
