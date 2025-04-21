@@ -1,11 +1,11 @@
 // Scene.js
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Canvas, extend } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
-import * as THREE from "three"; // Import THREE to extend its namespace
+import * as THREE from "three"; // Import THREE
 import Controls from "./_comps/Controls";
-import Player from "./_comps/Player";
+import Player from "./_comps/PlayerLogic"; // Update import
 import Floor from "../../_components/objects/Floor";
 import Cube from "../../_components/objects/Cube";
 
@@ -14,6 +14,7 @@ extend({ BoxGeometry: THREE.BoxGeometry });
 
 function Range() {
   const playerRef = useRef();
+  const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
 
   useEffect(() => {
     const initializePlayerPosition = () => {
@@ -29,10 +30,11 @@ function Range() {
     <Canvas
       shadows // Enables shadow rendering
       gl={{ alpha: false }} // Configures WebGL renderer
-      camera={{ position: [-1, 1, 5], fov: 50, mass: 1 }}
+      camera={{ position: [playerPosition[0], playerPosition[1] + 5, playerPosition[2] + 5], fov: 50 }} // Camera above player
+      style={{ background: '#000000', width: "99vw", height: "98vh" }} // Ensure full viewport
     >
       <color attach="background" args={["grey"]} />
-      <Physics>
+      <Physics gravity={[0, -20, 0]}> {/* Increased gravity for tank behavior */}
         <Stats />
         <Controls playerRef={playerRef} />
         <hemisphereLight intensity={0.35} />
@@ -43,12 +45,11 @@ function Range() {
           intensity={2}
           castShadow
         />
-        {/* Pass playerRef to Player component */}
-        <Player ref={playerRef} />
+        <Player ref={playerRef} onPositionChange={setPlayerPosition} /> {/* Track player position */}
         <Cube position={[0, 10, -2]} color="rebeccapurple" />
         <Cube position={[0, 20, -2]} color="pink" />
         <Cube position={[0, 30, -2]} color="darkorange" />
-        <Floor size={[500, 500]} color="darkseagreen" />
+        <Floor size={[500, 500]} color="black" />
       </Physics>
     </Canvas>
   );

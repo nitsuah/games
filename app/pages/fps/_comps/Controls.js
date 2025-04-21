@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PointerLockControls } from "@react-three/drei";
+import * as THREE from "three"; // Add this import
 
 const Controls = ({ playerRef, onPauseGame }) => {
   const controlsRef = useRef();
@@ -10,67 +11,35 @@ const Controls = ({ playerRef, onPauseGame }) => {
     backward: false,
     left: false,
     right: false,
-    jump: false,
-    down: false,
   });
 
-  const gravity = 0.0008;
+  const gravity = 0.02; // Increased gravity for tank-like behavior
 
-  const handleJump = (velocity) => {
-    const jumpForce = 0.015;
+  const handleMovement = (velocity, rotationSpeed, keys) => {
+    const { forward, backward, left, right } = keys;
+
     const controlsObject = controlsRef.current.getObject();
-    if (controlsObject && movement.jump) {
-      // Apply a continuous upward force
-      velocity = Math.min(velocity + jumpForce, 0.2);
-      controlsObject.position.y += velocity;
-    }
-  };
 
-  const handleDown = (velocity) => {
-    const downForce = 0.015;
-    const controlsObject = controlsRef.current.getObject();
-    if (controlsObject && movement.down) {
-      // Apply a continuous downward force
-      velocity = Math.max(velocity - downForce, -0.2); // Use Math.max to limit downward speed
-      controlsObject.position.y += velocity;
-    }
-  };
-
-  const handleMovement = (velocity, strafeSpeed, keys) => {
-    const { forward, backward, left, right, jump, down } = keys;
-
+    // Forward and backward movement
     if (forward) {
-      velocity = Math.min(velocity + 0.002, 0.1);
+      controlsObject.translateZ(-velocity);
     } else if (backward) {
-      velocity = Math.min(velocity - 0.002, -0.1);
-    } else {
-      velocity = 0;
+      controlsObject.translateZ(velocity);
     }
 
-    controlsRef.current.moveForward(velocity);
-
+    // Left and right rotation (fixed logic)
     if (left) {
-      controlsRef.current.moveRight(-strafeSpeed);
+      controlsObject.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), rotationSpeed);
     } else if (right) {
-      controlsRef.current.moveRight(strafeSpeed);
+      controlsObject.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -rotationSpeed);
     }
 
-    const controlsObject = controlsRef.current.getObject();
+    // Lock Y position to 1
+    controlsObject.position.y = 1;
 
-    if (jump && !down) {
-      handleJump(velocity);
-    } else if (down && !jump) {
-      handleDown(velocity);
-    } else if ((jump && down) || (!jump && !down)) {
-      if (controlsObject && controlsObject.position.y > 0) {
-        controlsObject.position.y -= gravity;
-      } else {
-        controlsObject.position.y = 0;
-      }
-    }
-    // Log PLayer coordinates to console
+    // Log tank coordinates to the console
     console.log(
-      "PLAYER X:",
+      "TANK X:",
       controlsObject.position.x.toFixed(2),
       "Y:",
       controlsObject.position.y.toFixed(2),
@@ -84,7 +53,12 @@ const Controls = ({ playerRef, onPauseGame }) => {
       switch (event.code) {
         case "ArrowUp":
         case "KeyW":
-          setMovement((prev) => ({ ...prev, forward: true, backward: false }));
+          setMovement((prev) => ({ ...prev, forward: true }));
+          break;
+
+        case "ArrowDown":
+        case "KeyS":
+          setMovement((prev) => ({ ...prev, backward: true }));
           break;
 
         case "ArrowLeft":
@@ -92,22 +66,9 @@ const Controls = ({ playerRef, onPauseGame }) => {
           setMovement((prev) => ({ ...prev, left: true }));
           break;
 
-        case "ArrowDown":
-        case "KeyS":
-          setMovement((prev) => ({ ...prev, backward: true, forward: false }));
-          break;
-
         case "ArrowRight":
         case "KeyD":
           setMovement((prev) => ({ ...prev, right: true }));
-          break;
-
-        case "Space":
-          setMovement((prev) => ({ ...prev, jump: true, down: false }));
-          break;
-
-        case "KeyZ":
-          setMovement((prev) => ({ ...prev, down: true, jump: false }));
           break;
 
         default:
@@ -122,27 +83,19 @@ const Controls = ({ playerRef, onPauseGame }) => {
           setMovement((prev) => ({ ...prev, forward: false }));
           break;
 
-        case "ArrowLeft":
-        case "KeyA":
-          setMovement((prev) => ({ ...prev, left: false }));
-          break;
-
         case "ArrowDown":
         case "KeyS":
           setMovement((prev) => ({ ...prev, backward: false }));
           break;
 
+        case "ArrowLeft":
+        case "KeyA":
+          setMovement((prev) => ({ ...prev, left: false }));
+          break;
+
         case "ArrowRight":
         case "KeyD":
           setMovement((prev) => ({ ...prev, right: false }));
-          break;
-
-        case "Space":
-          setMovement((prev) => ({ ...prev, jump: false, down: false }));
-          break;
-
-        case "KeyZ":
-          setMovement((prev) => ({ ...prev, down: false, jump: false }));
           break;
 
         default:
@@ -160,9 +113,9 @@ const Controls = ({ playerRef, onPauseGame }) => {
   }, []);
 
   useFrame(() => {
-    const movementSpeed = 0.1;
-    const strafeSpeed = 0.1;
-    handleMovement(movementSpeed, strafeSpeed, movement);
+    const movementSpeed = 0.1; // Tank movement speed
+    const rotationSpeed = 0.02; // Tank rotation speed
+    handleMovement(movementSpeed, rotationSpeed, movement);
   });
 
   return (
@@ -170,7 +123,6 @@ const Controls = ({ playerRef, onPauseGame }) => {
       ref={controlsRef}
       onUpdate={() => {
         if (controlsRef.current) {
-          const velocity = 0;
           controlsRef.current.addEventListener("lock", () => {
             console.log("lock");
             isLocked.current = true;
@@ -182,7 +134,6 @@ const Controls = ({ playerRef, onPauseGame }) => {
 
             // Pausing the game when controls are unlocked
             if (!isLocked.current) {
-              // Call the function to pause the game in Range.js
               onPauseGame();
             }
           });
