@@ -57,11 +57,28 @@ A fast-paced 3D space shooter where you pilot a spaceship through an asteroid fi
 - **Styled Components**: UI styling.
 - **Local Storage**: Persistent high scores and stats.
 
-## fps
+## FPS Tank Game
 
-- Controls the camera with WASD and mouse.
-- Players object for managing hitboxes and health.
-- Scene object to manage the setting and objects within it.
+A first-person tank game where players control a tank, shoot targets, and survive against enemies. Built with Three.js and React Three Fiber, the game offers immersive gameplay with dynamic environments and challenging mechanics.
 
-### Credit
- - 
+### Features (Planned and Implemented)
+
+1. **Crosshairs**: A visual aid for aiming. (✅ Implemented)
+2. **Targets**: Destructible targets that "explode" when hit.
+3. **Health System**: Tracks the tank's health and reduces it on collisions or hits.
+4. **Score System**: Tracks and displays the player's score.
+5. **Target Explosion**: Visual effects when targets are destroyed.
+6. **Game Over Screen**: Displays when health reaches zero, with an option to restart.
+7. **Dynamic Lighting**: Lighting effects for explosions and events.
+8. **Persistent Stats**: Save high scores and stats using local storage.
+9. **Power-Ups**: Collectible items like health restore or rapid fire.
+10. **Enemy AI**: AI-controlled enemies that attack the tank.
+11. **Level Progression**: Waves or levels with increasing difficulty.
+12. **Environmental Hazards**: Obstacles like mines or gravity wells.
+13. **Weapon Upgrades**: Unlockable weapon types and upgrades.
+14. **Combo/Multiplier System**: Bonus points for quick successive hits.
+15. **Cosmetic Customization**: Unlockable tank skins or crosshairs.
+
+### Credits
+
+---
