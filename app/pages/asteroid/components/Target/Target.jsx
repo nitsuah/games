@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00', speed = 1, refCallback }) => {
+const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00', setTargets, refCallback, speed = 1 }) => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
   const [rotationSpeed] = useState(() => Math.random() * 0.02 - 0.01);
@@ -12,8 +12,8 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     (Math.random() - 0.5) * 0.02
   ));
   const [bounds] = useState(() => ({
-    min: new THREE.Vector3(-100, -100, -100),
-    max: new THREE.Vector3(100, 100, 100),
+    min: new THREE.Vector3(-50, -50, -50),
+    max: new THREE.Vector3(50, 50, 50),
   }));
 
   useEffect(() => {
@@ -36,18 +36,21 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     }
   }, [isHit]);
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
+    const playerSphere = new THREE.Sphere(camera.position.clone(), 1); // Use camera position
+
     if (meshRef.current && !isHit) {
-      // Log the speed for debugging
-      console.log(`Target ID: ${targetId}, Speed: ${speed}`);
-  
-      // Rotate the target
-      meshRef.current.rotation.x += rotationSpeed;
-      meshRef.current.rotation.y += rotationSpeed;
-  
       // Dynamically scale movement speed by the current speed property
       const scaledMovement = movementSpeed.current.clone().multiplyScalar(speed);
       meshRef.current.position.add(scaledMovement);
+  
+      // Update the target's position in the state
+      const { x, y, z } = meshRef.current.position;
+      setTargets((prevTargets) =>
+        prevTargets.map((target) =>
+          target.id === targetId ? { ...target, x, y, z } : target
+        )
+      );
   
       // Bounce off boundaries
       if (
@@ -69,6 +72,12 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
         movementSpeed.current.z *= -1;
       }
     }
+
+    // Create a sphere for the target
+    const targetSphere = new THREE.Sphere(
+      new THREE.Vector3(meshRef.current.position.x, meshRef.current.position.y, meshRef.current.position.z), // Use updated positions
+      size / 2
+    );
   });
 
   const handleClick = (event) => {

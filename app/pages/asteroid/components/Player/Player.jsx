@@ -19,13 +19,13 @@ const Player = ({ targets, onTargetHit }) => {
   const { setThrusterVolume } = useSound();
 
   // Physics constants
-  const ACCELERATION = 0.08;     // Lower acceleration for more inertia
-  const MAX_VELOCITY = 0.5;     // Lower max velocity for slower movement
-  const ROTATION_SPEED = 0.002; // Mouse sensitivity
-  const DAMPING = 0.95;       // Much higher = much more floaty
+  const ACCELERATION = 0.00002;     // Much slower acceleration
+  const MAX_VELOCITY = 0.0002;      // Much slower max velocity
+  const ROTATION_SPEED = 0.00002;   // Mouse sensitivity remains unchanged
+  const DAMPING = 0.98;           // Adjusted damping for smoother deceleration
 
   useEffect(() => {
-    camera.position.set(0, 1.5, 0); // Start camera slightly above ground
+    camera.position.set(0, 1, 0); // Start camera slightly above ground
     camera.rotation.order = 'YXZ';
 
     const handleKeyDown = (e) => {
@@ -123,16 +123,18 @@ const Player = ({ targets, onTargetHit }) => {
     camera.position.add(velocityRef.current.clone().multiplyScalar(delta));
 
     // Update mesh (hitbox) to follow the camera
-    const offset = new THREE.Vector3(0, -1.5, 0); // Offset hitbox slightly below the camera
+    const offset = new THREE.Vector3(0, -1, 0); // Offset hitbox slightly below the camera
     meshRef.current.position.copy(camera.position).add(offset);
 
     // Collision detection logic
     targets.forEach((target) => {
       const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
+      const playerRadius = 2; // Increased from 1.0 to 2.0 for larger hitbox
+      const targetRadius = target.size / 2;
       const distance = camera.position.distanceTo(targetPosition);
 
-      if (distance < 1.0 && !target.isHit) { // Collision threshold
-        onTargetHit(target.id); // Notify parent of hit
+      if (distance < playerRadius + targetRadius && !target.isHit) {
+        onTargetHit(target.id);
       }
     });
 
@@ -144,7 +146,7 @@ const Player = ({ targets, onTargetHit }) => {
   return (
     <mesh ref={meshRef}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="blue" />
+      <meshStandardMaterial color="purple" />
     </mesh>
   );
 };

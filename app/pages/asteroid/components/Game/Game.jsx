@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
 import { Canvas, useThree } from '@react-three/fiber';
 import { PointerLockControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -8,6 +9,10 @@ import ScoreDisplay from '../UI/ScoreDisplay';
 import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
 import styled from 'styled-components';
+
+const MIN_ALIVE_TIME = 0.5; // Try a bigger delay for safety
+
+const now = () => performance.now() / 1000;
 
 const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
   const { camera, scene } = useThree();
@@ -49,7 +54,7 @@ const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
 
 const MovementControls = () => {
   const { camera } = useThree();
-  const moveSpeed = 0.1;
+  const moveSpeed = 0.00005; // INITIAL SPEED
   const keys = useRef({});
   const { setThrusterVolume = () => {} } = useSound();
   const isMovingRef = useRef(false);
@@ -116,6 +121,123 @@ const MovementControls = () => {
   return null;
 };
 
+const CollisionDetection = ({ targets, setTargets, setHealth }) => {
+  const { camera } = useThree(); // <-- Move this here, outside useFrame
+
+  useFrame(() => {
+    const playerSphere = new THREE.Sphere(camera.position.clone(), 2.0);
+
+    setTargets((prevTargets) =>
+      prevTargets.map((target) => {
+        if (!target.isHit) {
+          const targetSphere = new THREE.Sphere(
+            new THREE.Vector3(target.x, target.y, target.z),
+            target.size / 2
+          );
+
+          if (playerSphere.intersectsSphere(targetSphere)) {
+            console.log('Player Collision detected with target:', target.id);
+            setHealth((prevHealth) => Math.max(prevHealth - 10, 0));
+            return { ...target, isHit: true };
+          }
+        }
+        return target;
+      })
+    );
+  });
+
+  return null;
+};
+
+const TargetCollisionHandler = ({ targets, setTargets }) => {
+  useFrame(() => {
+    const currentTime = now();
+    setTargets((prevTargets) => {
+      let updatedTargets = [...prevTargets];
+      let newTargets = [];
+
+      for (let i = 0; i < updatedTargets.length; i++) {
+        const targetA = updatedTargets[i];
+        if (targetA.isHit || (currentTime - (targetA.spawnTime || 0) < MIN_ALIVE_TIME)) continue;
+
+        const sphereA = new THREE.Sphere(
+          new THREE.Vector3(targetA.x, targetA.y, targetA.z),
+          targetA.size / 2
+        );
+
+        for (let j = i + 1; j < updatedTargets.length; j++) {
+          const targetB = updatedTargets[j];
+          if (
+            targetB.isHit ||
+            (currentTime - (targetB.spawnTime || 0) < MIN_ALIVE_TIME)
+          )
+            continue;
+
+          const sphereB = new THREE.Sphere(
+            new THREE.Vector3(targetB.x, targetB.y, targetB.z),
+            targetB.size / 2
+          );
+
+          if (sphereA.intersectsSphere(sphereB)) {
+            // Remove both targets from the array
+            updatedTargets = updatedTargets.filter(
+              (t) => t.id !== targetA.id && t.id !== targetB.id
+            );
+
+            // Split both targets into smaller fragments
+            const splitTargets = [targetA, targetB].flatMap((target) => {
+              if (target.size > 1) {
+                const newSize = target.size * 0.5;
+                const newSpeed = target.speed * 2;
+                const newColor =
+                  newSize > 4 ? '#0000ff' :
+                  newSize > 3 ? '#800080' :
+                  newSize > 2 ? '#ff4500' :
+                  newSize > 1 ? '#00ffff' :
+                  '#ffff00';
+                const offsetRange = 1.0;
+                const spawnTime = now();
+                return [
+                  {
+                    id: `${target.id}-1`,
+                    x: target.x + Math.random() * offsetRange - offsetRange / 2,
+                    y: target.y + Math.random() * offsetRange - offsetRange / 2,
+                    z: target.z + Math.random() * offsetRange - offsetRange / 2,
+                    isHit: false,
+                    size: newSize,
+                    speed: newSpeed,
+                    color: newColor,
+                    spawnTime,
+                  },
+                  {
+                    id: `${target.id}-2`,
+                    x: target.x + Math.random() * offsetRange - offsetRange / 2,
+                    y: target.y + Math.random() * offsetRange - offsetRange / 2,
+                    z: target.z + Math.random() * offsetRange - offsetRange / 2,
+                    isHit: false,
+                    size: newSize,
+                    speed: newSpeed,
+                    color: newColor,
+                    spawnTime,
+                  },
+                ];
+              }
+              return [];
+            });
+
+            newTargets.push(...splitTargets);
+            break; // Only handle one collision per frame per target
+          }
+        }
+      }
+
+      return [...updatedTargets, ...newTargets];
+    });
+  });
+
+  return null; // This component doesn't render anything
+};
+
 const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
@@ -124,11 +246,12 @@ const Game = ({ onHit, onMiss }) => {
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
+  const [health, setHealth] = useState(100);
   const [targets, setTargets] = useState([
-    { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
-    { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
-    { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
-    { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
+    { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
   ]);
   const { playSound, pauseSound } = useSound();
   const soundsRef = useRef(null);
@@ -150,6 +273,14 @@ const Game = ({ onHit, onMiss }) => {
     // Play background music on mount
     playSound('bgm');
   }, [playSound]);
+
+  useEffect(() => {
+    if (health <= 0) {
+      setGameOver(true);
+      pauseSound('bgm'); // Pause background music
+      document.exitPointerLock(); // Exit pointer lock
+    }
+  }, [health, pauseSound]);
 
   useEffect(() => {
     // Game over effect: triggers when all targets are hit
@@ -174,8 +305,10 @@ const Game = ({ onHit, onMiss }) => {
   // HANDLE HIT
   const handleTargetHit = useCallback((targetId) => {
     setTargets((prevTargets) => {
-      const updatedTargets = prevTargets.flatMap((target) => {
-        if (target.id === targetId && !target.isHit) {
+      let updatedTargets = [];
+      let newTargets = [];
+      prevTargets.forEach((target) => {
+        if (target.id === targetId && !target.isHit && (now() - (target.spawnTime || 0) > MIN_ALIVE_TIME)) {
           const meshRef = targetRefs.current[targetId];
           const currentX = meshRef?.current?.position.x || target.x;
           const currentY = meshRef?.current?.position.y || target.y;
@@ -183,7 +316,7 @@ const Game = ({ onHit, onMiss }) => {
 
           if (target.size > 1) {
             const newSize = target.size * 0.5;
-            const newSpeed = target.speed * 1.5; // Incrementally increase speed for smaller fragments
+            const newSpeed = target.speed * 2; // Double the speed for smaller fragments
             const newColor =
               newSize > 4 ? '#0000ff' :
               newSize > 3 ? '#800080' :
@@ -192,7 +325,8 @@ const Game = ({ onHit, onMiss }) => {
               '#ffff00';
 
             const offsetRange = 1.0;
-            const splitTargets = [
+            const spawnTime = now();
+            newTargets.push(
               {
                 id: `${target.id}-1`,
                 x: currentX + Math.random() * offsetRange - offsetRange / 2,
@@ -200,8 +334,9 @@ const Game = ({ onHit, onMiss }) => {
                 z: currentZ + Math.random() * offsetRange - offsetRange / 2,
                 isHit: false,
                 size: newSize,
-                speed: newSpeed, // Pass updated speed
+                speed: newSpeed,
                 color: newColor,
+                spawnTime,
               },
               {
                 id: `${target.id}-2`,
@@ -210,24 +345,18 @@ const Game = ({ onHit, onMiss }) => {
                 z: currentZ + Math.random() * offsetRange - offsetRange / 2,
                 isHit: false,
                 size: newSize,
-                speed: newSpeed, // Pass updated speed
+                speed: newSpeed,
                 color: newColor,
-              },
-            ];
-
-            return splitTargets; // Replace the hit target with its splits
-          }
-
-          setTimeout(() => {
-            setTargets((currentTargets) =>
-              currentTargets.filter((t) => t.id !== targetId)
+                spawnTime,
+              }
             );
-          }, 500);
-          return [{ ...target, isHit: true }];
+          }
+          // Do not add the original target (removes it)
+        } else {
+          updatedTargets.push(target);
         }
-        return target;
       });
-      return updatedTargets;
+      return [...updatedTargets, ...newTargets];
     });
 
     setHits((prevHits) => prevHits + 1);
@@ -248,10 +377,10 @@ const Game = ({ onHit, onMiss }) => {
     setMisses(0);
     setGameOver(false);
     setTargets([
-      { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
-      { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
-      { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
-      { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00' },
+      { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+      { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+      { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+      { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     ]);
   };
 
@@ -275,24 +404,27 @@ const Game = ({ onHit, onMiss }) => {
           onMiss={handleMiss}
           isGameOver={gameOver}
         />
-      {targets.map((target) => (
-        <Target
-          key={target.id}
-          position={[target.x, target.y, target.z]}
-          targetId={target.id}
-          isHit={target.isHit}
-          onHit={handleTargetHit}
-          size={target.size}
-          speed={target.speed} // Pass the speed property
-          color={target.color || '#00ff00'}
-          refCallback={handleRefCallback}
-        />
-      ))}
+        <CollisionDetection targets={targets} setTargets={setTargets} setHealth={setHealth} />
+        <TargetCollisionHandler targets={targets} setTargets={setTargets} />
+        {targets.map((target) => (
+          <Target
+            key={target.id}
+            position={[target.x, target.y, target.z]}
+            targetId={target.id}
+            isHit={target.isHit}
+            onHit={handleTargetHit}
+            size={target.size}
+            speed={target.speed}
+            color={target.color || '#00ff00'}
+            refCallback={handleRefCallback}
+            setTargets={setTargets}
+          />
+        ))}
       </Canvas>
       <div className={styles.crosshair}></div>
       <ScoreDisplay score={score} />
       <div className={styles.statsDisplay}>
-        Score: {score} | High Score: {highScore}
+        Score: {score} | High Score: {highScore} | Health: {health}
       </div>
       {gameOver && (
         <div className={styles.gameOverOverlay}>
