@@ -29,7 +29,7 @@ const Player = forwardRef((props, ref) => {
 
   return (
     <mesh receiveShadow castShadow ref={playerRef}>
-      <boxBufferGeometry />
+      <boxGeometry /> {/* Updated from boxBufferGeometry */}
       <meshLambertMaterial attach="material" color="blue" />
     </mesh>
   );

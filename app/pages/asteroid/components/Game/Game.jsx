@@ -423,7 +423,10 @@ const Game = ({ onHit, onMiss }) => {
           }}
         />
       )}
-      <Canvas camera={{ position: [0, 0, 10], fov: 75 }} style={{ background: '#000000' }}>
+      <Canvas
+        camera={{ position: [0, 0, 10], fov: 75 }}
+        style={{ background: '#000000', width: '100%', height: '100%' }} // Ensure Canvas fills the container
+      >
         <PointerLockControls />
         <MovementControls />
         <ambientLight intensity={0.5} />

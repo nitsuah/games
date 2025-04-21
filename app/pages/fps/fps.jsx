@@ -1,12 +1,16 @@
 // Scene.js
 import React, { useRef, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, extend } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
+import * as THREE from "three"; // Import THREE to extend its namespace
 import Controls from "./_comps/Controls";
 import Player from "./_comps/Player";
-import Floor from "./objects/Floor";
-import Cube from "./objects/Cube";
+import Floor from "../../_components/objects/Floor";
+import Cube from "../../_components/objects/Cube";
+
+// Extend React Three Fiber's namespace to include BoxGeometry
+extend({ BoxGeometry: THREE.BoxGeometry });
 
 function Range() {
   const playerRef = useRef();
@@ -23,9 +27,8 @@ function Range() {
 
   return (
     <Canvas
-      shadowMap
-      sRGB
-      gl={{ alpha: false }}
+      shadows // Enables shadow rendering
+      gl={{ alpha: false }} // Configures WebGL renderer
       camera={{ position: [-1, 1, 5], fov: 50, mass: 1 }}
     >
       <color attach="background" args={["grey"]} />

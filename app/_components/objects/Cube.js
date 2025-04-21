@@ -11,7 +11,7 @@ function Cube({ position, color }) {
 
   return (
     <mesh receiveShadow castShadow ref={ref}>
-      <boxBufferGeometry />
+      <boxGeometry />
       <meshLambertMaterial attach="material" color={color} />
     </mesh>
   );
