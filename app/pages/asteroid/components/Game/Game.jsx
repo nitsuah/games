@@ -54,7 +54,7 @@ const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
 
 const MovementControls = () => {
   const { camera } = useThree();
-  const moveSpeed = 0.00005; // INITIAL SPEED
+  const moveSpeed = 0.0005; // INITIAL SPEED
   const keys = useRef({});
   const { setThrusterVolume = () => {} } = useSound();
   const isMovingRef = useRef(false);
@@ -121,8 +121,8 @@ const MovementControls = () => {
   return null;
 };
 
-const CollisionDetection = ({ targets, setTargets, setHealth }) => {
-  const { camera } = useThree(); // <-- Move this here, outside useFrame
+const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit }) => {
+  const { camera } = useThree(); // <-- Move camera outside useFrame
 
   useFrame(() => {
     const playerSphere = new THREE.Sphere(camera.position.clone(), 2.0);
@@ -137,7 +137,7 @@ const CollisionDetection = ({ targets, setTargets, setHealth }) => {
 
           if (playerSphere.intersectsSphere(targetSphere)) {
             console.log('Player Collision detected with target:', target.id);
-            setHealth((prevHealth) => Math.max(prevHealth - 10, 0));
+            onPlayerHit(); // Call the onPlayerHit callback
             return { ...target, isHit: true };
           }
         }
@@ -247,6 +247,7 @@ const Game = ({ onHit, onMiss }) => {
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(100);
+  const [showRedFlash, setShowRedFlash] = useState(false); // Add this state
   const [targets, setTargets] = useState([
     { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
@@ -278,6 +279,11 @@ const Game = ({ onHit, onMiss }) => {
     if (health <= 0) {
       setGameOver(true);
       pauseSound('bgm'); // Pause background music
+      playSound('hit');
+      setShowRedFlash(true); // setShowRedFlash
+      setTimeout(() => {
+        setShowRedFlash(false); // Hide red flash effect after 500ms
+      }, 1000);
       document.exitPointerLock(); // Exit pointer lock
     }
   }, [health, pauseSound]);
@@ -376,6 +382,7 @@ const Game = ({ onHit, onMiss }) => {
     setHits(0);
     setMisses(0);
     setGameOver(false);
+    setHealth(100); // Reset health to 100
     setTargets([
       { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
       { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
@@ -391,8 +398,31 @@ const Game = ({ onHit, onMiss }) => {
     targetRefs.current[targetId] = ref;
   };
 
+  // Red flash effect when player is hit
+  const handlePlayerHit = useCallback((targetSize) => {
+    // Example: lose 2x the target's size in HP, minimum 5, maximum 50
+    const hpLoss = Math.max(5, Math.min(50, Math.round(targetSize * 2)));
+    setHealth((prevHealth) => Math.max(prevHealth - 10 * (hpLoss || 1), 0));
+    setShowRedFlash(true); // Show red flash
+    playSound('hit'); // Play hit sound
+    setTimeout(() => setShowRedFlash(false), 500);
+  }, [playSound]);
+
   return (
     <div className={styles.gameContainer}>
+      {/* Red flash overlay */}
+      {showRedFlash && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(255,0,0,0.3)',
+            zIndex: 1000,
+            pointerEvents: 'none',
+            transition: 'opacity 0.1s',
+          }}
+        />
+      )}
       <Canvas camera={{ position: [0, 0, 10], fov: 75 }} style={{ background: '#000000' }}>
         <PointerLockControls />
         <MovementControls />
@@ -404,7 +434,7 @@ const Game = ({ onHit, onMiss }) => {
           onMiss={handleMiss}
           isGameOver={gameOver}
         />
-        <CollisionDetection targets={targets} setTargets={setTargets} setHealth={setHealth} />
+        <CollisionDetection targets={targets} setTargets={setTargets} setHealth={setHealth} onPlayerHit={handlePlayerHit} />
         <TargetCollisionHandler targets={targets} setTargets={setTargets} />
         {targets.map((target) => (
           <Target
