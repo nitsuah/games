@@ -14,40 +14,99 @@ const MIN_ALIVE_TIME = 0.5; // Try a bigger delay for safety
 
 const now = () => performance.now() / 1000;
 
-const ShootingSystem = ({ onHit, onMiss, isGameOver }) => {
+const WEAPON_TYPES = [
+  { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
+  { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 1.0 },
+  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 2.0 },
+];
+
+const ShootingSystem = ({
+  onHit,
+  onMiss,
+  isGameOver,
+  weapon,
+  ammo,
+  setAmmo,
+  cooldowns,
+  setCooldowns,
+  showLaser,
+  setShowLaser,
+}) => {
   const { camera, scene } = useThree();
   const raycaster = new THREE.Raycaster();
-  const mousePosition = new THREE.Vector2(0, 0);
   const { playSound } = useSound();
 
   useEffect(() => {
     const handleShoot = () => {
       if (document.pointerLockElement && !isGameOver) {
-        playSound('shoot');
-        raycaster.setFromCamera(mousePosition, camera);
-        const intersects = raycaster.intersectObjects(scene.children, true);
-
-        // Only call one of onHit or onMiss per shot
-        const targetIntersect = intersects.find((intersect) => {
-          const parent = intersect.object.parent;
-          return parent?.userData?.isTarget && !parent?.userData?.isHit;
-        });
-
-        if (targetIntersect) {
-          const targetId = targetIntersect.object.parent.userData.targetId;
-          targetIntersect.object.parent.userData.isHit = true;
-          playSound('hit');
-          onHit(targetId);
-        } else {
+        // Check cooldown and ammo
+        if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
           playSound('miss');
-          onMiss();
+          return;
         }
+        // Set cooldown
+        setCooldowns((prev) => ({ ...prev, [weapon]: WEAPON_TYPES.find(w => w.key === weapon).cooldown }));
+        // Reduce ammo
+        setAmmo((prev) => ({ ...prev, [weapon]: Math.max(0, prev[weapon] - 1) }));
+
+        playSound('shoot');
+        if (weapon === 'laser') {
+          // Laser: straight line, hits first target in path, show beam
+          // Offset the laser start position to the left of the player
+          const from = camera.position.clone();
+          const left = new THREE.Vector3();
+          camera.getWorldDirection(left);
+          // Get left vector (cross up with forward)
+          left.crossVectors(camera.up, left).normalize();
+          const offset = 0.5; // adjust for more/less offset
+          from.add(left.multiplyScalar(offset));
+          // Get direction camera is facing
+          const direction = new THREE.Vector3();
+          camera.getWorldDirection(direction);
+          raycaster.set(from, direction);
+          const intersects = raycaster.intersectObjects(scene.children, true);
+          let to;
+          if (intersects[0]?.point) {
+            to = intersects[0].point.clone();
+          } else {
+            to = from.clone().add(direction.multiplyScalar(100));
+          }
+          setShowLaser({
+            from,
+            to,
+            time: now(),
+          });
+          const targetIntersect = intersects.find((intersect) => {
+            const parent = intersect.object.parent;
+            return parent?.userData?.isTarget && !parent?.userData?.isHit;
+          });
+          if (targetIntersect) {
+            const targetId = targetIntersect.object.parent.userData.targetId;
+            targetIntersect.object.parent.userData.isHit = true;
+            playSound('hit');
+            onHit(targetId);
+          } else {
+            playSound('miss');
+            onMiss();
+          }
+        }
+        // ...implement other weapons later...
       }
     };
 
     window.addEventListener('click', handleShoot);
     return () => window.removeEventListener('click', handleShoot);
-  }, [camera, scene, onHit, onMiss, isGameOver, playSound]);
+  }, [camera, scene, onHit, onMiss, isGameOver, weapon, ammo, setAmmo, cooldowns, setCooldowns, playSound, setShowLaser]);
+
+  // Cooldown timer
+  useFrame(() => {
+    setCooldowns((prev) => {
+      if (prev[weapon] > 0) {
+        return { ...prev, [weapon]: Math.max(0, prev[weapon] - 1 / 60) };
+      }
+      return prev;
+    });
+  });
 
   return null;
 };
@@ -257,6 +316,39 @@ const Game = ({ onHit, onMiss }) => {
   const { playSound, pauseSound } = useSound();
   const soundsRef = useRef(null);
 
+  // Weapon state
+  const [weapon, setWeapon] = useState('spread');
+  const [ammo, setAmmo] = useState({
+    spread: 30,
+    laser: 10,
+    explosive: 5,
+  });
+  const [cooldowns, setCooldowns] = useState({
+    spread: 0,
+    laser: 0,
+    explosive: 0,
+  });
+  const [showLaser, setShowLaser] = useState(null); // {from, to, time}
+
+  // Weapon switch & reload handler
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === 'Digit1') setWeapon('spread');
+      if (e.code === 'Digit2') setWeapon('laser');
+      if (e.code === 'Digit3') setWeapon('explosive');
+      if (e.code === 'KeyR') {
+        // Replenish all ammo to max
+        setAmmo({
+          spread: WEAPON_TYPES.find(w => w.key === 'spread').maxAmmo,
+          laser: WEAPON_TYPES.find(w => w.key === 'laser').maxAmmo,
+          explosive: WEAPON_TYPES.find(w => w.key === 'explosive').maxAmmo,
+        });
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [setWeapon, setAmmo]);
+
   useEffect(() => {
     const savedHighScore = window.localStorage.getItem('asteroidHighScore');
     const savedBestAccuracy = window.localStorage.getItem('asteroidBestAccuracy');
@@ -310,6 +402,10 @@ const Game = ({ onHit, onMiss }) => {
 
   // HANDLE HIT
   const handleTargetHit = useCallback((targetId) => {
+    // Only allow hit if weapon is not cooling down and has ammo
+    if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
+      return;
+    }
     setTargets((prevTargets) => {
       let updatedTargets = [];
       let newTargets = [];
@@ -368,7 +464,7 @@ const Game = ({ onHit, onMiss }) => {
     setHits((prevHits) => prevHits + 1);
 
     if (onHit) onHit();
-  }, [onHit]);
+  }, [onHit, cooldowns, weapon, ammo]);
 
   // HANDLE MISS
   const handleMiss = useCallback(() => {
@@ -383,6 +479,9 @@ const Game = ({ onHit, onMiss }) => {
     setMisses(0);
     setGameOver(false);
     setHealth(100); // Reset health to 100
+    setWeapon('spread');
+    setAmmo({ spread: 30, laser: 10, explosive: 5 });
+    setCooldowns({ spread: 0, laser: 0, explosive: 5 });
     setTargets([
       { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
       { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
@@ -407,6 +506,33 @@ const Game = ({ onHit, onMiss }) => {
     playSound('hit'); // Play hit sound
     setTimeout(() => setShowRedFlash(false), 500);
   }, [playSound]);
+
+  // Laser beam visual (simple line)
+  const LaserBeam = ({ from, to }) => {
+    if (!from || !to) return null;
+    // Make the laser thicker and more visible
+    return (
+      <line>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            count={2}
+            array={new Float32Array([from.x, from.y, from.z, to.x, to.y, to.z])}
+            itemSize={3}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial attach="material" color="cyan" linewidth={20} />
+      </line>
+    );
+  };
+
+  // Remove laser after short time
+  useEffect(() => {
+    if (showLaser) {
+      const timeout = setTimeout(() => setShowLaser(null), 120);
+      return () => clearTimeout(timeout);
+    }
+  }, [showLaser]);
 
   return (
     <div className={styles.gameContainer}>
@@ -436,7 +562,15 @@ const Game = ({ onHit, onMiss }) => {
           onHit={handleTargetHit}
           onMiss={handleMiss}
           isGameOver={gameOver}
+          weapon={weapon}
+          ammo={ammo}
+          setAmmo={setAmmo}
+          cooldowns={cooldowns}
+          setCooldowns={setCooldowns}
+          showLaser={showLaser}
+          setShowLaser={setShowLaser}
         />
+        {showLaser && <LaserBeam from={showLaser.from} to={showLaser.to} />}
         <CollisionDetection targets={targets} setTargets={setTargets} setHealth={setHealth} onPlayerHit={handlePlayerHit} />
         <TargetCollisionHandler targets={targets} setTargets={setTargets} />
         {targets.map((target) => (
@@ -456,6 +590,14 @@ const Game = ({ onHit, onMiss }) => {
       </Canvas>
       <div className={styles.crosshair}></div>
       <ScoreDisplay score={score} />
+      {/* Weapon UI */}
+      <div className={styles.weaponDisplay} style={{ position: 'absolute', top: 10, left: 10, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: 8, borderRadius: 6, fontSize: 16 }}>
+        Weapon: <b>{WEAPON_TYPES.find(w => w.key === weapon).name}</b>
+        <br />
+        Ammo: {ammo[weapon]} / {WEAPON_TYPES.find(w => w.key === weapon).maxAmmo}
+        <br />
+        Cooldown: {cooldowns[weapon] > 0 ? cooldowns[weapon].toFixed(2) + 's' : 'Ready'}
+      </div>
       <div className={styles.statsDisplay}>
         Score: {score} | High Score: {highScore} | Health: {health}
       </div>

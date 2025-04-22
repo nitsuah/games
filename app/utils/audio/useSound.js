@@ -47,15 +47,16 @@ export const useSound = () => {
       try {
         await initAudioContext();
         
-        const [shoot, hit, miss, bgm, thrusterSound] = await Promise.all([
+        const [shoot, hit, miss, bgm, thrusterSound, empty] = await Promise.all([
           loadAudio('/sounds/shoot.mp3'),
           loadAudio('/sounds/hit.mp3'),
           loadAudio('/sounds/miss.mp3'),
           loadAudio('/sounds/bgm.mp3'),
-          loadAudio('/sounds/thruster.mp3')
+          loadAudio('/sounds/thruster.mp3'),
+          loadAudio('/sounds/empty.mp3')
         ]);
 
-        sounds.current = { shoot, hit, miss, bgm };
+        sounds.current = { shoot, hit, miss, bgm, empty };
         
         // Set up BGM
         sounds.current.bgm.loop = true;
