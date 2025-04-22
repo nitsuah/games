@@ -17,24 +17,29 @@ A first-person tank game where players control a tank, shoot targets, and surviv
 
 1. **Crosshairs**: A visual aid for precise aiming.
 2. **Dynamic Terrain**: The tank's position dynamically adjusts based on the terrain height.
-3. **Targets**: Destructible targets that "explode" when hit.
-4. **Score System**: Tracks and displays the player's score.
-5. **Decals**: Bullet impact decals that fade out over time.
-6. **Bullet Physics**: Bullets with realistic physics and automatic cleanup after a few seconds.
-7. **Dynamic Lighting**: Lighting effects for explosions and events.
-8. **Game Over Screen**: Displays when health reaches zero, with an option to restart.
-9. **Persistent Stats**: Save high scores and stats using local storage.
+3. **EXR Heightmap Support**: Terrain can be generated from EXR heightmap files.
+4. **Bell Curve Terrain**: Terrain heights follow a bell curve for natural elevation.
+5. **Height-Based Shading**: Terrain color shades from dark to light green based on height.
+6. **Targets**: Destructible targets that "explode" when hit.
+7. **Score System**: Tracks and displays the player's score.
+8. **Decals**: Bullet impact decals that fade out over time.
+9. **Bullet Physics**: Bullets with realistic physics and automatic cleanup after a few seconds.
+10. **Dynamic Lighting**: Lighting effects for explosions and events.
+11. **Game Over Screen**: Displays when health reaches zero, with an option to restart.
+12. **Persistent Stats**: Save high scores and stats using local storage.
+13. **Power-Ups**: Collectible items like health restore, shields, rapid fire, and speed boost.
+14. **Player Health System**: Tracks and displays player health.
+15. **Speed Boost and Rapid Fire**: Temporary power-ups that affect movement and shooting.
 
 ### Planned Features
 
-1. **Health System**: Tracks the tank's health and reduces it on collisions or hits.
-2. **Power-Ups**: Collectible items like health restore, shields, or rapid fire.
-3. **Enemy AI**: AI-controlled enemies that attack the tank.
-4. **Level Progression**: Waves or levels with increasing difficulty.
-5. **Environmental Hazards**: Obstacles like mines or gravity wells.
-6. **Weapon Upgrades**: Unlockable weapon types and upgrades.
-7. **Combo/Multiplier System**: Bonus points for quick successive hits.
-8. **Cosmetic Customization**: Unlockable tank skins or crosshairs.
+1. **Shield Power-Up**: Temporary shield that absorbs damage.
+2. **Enemy AI**: AI-controlled enemies that attack the tank.
+3. **Level Progression**: Waves or levels with increasing difficulty.
+4. **Environmental Hazards**: Obstacles like mines or gravity wells.
+5. **Weapon Upgrades**: Unlockable weapon types and upgrades.
+6. **Combo/Multiplier System**: Bonus points for quick successive hits.
+7. **Cosmetic Customization**: Unlockable tank skins or crosshairs.
 
 ### Technologies Used
 

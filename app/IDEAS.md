@@ -47,67 +47,72 @@
 
 1. **Targets**
    - Add projectile animation for the tank's cannon. (✅ Implemented)
-   - Added physic s to the projectile for environment interaction. (✅ Implemented)
+   - Added physics to the projectile for environment interaction. (✅ Implemented)
    - Add destructible targets that "explode" when hit. (✅ Implemented)
    - Stretch: Targets can have different types (e.g., armored, explosive).
 
 2. **Health System**
-   - Add a health bar for the tank.
+   - Add a health bar for the tank. (✅ Implemented)
    - Reduce health on collisions or enemy attacks.
 
 3. **Score System**
    - Add a scoring system for hitting targets. (✅ Implemented)
-   - Include combo bonuses pr loot for hitting multiple targets in a row.
+   - Include combo bonuses or loot for hitting multiple targets in a row.
 
 4. **Power-Ups**
-   - Add collectible power-ups (e.g., health restore, shield, rapid fire, quick move).
+   - Add collectible power-ups (e.g., health restore, shield, rapid fire, quick move). (✅ Implemented: health, speed, rapid fire, death)
    - Power-ups float in the environment and can be collected by the tank.
 
-5. **Enemy AI**
+5. **Dynamic Terrain**
+   - Terrain height is generated from EXR heightmap files. (✅ Implemented)
+   - Terrain heights follow a bell curve for natural elevation. (✅ Implemented)
+   - Terrain color shades from dark to light green based on height. (✅ Implemented)
+
+6. **Enemy AI**
    - Add AI-controlled enemies that shoot or chase the tank.
    - Destroying them grants points or drops power-ups.
 
-6. **Level Progression**
+7. **Level Progression**
    - Add waves or levels with increasing difficulty.
    - Introduce new target types, enemy AI, or environmental hazards.
 
-7. **Environmental Hazards**
+8. **Environmental Hazards**
    - Add obstacles like mines, moving barriers, or gravity wells.
    - Hazards can damage the tank or destroy targets.
 
-8. **Weapon Upgrades**
+9. **Weapon Upgrades**
    - Add different weapon types (e.g., explosive shells, rapid fire).
    - Unlock upgrades via power-ups or score milestones.
 
-9. **Dynamic Lighting**
-   - Add lighting effects for explosions or other events. (✅ Implemented)
+10. **Dynamic Lighting**
+    - Add lighting effects for explosions or other events. (✅ Implemented)
 
-10. **Game Over Screen**
-    - Display a game-over screen when health reaches zero. (✅ Implemented)
+11. **Game Over Screen**
+    - Display a game-over screen when health reaches zero.
     - Include options to restart the game.
 
-11. **Persistent Stats**
+12. **Persistent Stats**
     - Save high scores and stats using local storage. (✅ Implemented)
 
-12. **Cosmetic Customization**
+13. **Cosmetic Customization**
     - Unlockable tank skins, trails, or crosshairs based on achievements or score.
 
-13. **Decal Enhancements**
-    - Add different decal types (e.g., scorch marks, bullet holes).
+14. **Decal Enhancements**
+    - Add different decal types (e.g., scorch marks, bullet holes). (✅ Basic decals implemented)
     - Decals could vary based on the type of target hit (e.g., metal, dirt, or explosive).
 
-14. **Tank Abilities**
-    - Add a temporary speed boost ability.
+15. **Tank Abilities**
+    - Add a temporary speed boost ability. (✅ Power-up Implemented)
     - Add a "shockwave" ability that destroys nearby targets.
 
-15. **Interactive Environment**
+16. **Interactive Environment**
     - Add destructible objects like walls or barrels.
     - Add environmental effects like dust clouds or debris when objects are destroyed.
 
-16. **Multiplayer Mode**
+17. **Multiplayer Mode**
     - Add a basic multiplayer mode where players compete to destroy targets or each other.
 
-17. **Tank Customization**
+18. **Tank Customization**
     - Add unlockable tank parts (e.g., turrets, tracks) that can be swapped for cosmetic changes.
 
 ---
