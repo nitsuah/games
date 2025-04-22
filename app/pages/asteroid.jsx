@@ -1,46 +1,8 @@
 import React, { useState } from 'react';
-import Game from './components/Game/Game';
+import Game from './asteroid/components/Game/Game';
 import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound'; // Use the hook instead of importing playSound directly
-
-const Crosshair = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 32px;
-  height: 32px;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: black;
-`;
-
-const CrosshairVertical = styled.div`
-  width: 2px;
-  height: 20px;
-  background: red;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 1px;
-  opacity: 0.8;
-`;
-
-const CrosshairHorizontal = styled.div`
-  width: 20px;
-  height: 2px;
-  background: red;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 1px;
-  opacity: 0.8;
-`;
+import Crosshair from './asteroid/components/UI/Crosshair';
 
 const Instructions = styled.div`
   position: absolute;
@@ -82,10 +44,7 @@ const AsteroidPage = () => {
       <Instructions>
         Click to lock pointer as camera, Esc to exit
       </Instructions>
-      <Crosshair>
-        <CrosshairVertical />
-        <CrosshairHorizontal />
-      </Crosshair>
+      <Crosshair />
       <Game onHit={handleHit} onMiss={handleMiss} />
     </GameContainer>
   );

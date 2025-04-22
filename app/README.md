@@ -12,6 +12,7 @@ A first-person tank game where players control a tank, shoot targets, and surviv
 - Use the **Mouse** to aim and click to shoot.
 - Destroy targets to earn points and avoid hazards to survive.
 - Collect power-ups to gain temporary advantages.
+- Use **Shift** to boost/sprint for a short speed increase (with cooldown).
 
 ### Features (Implemented)
 
@@ -27,25 +28,36 @@ A first-person tank game where players control a tank, shoot targets, and surviv
 10. **Dynamic Lighting**: Lighting effects for explosions and events.
 11. **Game Over Screen**: Displays when health reaches zero, with an option to restart.
 12. **Persistent Stats**: Save high scores and stats using local storage.
-13. **Power-Ups**: Collectible items like health restore, shields, rapid fire, and speed boost.
+13. **Power-Ups**: Collectible items like health restore, rapid fire, speed boost, and (foundation for) ammo. (Note: shield power-up logic is not fully implemented)
 14. **Player Health System**: Tracks and displays player health.
 15. **Speed Boost and Rapid Fire**: Temporary power-ups that affect movement and shooting.
+16. **Reload Bar**: Visual indicator for weapon cooldown.
+17. **Ammo System**: Limited ammo, with pickups to replenish. (Foundation present, but full depletion/disable logic may not be complete)
 
-### Planned Features
+### Planned Features (Next Milestone)
 
-1. **Shield Power-Up**: Temporary shield that absorbs damage.
-2. **Enemy AI**: AI-controlled enemies that attack the tank.
-3. **Level Progression**: Waves or levels with increasing difficulty.
-4. **Environmental Hazards**: Obstacles like mines or gravity wells.
-5. **Weapon Upgrades**: Unlockable weapon types and upgrades.
-6. **Combo/Multiplier System**: Bonus points for quick successive hits.
-7. **Cosmetic Customization**: Unlockable tank skins or crosshairs.
+1. **Enemy Implementation**: Add a basic AI enemy that can be destroyed and attacks the player.
+2. **Attack Integration**: Ensure both attack types (standard and alternate) work on enemies and targets.
+3. **Power-Up Integration**: Enemies and targets can drop power-ups (health, ammo, speed, rapid fire).
+4. **HUD/UI Polish**: Display all relevant stats (health, ammo, reload, boost, score) clearly.
+5. **Polish & Feedback**: Improve visual/audio feedback for all actions, attacks, and pickups.
+
+### Deferred Features (Future)
+
+- Multiple enemy types and advanced AI.
+- Level progression, waves, or bosses.
+- Cosmetic customization (tank skins, trails, crosshairs).
+- Environmental hazards and destructible objects.
+- Multiplayer and advanced progression.
 
 ### Technologies Used
 
 - **Next.js**: Application framework.
 - **Three.js and React Three Fiber**: 3D rendering and scene management.
+- **@react-three/cannon**: Physics simulation for bullets, terrain, and collisions.
+- **three/examples/jsm/loaders/EXRLoader**: For loading EXR heightmaps.
 - **Styled Components**: UI styling.
 - **Local Storage**: Persistent high scores and stats.
+- **Custom Audio Management**: For sound effects and background music.
 
 ---

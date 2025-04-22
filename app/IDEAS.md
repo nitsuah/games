@@ -1,4 +1,4 @@
-# Game Ideation: New Features
+# Game Ideation: New
 
 ## Asteroid
 
@@ -45,74 +45,50 @@
 
 ## FPS Tank Commander
 
-1. **Targets**
-   - Add projectile animation for the tank's cannon. (✅ Implemented)
-   - Added physics to the projectile for environment interaction. (✅ Implemented)
-   - Add destructible targets that "explode" when hit. (✅ Implemented)
-   - Stretch: Targets can have different types (e.g., armored, explosive).
+### Core Gameplay (Focus for Next Milestone)
 
-2. **Health System**
-   - Add a health bar for the tank. (✅ Implemented)
-   - Reduce health on collisions or enemy attacks.
+1. **Player Tank Core**
+   - Smooth movement and rotation (WASD).
+   - Health bar and damage feedback.
+   - Two attack types: standard shot and alternate fire (e.g., rapid fire or explosive).
+   - Reload/cooldown bar for each attack.
+   - Ammo system: limited ammo, ammo pickups as power-ups.
+   - Boost/Sprint: temporary speed increase (Shift), with a visible boost meter/cooldown.
 
-3. **Score System**
-   - Add a scoring system for hitting targets. (✅ Implemented)
-   - Include combo bonuses or loot for hitting multiple targets in a row.
+2. **Targets & Power-Ups**
+   - Destructible targets for practice and scoring.
+   - Power-ups: health restore, speed boost, rapid fire, ammo drops.
+   - Visual/audio feedback for pickups and effects.
 
-4. **Power-Ups**
-   - Add collectible power-ups (e.g., health restore, shield, rapid fire, quick move). (✅ Implemented: health, speed, rapid fire, death)
-   - Power-ups float in the environment and can be collected by the tank.
+3. **Enemy Implementation (Next Major Feature)**
+   - Add a basic AI enemy that moves and attacks the player.
+   - Enemy can be destroyed using either attack type.
+   - Enemy drops power-ups or score on destruction.
+   - Integrate enemy with health, damage, and feedback systems.
 
-5. **Dynamic Terrain**
-   - Terrain height is generated from EXR heightmap files. (✅ Implemented)
-   - Terrain heights follow a bell curve for natural elevation. (✅ Implemented)
-   - Terrain color shades from dark to light green based on height. (✅ Implemented)
+4. **HUD & UI**
+   - Display health, ammo, reload/cooldown, boost meter, and score.
+   - Clear, readable layout for all stats.
+   - Feedback for low health, low ammo, reload/boost ready.
 
-6. **Enemy AI**
-   - Add AI-controlled enemies that shoot or chase the tank.
-   - Destroying them grants points or drops power-ups.
+5. **Game Over & Restart**
+   - Game over screen when health reaches zero.
+   - Option to restart and track high scores.
 
-7. **Level Progression**
-   - Add waves or levels with increasing difficulty.
-   - Introduce new target types, enemy AI, or environmental hazards.
+### Polishing & Integration
 
-8. **Environmental Hazards**
-   - Add obstacles like mines, moving barriers, or gravity wells.
-   - Hazards can damage the tank or destroy targets.
+- Ensure all attack types, power-ups, and movement features are visually and mechanically polished.
+- Decals and effects for hits, destruction, and power-up use.
+- Responsive controls and clear feedback for all actions.
 
-9. **Weapon Upgrades**
-   - Add different weapon types (e.g., explosive shells, rapid fire).
-   - Unlock upgrades via power-ups or score milestones.
+### Deferred/Advanced Features (After Enemy Integration)
 
-10. **Dynamic Lighting**
-    - Add lighting effects for explosions or other events. (✅ Implemented)
+- Multiple enemy types and AI behaviors.
+- Level progression, waves, or bosses.
+- Cosmetic customization (skins, trails, crosshairs).
+- Environmental hazards and destructible objects.
+- Multiplayer and advanced progression.
 
-11. **Game Over Screen**
-    - Display a game-over screen when health reaches zero.
-    - Include options to restart the game.
-
-12. **Persistent Stats**
-    - Save high scores and stats using local storage. (✅ Implemented)
-
-13. **Cosmetic Customization**
-    - Unlockable tank skins, trails, or crosshairs based on achievements or score.
-
-14. **Decal Enhancements**
-    - Add different decal types (e.g., scorch marks, bullet holes). (✅ Basic decals implemented)
-    - Decals could vary based on the type of target hit (e.g., metal, dirt, or explosive).
-
-15. **Tank Abilities**
-    - Add a temporary speed boost ability. (✅ Power-up Implemented)
-    - Add a "shockwave" ability that destroys nearby targets.
-
-16. **Interactive Environment**
-    - Add destructible objects like walls or barrels.
-    - Add environmental effects like dust clouds or debris when objects are destroyed.
-
-17. **Multiplayer Mode**
-    - Add a basic multiplayer mode where players compete to destroy targets or each other.
-
-18. **Tank Customization**
-    - Add unlockable tank parts (e.g., turrets, tracks) that can be swapped for cosmetic changes.
+---
 
 ---

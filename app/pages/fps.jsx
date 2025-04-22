@@ -5,18 +5,18 @@ import { Stats, Debug } from "@react-three/drei"; // Import Debug
 import { Physics, usePlane } from "@react-three/cannon";
 import * as THREE from "three";
 import { Raycaster } from "three";
-import Controls from "./_comps/Controls";
-import PlayerLogic from "./_comps/PlayerLogic";
-import Floor from "../../_components/objects/Floor";
-import Cube from "../../_components/objects/Cube";
-import Crosshair from "./_comps/Crosshair";
-import Target from "./_comps/Target";
-import Bullet from "./_comps/Bullet";
-import Explosion from "./_comps/Explosion";
-import Decal from "./_comps/Decal";
-import ShootingHandler from "./_comps/ShootingHandler";
-import HillyFloor from "../../_components/objects/HillyFloor";
-import PowerUp from "./_comps/PowerUp"; // Import the PowerUp component
+import Controls from "./fps/_comps/Controls";
+import PlayerLogic from "./fps/_comps/PlayerLogic";
+import Floor from "../_components/objects/Floor";
+import Cube from "../_components/objects/Cube";
+import Crosshair from "./fps/_comps/Crosshair";
+import Target from "./fps/_comps/Target";
+import Bullet from "./fps/_comps/Bullet";
+import Explosion from "./fps/_comps/Explosion";
+import Decal from "./fps/_comps/Decal";
+import ShootingHandler from "./fps/_comps/ShootingHandler";
+import HillyFloor from "../_components/objects/HillyFloor";
+import PowerUp from "./fps/_comps/PowerUp"; // Import the PowerUp component
 
 // Extend React Three Fiber's namespace to include BoxGeometry
 extend({ BoxGeometry: THREE.BoxGeometry });

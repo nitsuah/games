@@ -4,35 +4,6 @@
     height: 100vh;
     overflow: hidden;
   }
-  
-  .crosshair {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
-    pointer-events: none;
-  }
-  
-  .crosshair::before,
-  .crosshair::after {
-    content: '';
-    position: absolute;
-    background: white;
-  }
-  
-  .crosshair::before {
-    width: 2px;
-    height: 20px;
-    left: 9px;
-  }
-  
-  .crosshair::after {
-    width: 20px;
-    height: 2px;
-    top: 9px;
-  }
 
   .flashRed {
     background-color: rgba(255, 0, 0, 0.5);

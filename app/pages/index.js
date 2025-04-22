@@ -105,7 +105,7 @@ const HomePage = () => {
         <GameLink href="/asteroid/asteroid">
           Asteroid
         </GameLink>
-        <GameLink href="/fps/fps">
+        <GameLink href="/fps">
           FPS
         </GameLink>
       </GameList>
