@@ -66,9 +66,9 @@ function Range() {
               <Cube position={[0, 10, -2]} color="rebeccapurple" />
               <Cube position={[0, 20, -2]} color="pink" />
               <Cube position={[0, 30, -2]} color="darkorange" />
-              <Target position={[5, 1, -5]} color="red" type="explode" onHit={handleTargetHit} />
-              <Target position={[-5, 1, -10]} color="green" type="shrink" onHit={handleTargetHit} />
-              <Target position={[0, 1, -15]} color="blue" type="default" onHit={handleTargetHit} />
+              <Target position={[5, 10, -5]} color="red" type="explode" onHit={handleTargetHit} />
+              <Target position={[-5, 10, -10]} color="green" type="shrink" onHit={handleTargetHit} />
+              <Target position={[0, 10, -15]} color="blue" type="default" onHit={handleTargetHit} />
               {bullets.map((bullet) => (
                 <Bullet
                   key={bullet.id}

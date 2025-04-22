@@ -129,7 +129,7 @@ const Player = ({ targets, onTargetHit }) => {
     // Collision detection logic
     targets.forEach((target) => {
       const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
-      const playerRadius = 2; // Increased from 1.0 to 2.0 for larger hitbox
+      const playerRadius = 3; // Increased from 1.0 to 2.0 for larger hitbox
       const targetRadius = target.size / 2;
       const distance = camera.position.distanceTo(targetPosition);
 
