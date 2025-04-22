@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Game from './asteroid/components/Game/Game';
+import Game from './asteroid/_comp/Game/Game';
 import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound'; // Use the hook instead of importing playSound directly
-import Crosshair from './asteroid/components/UI/Crosshair';
+import Crosshair from './asteroid/_comp/UI/Crosshair';
 
 const Instructions = styled.div`
   position: absolute;
