@@ -1,20 +1,20 @@
 // Scene.js
 import React, { useRef, useEffect, useState } from "react";
-import { Canvas, extend, useThree } from "@react-three/fiber";
-import { Stats } from "@react-three/drei";
-import { Physics } from "@react-three/cannon";
+import { Canvas, extend, useFrame } from "@react-three/fiber"; // Import useFrame
+import { Stats, Debug } from "@react-three/drei"; // Import Debug
+import { Physics, usePlane } from "@react-three/cannon";
 import * as THREE from "three"; // Import THREE
 import Controls from "./_comps/Controls";
 import PlayerLogic from "./_comps/PlayerLogic"; // Update import
 import Floor from "../../_components/objects/Floor";
 import Cube from "../../_components/objects/Cube";
-import styled from "styled-components"; // Add this import for styling
 import Crosshair from "./_comps/Crosshair"; // Import the Crosshair component
 import Target from "./_comps/Target"; // Import the Target component
 import Bullet from "./_comps/Bullet";
 import Explosion from "./_comps/Explosion";
 import Decal from "./_comps/Decal";
 import ShootingHandler from "./_comps/ShootingHandler"; // Import ShootingHandler
+import HillyFloor from "../../_components/objects/HillyFloor"; // Import the HillyFloor component
 
 // Extend React Three Fiber's namespace to include BoxGeometry
 extend({ BoxGeometry: THREE.BoxGeometry });
@@ -27,15 +27,32 @@ function Range() {
   const [explosions, setExplosions] = useState([]);
   const [decals, setDecals] = useState([]);
 
-  useEffect(() => {
-    const initializePlayerPosition = () => {
+  // DebugPlane component to visualize the physics floor
+  const DebugPlane = () => {
+    usePlane(() => ({
+      position: [0, -10, 0],
+      rotation: [-Math.PI / 2, 0, 0],
+      type: "Static",
+    }));
+    return (
+      <mesh position={[0, -10, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[500, 500]} />
+        <meshStandardMaterial color="red" wireframe />
+      </mesh>
+    );
+  };
+  
+  // Sync player position with physics engine
+  const SyncPlayerPosition = () => {
+    useFrame(() => {
       if (playerRef.current) {
-        playerRef.current.api.position.set(0, 0, 0);
+        playerRef.current.api.position.subscribe((pos) => {
+          setPlayerPosition(pos);
+        });
       }
-    };
-
-    initializePlayerPosition();
-  }, [playerRef]);
+    });
+    return null; // This component doesn't render anything
+  };
 
   // Handle target hit
   const handleTargetHit = () => {
@@ -48,7 +65,7 @@ function Range() {
       <Canvas
         shadows // Enables shadow rendering
         gl={{ alpha: false }} // Configures WebGL renderer
-        camera={{ position: [playerPosition[0], playerPosition[1] + 5, playerPosition[2] + 5], fov: 50 }} // Camera above player
+        camera={{ position: [playerPosition[0], playerPosition[1], playerPosition[2] + 5], fov: 50 }} // Camera above player
         style={{ background: '#000000', width: "99vw", height: "98vh" }} // Ensure full viewport
       >
         <color attach="background" args={["grey"]} />
@@ -63,7 +80,10 @@ function Range() {
             intensity={2}
             castShadow
           />
+          <HillyFloor width={250} depth={250} hillHeight={5} color="green" /> {/* Add the hilly floor */}
+          <Floor size={[500, 500]} color="black" position={[0, -10, 0]} /> {/* Add a gutter floor below */}
           <PlayerLogic ref={playerRef} onPositionChange={setPlayerPosition} /> {/* Track player position */}
+          <SyncPlayerPosition /> {/* Sync player position */}
           <Cube position={[0, 10, -2]} color="rebeccapurple" />
           <Cube position={[0, 20, -2]} color="pink" />
           <Cube position={[0, 30, -2]} color="darkorange" />
@@ -72,8 +92,6 @@ function Range() {
           <Target position={[5, 1, -5]} color="red" type="explode" onHit={handleTargetHit} />
           <Target position={[-5, 1, -10]} color="green" type="shrink" onHit={handleTargetHit} />
           <Target position={[0, 1, -15]} color="blue" type="default" onHit={handleTargetHit} />
-
-          <Floor size={[500, 500]} color="black" />
 
           {/* Render bullets */}
           {bullets.map((bullet) => (
@@ -87,7 +105,7 @@ function Range() {
             />
           ))}
 
-          {/* Render explosions 
+          {/* Render explosions
           {explosions.map((explosion) => (
             <Explosion
               key={explosion.id}
@@ -100,14 +118,14 @@ function Range() {
             />
           ))} */}
 
-          {/* Render decals
+          {/* Render decals */}
           {decals.map((decal) => (
             <Decal
               key={decal.id}
               position={decal.position}
               normal={decal.normal}
             />
-          ))}  */}
+          ))}
 
           {/* Shooting handler */}
           <ShootingHandler

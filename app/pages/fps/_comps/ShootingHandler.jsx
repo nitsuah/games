@@ -3,46 +3,57 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
 const ShootingHandler = ({ playerPosition, setBullets, setExplosions, setDecals }) => {
-  const { camera, scene } = useThree(); // Access camera and scene from useThree
+  const { camera, scene } = useThree();
 
   const handleShoot = () => {
     const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera({ x: 0, y: 0 }, camera); // Use camera from useThree
-    const intersects = raycaster.intersectObjects(scene.children, true); // Use scene from useThree
+    raycaster.setFromCamera({ x: 0, y: 0 }, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
 
     if (intersects.length > 0) {
       const target = intersects[0];
-      const start = camera.position.clone(); // Use the player's camera position as the starting point
+      const start = camera.position.clone();
       const end = target.point;
 
       // Add bullet
+      const bulletId = Date.now();
       setBullets((prev) => [
         ...prev,
-        { id: Date.now(), start, end },
-      ]);
+        {
+          id: bulletId,
+          start,
+          end,
+          onComplete: () => {
+            // Add explosion after the bullet disappears
+            setExplosions((prev) => [
+              ...prev,
+              { id: Date.now(), position: end, onComplete: () => {
+                setExplosions((prevExplosions) =>
+                  prevExplosions.filter((e) => e.id !== bulletId)
+                );
+              }},
+            ]);
 
-      // Add explosion
-      setExplosions((prev) => [
-        ...prev,
-        { id: Date.now(), position: end },
-      ]);
+            // Add decal after the explosion
+            setDecals((prev) => [
+              ...prev,
+              { id: Date.now(), position: end, normal: target.face.normal },
+            ]);
 
-      // Add decal (ensure target.face exists)
-      if (target.face) {
-        setDecals((prev) => [
-          ...prev,
-          { id: Date.now(), position: end, normal: target.face.normal },
-        ]);
-      }
+            // Remove the bullet
+            setBullets((prevBullets) => prevBullets.filter((b) => b.id !== bulletId));
+          },
+        },
+      ]);
     }
   };
 
   useEffect(() => {
     window.addEventListener("click", handleShoot);
     return () => window.removeEventListener("click", handleShoot);
-  }, [camera, scene, playerPosition]);
+  }, [camera, scene, setBullets, setExplosions, setDecals]);
 
-  return null; // This component doesn't render anything
+  return null;
 };
 
 export default ShootingHandler;

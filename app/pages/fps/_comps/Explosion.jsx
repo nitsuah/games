@@ -1,24 +1,29 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 
 const Explosion = ({ position, onComplete }) => {
   const meshRef = useRef();
-  const scale = useRef(0.1);
+  const [scale, setScale] = useState(0.1); // Start small
+  const [opacity, setOpacity] = useState(0.8); // Start semi-transparent
+  const [exploded, setExploded] = useState(false); // Track if fully exploded
 
   useFrame(() => {
-    if (meshRef.current) {
-      scale.current += 0.1;
-      meshRef.current.scale.set(scale.current, scale.current, scale.current);
-      if (scale.current > 2) {
+    if (meshRef.current && !exploded) {
+      if (scale < 5) {
+        setScale((prev) => prev + 0.1); // Gradually grow in size
+        setOpacity((prev) => Math.max(prev - 0.02, 0)); // Gradually fade out
+      } else {
+        setExploded(true); // Mark as fully exploded
+        setScale(0); // Reset scale to 0
         onComplete(); // Notify parent when the explosion animation is complete
       }
     }
   });
 
   return (
-    <mesh ref={meshRef} position={position}>
+    <mesh ref={meshRef} position={position} scale={[scale, scale, scale]}>
       <sphereGeometry args={[0.5, 16, 16]} />
-      <meshStandardMaterial color="orange" transparent opacity={0.8} />
+      <meshStandardMaterial color="orange" transparent opacity={opacity} />
     </mesh>
   );
 };
