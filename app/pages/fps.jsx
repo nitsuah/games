@@ -15,9 +15,8 @@ import Bullet from "./fps/_comps/Bullet";
 import Explosion from "./fps/_comps/Explosion";
 import Decal from "./fps/_comps/Decal";
 import ShootingHandler from "./fps/_comps/ShootingHandler";
+import PowerUp from "./fps/_comps/PowerUp";
 import HillyFloor from "../_components/objects/HillyFloor";
-import PowerUp from "./fps/_comps/PowerUp"; // Import the PowerUp component
-
 // Extend React Three Fiber's namespace to include BoxGeometry
 extend({ BoxGeometry: THREE.BoxGeometry });
 
@@ -103,7 +102,7 @@ function Range() {
             depth={250}
             hillHeight={5}
             color="green"
-            heightmapUrl="/terrain003.exr"
+            heightmapUrl="/_components/objects/terrain003.exr" // Pass as string path
           /> {/* Terrain */}
           <Floor size={[500, 500]} color="black" position={[0, -1, 0]} /> {/* Gutter floor */}
           <hemisphereLight intensity={0.35} />
@@ -115,15 +114,15 @@ function Range() {
           <PowerUp position={[20, 3, -20]} type="rapidFire" onCollect={handlePowerUpCollect} />
           <PowerUp position={[25, 3, -25]} type="speed" onCollect={handlePowerUpCollect} />
           <PowerUp position={[30, 3, -30]} type="death" onCollect={handlePowerUpCollect} />
-          <Cube position={[5, 15, -5]} color="rebeccapurple" />
-          <Cube position={[10, 20, -10]} color="pink" />
-          <Cube position={[15, 25, -15]} color="darkorange" />
-          <Cube position={[5, 15, -5]} color="rebeccapurple" />
-          <Cube position={[10, 20, -10]} color="pink" />
-          <Cube position={[15, 25, -15]} color="darkorange" />
-          <Cube position={[5, 15, -5]} color="rebeccapurple" />
-          <Cube position={[10, 20, -10]} color="pink" />
-          <Cube position={[15, 25, -15]} color="darkorange" />
+          <Cube position={[10, 14, -10]} color="rebeccapurple" />
+          <Cube position={[10, 15, -10]} color="pink" />
+          <Cube position={[10, 16, -10]} color="darkorange" />
+          <Cube position={[10, 17, -10]} color="rebeccapurple" />
+          <Cube position={[10, 18, -10]} color="pink" />
+          <Cube position={[15, 19, -15]} color="darkorange" />
+          <Cube position={[5, 3, -5]} color="rebeccapurple" />
+          <Cube position={[10, 3, -10]} color="pink" />
+          <Cube position={[15, 3, -15]} color="darkorange" />
           <Target position={[20, 15, -20]} color="red" type="explode" onHit={handleTargetHit} />
           <Target position={[-10, 15, -25]} color="green" type="shrink" onHit={handleTargetHit} />
           <Target position={[0, 15, -30]} color="blue" type="default" onHit={handleTargetHit} />

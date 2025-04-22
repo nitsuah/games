@@ -11,6 +11,7 @@ const PageContainer = styled.div`
   background: #1a1a1a;
   color: white;
   font-family: Arial, sans-serif;
+  margin: 0;
 `;
 
 const Title = styled.h1`
@@ -31,7 +32,7 @@ const GameLink = styled(Link)`
   background: #333;
   color: white;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 4px;
   text-align: center;
   font-size: 1.2rem;
   transition: all 0.3s ease;
@@ -47,7 +48,7 @@ const TestButton = styled.button`
   background: #2196F3;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
   font-size: 1.2rem;
   cursor: pointer;
   margin-top: 2rem;
@@ -102,7 +103,7 @@ const HomePage = () => {
     <PageContainer>
       <Title>Game Selector</Title>
       <GameList>
-        <GameLink href="/asteroid/asteroid">
+        <GameLink href="/asteroid">
           Asteroid
         </GameLink>
         <GameLink href="/fps">

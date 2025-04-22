@@ -22,7 +22,7 @@
     transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.8);
     padding: 2rem;
-    border-radius: 8px;
+    border-radius: 1px;
     text-align: center;
     color: white;
   }
