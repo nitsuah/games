@@ -97,17 +97,24 @@ function Range() {
         <color attach="background" args={["lightblue"]} />
         <Stats showPanel={0} className="stats" />
         <Physics gravity={[0, -20, 0]}>
-          <HillyFloor ref={terrainRef} width={250} depth={250} hillHeight={5} color="green" /> {/* Terrain */}
+          <HillyFloor
+            ref={terrainRef}
+            width={250}
+            depth={250}
+            hillHeight={5}
+            color="green"
+            heightmapUrl="/terrain003.exr"
+          /> {/* Terrain */}
           <Floor size={[500, 500]} color="black" position={[0, -1, 0]} /> {/* Gutter floor */}
           <hemisphereLight intensity={0.35} />
           <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={2} castShadow />
           <PlayerLogic ref={playerRef} onPositionChange={setPlayerPosition} />
           <Controls playerRef={playerRef} terrainRef={terrainRef} playerSpeed={playerSpeed} /> {/* Pass player speed */}
-          <PowerUp position={[10, 1, -10]} type="health" onCollect={handlePowerUpCollect} />
-          <PowerUp position={[15, 1, -15]} type="shield" onCollect={handlePowerUpCollect} />
-          <PowerUp position={[20, 1, -20]} type="rapidFire" onCollect={handlePowerUpCollect} />
-          <PowerUp position={[25, 1, -25]} type="speed" onCollect={handlePowerUpCollect} />
-          <PowerUp position={[30, 1, -30]} type="death" onCollect={handlePowerUpCollect} />
+          <PowerUp position={[10, 3, -10]} type="health" onCollect={handlePowerUpCollect} />
+          <PowerUp position={[15, 3, -15]} type="shield" onCollect={handlePowerUpCollect} />
+          <PowerUp position={[20, 3, -20]} type="rapidFire" onCollect={handlePowerUpCollect} />
+          <PowerUp position={[25, 3, -25]} type="speed" onCollect={handlePowerUpCollect} />
+          <PowerUp position={[30, 3, -30]} type="death" onCollect={handlePowerUpCollect} />
           <Cube position={[5, 15, -5]} color="rebeccapurple" />
           <Cube position={[10, 20, -10]} color="pink" />
           <Cube position={[15, 25, -15]} color="darkorange" />
