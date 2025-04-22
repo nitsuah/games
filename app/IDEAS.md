@@ -46,8 +46,9 @@
 ## FPS Tank Commander
 
 1. **Targets**
-   - Add projectile animation for the tank's cannon.
-   - Add destructible targets that "explode" when hit.
+   - Add projectile animation for the tank's cannon. (✅ Implemented)
+   - Added physic s to the projectile for environment interaction. (✅ Implemented)
+   - Add destructible targets that "explode" when hit. (✅ Implemented)
    - Stretch: Targets can have different types (e.g., armored, explosive).
 
 2. **Health System**
@@ -55,8 +56,8 @@
    - Reduce health on collisions or enemy attacks.
 
 3. **Score System**
-   - Add a scoring system for hitting targets.
-   - Include combo bonuses for quick successive hits.
+   - Add a scoring system for hitting targets. (✅ Implemented)
+   - Include combo bonuses pr loot for hitting multiple targets in a row.
 
 4. **Power-Ups**
    - Add collectible power-ups (e.g., health restore, shield, rapid fire, quick move).
@@ -79,16 +80,34 @@
    - Unlock upgrades via power-ups or score milestones.
 
 9. **Dynamic Lighting**
-   - Add lighting effects for explosions or other events.
+   - Add lighting effects for explosions or other events. (✅ Implemented)
 
 10. **Game Over Screen**
-    - Display a game-over screen when health reaches zero.
+    - Display a game-over screen when health reaches zero. (✅ Implemented)
     - Include options to restart the game.
 
 11. **Persistent Stats**
-    - Save high scores and stats using local storage.
+    - Save high scores and stats using local storage. (✅ Implemented)
 
 12. **Cosmetic Customization**
     - Unlockable tank skins, trails, or crosshairs based on achievements or score.
+
+13. **Decal Enhancements**
+    - Add different decal types (e.g., scorch marks, bullet holes).
+    - Decals could vary based on the type of target hit (e.g., metal, dirt, or explosive).
+
+14. **Tank Abilities**
+    - Add a temporary speed boost ability.
+    - Add a "shockwave" ability that destroys nearby targets.
+
+15. **Interactive Environment**
+    - Add destructible objects like walls or barrels.
+    - Add environmental effects like dust clouds or debris when objects are destroyed.
+
+16. **Multiplayer Mode**
+    - Add a basic multiplayer mode where players compete to destroy targets or each other.
+
+17. **Tank Customization**
+    - Add unlockable tank parts (e.g., turrets, tracks) that can be swapped for cosmetic changes.
 
 ---
