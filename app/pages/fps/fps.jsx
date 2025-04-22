@@ -1,142 +1,107 @@
-// Scene.js
+// fps.jsx
 import React, { useRef, useEffect, useState } from "react";
-import { Canvas, extend, useFrame } from "@react-three/fiber"; // Import useFrame
+import { Canvas, extend, useFrame } from "@react-three/fiber";
 import { Stats, Debug } from "@react-three/drei"; // Import Debug
 import { Physics, usePlane } from "@react-three/cannon";
-import * as THREE from "three"; // Import THREE
+import * as THREE from "three";
+import { Raycaster } from "three";
 import Controls from "./_comps/Controls";
-import PlayerLogic from "./_comps/PlayerLogic"; // Update import
+import PlayerLogic from "./_comps/PlayerLogic";
 import Floor from "../../_components/objects/Floor";
 import Cube from "../../_components/objects/Cube";
-import Crosshair from "./_comps/Crosshair"; // Import the Crosshair component
-import Target from "./_comps/Target"; // Import the Target component
+import Crosshair from "./_comps/Crosshair";
+import Target from "./_comps/Target";
 import Bullet from "./_comps/Bullet";
 import Explosion from "./_comps/Explosion";
 import Decal from "./_comps/Decal";
-import ShootingHandler from "./_comps/ShootingHandler"; // Import ShootingHandler
-import HillyFloor from "../../_components/objects/HillyFloor"; // Import the HillyFloor component
+import ShootingHandler from "./_comps/ShootingHandler";
+import HillyFloor from "../../_components/objects/HillyFloor";
 
 // Extend React Three Fiber's namespace to include BoxGeometry
 extend({ BoxGeometry: THREE.BoxGeometry });
 
 function Range() {
   const playerRef = useRef();
-  const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
-  const [score, setScore] = useState(0); // Add score state
+  const terrainRef = useRef(); // Reference to the terrain mesh
+  const cameraRef = useRef(); // Reference to the camera
+  const [playerPosition, setPlayerPosition] = useState([0, 1, 0]); // Start Y at 1
+  const [score, setScore] = useState(0);
   const [bullets, setBullets] = useState([]);
   const [explosions, setExplosions] = useState([]);
   const [decals, setDecals] = useState([]);
 
-  // DebugPlane component to visualize the physics floor
-  const DebugPlane = () => {
-    usePlane(() => ({
-      position: [0, -10, 0],
-      rotation: [-Math.PI / 2, 0, 0],
-      type: "Static",
-    }));
-    return (
-      <mesh position={[0, -10, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[500, 500]} />
-        <meshStandardMaterial color="red" wireframe />
-      </mesh>
-    );
-  };
-  
-  // Sync player position with physics engine
-  const SyncPlayerPosition = () => {
-    useFrame(() => {
-      if (playerRef.current) {
-        playerRef.current.api.position.subscribe((pos) => {
-          setPlayerPosition(pos);
-        });
-      }
-    });
-    return null; // This component doesn't render anything
+  const handleTargetHit = () => {
+    setScore((prevScore) => prevScore + 100);
+    console.log("Target hit! Score:", score + 100);
   };
 
-  // Handle target hit
-  const handleTargetHit = () => {
-    setScore((prevScore) => prevScore + 100); // Increment score by 100
-    console.log("Target hit! Score:", score + 100);
+  const handleBulletHit = (hitPosition, normal) => {
+    if (!hitPosition || !normal) {
+      console.warn("Invalid hit position or normal vector for decal placement.");
+      return;
+    }
+    setDecals((prev) => [
+      ...prev,
+      { id: `${Date.now()}-${Math.random()}`, position: hitPosition, normal }, // Generate a unique id
+    ]);
   };
 
   return (
     <>
       <Canvas
-        shadows // Enables shadow rendering
-        gl={{ alpha: false }} // Configures WebGL renderer
-        camera={{ position: [playerPosition[0], playerPosition[1], playerPosition[2] + 5], fov: 50 }} // Camera above player
-        style={{ background: '#000000', width: "99vw", height: "98vh" }} // Ensure full viewport
-      >
-        <color attach="background" args={["grey"]} />
-        <Physics gravity={[0, -20, 0]}> {/* Physics provider */}
-          <Stats />
-          <Controls playerRef={playerRef} />
-          <hemisphereLight intensity={0.35} />
-          <spotLight
-            position={[10, 10, 10]}
-            angle={0.3}
-            penumbra={1}
-            intensity={2}
-            castShadow
-          />
-          <HillyFloor width={250} depth={250} hillHeight={5} color="green" /> {/* Add the hilly floor */}
-          <Floor size={[500, 500]} color="black" position={[0, -10, 0]} /> {/* Add a gutter floor below */}
-          <PlayerLogic ref={playerRef} onPositionChange={setPlayerPosition} /> {/* Track player position */}
-          <SyncPlayerPosition /> {/* Sync player position */}
-          <Cube position={[0, 10, -2]} color="rebeccapurple" />
-          <Cube position={[0, 20, -2]} color="pink" />
-          <Cube position={[0, 30, -2]} color="darkorange" />
-
-          {/* Add targets with different behaviors */}
-          <Target position={[5, 1, -5]} color="red" type="explode" onHit={handleTargetHit} />
-          <Target position={[-5, 1, -10]} color="green" type="shrink" onHit={handleTargetHit} />
-          <Target position={[0, 1, -15]} color="blue" type="default" onHit={handleTargetHit} />
-
-          {/* Render bullets */}
-          {bullets.map((bullet) => (
-            <Bullet
-              key={bullet.id}
-              start={bullet.start}
-              end={bullet.end}
-              onComplete={() =>
-                setBullets((prev) => prev.filter((b) => b.id !== bullet.id))
-              }
-            />
-          ))}
-
-          {/* Render explosions
-          {explosions.map((explosion) => (
-            <Explosion
-              key={explosion.id}
-              position={explosion.position}
-              onComplete={() =>
-                setExplosions((prev) =>
-                  prev.filter((e) => e.id !== explosion.id)
-                )
-              }
-            />
-          ))} */}
-
-          {/* Render decals */}
-          {decals.map((decal) => (
-            <Decal
-              key={decal.id}
-              position={decal.position}
-              normal={decal.normal}
-            />
-          ))}
-
-          {/* Shooting handler */}
-          <ShootingHandler
-            playerPosition={playerPosition}
-            setBullets={setBullets}
-            setExplosions={setExplosions}
-            setDecals={setDecals}
-          />
-        </Physics>
-      </Canvas>
-      <Crosshair />
+        shadows
+        gl={{ alpha: false }}
+        camera={{ position: [playerPosition[0], playerPosition[1] + 5, playerPosition[2] + 5], fov: 50 }}
+        style={{ background: "#000000", width: "99vw", height: "98vh" }}
+          >
+            <color attach="background" args={["lightblue"]} />
+            <Stats showPanel={0} className="stats" />
+            <Physics gravity={[0, -20, 0]}>
+              <HillyFloor ref={terrainRef} width={250} depth={250} hillHeight={5} color="green" /> {/* Terrain */}
+              <Floor size={[500, 500]} color="black" position={[0, -1, 0]} /> {/* Gutter floor */}
+              <PlayerLogic ref={playerRef} onPositionChange={setPlayerPosition} />
+              <Controls playerRef={playerRef} terrainRef={terrainRef} /> {/* Use Controls from Controls.js */}
+              <hemisphereLight intensity={0.35} />
+              <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={2} castShadow />
+              <Cube position={[0, 10, -2]} color="rebeccapurple" />
+              <Cube position={[0, 20, -2]} color="pink" />
+              <Cube position={[0, 30, -2]} color="darkorange" />
+              <Target position={[5, 1, -5]} color="red" type="explode" onHit={handleTargetHit} />
+              <Target position={[-5, 1, -10]} color="green" type="shrink" onHit={handleTargetHit} />
+              <Target position={[0, 1, -15]} color="blue" type="default" onHit={handleTargetHit} />
+              {bullets.map((bullet) => (
+                <Bullet
+                  key={bullet.id}
+                  start={bullet.start}
+                  end={bullet.end}
+                  onComplete={() => {
+                    try {
+                      const raycaster = new THREE.Raycaster();
+                      raycaster.set(bullet.start, new THREE.Vector3().subVectors(bullet.end, bullet.start).normalize());
+                      const intersects = raycaster.intersectObject(terrainRef.current, true);
+                      if (intersects.length > 0) {
+                        const { point, face } = intersects[0];
+                        handleBulletHit(point, face.normal); // Place decal at hit point
+                      }
+                    } catch (error) {
+                      console.error("Error in Bullet onComplete raycasting:", error);
+                    }
+                    setBullets((prev) => prev.filter((b) => b.id !== bullet.id));
+                  }}
+                  />
+                ))}
+                {decals.map((decal) => (
+                  <Decal key={decal.id} position={decal.position} playerPosition={playerPosition} />
+                ))}
+                <ShootingHandler
+                  playerPosition={playerPosition}
+                  setBullets={setBullets}
+                  setExplosions={setExplosions}
+                  setDecals={setDecals}
+                />
+            </Physics>
+          </Canvas>
+        <Crosshair />
       <div
         style={{
           position: "absolute",
@@ -145,9 +110,7 @@ function Range() {
           color: "white",
           fontSize: "20px",
         }}
-      >
-        Score: {score}
-      </div>
+      >Score: {score}</div>
     </>
   );
 }

@@ -26,8 +26,16 @@ const Bullet = ({ start, end, onComplete }) => {
     );
   }, [api, direction, speed]);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      onComplete(); // Trigger onComplete to remove the bullet
+    }, 5000); // Destroy after 5 seconds
+
+    return () => clearTimeout(timeout); // Cleanup timeout
+  }, [onComplete]);
+
   useFrame(() => {
-    if (traveled.current >= 1500) {
+    if (traveled.current >= 400) {
       onComplete(); // Remove the bullet if it travels too far
     }
     traveled.current += speed * 0.1; // Adjust travel tracking for increased speed
@@ -35,7 +43,7 @@ const Bullet = ({ start, end, onComplete }) => {
 
   return (
     <mesh ref={ref}>
-      <sphereGeometry args={[0.1, 5, 5]} />
+      <sphereGeometry args={[0.1, 4, 4]} />
       <meshStandardMaterial color="black" />
     </mesh>
   );
