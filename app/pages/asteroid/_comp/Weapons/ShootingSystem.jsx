@@ -4,14 +4,118 @@ import * as THREE from 'three';
 import { useSound } from '@/utils/audio/useSound';
 
 const WEAPON_TYPES = [
-  { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
+  { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 1 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
-  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 0 },
+  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 2 },
 ];
 
-const SPREAD_ANGLE = 0.2; // Spread angle in radians
-const SPREAD_COUNT = 100; // Number of pellets for the shotgun
+const SPREAD_ANGLE = 0.25; // Spread angle in radians
+const SPREAD_COUNT = 15; // Number of pellets for the shotgun
 const SPREAD_RANGE = 100; // Maximum range for shotgun projectiles
+
+const handleSpreadShot = ({
+  camera,
+  targets,
+  setTargets,
+  setShowLaser,
+  playSound,
+  onHit,
+  onMiss,
+}) => {
+  const from = camera.position.clone();
+  const forwardDirection = new THREE.Vector3();
+  camera.getWorldDirection(forwardDirection);
+
+  const hitTargets = new Set(); // Track hit targets to avoid duplicates
+  const lasers = []; // Store laser data for visual feedback
+
+  // Iterate through all targets
+  const updatedTargets = targets.map((target) => {
+    if (!target.isHit) {
+      const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
+      const toTarget = targetPosition.sub(from).normalize(); // Vector to the target
+      const distance = from.distanceTo(targetPosition);
+
+      // Check if the target is within the cone
+      const angle = forwardDirection.angleTo(toTarget);
+      if (angle <= SPREAD_ANGLE && distance <= SPREAD_RANGE) {
+        hitTargets.add(target.id);
+        playSound('hit');
+        return { ...target, isHit: true, hovered: true }; // Mark as hit and hovered
+      }
+    }
+    return { ...target, hovered: false }; // Reset hover state for other targets
+  });
+
+  setTargets(updatedTargets); // Update targets state
+
+  // If no targets were hit, register a miss
+  if (hitTargets.size === 0) {
+    playSound('miss');
+    onMiss();
+  }
+
+  // Generate visual feedback for the spread
+  for (let i = 0; i < SPREAD_COUNT; i++) {
+    const spreadDirection = forwardDirection.clone().applyEuler(
+      new THREE.Euler(
+        (Math.random() - 0.5) * SPREAD_ANGLE,
+        (Math.random() - 0.5) * SPREAD_ANGLE,
+        0
+      )
+    );
+
+    const to = from.clone().add(spreadDirection.multiplyScalar(SPREAD_RANGE));
+    lasers.push({ from, to });
+  }
+
+  setShowLaser(lasers); // Update visual feedback
+
+  // Remove lasers after 0.5 seconds
+  setTimeout(() => setShowLaser(null), 500);
+};
+
+const handleLaserShot = ({
+  camera,
+  scene,
+  setShowLaser,
+  playSound,
+  onHit,
+  onMiss,
+}) => {
+  const from = camera.position.clone();
+  const forwardDirection = new THREE.Vector3();
+  camera.getWorldDirection(forwardDirection);
+
+  const raycaster = new THREE.Raycaster(from, forwardDirection);
+  const intersects = raycaster.intersectObjects(scene.children, true);
+  let to;
+
+  if (intersects[0]?.point) {
+    to = intersects[0].point.clone(); // Use the intersection point
+  } else {
+    to = from.clone().add(forwardDirection.multiplyScalar(100)); // Default to a point far ahead
+  }
+
+  setShowLaser([{ from, to }]); // Update visual feedback
+
+  // Remove laser after 0.5 seconds
+  setTimeout(() => setShowLaser(null), 500);
+
+  const targetIntersect = intersects.find((intersect) => {
+    const parent = intersect.object.parent;
+    return parent?.userData?.isTarget && !parent?.userData?.isHit;
+  });
+  if (targetIntersect) {
+    const targetId = targetIntersect.object.parent.userData.targetId;
+    targetIntersect.object.parent.userData.isHit = true;
+    playSound('hit');
+    onHit(targetId);
+  } else {
+    playSound('miss');
+    onMiss();
+  }
+};
 
 const ShootingSystem = ({
   onHit,
@@ -22,8 +126,9 @@ const ShootingSystem = ({
   setAmmo,
   cooldowns,
   setCooldowns,
-  showLaser,
   setShowLaser,
+  targets,
+  setTargets,
 }) => {
   const { camera, scene } = useThree();
   const { playSound } = useSound();
@@ -31,136 +136,94 @@ const ShootingSystem = ({
   useEffect(() => {
     const handleShoot = () => {
       if (document.pointerLockElement && !isGameOver) {
+        // Check if the weapon is on cooldown
         if (cooldowns[weapon] > 0) {
           playSound('miss');
           return;
         }
+
+        // Check if the player has ammo
         if (ammo[weapon] <= 0) {
-          playSound('empty');
-          return;
+          playSound('empty'); // Play empty ammo sound
+          return; // Prevent shooting if out of ammo
         }
 
-        const from = camera.position.clone();
-        const direction = new THREE.Vector3();
-        camera.getWorldDirection(direction);
-
-        // Calculate the player's backward direction
-        const backwardDirection = direction.clone().negate();
-
-        // Ensure the direction is not pointing back toward the player or within a very short range
-        const raycaster = new THREE.Raycaster(from, direction);
-        const intersects = raycaster.intersectObjects(scene.children, true);
-        let to;
-        if (intersects[0]?.point) {
-          to = intersects[0].point.clone();
-        } else {
-          to = from.clone().add(direction.multiplyScalar(100));
+        // Handle weapon-specific logic
+        if (weapon === 'spread') {
+          handleSpreadShot({
+            camera,
+            targets,
+            setTargets,
+            setShowLaser,
+            playSound,
+            onHit,
+            onMiss,
+          });
         }
-
-        const distance = from.distanceTo(to); // Calculate distance
-        if (distance < 1 || direction.dot(backwardDirection) > 0.99) {
-          console.debug('Skipping laser: invalid direction or too close.');
-          return; // Skip firing entirely
-        }
-
-        // Update ammo and cooldown only if the laser is valid
-        setCooldowns((prev) => ({ ...prev, [weapon]: WEAPON_TYPES.find(w => w.key === weapon).cooldown }));
-        setAmmo((prev) => ({ ...prev, [weapon]: Math.max(0, prev[weapon] - 1) }));
-
-        playSound('shoot');
 
         if (weapon === 'laser') {
-          setShowLaser([{ from, to }]); // Ensure lasers is always an array
-
-          // Remove laser after 0.5 seconds
-          setTimeout(() => setShowLaser([]), 500);
-
-          const targetIntersect = intersects.find((intersect) => {
-            const parent = intersect.object.parent;
-            return parent?.userData?.isTarget && !parent?.userData?.isHit;
+          handleLaserShot({
+            camera,
+            scene,
+            setShowLaser,
+            playSound,
+            onHit,
+            onMiss,
           });
-          if (targetIntersect) {
-            const targetId = targetIntersect.object.parent.userData.targetId;
-            targetIntersect.object.parent.userData.isHit = true;
-            playSound('hit');
-            onHit(targetId);
-          } else {
-            playSound('miss');
-            onMiss();
-          }
         }
 
-        if (weapon === 'spread') {
-          const origin = camera.position.clone();
-          const forwardDirection = new THREE.Vector3();
-          camera.getWorldDirection(forwardDirection);
+        // Set the cooldown for the weapon
+        const weaponCooldown = WEAPON_TYPES.find((w) => w.key === weapon).cooldown;
+        setCooldowns((prev) => ({
+          ...prev,
+          [weapon]: weaponCooldown,
+        }));
 
-          const hitTargets = new Set(); // Track hit targets to avoid duplicates
-          const lasers = []; // Store laser data for visual feedback
+        // Decrease ammo for the weapon
+        setAmmo((prev) => ({
+          ...prev,
+          [weapon]: Math.max(0, prev[weapon] - 1),
+        }));
 
-          for (let i = 0; i < SPREAD_COUNT; i++) {
-            // Generate a random direction within the spread angle
-            const spreadDirection = forwardDirection.clone().applyEuler(
-              new THREE.Euler(
-                (Math.random() - 0.5) * SPREAD_ANGLE,
-                (Math.random() - 0.5) * SPREAD_ANGLE,
-                0
-              )
-            );
-
-            const raycaster = new THREE.Raycaster(origin, spreadDirection);
-            const intersects = raycaster.intersectObjects(scene.children, true);
-
-            if (intersects.length > 0) {
-              const target = intersects[0];
-              if (target.object.userData?.isTarget && !hitTargets.has(target.object.userData.targetId)) {
-                hitTargets.add(target.object.userData.targetId);
-                target.object.userData.isHit = true;
-                playSound('hit');
-                onHit(target.object.userData.targetId);
-              }
-            }
-
-            // Debugging: Visualize the ray
-            lasers.push({
-              from: origin,
-              to: origin.clone().add(spreadDirection.multiplyScalar(SPREAD_RANGE)),
-            });
-          }
-
-          // If no targets were hit, register a miss
-          if (hitTargets.size === 0) {
-            playSound('miss');
-            onMiss();
-          }
-
-          setShowLaser(lasers); // Update visual feedback
-
-          // Remove lasers after 0.5 seconds
-          setTimeout(() => setShowLaser([]), 500);
-        }
+        playSound('shoot');
       }
     };
 
     window.addEventListener('click', handleShoot);
     return () => window.removeEventListener('click', handleShoot);
-  }, [camera, scene, onHit, onMiss, isGameOver, weapon, ammo, setAmmo, cooldowns, setCooldowns, playSound, setShowLaser]);
+  }, [
+    camera,
+    scene,
+    onHit,
+    onMiss,
+    isGameOver,
+    weapon,
+    ammo,
+    setAmmo,
+    cooldowns,
+    setCooldowns,
+    playSound,
+    setShowLaser,
+    setTargets,
+  ]);
 
-  // Cooldown timer
+  // Cooldown timer logic
   useEffect(() => {
-    let frame;
-    const updateCooldown = () => {
+    const updateCooldowns = () => {
       setCooldowns((prev) => {
-        if (prev[weapon] > 0) {
-          return { ...prev, [weapon]: Math.max(0, prev[weapon] - 1 / 60) };
-        }
-        return prev;
+        const updatedCooldowns = { ...prev };
+        Object.keys(updatedCooldowns).forEach((key) => {
+          if (updatedCooldowns[key] > 0) {
+            updatedCooldowns[key] = Math.max(0, updatedCooldowns[key] - 1 / 60); // Decrease cooldown by 1 frame (assuming 60 FPS)
+          }
+        });
+        return updatedCooldowns;
       });
-      frame = requestAnimationFrame(updateCooldown);
     };
-    frame = requestAnimationFrame(updateCooldown);
-    return () => cancelAnimationFrame(frame);
-  }, [weapon, setCooldowns]);
+
+    const interval = setInterval(updateCooldowns, 1000 / 60); // Run at 60 FPS
+    return () => clearInterval(interval); // Cleanup interval on unmount
+  }, [setCooldowns]);
 
   return null;
 };

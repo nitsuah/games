@@ -1,10 +1,26 @@
 import React from 'react';
 import * as THREE from 'three';
 
-const LaserBeam = ({ lasers, color = 'cyan', thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, -5, 0) }) => {
+const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, -5, 0) }) => {
   if (!Array.isArray(lasers) || lasers.length === 0) return null; // Ensure lasers is an array
 
-  console.debug("Rendering lasers:", lasers); // Debugging laser positions
+  // Determine the laser color based on the weapon type
+  const getLaserColor = () => {
+    switch (weaponType) {
+      case 'spread':
+        return 'red';
+      case 'laser':
+        return 'cyan';
+      case 'explosive':
+        return 'orange';
+      default:
+        return 'white';
+    }
+  };
+
+  const laserColor = getLaserColor();
+
+  console.debug("Rendering lasers with color:", laserColor); // Debugging laser color
 
   return (
     <>
@@ -42,8 +58,8 @@ const LaserBeam = ({ lasers, color = 'cyan', thickness = 1, glowIntensity = 0.8,
               ]}
             />
             <meshStandardMaterial
-              color={color}
-              emissive={color}
+              color={laserColor}
+              emissive={laserColor}
               emissiveIntensity={glowIntensity} // Add glow effect
               transparent
               opacity={0.8}

@@ -32,6 +32,30 @@ import GameOverOverlay from '../UI/GameOverOverlay';
 
 const MIN_ALIVE_TIME = 0.5;
 
+const GameLogic = ({
+  gameOver,
+  setShowLaser,
+  showLaser,
+  weapon,
+}) => {
+  const { camera } = useThree(); // Access the camera from useThree
+
+  // Remove duplicate laser logic; rely on ShootingSystem for laser handling
+  useEffect(() => {
+    const handleMouseClick = (event) => {
+      if (gameOver) return;
+
+      // Prevent duplicate laser logic here
+      console.debug("Mouse click detected, but laser logic is handled in ShootingSystem.");
+    };
+
+    window.addEventListener('mousedown', handleMouseClick);
+    return () => window.removeEventListener('mousedown', handleMouseClick);
+  }, [camera, gameOver]);
+
+  return null;
+};
+
 const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
@@ -216,8 +240,16 @@ const Game = ({ onHit, onMiss }) => {
           setCooldowns={setCooldowns}
           showLaser={showLaser}
           setShowLaser={setShowLaser}
+          targets={targets} // Pass targets
+          setTargets={setTargets} // Pass setTargets
         />
-        {showLaser && <LaserBeam lasers={showLaser} />}
+        {showLaser && <LaserBeam lasers={showLaser} weaponType={weapon} />} {/* Pass weaponType */}
+        <GameLogic
+          gameOver={gameOver}
+          setShowLaser={setShowLaser}
+          showLaser={showLaser}
+          weapon={weapon}
+        />
         <CollisionDetection targets={targets} setTargets={setTargets} setHealth={setHealth} onPlayerHit={handlePlayerHit} />
         <TargetCollisionHandler targets={targets} setTargets={setTargets} />
         <TargetList
