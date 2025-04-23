@@ -40,10 +40,55 @@ const ShootingSystem = ({
           return;
         }
 
+        const from = camera.position.clone();
+        const direction = new THREE.Vector3();
+        camera.getWorldDirection(direction);
+
+        // Calculate the player's backward direction
+        const backwardDirection = direction.clone().negate();
+
+        // Ensure the direction is not pointing back toward the player or within a very short range
+        const raycaster = new THREE.Raycaster(from, direction);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        let to;
+        if (intersects[0]?.point) {
+          to = intersects[0].point.clone();
+        } else {
+          to = from.clone().add(direction.multiplyScalar(100));
+        }
+
+        const distance = from.distanceTo(to); // Calculate distance
+        if (distance < 1 || direction.dot(backwardDirection) > 0.99) {
+          console.debug('Skipping laser: invalid direction or too close.');
+          return; // Skip firing entirely
+        }
+
+        // Update ammo and cooldown only if the laser is valid
         setCooldowns((prev) => ({ ...prev, [weapon]: WEAPON_TYPES.find(w => w.key === weapon).cooldown }));
         setAmmo((prev) => ({ ...prev, [weapon]: Math.max(0, prev[weapon] - 1) }));
 
         playSound('shoot');
+
+        if (weapon === 'laser') {
+          setShowLaser([{ from, to }]); // Ensure lasers is always an array
+
+          // Remove laser after 0.5 seconds
+          setTimeout(() => setShowLaser([]), 500);
+
+          const targetIntersect = intersects.find((intersect) => {
+            const parent = intersect.object.parent;
+            return parent?.userData?.isTarget && !parent?.userData?.isHit;
+          });
+          if (targetIntersect) {
+            const targetId = targetIntersect.object.parent.userData.targetId;
+            targetIntersect.object.parent.userData.isHit = true;
+            playSound('hit');
+            onHit(targetId);
+          } else {
+            playSound('miss');
+            onMiss();
+          }
+        }
 
         if (weapon === 'spread') {
           const origin = camera.position.clone();
@@ -93,38 +138,6 @@ const ShootingSystem = ({
 
           // Remove lasers after 0.5 seconds
           setTimeout(() => setShowLaser([]), 500);
-        }
-
-        if (weapon === 'laser') {
-          const from = camera.position.clone();
-          const direction = new THREE.Vector3();
-          camera.getWorldDirection(direction);
-          const raycaster = new THREE.Raycaster(from, direction);
-          const intersects = raycaster.intersectObjects(scene.children, true);
-          let to;
-          if (intersects[0]?.point) {
-            to = intersects[0].point.clone();
-          } else {
-            to = from.clone().add(direction.multiplyScalar(100));
-          }
-          setShowLaser([{ from, to }]); // Ensure lasers is always an array
-
-          // Remove laser after 0.5 seconds
-          setTimeout(() => setShowLaser([]), 500);
-
-          const targetIntersect = intersects.find((intersect) => {
-            const parent = intersect.object.parent;
-            return parent?.userData?.isTarget && !parent?.userData?.isHit;
-          });
-          if (targetIntersect) {
-            const targetId = targetIntersect.object.parent.userData.targetId;
-            targetIntersect.object.parent.userData.isHit = true;
-            playSound('hit');
-            onHit(targetId);
-          } else {
-            playSound('miss');
-            onMiss();
-          }
         }
       }
     };

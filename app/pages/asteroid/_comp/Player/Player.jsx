@@ -134,7 +134,7 @@ const Player = ({ targets, onTargetHit }) => {
       const distance = camera.position.distanceTo(targetPosition);
 
       if (distance < playerRadius + targetRadius && !target.isHit) {
-        console.log('Collision detected with target:', target.id, 'Size:', target.size);
+        console.debug('Collision detected with target:', target.id, 'Size:', target.size);
         onTargetHit(target.id);
       }
     });
