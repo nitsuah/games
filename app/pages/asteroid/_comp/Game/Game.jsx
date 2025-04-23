@@ -17,8 +17,17 @@ import LaserBeam from '../Weapons/LaserBeam';
 import MovementControls from '../Player/MovementControls';
 import CollisionDetection from '../Target/CollisionDetection';
 import TargetCollisionHandler from '../Target/TargetCollisionHandler';
+import { handleTargetHit as handleTargetHitFn } from './handleTargetHit';
+import { handleMiss as handleMissFn } from './handleMiss';
+import { restartGame as restartGameFn } from './restartGame';
+import { handlePlayerHit as handlePlayerHitFn } from './handlePlayerHit';
+import { handleKeyDown as handleKeyDownFn } from './handleKeyDown';
+import { updateScore as updateScoreFn } from './updateScore';
+import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
+import { handleGameOver as handleGameOverFn } from './handleGameOver';
+import { handleHealthDepletion as handleHealthDepletionFn } from './handleHealthDepletion';
 
-const MIN_ALIVE_TIME = 0.5; // Try a bigger delay for safety
+const MIN_ALIVE_TIME = 0.5;
 
 const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
@@ -55,35 +64,18 @@ const Game = ({ onHit, onMiss }) => {
 
   // Weapon switch & reload handler
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.code === 'Digit1') setWeapon('spread');
-      if (e.code === 'Digit2') setWeapon('laser');
-      if (e.code === 'Digit3') setWeapon('explosive');
-      if (e.code === 'KeyR') {
-        // Replenish all ammo to max
-        setAmmo({
-          spread: WEAPON_TYPES.find(w => w.key === 'spread').maxAmmo,
-          laser: WEAPON_TYPES.find(w => w.key === 'laser').maxAmmo,
-          explosive: WEAPON_TYPES.find(w => w.key === 'explosive').maxAmmo,
-        });
-      }
-    };
+    const handleKeyDown = (e) => handleKeyDownFn(e, setWeapon, setAmmo);
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setWeapon, setAmmo]);
 
   useEffect(() => {
-    const savedHighScore = window.localStorage.getItem('asteroidHighScore');
-    const savedBestAccuracy = window.localStorage.getItem('asteroidBestAccuracy');
-
-    if (savedHighScore) setHighScore(parseInt(savedHighScore, 10));
-    if (savedBestAccuracy) setBestAccuracy(parseFloat(savedBestAccuracy));
-  }, []);
+    loadSavedScoresFn({ setHighScore, setBestAccuracy });
+  }, [setHighScore, setBestAccuracy]);
 
   useEffect(() => {
-    // Update score whenever hits or misses change
-    setScore(hits * 100 + Math.round((hits / (hits + misses || 1)) * 100));
-  }, [hits, misses]);
+    updateScoreFn({ hits, misses, setScore });
+  }, [hits, misses, setScore]);
   
   useEffect(() => {
     // Play background music on mount
@@ -91,127 +83,67 @@ const Game = ({ onHit, onMiss }) => {
   }, [playSound]);
 
   useEffect(() => {
-    if (health <= 0) {
-      setGameOver(true);
-      pauseSound('bgm'); // Pause background music
-      playSound('hit');
-      setShowRedFlash(true); // setShowRedFlash
-      setTimeout(() => {
-        setShowRedFlash(false); // Hide red flash effect after 500ms
-      }, 1000);
-      document.exitPointerLock(); // Exit pointer lock
-    }
-  }, [health, pauseSound]);
+    handleHealthDepletionFn({
+      health,
+      setGameOver,
+      pauseSound,
+      playSound,
+      setShowRedFlash,
+    });
+  }, [health, setGameOver, pauseSound, playSound, setShowRedFlash]);
 
   useEffect(() => {
-    // Game over effect: triggers when all targets are hit
-    if (targets.length > 0 && targets.every(t => t.isHit)) {
-      setGameOver(true);
-      document.exitPointerLock();
-      // Pause BGM on game over
-      pauseSound('bgm');
-      const accuracy = hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0;
-      if (score > highScore) {
-        setHighScore(score);
-        window.localStorage.setItem('asteroidHighScore', score);
-        setIsNewHighScore(true);
-      }
-      if (accuracy > bestAccuracy) {
-        setBestAccuracy(accuracy);
-        window.localStorage.setItem('asteroidBestAccuracy', accuracy);
-      }
-    }
-  }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound]);
+    handleGameOverFn({
+      targets,
+      setGameOver,
+      pauseSound,
+      playSound,
+      hits,
+      misses,
+      score,
+      highScore,
+      setHighScore,
+      setIsNewHighScore,
+      bestAccuracy,
+      setBestAccuracy,
+    });
+  }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound, playSound, setGameOver, setHighScore, setIsNewHighScore, setBestAccuracy]);
 
   // HANDLE HIT
-  const handleTargetHit = useCallback((targetId) => {
-    // Only allow hit if weapon is not cooling down and has ammo
-    if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
-      return;
-    }
-    setTargets((prevTargets) => {
-      let updatedTargets = [];
-      let newTargets = [];
-      prevTargets.forEach((target) => {
-        if (target.id === targetId && !target.isHit && (now() - (target.spawnTime || 0) > MIN_ALIVE_TIME)) {
-          const meshRef = targetRefs.current[targetId];
-          const currentX = meshRef?.current?.position.x || target.x;
-          const currentY = meshRef?.current?.position.y || target.y;
-          const currentZ = meshRef?.current?.position.z || target.z;
-
-          if (target.size > 1) {
-            const newSize = target.size * 0.5;
-            const newSpeed = target.speed * 2; // Double the speed for smaller fragments
-            const newColor =
-              newSize > 4 ? '#0000ff' :
-              newSize > 3 ? '#800080' :
-              newSize > 2 ? '#ff4500' :
-              newSize > 1 ? '#00ffff' :
-              '#ffff00';
-
-            const offsetRange = 1.0;
-            const spawnTime = now();
-            newTargets.push(
-              {
-                id: `${target.id}-1`,
-                x: currentX + Math.random() * offsetRange - offsetRange / 2,
-                y: currentY + Math.random() * offsetRange - offsetRange / 2,
-                z: currentZ + Math.random() * offsetRange - offsetRange / 2,
-                isHit: false,
-                size: newSize,
-                speed: newSpeed,
-                color: newColor,
-                spawnTime,
-              },
-              {
-                id: `${target.id}-2`,
-                x: currentX + Math.random() * offsetRange - offsetRange / 2,
-                y: currentY + Math.random() * offsetRange - offsetRange / 2,
-                z: currentZ + Math.random() * offsetRange - offsetRange / 2,
-                isHit: false,
-                size: newSize,
-                speed: newSpeed,
-                color: newColor,
-                spawnTime,
-              }
-            );
-          }
-          // Do not add the original target (removes it)
-        } else {
-          updatedTargets.push(target);
-        }
-      });
-      return [...updatedTargets, ...newTargets];
-    });
-
-    setHits((prevHits) => prevHits + 1);
-
-    if (onHit) onHit();
-  }, [onHit, cooldowns, weapon, ammo]);
+  const handleTargetHit = useCallback(
+    (targetId) =>
+      handleTargetHitFn({
+        targetId,
+        cooldowns,
+        weapon,
+        ammo,
+        setTargets,
+        setHits,
+        onHit,
+        targetRefs,
+      }),
+    [cooldowns, weapon, ammo, setTargets, setHits, onHit]
+  );
 
   // HANDLE MISS
-  const handleMiss = useCallback(() => {
-    setMisses((prevMisses) => prevMisses + 1);
-    if (onMiss) onMiss(); // Call the onMiss prop if it exists
-  }, [onMiss]);
+  const handleMiss = useCallback(
+    () => handleMissFn({ setMisses, onMiss }),
+    [setMisses, onMiss]
+  );
 
   // HANDLE RESTART
-  const restartGame = () => {
-    setScore(0);
-    setHits(0);
-    setMisses(0);
-    setGameOver(false);
-    setHealth(100); // Reset health to 100
-    setWeapon('spread');
-    setAmmo({ spread: 30, laser: 10, explosive: 5 });
-    setCooldowns({ spread: 0, laser: 0, explosive: 5 });
-    setTargets([
-      { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-      { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-      { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-      { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    ]);
-  };
+  const restartGame = () =>
+    restartGameFn({
+      setScore,
+      setHits,
+      setMisses,
+      setGameOver,
+      setHealth,
+      setWeapon,
+      setAmmo,
+      setCooldowns,
+      setTargets,
+    });
 
   // HANDLE REFS
   const targetRefs = useRef({});
@@ -221,14 +153,16 @@ const Game = ({ onHit, onMiss }) => {
   };
 
   // Red flash effect when player is hit
-  const handlePlayerHit = useCallback((targetSize) => {
-    // Example: lose 2x the target's size in HP, minimum 5, maximum 50
-    const hpLoss = Math.max(5, Math.min(50, Math.round(targetSize * 2)));
-    setHealth((prevHealth) => Math.max(prevHealth - 10 * (hpLoss || 1), 0));
-    setShowRedFlash(true); // Show red flash
-    playSound('hit'); // Play hit sound
-    setTimeout(() => setShowRedFlash(false), 500);
-  }, [playSound]);
+  const handlePlayerHit = useCallback(
+    (targetSize) =>
+      handlePlayerHitFn({
+        targetSize,
+        setHealth,
+        setShowRedFlash,
+        playSound,
+      }),
+    [setHealth, setShowRedFlash, playSound]
+  );
 
   // Remove laser after short time
   useEffect(() => {
