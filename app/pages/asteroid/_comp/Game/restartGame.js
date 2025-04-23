@@ -17,8 +17,8 @@ export const restartGame = ({
   setGameOver(false);
   setHealth(100);
   setWeapon('spread');
-  setAmmo({ spread: 30, laser: 10, explosive: 5 });
-  setCooldowns({ spread: 0, laser: 0, explosive: 5 });
+  setAmmo({ spread: 30, laser: 10, explosive: 10 });
+  setCooldowns({ spread: 0.3, laser: 0, explosive: 1 });
   setTargets([
     { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },

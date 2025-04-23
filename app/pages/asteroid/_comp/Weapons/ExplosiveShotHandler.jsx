@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
 import * as THREE from 'three';
-import Explosion from './Explosion'; // Import the Explosion component
 
 const ExplosiveShotHandler = ({
   camera,
@@ -11,12 +9,10 @@ const ExplosiveShotHandler = ({
   onMiss,
   targets,
   setTargets,
-  explosionRadius = 20, // Radius of the explosion sphere
-  maxRange = 100, // Maximum range of the explosive shot
+  explosionRadius = 50, // Radius of the explosion sphere
+  maxRange = 500, // Maximum range of the explosive shot
   triggerExplosion, // Callback to trigger an explosion
 }) => {
-  const [explosions, setExplosions] = useState([]); // Track active explosions
-
   const from = camera.position.clone();
   const forwardDirection = new THREE.Vector3();
   camera.getWorldDirection(forwardDirection);
@@ -64,22 +60,6 @@ const ExplosiveShotHandler = ({
     playSound('miss');
     onMiss();
   }
-
-  return (
-    <>
-      {explosions.map((explosion) => (
-        <Explosion
-          key={explosion.id}
-          position={explosion.position}
-          onComplete={() =>
-            setExplosions((prev) =>
-              prev.filter((e) => e.id !== explosion.id)
-            )
-          }
-        />
-      ))}
-    </>
-  );
 };
 
 export default ExplosiveShotHandler;

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 import SpreadShotHandler from './SpreadShotHandler';
 import LaserShotHandler from './LaserShotHandler';
 import CooldownManager from './CooldownManager';
 import ExplosiveShotHandler from './ExplosiveShotHandler';
+import Explosion from '../../../../_components/objects/Explosion';
 
 const WEAPON_TYPES = [
   { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
@@ -27,6 +28,7 @@ const ShootingSystem = ({
 }) => {
   const { camera, scene } = useThree();
   const { playSound } = useSound();
+  const [explosions, setExplosions] = useState([]); // Track active explosions
 
   useEffect(() => {
     const handleShoot = () => {
@@ -68,6 +70,7 @@ const ShootingSystem = ({
         }
 
         if (weapon === 'explosive') {
+          const explosionRadius = 50; // Adjust the explosion radius here
           ExplosiveShotHandler({
             camera,
             scene,
@@ -77,6 +80,13 @@ const ShootingSystem = ({
             onMiss,
             targets,
             setTargets,
+            explosionRadius,
+            triggerExplosion: (position) => {
+              setExplosions((prev) => [
+                ...prev,
+                { id: Date.now(), position, explosionRadius },
+              ]);
+            },
           });
         }
 
@@ -115,7 +125,23 @@ const ShootingSystem = ({
     setTargets,
   ]);
 
-  return <CooldownManager cooldowns={cooldowns} setCooldowns={setCooldowns} />;
+  return (
+    <>
+      <CooldownManager cooldowns={cooldowns} setCooldowns={setCooldowns} />
+      {explosions.map((explosion) => (
+        <Explosion
+          key={explosion.id}
+          position={explosion.position}
+          explosionRadius={explosion.explosionRadius} // Pass explosionRadius to Explosion
+          onComplete={() =>
+            setExplosions((prev) =>
+              prev.filter((e) => e.id !== explosion.id)
+            )
+          }
+        />
+      ))}
+    </>
+  );
 };
 
 export default ShootingSystem;
