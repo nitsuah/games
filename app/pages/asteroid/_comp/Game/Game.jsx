@@ -217,7 +217,7 @@ const Game = ({ onHit, onMiss }) => {
           showLaser={showLaser}
           setShowLaser={setShowLaser}
         />
-        {showLaser && <LaserBeam from={showLaser.from} to={showLaser.to} />}
+        {showLaser && <LaserBeam lasers={showLaser} />}
         <CollisionDetection targets={targets} setTargets={setTargets} setHealth={setHealth} onPlayerHit={handlePlayerHit} />
         <TargetCollisionHandler targets={targets} setTargets={setTargets} />
         <TargetList

@@ -9,10 +9,9 @@ const WEAPON_TYPES = [
   { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 0 },
 ];
 
-const now = () => performance.now() / 1000;
-
-const SPREAD_ANGLE = 10; // Maximum angle offset for spread rays
-const SPREAD_COUNT = 5; // Number of rays in the spread
+const SPREAD_ANGLE = 0.2; // Spread angle in radians
+const SPREAD_COUNT = 100; // Number of pellets for the shotgun
+const SPREAD_RANGE = 100; // Maximum range for shotgun projectiles
 
 const ShootingSystem = ({
   onHit,
@@ -27,13 +26,12 @@ const ShootingSystem = ({
   setShowLaser,
 }) => {
   const { camera, scene } = useThree();
-  const raycaster = new THREE.Raycaster();
   const { playSound } = useSound();
 
   useEffect(() => {
-    const handleShoot = (e) => {
+    const handleShoot = () => {
       if (document.pointerLockElement && !isGameOver) {
-        if (cooldowns[weapon] > 0 && ammo[weapon] > 0) {
+        if (cooldowns[weapon] > 0) {
           playSound('miss');
           return;
         }
@@ -41,54 +39,67 @@ const ShootingSystem = ({
           playSound('empty');
           return;
         }
+
         setCooldowns((prev) => ({ ...prev, [weapon]: WEAPON_TYPES.find(w => w.key === weapon).cooldown }));
         setAmmo((prev) => ({ ...prev, [weapon]: Math.max(0, prev[weapon] - 1) }));
 
         playSound('shoot');
 
         if (weapon === 'spread') {
-          const from = camera.position.clone();
-          const direction = new THREE.Vector3();
-          camera.getWorldDirection(direction);
+          const origin = camera.position.clone();
+          const forwardDirection = new THREE.Vector3();
+          camera.getWorldDirection(forwardDirection);
 
-          // Generate multiple rays for the spread
+          const hitTargets = new Set(); // Track hit targets to avoid duplicates
+          const lasers = []; // Store laser data for visual feedback
+
           for (let i = 0; i < SPREAD_COUNT; i++) {
-            const spreadDirection = direction.clone();
-            const offsetX = (Math.random() - 0.5) * SPREAD_ANGLE * (Math.PI / 180);
-            const offsetY = (Math.random() - 0.5) * SPREAD_ANGLE * (Math.PI / 180);
-            spreadDirection.applyAxisAngle(camera.up, offsetX);
-            spreadDirection.applyAxisAngle(new THREE.Vector3(1, 0, 0), offsetY);
+            // Generate a random direction within the spread angle
+            const spreadDirection = forwardDirection.clone().applyEuler(
+              new THREE.Euler(
+                (Math.random() - 0.5) * SPREAD_ANGLE,
+                (Math.random() - 0.5) * SPREAD_ANGLE,
+                0
+              )
+            );
 
-            raycaster.set(from, spreadDirection);
+            const raycaster = new THREE.Raycaster(origin, spreadDirection);
             const intersects = raycaster.intersectObjects(scene.children, true);
 
-            const targetIntersect = intersects.find((intersect) => {
-              const parent = intersect.object.parent;
-              return parent?.userData?.isTarget && !parent?.userData?.isHit;
-            });
-
-            if (targetIntersect) {
-              const targetId = targetIntersect.object.parent.userData.targetId;
-              targetIntersect.object.parent.userData.isHit = true;
-              playSound('hit');
-              onHit(targetId);
-            } else {
-              playSound('miss');
-              onMiss();
+            if (intersects.length > 0) {
+              const target = intersects[0];
+              if (target.object.userData?.isTarget && !hitTargets.has(target.object.userData.targetId)) {
+                hitTargets.add(target.object.userData.targetId);
+                target.object.userData.isHit = true;
+                playSound('hit');
+                onHit(target.object.userData.targetId);
+              }
             }
+
+            // Debugging: Visualize the ray
+            lasers.push({
+              from: origin,
+              to: origin.clone().add(spreadDirection.multiplyScalar(SPREAD_RANGE)),
+            });
           }
+
+          // If no targets were hit, register a miss
+          if (hitTargets.size === 0) {
+            playSound('miss');
+            onMiss();
+          }
+
+          setShowLaser(lasers); // Update visual feedback
+
+          // Remove lasers after 0.5 seconds
+          setTimeout(() => setShowLaser([]), 500);
         }
 
         if (weapon === 'laser') {
           const from = camera.position.clone();
-          const left = new THREE.Vector3();
-          camera.getWorldDirection(left);
-          left.crossVectors(camera.up, left).normalize();
-          const offset = 0.5;
-          from.add(left.multiplyScalar(offset));
           const direction = new THREE.Vector3();
           camera.getWorldDirection(direction);
-          raycaster.set(from, direction);
+          const raycaster = new THREE.Raycaster(from, direction);
           const intersects = raycaster.intersectObjects(scene.children, true);
           let to;
           if (intersects[0]?.point) {
@@ -96,11 +107,11 @@ const ShootingSystem = ({
           } else {
             to = from.clone().add(direction.multiplyScalar(100));
           }
-          if (e.button === 0) {
-            setShowLaser({ from, to, time: now(), which: 'left' });
-          } else if (e.button === 2) {
-            setShowLaser({ from, to, time: now(), which: 'right' });
-          }
+          setShowLaser([{ from, to }]); // Ensure lasers is always an array
+
+          // Remove laser after 0.5 seconds
+          setTimeout(() => setShowLaser([]), 500);
+
           const targetIntersect = intersects.find((intersect) => {
             const parent = intersect.object.parent;
             return parent?.userData?.isTarget && !parent?.userData?.isHit;
