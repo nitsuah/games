@@ -29,7 +29,7 @@ const Game = ({ onHit, onMiss }) => {
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(100);
-  const [showRedFlash, setShowRedFlash] = useState(false); // Add this state
+  const [showRedFlash, setShowRedFlash] = useState(false);
   const [targets, setTargets] = useState([
     { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },

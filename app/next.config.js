@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true, // Enables React strict mode
+  compiler: {
+    styledComponents: true, // Enables styled-components support
+  },
   // Configure static file serving
   async headers() {
     return [
@@ -22,4 +26,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig; 
+module.exports = nextConfig;
