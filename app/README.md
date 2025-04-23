@@ -19,7 +19,7 @@ A first-person tank game where players control a tank, shoot targets, and surviv
 1. **Crosshairs**: A visual aid for precise aiming.
 2. **Dynamic Terrain**: The tank's position dynamically adjusts based on the terrain height.
 3. **EXR Heightmap Support**: Terrain can be generated from EXR heightmap files.
-4. **Bell Curve Terrain**: Terrain heights follow a bell curve for natural elevation.
+4. **Bell Curve Terrain**: Default Terrain heights follow a bell curve for natural elevation.
 5. **Height-Based Shading**: Terrain color shades from dark to light green based on height.
 6. **Targets**: Destructible targets that "explode" when hit.
 7. **Score System**: Tracks and displays the player's score.
@@ -64,7 +64,7 @@ A fast-paced asteroid shooting game where players destroy asteroids, collect pow
 
 ### Released Features
 
-1. **Weapon System**: Multiple weapon types (spread, laser, explosive) with unique behaviors coming soon!
+1. **Weapon System**: Multiple weapon types (spread, laser, explosive) with unique behaviors! Added visual upgrades and foundational support for functional upgrades (laser, spread shot, explosive shot, chromatic settings and more!).
 2. **Ammo Management**: Limited ammo with reloading functionality.
 3. **Health System**: Player health decreases on collision with asteroids.
 4. **Score System**: Tracks hits, misses, and calculates score dynamically.

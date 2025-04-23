@@ -2,52 +2,48 @@
 
 ## Asteroid
 
-1. **Weapon Upgrades**
-   - **Implemented**: Added visual upgrades and foundational support for functional upgrades (spread shot, laser, explosive shot).
-   - **Next Steps**: Finalize unique behaviors for each weapon type (e.g., laser pierces targets, explosive deals area damage).
-
-2. **Power-Ups**
+1. **Power-Ups**
    - **Planned**: Add collectible power-ups (e.g., health restore, shield, rapid fire, slow motion, invincibility).
    - **Next Steps**: Implement floating power-ups that can be collected by colliding with them.
 
-3. **Player Shield**
+2. **Player Shield**
    - **Planned**: Temporary shield power-up that absorbs one or more hits before breaking.
    - **Next Steps**: Add visual effect around the player when the shield is active.
 
-4. **Level Progression**
+3. **Level Progression**
    - **Planned**: Add waves or levels with increasing difficulty.
    - **Next Steps**: Introduce new asteroid patterns, more enemies, or environmental hazards for each level.
 
-5. **Enemy Ships**
+4. **Enemy Ships**
    - **Planned**: Add AI-controlled enemy ships that chase or shoot at the player.
    - **Next Steps**: Destroying them grants bonus points or drops power-ups.
 
-6. **Asteroid Types**
+5. **Asteroid Types**
    - **Planned**: Add different asteroid types (e.g., armored, explosive, fast, splitting into more fragments).
    - **Next Steps**: Implement unique behaviors or effects for each type.
 
-7. **Combo/Multiplier System**
+6. **Combo/Multiplier System**
    - **Planned**: Score multipliers for hitting multiple asteroids in quick succession.
    - **Next Steps**: Display combo streaks and bonus points.
 
-8. **Leaderboards**
+7. **Leaderboards**
    - **Planned**: Online or local leaderboard to track high scores and best runs.
    - **Next Steps**: Optionally show friends' scores.
 
-9. **Cosmetic Customization**
+8. **Cosmetic Customization**
    - **Planned**: Unlockable ship skins, trails, or crosshairs based on achievements or score.
    - **Next Steps**: Ensure customization is cosmetic-only and does not affect gameplay.
 
-10. **Environmental Hazards**
+9. **Environmental Hazards**
     - **Planned**: Add moving obstacles, black holes, or gravity wells that affect movement.
     - **Next Steps**: Hazards can destroy asteroids or the player.
 
-11. **Code Modularization**
+10. **Code Modularization**
     - **Implemented**: Refactored game logic into modular, reusable functions for better maintainability.
     - Functions like `handleTargetHit`, `handleMiss`, `restartGame`, and others are now in separate files.
     - Improved clarity and ease of updates for specific game features.
 
-12. **Weapon Types**
+11. **Weapon Types**
     - **Implemented**: Added foundational support for weapon types (spread, laser, explosive) in `WEAPON_TYPES`.
     - **Next Steps**: Finalize behaviors for each weapon type and integrate them into the shooting system.
 
