@@ -10,7 +10,7 @@ import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
 import styled from 'styled-components';
 import TargetList from '../Target/TargetList';
-import ShootingSystem from './ShootingSystem';
+import ShootingSystem from '../Weapons/ShootingSystem';
 import { now } from '@/utils/time';
 import { WEAPON_TYPES } from '../Weapons/constants';
 import LaserBeam from '../Weapons/LaserBeam';
@@ -26,6 +26,9 @@ import { updateScore as updateScoreFn } from './updateScore';
 import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
 import { handleGameOver as handleGameOverFn } from './handleGameOver';
 import { handleHealthDepletion as handleHealthDepletionFn } from './handleHealthDepletion';
+import ShotReticle from '../UI/ShotReticle';
+import WeaponDisplay from '../UI/WeaponDisplay';
+import GameOverOverlay from '../UI/GameOverOverlay';
 
 const MIN_ALIVE_TIME = 0.5;
 
@@ -62,26 +65,29 @@ const Game = ({ onHit, onMiss }) => {
   });
   const [showLaser, setShowLaser] = useState(null); // {from, to, time}
 
-  // Weapon switch & reload handler
+  // Weapon switch, ammo, & reload handler
   useEffect(() => {
     const handleKeyDown = (e) => handleKeyDownFn(e, setWeapon, setAmmo);
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setWeapon, setAmmo]);
 
+  // Load saved scores
   useEffect(() => {
     loadSavedScoresFn({ setHighScore, setBestAccuracy });
   }, [setHighScore, setBestAccuracy]);
 
+  // Update score and accuracy
   useEffect(() => {
     updateScoreFn({ hits, misses, setScore });
   }, [hits, misses, setScore]);
   
+  // Play background music on mount
   useEffect(() => {
-    // Play background music on mount
     playSound('bgm');
   }, [playSound]);
 
+  // Handle player state
   useEffect(() => {
     handleHealthDepletionFn({
       health,
@@ -92,6 +98,7 @@ const Game = ({ onHit, onMiss }) => {
     });
   }, [health, setGameOver, pauseSound, playSound, setShowRedFlash]);
 
+  // Handle general game state
   useEffect(() => {
     handleGameOverFn({
       targets,
@@ -187,6 +194,7 @@ const Game = ({ onHit, onMiss }) => {
           }}
         />
       )}
+      {weapon === 'spread' && <ShotReticle />}
       <Canvas
         camera={{ position: [0, 0, 10], fov: 75 }}
         style={{ background: '#000000', width: '100%', height: '100%' }} // Ensure Canvas fills the container
@@ -221,34 +229,23 @@ const Game = ({ onHit, onMiss }) => {
       </Canvas>
       <div className={styles.crosshair}></div>
       <ScoreDisplay score={score} />
-      {/* Weapon UI */}
-      <div className={styles.weaponDisplay} style={{ position: 'absolute', top: 10, left: 10, color: '#fff', background: 'rgba(0,0,0,0.5)', padding: 8, borderRadius: 6, fontSize: 16 }}>
-        Weapon: <b>{WEAPON_TYPES.find(w => w.key === weapon).name}</b>
-        <br />
-        Ammo: {ammo[weapon]} / {WEAPON_TYPES.find(w => w.key === weapon).maxAmmo}
-        <br />
-        Cooldown: {cooldowns[weapon] > 0 ? cooldowns[weapon].toFixed(2) + 's' : 'Ready'}
-      </div>
+      <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
       <div className={styles.statsDisplay}>
-        Score: {score} | High Score: {highScore} | Health: {health}
+        Health: {health} <br />
+        Score: {score} <br />
+        High Score: {highScore} <br />
+        Best Accuracy: {bestAccuracy.toFixed(1)}%
       </div>
       {gameOver && (
-        <div className={styles.gameOverOverlay}>
-          <h2>Game Over!</h2>
-          <p>
-            Final Score: {score} {isNewHighScore && '🏆 New High Score!'}
-          </p>
-          <p>
-            Final Accuracy: {hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0'}%{' '}
-            {parseFloat(hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0') >
-              bestAccuracy && '🎯 New Best!'}
-          </p>
-          <p>High Score: {highScore}</p>
-          <p>Best Accuracy: {bestAccuracy.toFixed(1)}%</p>
-          <button className={styles.restartButton} onClick={restartGame}>
-            Play Again
-          </button>
-        </div>
+        <GameOverOverlay
+          score={score}
+          isNewHighScore={isNewHighScore}
+          hits={hits}
+          misses={misses}
+          bestAccuracy={bestAccuracy}
+          highScore={highScore}
+          restartGame={restartGame}
+        />
       )}
     </div>
   );

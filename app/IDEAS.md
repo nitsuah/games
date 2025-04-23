@@ -3,45 +3,55 @@
 ## Asteroid
 
 1. **Weapon Upgrades**
-   - Add visual and functional upgrades to the player's weapons.
-   - Add different weapon types (spread shot, laser, explosive shot).
-   - Temporary or permanent upgrades via power-ups.
+   - **Implemented**: Added visual upgrades and foundational support for functional upgrades (spread shot, laser, explosive shot).
+   - **Next Steps**: Finalize unique behaviors for each weapon type (e.g., laser pierces targets, explosive deals area damage).
 
 2. **Power-Ups**
-   - Add collectible power-ups (e.g., health restore, shield, rapid fire, slow motion, invincibility).
-   - Power-ups float in space and can be collected by colliding with them.
+   - **Planned**: Add collectible power-ups (e.g., health restore, shield, rapid fire, slow motion, invincibility).
+   - **Next Steps**: Implement floating power-ups that can be collected by colliding with them.
 
 3. **Player Shield**
-   - Temporary shield power-up that absorbs one or more hits before breaking.
-   - Visual effect around the player when active.
+   - **Planned**: Temporary shield power-up that absorbs one or more hits before breaking.
+   - **Next Steps**: Add visual effect around the player when the shield is active.
 
 4. **Level Progression**
-   - Add waves or levels with increasing difficulty.
-   - New asteroid patterns, more enemies, or environmental hazards each level.
+   - **Planned**: Add waves or levels with increasing difficulty.
+   - **Next Steps**: Introduce new asteroid patterns, more enemies, or environmental hazards for each level.
 
 5. **Enemy Ships**
-   - Add AI-controlled enemy ships that chase or shoot at the player.
-   - Destroying them grants bonus points or drops power-ups.
+   - **Planned**: Add AI-controlled enemy ships that chase or shoot at the player.
+   - **Next Steps**: Destroying them grants bonus points or drops power-ups.
 
 6. **Asteroid Types**
-   - Add different asteroid types (e.g., armored, explosive, fast, splitting into more fragments).
-   - Each type has unique behavior or effects.
+   - **Planned**: Add different asteroid types (e.g., armored, explosive, fast, splitting into more fragments).
+   - **Next Steps**: Implement unique behaviors or effects for each type.
 
 7. **Combo/Multiplier System**
-   - Score multipliers for hitting multiple asteroids in quick succession.
-   - Display combo streaks and bonus points.
+   - **Planned**: Score multipliers for hitting multiple asteroids in quick succession.
+   - **Next Steps**: Display combo streaks and bonus points.
 
 8. **Leaderboards**
-   - Online or local leaderboard to track high scores and best runs.
-   - Optionally, show friends' scores.
+   - **Planned**: Online or local leaderboard to track high scores and best runs.
+   - **Next Steps**: Optionally show friends' scores.
 
 9. **Cosmetic Customization**
-   - Unlockable ship skins, trails, or crosshairs based on achievements or score.
-   - Cosmetic-only, does not affect gameplay.
+   - **Planned**: Unlockable ship skins, trails, or crosshairs based on achievements or score.
+   - **Next Steps**: Ensure customization is cosmetic-only and does not affect gameplay.
 
 10. **Environmental Hazards**
-    - Add moving obstacles, black holes, or gravity wells that affect movement.
-    - Hazards can destroy asteroids or the player.
+    - **Planned**: Add moving obstacles, black holes, or gravity wells that affect movement.
+    - **Next Steps**: Hazards can destroy asteroids or the player.
+
+11. **Code Modularization**
+    - **Implemented**: Refactored game logic into modular, reusable functions for better maintainability.
+    - Functions like `handleTargetHit`, `handleMiss`, `restartGame`, and others are now in separate files.
+    - Improved clarity and ease of updates for specific game features.
+
+12. **Weapon Types**
+    - **Implemented**: Added foundational support for weapon types (spread, laser, explosive) in `WEAPON_TYPES`.
+    - **Next Steps**: Finalize behaviors for each weapon type and integrate them into the shooting system.
+
+---
 
 ## FPS Tank Commander
 
@@ -88,7 +98,5 @@
 - Cosmetic customization (skins, trails, crosshairs).
 - Environmental hazards and destructible objects.
 - Multiplayer and advanced progression.
-
----
 
 ---

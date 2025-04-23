@@ -50,7 +50,40 @@ A first-person tank game where players control a tank, shoot targets, and surviv
 - Environmental hazards and destructible objects.
 - Multiplayer and advanced progression.
 
-### Technologies Used
+## Asteroid Game
+
+A fast-paced asteroid shooting game where players destroy asteroids, collect power-ups, and aim for high scores. Built with Three.js and React Three Fiber, the game offers modular and maintainable code for easy feature expansion.
+
+### Controls
+
+- Use **WASD** to move the ship and **Mouse** to aim.
+- Use **Left Click** to shoot and destroy asteroids.
+- Switch weapons using **1, 2, 3** keys (spread, laser, explosive).
+- Reload ammo using **R**.
+- Avoid getting hit by asteroids to survive.
+
+### Released Features
+
+1. **Weapon System**: Multiple weapon types (spread, laser, explosive) with unique behaviors coming soon!
+2. **Ammo Management**: Limited ammo with reloading functionality.
+3. **Health System**: Player health decreases on collision with asteroids.
+4. **Score System**: Tracks hits, misses, and calculates score dynamically.
+5. **Game Over Logic**: Ends the game when health reaches zero or all targets are destroyed.
+6. **Modular Codebase**: Refactored game logic into reusable functions for better maintainability.
+7. **Red Flash Effect**: Visual feedback when the player is hit.
+8. **Laser Beam Effect**: Visual representation of laser weapon firing.
+9. **Collision Detection**: Handles asteroid collisions with the player and projectiles.
+10. **Local Storage**: Saves high scores and best accuracy for persistence.
+
+### Planned Features
+
+1. **Power-Ups**: Add collectible items like health restore, shields, and rapid fire.
+2. **Asteroid Variants**: Introduce different asteroid types with unique behaviors.
+3. **Enemy Ships**: Add AI-controlled enemy ships for additional challenges.
+4. **Level Progression**: Implement waves or levels with increasing difficulty.
+5. **Leaderboards**: Track and display high scores locally or online.
+
+## Technologies Used
 
 - **Next.js**: Application framework.
 - **Three.js and React Three Fiber**: 3D rendering and scene management.
