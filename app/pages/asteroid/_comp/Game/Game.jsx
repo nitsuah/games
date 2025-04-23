@@ -9,293 +9,16 @@ import ScoreDisplay from '../UI/ScoreDisplay';
 import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
 import styled from 'styled-components';
+import TargetList from '../Target/TargetList';
+import ShootingSystem from './ShootingSystem';
+import { now } from '@/utils/time';
+import { WEAPON_TYPES } from '../Weapons/constants';
+import LaserBeam from '../Weapons/LaserBeam';
+import MovementControls from '../Player/MovementControls';
+import CollisionDetection from '../Target/CollisionDetection';
+import TargetCollisionHandler from '../Target/TargetCollisionHandler';
 
 const MIN_ALIVE_TIME = 0.5; // Try a bigger delay for safety
-
-const now = () => performance.now() / 1000;
-
-const WEAPON_TYPES = [
-  { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
-  { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 1.0 },
-  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 2.0 },
-];
-
-const ShootingSystem = ({
-  onHit,
-  onMiss,
-  isGameOver,
-  weapon,
-  ammo,
-  setAmmo,
-  cooldowns,
-  setCooldowns,
-  showLaser,
-  setShowLaser,
-}) => {
-  const { camera, scene } = useThree();
-  const raycaster = new THREE.Raycaster();
-  const { playSound } = useSound();
-
-  useEffect(() => {
-    const handleShoot = () => {
-      if (document.pointerLockElement && !isGameOver) {
-        // Check cooldown and ammo
-        if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
-          playSound('miss');
-          return;
-        }
-        // Set cooldown
-        setCooldowns((prev) => ({ ...prev, [weapon]: WEAPON_TYPES.find(w => w.key === weapon).cooldown }));
-        // Reduce ammo
-        setAmmo((prev) => ({ ...prev, [weapon]: Math.max(0, prev[weapon] - 1) }));
-
-        playSound('shoot');
-        if (weapon === 'laser') {
-          // Laser: straight line, hits first target in path, show beam
-          // Offset the laser start position to the left of the player
-          const from = camera.position.clone();
-          const left = new THREE.Vector3();
-          camera.getWorldDirection(left);
-          // Get left vector (cross up with forward)
-          left.crossVectors(camera.up, left).normalize();
-          const offset = 0.5; // adjust for more/less offset
-          from.add(left.multiplyScalar(offset));
-          // Get direction camera is facing
-          const direction = new THREE.Vector3();
-          camera.getWorldDirection(direction);
-          raycaster.set(from, direction);
-          const intersects = raycaster.intersectObjects(scene.children, true);
-          let to;
-          if (intersects[0]?.point) {
-            to = intersects[0].point.clone();
-          } else {
-            to = from.clone().add(direction.multiplyScalar(100));
-          }
-          setShowLaser({
-            from,
-            to,
-            time: now(),
-          });
-          const targetIntersect = intersects.find((intersect) => {
-            const parent = intersect.object.parent;
-            return parent?.userData?.isTarget && !parent?.userData?.isHit;
-          });
-          if (targetIntersect) {
-            const targetId = targetIntersect.object.parent.userData.targetId;
-            targetIntersect.object.parent.userData.isHit = true;
-            playSound('hit');
-            onHit(targetId);
-          } else {
-            playSound('miss');
-            onMiss();
-          }
-        }
-        // ...implement other weapons later...
-      }
-    };
-
-    window.addEventListener('click', handleShoot);
-    return () => window.removeEventListener('click', handleShoot);
-  }, [camera, scene, onHit, onMiss, isGameOver, weapon, ammo, setAmmo, cooldowns, setCooldowns, playSound, setShowLaser]);
-
-  // Cooldown timer
-  useFrame(() => {
-    setCooldowns((prev) => {
-      if (prev[weapon] > 0) {
-        return { ...prev, [weapon]: Math.max(0, prev[weapon] - 1 / 60) };
-      }
-      return prev;
-    });
-  });
-
-  return null;
-};
-
-const MovementControls = () => {
-  const { camera } = useThree();
-  const moveSpeed = 0.0005; // INITIAL SPEED
-  const keys = useRef({});
-  const { setThrusterVolume = () => {} } = useSound();
-  const isMovingRef = useRef(false);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => (keys.current[e.code] = true);
-    const handleKeyUp = (e) => (keys.current[e.code] = false);
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, []);
-
-  useEffect(() => {
-    const moveCamera = () => {
-      if (!document.pointerLockElement) return;
-
-      const direction = new THREE.Vector3(0, 0, 0);
-      const frontVector = new THREE.Vector3();
-      const sideVector = new THREE.Vector3();
-      const upVector = new THREE.Vector3(0, 1, 0);
-
-      camera.getWorldDirection(frontVector);
-      frontVector.y = 0;
-      frontVector.normalize();
-      sideVector.crossVectors(upVector, frontVector);
-
-      const isMoving =
-        keys.current['KeyW'] ||
-        keys.current['KeyS'] ||
-        keys.current['KeyA'] ||
-        keys.current['KeyD'] ||
-        keys.current['Space'] ||
-        keys.current['ShiftLeft'];
-      if (isMovingRef.current !== isMoving) {
-        setThrusterVolume(isMoving ? 0.3 : 0);
-        isMovingRef.current = isMoving;
-      }
-      setThrusterVolume(isMoving ? 0.3 : 0);
-
-      if (keys.current['KeyW']) direction.add(frontVector.multiplyScalar(moveSpeed));
-      if (keys.current['KeyS']) direction.sub(frontVector.multiplyScalar(moveSpeed));
-      if (keys.current['KeyA']) direction.add(sideVector.multiplyScalar(moveSpeed));
-      if (keys.current['KeyD']) direction.sub(sideVector.multiplyScalar(moveSpeed));
-      if (keys.current['Space']) direction.add(upVector.multiplyScalar(moveSpeed));
-      if (keys.current['ShiftLeft']) direction.sub(upVector.multiplyScalar(moveSpeed));
-
-      camera.position.add(direction);
-    };
-
-    const animate = () => {
-      moveCamera();
-      requestAnimationFrame(animate);
-    };
-
-    const animationId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationId);
-  }, [camera, setThrusterVolume]);
-
-  return null;
-};
-
-const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit }) => {
-  const { camera } = useThree(); // <-- Move camera outside useFrame
-
-  useFrame(() => {
-    const playerSphere = new THREE.Sphere(camera.position.clone(), 2.0);
-
-    setTargets((prevTargets) =>
-      prevTargets.map((target) => {
-        if (!target.isHit) {
-          const targetSphere = new THREE.Sphere(
-            new THREE.Vector3(target.x, target.y, target.z),
-            target.size / 2
-          );
-
-          if (playerSphere.intersectsSphere(targetSphere)) {
-            console.log('Player Collision detected with target:', target.id);
-            onPlayerHit(); // Call the onPlayerHit callback
-            return { ...target, isHit: true };
-          }
-        }
-        return target;
-      })
-    );
-  });
-
-  return null;
-};
-
-const TargetCollisionHandler = ({ targets, setTargets }) => {
-  useFrame(() => {
-    const currentTime = now();
-    setTargets((prevTargets) => {
-      let updatedTargets = [...prevTargets];
-      let newTargets = [];
-
-      for (let i = 0; i < updatedTargets.length; i++) {
-        const targetA = updatedTargets[i];
-        if (targetA.isHit || (currentTime - (targetA.spawnTime || 0) < MIN_ALIVE_TIME)) continue;
-
-        const sphereA = new THREE.Sphere(
-          new THREE.Vector3(targetA.x, targetA.y, targetA.z),
-          targetA.size / 2
-        );
-
-        for (let j = i + 1; j < updatedTargets.length; j++) {
-          const targetB = updatedTargets[j];
-          if (
-            targetB.isHit ||
-            (currentTime - (targetB.spawnTime || 0) < MIN_ALIVE_TIME)
-          )
-            continue;
-
-          const sphereB = new THREE.Sphere(
-            new THREE.Vector3(targetB.x, targetB.y, targetB.z),
-            targetB.size / 2
-          );
-
-          if (sphereA.intersectsSphere(sphereB)) {
-            // Remove both targets from the array
-            updatedTargets = updatedTargets.filter(
-              (t) => t.id !== targetA.id && t.id !== targetB.id
-            );
-
-            // Split both targets into smaller fragments
-            const splitTargets = [targetA, targetB].flatMap((target) => {
-              if (target.size > 1) {
-                const newSize = target.size * 0.5;
-                const newSpeed = target.speed * 2;
-                const newColor =
-                  newSize > 4 ? '#0000ff' :
-                  newSize > 3 ? '#800080' :
-                  newSize > 2 ? '#ff4500' :
-                  newSize > 1 ? '#00ffff' :
-                  '#ffff00';
-                const offsetRange = 1.0;
-                const spawnTime = now();
-                return [
-                  {
-                    id: `${target.id}-1`,
-                    x: target.x + Math.random() * offsetRange - offsetRange / 2,
-                    y: target.y + Math.random() * offsetRange - offsetRange / 2,
-                    z: target.z + Math.random() * offsetRange - offsetRange / 2,
-                    isHit: false,
-                    size: newSize,
-                    speed: newSpeed,
-                    color: newColor,
-                    spawnTime,
-                  },
-                  {
-                    id: `${target.id}-2`,
-                    x: target.x + Math.random() * offsetRange - offsetRange / 2,
-                    y: target.y + Math.random() * offsetRange - offsetRange / 2,
-                    z: target.z + Math.random() * offsetRange - offsetRange / 2,
-                    isHit: false,
-                    size: newSize,
-                    speed: newSpeed,
-                    color: newColor,
-                    spawnTime,
-                  },
-                ];
-              }
-              return [];
-            });
-
-            newTargets.push(...splitTargets);
-            break; // Only handle one collision per frame per target
-          }
-        }
-      }
-
-      return [...updatedTargets, ...newTargets];
-    });
-  });
-
-  return null; // This component doesn't render anything
-};
 
 const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
@@ -507,25 +230,6 @@ const Game = ({ onHit, onMiss }) => {
     setTimeout(() => setShowRedFlash(false), 500);
   }, [playSound]);
 
-  // Laser beam visual (simple line)
-  const LaserBeam = ({ from, to }) => {
-    if (!from || !to) return null;
-    // Make the laser thicker and more visible
-    return (
-      <line>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            count={2}
-            array={new Float32Array([from.x, from.y, from.z, to.x, to.y, to.z])}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial attach="material" color="cyan" linewidth={20} />
-      </line>
-    );
-  };
-
   // Remove laser after short time
   useEffect(() => {
     if (showLaser) {
@@ -558,6 +262,7 @@ const Game = ({ onHit, onMiss }) => {
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
         <Player targets={targets} onTargetHit={handleTargetHit} />
+        {/* Use the imported ShootingSystem component */}
         <ShootingSystem
           onHit={handleTargetHit}
           onMiss={handleMiss}
@@ -573,20 +278,12 @@ const Game = ({ onHit, onMiss }) => {
         {showLaser && <LaserBeam from={showLaser.from} to={showLaser.to} />}
         <CollisionDetection targets={targets} setTargets={setTargets} setHealth={setHealth} onPlayerHit={handlePlayerHit} />
         <TargetCollisionHandler targets={targets} setTargets={setTargets} />
-        {targets.map((target) => (
-          <Target
-            key={target.id}
-            position={[target.x, target.y, target.z]}
-            targetId={target.id}
-            isHit={target.isHit}
-            onHit={handleTargetHit}
-            size={target.size}
-            speed={target.speed}
-            color={target.color || '#00ff00'}
-            refCallback={handleRefCallback}
-            setTargets={setTargets}
-          />
-        ))}
+        <TargetList
+          targets={targets}
+          handleTargetHit={handleTargetHit}
+          handleRefCallback={handleRefCallback}
+          setTargets={setTargets}
+        />
       </Canvas>
       <div className={styles.crosshair}></div>
       <ScoreDisplay score={score} />
