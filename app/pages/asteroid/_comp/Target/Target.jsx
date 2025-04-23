@@ -58,11 +58,13 @@ const Target = ({
   
       // Update the target's position in the state
       const { x, y, z } = meshRef.current.position;
-      setTargets((prevTargets) =>
-        prevTargets.map((target) =>
-          target.id === targetId ? { ...target, x, y, z } : target
-        )
-      );
+      if (typeof setTargets === 'function') {
+        setTargets((prevTargets) =>
+          prevTargets.map((target) =>
+            target.id === targetId ? { ...target, x, y, z } : target
+          )
+        );
+      }
   
       // Bounce off boundaries
       if (

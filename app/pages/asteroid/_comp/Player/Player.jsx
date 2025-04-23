@@ -1,10 +1,17 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 
-const Player = ({ targets, onTargetHit }) => {
+const Player = ({ 
+  targets, 
+  onTargetHit, 
+  speedBoostActive, 
+  invincibilityActive, 
+  isGameOver, 
+  setShowBlueFlash // Add setShowBlueFlash as a prop
+}) => {
   const meshRef = useRef(); // Blue square (hitbox)
   const { camera } = useThree();
   const velocityRef = useRef(new THREE.Vector3());
@@ -17,10 +24,11 @@ const Player = ({ targets, onTargetHit }) => {
     down: false,
   });
   const { setThrusterVolume } = useSound();
+  const [shieldActive, setShieldActive] = useState(true); // Shield state
 
   // Physics constants
-  const ACCELERATION = 0.00002;     // Much slower acceleration
-  const MAX_VELOCITY = 0.0002;      // Much slower max velocity
+  const ACCELERATION = speedBoostActive ? 0.05 : 0.0002; // Cranked up acceleration for testing
+  const MAX_VELOCITY = speedBoostActive ? 0.5 : 0.002; // Cranked up max velocity for testing
   const ROTATION_SPEED = 0.00002;   // Mouse sensitivity remains unchanged
   const DAMPING = 0.98;           // Adjusted damping for smoother deceleration
 
@@ -84,6 +92,11 @@ const Player = ({ targets, onTargetHit }) => {
   }, []);
 
   useFrame((state, delta) => {
+    if (isGameOver) {
+      console.debug('Player movement disabled because the game is over.');
+      return; // Prevent movement when the game is over
+    }
+
     if (!meshRef.current) return;
 
     // Movement logic
@@ -134,14 +147,33 @@ const Player = ({ targets, onTargetHit }) => {
       const distance = camera.position.distanceTo(targetPosition);
 
       if (distance < playerRadius + targetRadius && !target.isHit) {
-        console.debug('Collision detected with target:', target.id, 'Size:', target.size);
-        onTargetHit(target.id);
+        if (shieldActive) {
+          console.debug('Shield absorbed the collision with target:', target.id);
+          setShieldActive(false); // Deactivate shield after absorbing the collision
+          if (setShowBlueFlash) setShowBlueFlash(false); // End blue flash
+          console.log('Shield Power-Up expired!');
+        } else {
+          console.debug('Collision detected with target:', target.id, 'Size:', target.size);
+          onTargetHit(target.id);
+        }
       }
     });
 
     // Thruster sound logic
     const isMoving = velocityRef.current.length() > 0.1; // Consider moving if velocity is significant
     setThrusterVolume(isMoving ? 0.5 : 0); // Adjust thruster volume based on movement
+
+    // Apply invincibility visual effect
+    if (invincibilityActive) {
+      meshRef.current.material.color.set('white'); // Change player color to white
+    } else {
+      meshRef.current.material.color.set('purple'); // Default color
+    }
+
+    // Log for debugging
+    if (speedBoostActive) {
+      console.log(`SpeedBoostActive: ${speedBoostActive}, Velocity: ${velocityRef.current.length()}`);
+    }
   });
 
   return (

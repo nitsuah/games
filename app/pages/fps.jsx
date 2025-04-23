@@ -12,7 +12,7 @@ import Cube from "../_components/objects/Cube";
 import Crosshair from "./fps/_comps/Crosshair";
 import Target from "./fps/_comps/Target";
 import Bullet from "./fps/_comps/Bullet";
-import Explosion from "../_components/objects/Explosion";
+import Explosion from "../_components/effects/Explosion";
 import Decal from "./fps/_comps/Decal";
 import ShootingHandler from "./fps/_comps/ShootingHandler";
 import PowerUp from "./fps/_comps/PowerUp";

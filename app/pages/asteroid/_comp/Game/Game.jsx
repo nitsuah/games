@@ -29,6 +29,7 @@ import { handleHealthDepletion as handleHealthDepletionFn } from './handleHealth
 import ShotReticle from '../UI/ShotReticle';
 import WeaponDisplay from '../UI/WeaponDisplay';
 import GameOverOverlay from '../UI/GameOverOverlay';
+import PowerUp from '@/_components/effects/PowerUp'; // Import the new global PowerUp component
 
 const MIN_ALIVE_TIME = 0.5;
 
@@ -66,11 +67,22 @@ const Game = ({ onHit, onMiss }) => {
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(100);
   const [showRedFlash, setShowRedFlash] = useState(false);
+  const [showGreenFlash, setShowGreenFlash] = useState(false); // Green flash for health
+  const [showBlueFlash, setShowBlueFlash] = useState(false); // Blue flash for shield
+  const [showYellowFlash, setShowYellowFlash] = useState(false); // Yellow flash for invincibility
+  const [showPurpleFlash, setShowPurpleFlash] = useState(false); // Purple flash for slow motion
+  const [showOrangeFlash, setShowOrangeFlash] = useState(false); // Orange flash for speed boost
   const [targets, setTargets] = useState([
     { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 5, x: 12, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 6, x: 15, y: 17, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 7, x: 18, y: 19, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 8, x: -12, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 9, x: -15, y: 17, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    { id: 10, x: -18, y: 19, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
   ]);
   const { playSound, pauseSound } = useSound();
   const soundsRef = useRef(null);
@@ -88,6 +100,93 @@ const Game = ({ onHit, onMiss }) => {
     explosive: 0,
   });
   const [showLaser, setShowLaser] = useState(null); // {from, to, time}
+
+  const [shieldActive, setShieldActive] = useState(false);
+  const [rapidFireActive, setRapidFireActive] = useState(false);
+  const [slowMotionActive, setSlowMotionActive] = useState(false);
+  const [invincibilityActive, setInvincibilityActive] = useState(false);
+  const [speedBoostActive, setSpeedBoostActive] = useState(false);
+
+  const handlePowerUpCollect = (type) => {
+    switch (type) {
+      case 'health':
+        console.log('Health Power-Up activated!');
+        setHealth((prevHealth) => Math.min(prevHealth + 25, 100)); // Restore health up to 100
+        setShowGreenFlash(true); // Trigger green flash
+        setTimeout(() => setShowGreenFlash(false), 100); // Flash green briefly
+        break;
+      case 'speedBoost':
+        console.log('Speed Boost Power-Up activated!');
+        setSpeedBoostActive(true);
+        setShowOrangeFlash(true); // Trigger orange flash
+        setTimeout(() => {
+          setSpeedBoostActive(false);
+          setShowOrangeFlash(false); // End orange flash
+          console.log('Speed Boost Power-Up expired!');
+        }, 10000); // Deactivate after 10 seconds
+        break;
+      case 'rapidFire':
+        console.log('Rapid Fire Power-Up activated!');
+        setRapidFireActive(true);
+        setShowRedFlash(true); // Trigger red flash
+        setTimeout(() => {
+          setRapidFireActive(false);
+          setShowRedFlash(false); // End red flash
+          console.log('Rapid Fire Power-Up expired!');
+        }, 10000); // Deactivate after 10 seconds
+        break;
+      case 'shield':
+        console.log('Shield Power-Up activated!');
+        setShieldActive(true);
+        setShowBlueFlash(true); // Trigger blue flash
+        break; // Shield will now only expire when used
+      case 'slowMotion':
+        console.log('Slow Motion Power-Up activated!');
+        setSlowMotionActive(true);
+        setTargets((prevTargets) =>
+          prevTargets.map((target) => ({
+            ...target,
+            speed: target.speed * 0.5, // Reduce target speed by 50%
+          }))
+        );
+        setTimeout(() => {
+          setSlowMotionActive(false);
+          setTargets((prevTargets) =>
+            prevTargets.map((target) => ({
+              ...target,
+              speed: target.speed * 2, // Restore original speed
+            }))
+          );
+          console.log('Slow Motion Power-Up expired!');
+        }, 10000); // Deactivate after 10 seconds
+        break;
+      case 'invincibility':
+        console.log('Invincibility Power-Up activated!');
+        setInvincibilityActive(true);
+        setShowYellowFlash(true); // Trigger yellow flash
+        setTimeout(() => {
+          setInvincibilityActive(false);
+          setShowYellowFlash(false); // End yellow flash
+          console.log('Invincibility Power-Up expired!');
+        }, 10000); // Deactivate after 10 seconds
+        break;
+      default:
+        console.warn('Unknown power-up type:', type);
+    }
+  };
+
+  // Apply slow motion effect
+  useEffect(() => {
+    if (slowMotionActive) {
+      console.log('Slow Motion is active. Target speeds are reduced.');
+      setTargets((prevTargets) =>
+        prevTargets.map((target) => ({
+          ...target,
+          speed: target.speed * 0.5, // Reduce target speed by 50%
+        }))
+      );
+    }
+  }, [slowMotionActive]);
 
   // Weapon switch, ammo, & reload handler
   useEffect(() => {
@@ -108,8 +207,18 @@ const Game = ({ onHit, onMiss }) => {
   
   // Play background music on mount
   useEffect(() => {
-    playSound('bgm');
-  }, [playSound]);
+    if (!gameOver) {
+      playSound('bgm')
+        .then(() => console.log('Background music started'))
+        .catch((err) => console.error('Failed to play bgm:', err)); // Catch errors to avoid unhandled rejections
+    }
+
+    return () => {
+      if (gameOver) {
+        pauseSound('bgm'); // Pause background music when the game ends
+      }
+    };
+  }, [playSound, pauseSound, gameOver]);
 
   // Handle player state
   useEffect(() => {
@@ -119,8 +228,11 @@ const Game = ({ onHit, onMiss }) => {
       pauseSound,
       playSound,
       setShowRedFlash,
+      invincibilityActive, // Pass invincibility state
+      shieldActive,        // Pass shield state
+      setShieldActive,     // Pass shield state setter
     });
-  }, [health, setGameOver, pauseSound, playSound, setShowRedFlash]);
+  }, [health, setGameOver, pauseSound, playSound, setShowRedFlash, invincibilityActive, shieldActive, setShieldActive]);
 
   // Handle general game state
   useEffect(() => {
@@ -139,6 +251,15 @@ const Game = ({ onHit, onMiss }) => {
       setBestAccuracy,
     });
   }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound, playSound, setGameOver, setHighScore, setIsNewHighScore, setBestAccuracy]);
+
+  // Prevent movement after game ends
+  useEffect(() => {
+    if (gameOver) {
+      console.log('Game over! Disabling player movement.');
+      window.removeEventListener('keydown', handleKeyDownFn);
+      window.removeEventListener('keyup', handleKeyDownFn);
+    }
+  }, [gameOver]);
 
   // HANDLE HIT
   const handleTargetHit = useCallback(
@@ -205,16 +326,75 @@ const Game = ({ onHit, onMiss }) => {
 
   return (
     <div className={styles.gameContainer}>
+      {/* Blue flash overlay */}
+      {showBlueFlash && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0,0,255,0.5)', // Higher opacity for visibility
+            zIndex: 1000,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      {/* Green flash overlay */}
+      {showGreenFlash && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0,255,0,0.5)', // Higher opacity for visibility
+            zIndex: 1000,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      {/* Yellow flash overlay */}
+      {showYellowFlash && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(255,255,0,0.5)', // Higher opacity for visibility
+            zIndex: 1000,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      {/* Purple flash overlay */}
+      {showPurpleFlash && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(128,0,128,0.5)', // Higher opacity for visibility
+            zIndex: 1000,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
       {/* Red flash overlay */}
       {showRedFlash && (
         <div
           style={{
             position: 'absolute',
             top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(255,0,0,0.3)',
+            background: 'rgba(255,0,0,0.5)', // Higher opacity for visibility
             zIndex: 1000,
             pointerEvents: 'none',
-            transition: 'opacity 0.1s',
+          }}
+        />
+      )}
+      {/* Orange flash overlay */}
+      {showOrangeFlash && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(255,165,0,0.5)', // Higher opacity for visibility
+            zIndex: 1000,
+            pointerEvents: 'none',
           }}
         />
       )}
@@ -227,7 +407,14 @@ const Game = ({ onHit, onMiss }) => {
         <MovementControls />
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
-        <Player targets={targets} onTargetHit={handleTargetHit} />
+        <Player 
+          targets={targets} 
+          onTargetHit={handleTargetHit} 
+          speedBoostActive={speedBoostActive} 
+          invincibilityActive={invincibilityActive} 
+          isGameOver={gameOver} 
+          setShowBlueFlash={setShowBlueFlash} // Pass setShowBlueFlash as a prop
+        />
         {/* Use the imported ShootingSystem component */}
         <ShootingSystem
           onHit={handleTargetHit}
@@ -242,6 +429,7 @@ const Game = ({ onHit, onMiss }) => {
           setShowLaser={setShowLaser}
           targets={targets} // Pass targets
           setTargets={setTargets} // Pass setTargets
+          rapidFireActive={rapidFireActive} // Pass rapidFireActive to ShootingSystem
         />
         {showLaser && <LaserBeam lasers={showLaser} weaponType={weapon} />} {/* Pass weaponType */}
         <GameLogic
@@ -258,6 +446,36 @@ const Game = ({ onHit, onMiss }) => {
           handleRefCallback={handleRefCallback}
           setTargets={setTargets}
         />
+
+        {/* Cluster 1: Health Power-Ups */}
+        <PowerUp position={[10, 10, 0]} size={1.5} type="health" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[13, 12, 0]} size={1.5} type="health" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[16, 14, 0]} size={1.5} type="health" onCollect={handlePowerUpCollect} />
+
+        {/* Cluster 2: Shield Power-Ups */}
+        <PowerUp position={[-10, 10, 0]} size={1.5} type="shield" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[-13, 12, 0]} size={1.5} type="shield" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[-16, 14, 0]} size={1.5} type="shield" onCollect={handlePowerUpCollect} />
+
+        {/* Cluster 3: Rapid Fire Power-Ups */}
+        <PowerUp position={[0, -10, 0]} size={1.5} type="rapidFire" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[3, -12, 0]} size={1.5} type="rapidFire" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[6, -14, 0]} size={1.5} type="rapidFire" onCollect={handlePowerUpCollect} />
+
+        {/* Cluster 4: Slow Motion Power-Ups */}
+        <PowerUp position={[0, 0, 10]} size={1.5} type="slowMotion" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[3, 2, 12]} size={1.5} type="slowMotion" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[6, 4, 14]} size={1.5} type="slowMotion" onCollect={handlePowerUpCollect} />
+
+        {/* Cluster 5: Invincibility Power-Ups */}
+        <PowerUp position={[15, 0, 0]} size={1.5} type="invincibility" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[18, 2, 0]} size={1.5} type="invincibility" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[21, 4, 0]} size={1.5} type="invincibility" onCollect={handlePowerUpCollect} />
+
+        {/* Cluster 6: Speed Boost Power-Ups */}
+        <PowerUp position={[-15, 0, 0]} size={1.5} type="speedBoost" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[-18, 2, 0]} size={1.5} type="speedBoost" onCollect={handlePowerUpCollect} />
+        <PowerUp position={[-21, 4, 0]} size={1.5} type="speedBoost" onCollect={handlePowerUpCollect} />
       </Canvas>
       <div className={styles.crosshair}></div>
       <ScoreDisplay score={score} />

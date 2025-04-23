@@ -5,13 +5,8 @@ import SpreadShotHandler from './SpreadShotHandler';
 import LaserShotHandler from './LaserShotHandler';
 import CooldownManager from './CooldownManager';
 import ExplosiveShotHandler from './ExplosiveShotHandler';
-import Explosion from '../../../../_components/objects/Explosion';
-
-const WEAPON_TYPES = [
-  { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
-  { key: 'laser', name: 'Laser Beam', maxAmmo: 50, cooldown: 0 },
-  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1 },
-];
+import Explosion from '../../../../_components/effects/Explosion';
+import { WEAPON_TYPES } from './constants';
 
 const ShootingSystem = ({
   onHit,
@@ -25,6 +20,7 @@ const ShootingSystem = ({
   setShowLaser,
   targets,
   setTargets,
+  rapidFireActive,
 }) => {
   const { camera, scene } = useThree();
   const { playSound } = useSound();
@@ -32,9 +28,15 @@ const ShootingSystem = ({
 
   useEffect(() => {
     const handleShoot = () => {
+      if (isGameOver) {
+        console.debug('Shooting disabled because the game is over.');
+        return; // Prevent shooting when the game is over
+      }
+
       if (document.pointerLockElement && !isGameOver) {
         // Check if the weapon is on cooldown
         if (cooldowns[weapon] > 0) {
+          console.log(`Weapon: ${weapon}, Cooldown Remaining: ${cooldowns[weapon].toFixed(2)}s`);
           playSound('miss');
           return;
         }
@@ -44,6 +46,9 @@ const ShootingSystem = ({
           playSound('empty'); // Play empty ammo sound
           return; // Prevent shooting if out of ammo
         }
+
+        // Log weapon and cooldown for testing
+        console.log(`Weapon: ${weapon}, Cooldown Applied: ${cooldowns[weapon]}s`);
 
         // Handle weapon-specific logic
         if (weapon === 'spread') {
@@ -92,9 +97,11 @@ const ShootingSystem = ({
 
         // Set the cooldown for the weapon
         const weaponCooldown = WEAPON_TYPES.find((w) => w.key === weapon).cooldown;
+        const adjustedCooldown = rapidFireActive ? weaponCooldown / 2 : weaponCooldown; // Halve cooldown if rapid fire is active
+        console.log(`Weapon: ${weapon}, Adjusted Cooldown: ${adjustedCooldown}s`); // Log adjusted cooldown
         setCooldowns((prev) => ({
           ...prev,
-          [weapon]: weaponCooldown,
+          [weapon]: adjustedCooldown,
         }));
 
         // Decrease ammo for the weapon
@@ -123,11 +130,24 @@ const ShootingSystem = ({
     playSound,
     setShowLaser,
     setTargets,
+    rapidFireActive,
   ]);
+
+  useEffect(() => {
+    if (rapidFireActive) {
+      console.log('Rapid Fire Power-Up is active!');
+    } else {
+      console.log('Rapid Fire Power-Up expired!');
+    }
+  }, [rapidFireActive]);
 
   return (
     <>
-      <CooldownManager cooldowns={cooldowns} setCooldowns={setCooldowns} />
+      <CooldownManager 
+        cooldowns={cooldowns} 
+        setCooldowns={setCooldowns} 
+        rapidFireActive={rapidFireActive} // Pass rapidFireActive to CooldownManager
+      />
       {explosions.map((explosion) => (
         <Explosion
           key={explosion.id}

@@ -50,6 +50,8 @@ A first-person tank game where players control a tank, shoot targets, and surviv
 - Environmental hazards and destructible objects.
 - Multiplayer and advanced progression.
 
+---
+
 ## Asteroid Game
 
 A fast-paced asteroid shooting game where players destroy asteroids, collect power-ups, and aim for high scores. Built with Three.js and React Three Fiber, the game offers modular and maintainable code for easy feature expansion.
