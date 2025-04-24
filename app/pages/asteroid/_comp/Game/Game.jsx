@@ -1,22 +1,14 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Canvas, useThree } from '@react-three/fiber';
-import { PointerLockControls } from '@react-three/drei';
-import * as THREE from 'three';
-import Player from '../Player/Player';
-import Target from '../Target/Target';
-import ScoreDisplay from '../UI/ScoreDisplay';
 import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
-import styled from 'styled-components';
-import TargetList from '../Target/TargetList';
-import ShootingSystem from '../Weapons/ShootingSystem';
+import { handleHealthDepletion as handleHealthDepletionFn } from './handleHealthDepletion';
+import { handleGameOver as handleGameOverFn } from './handleGameOver';
+import FlashOverlays from '../UI/FlashOverlays';
+import GameCanvas from './GameCanvas';
+import GameOverOverlay from '../UI/GameOverOverlay';
+import ScoreDisplay from '../UI/ScoreDisplay';
+import WeaponDisplay from '../UI/WeaponDisplay';
 import { now } from '@/utils/time';
-import { WEAPON_TYPES } from '../Weapons/constants';
-import LaserBeam from '../Weapons/LaserBeam';
-import MovementControls from '../Player/MovementControls';
-import CollisionDetection from '../Target/CollisionDetection';
-import TargetCollisionHandler from '../Target/TargetCollisionHandler';
 import { handleTargetHit as handleTargetHitFn } from './handleTargetHit';
 import { handleMiss as handleMissFn } from './handleMiss';
 import { restartGame as restartGameFn } from './restartGame';
@@ -24,38 +16,7 @@ import { handlePlayerHit as handlePlayerHitFn } from './handlePlayerHit';
 import { handleKeyDown as handleKeyDownFn } from './handleKeyDown';
 import { updateScore as updateScoreFn } from './updateScore';
 import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
-import { handleGameOver as handleGameOverFn } from './handleGameOver';
-import { handleHealthDepletion as handleHealthDepletionFn } from './handleHealthDepletion';
-import ShotReticle from '../UI/ShotReticle';
-import WeaponDisplay from '../UI/WeaponDisplay';
-import GameOverOverlay from '../UI/GameOverOverlay';
-import PowerUp from '@/_components/effects/PowerUp'; // Import the new global PowerUp component
-
-const MIN_ALIVE_TIME = 0.5;
-
-const GameLogic = ({
-  gameOver,
-  setShowLaser,
-  showLaser,
-  weapon,
-}) => {
-  const { camera } = useThree(); // Access the camera from useThree
-
-  // Remove duplicate laser logic; rely on ShootingSystem for laser handling
-  useEffect(() => {
-    const handleMouseClick = (event) => {
-      if (gameOver) return;
-
-      // Prevent duplicate laser logic here
-      console.debug("Mouse click detected, but laser logic is handled in ShootingSystem.");
-    };
-
-    window.addEventListener('mousedown', handleMouseClick);
-    return () => window.removeEventListener('mousedown', handleMouseClick);
-  }, [camera, gameOver]);
-
-  return null;
-};
+import ShotReticle from '../UI/ShotReticle'; // Import ShotReticle
 
 const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
@@ -67,11 +28,11 @@ const Game = ({ onHit, onMiss }) => {
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(100);
   const [showRedFlash, setShowRedFlash] = useState(false);
-  const [showGreenFlash, setShowGreenFlash] = useState(false); // Green flash for health
-  const [showBlueFlash, setShowBlueFlash] = useState(false); // Blue flash for shield
-  const [showYellowFlash, setShowYellowFlash] = useState(false); // Yellow flash for invincibility
-  const [showPurpleFlash, setShowPurpleFlash] = useState(false); // Purple flash for slow motion
-  const [showOrangeFlash, setShowOrangeFlash] = useState(false); // Orange flash for speed boost
+  const [showGreenFlash, setShowGreenFlash] = useState(false);
+  const [showBlueFlash, setShowBlueFlash] = useState(false);
+  const [showYellowFlash, setShowYellowFlash] = useState(false);
+  const [showPurpleFlash, setShowPurpleFlash] = useState(false);
+  const [showOrangeFlash, setShowOrangeFlash] = useState(false);
   const [targets, setTargets] = useState([
     { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
@@ -85,7 +46,6 @@ const Game = ({ onHit, onMiss }) => {
     { id: 10, x: -18, y: 19, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
   ]);
   const { playSound, pauseSound } = useSound();
-  const soundsRef = useRef(null);
 
   // Weapon state
   const [weapon, setWeapon] = useState('spread');
@@ -99,7 +59,7 @@ const Game = ({ onHit, onMiss }) => {
     laser: 0,
     explosive: 0,
   });
-  const [showLaser, setShowLaser] = useState(null); // {from, to, time}
+  const [showLaser, setShowLaser] = useState([]);
 
   const [shieldActive, setShieldActive] = useState(false);
   const [rapidFireActive, setRapidFireActive] = useState(false);
@@ -209,7 +169,7 @@ const Game = ({ onHit, onMiss }) => {
   useEffect(() => {
     if (!gameOver) {
       playSound('bgm')
-        .then(() => console.log('Background music started'))
+        .then(() => console.debug('Background music started'))
         .catch((err) => console.error('Failed to play bgm:', err)); // Catch errors to avoid unhandled rejections
     }
 
@@ -256,10 +216,14 @@ const Game = ({ onHit, onMiss }) => {
   }, [gameOver, shieldActive, invincibilityActive, health, setHealth, setGameOver, pauseSound, playSound, setShowRedFlash, setShieldActive]);
 
   useEffect(() => {
+    const handleShoot = () => {
+      console.log('Shooting disabled because the game is over.');
+    };
+
     if (gameOver) {
-      console.log('Game over! Disabling player movement and interactions.');
       window.removeEventListener('keydown', handleKeyDownFn);
       window.removeEventListener('keyup', handleKeyDownFn);
+      window.removeEventListener('mousedown', handleShoot); // Disable shooting
     }
   }, [gameOver]);
 
@@ -318,14 +282,6 @@ const Game = ({ onHit, onMiss }) => {
     [setHealth, setShowRedFlash, playSound]
   );
 
-  // Remove laser after short time
-  useEffect(() => {
-    if (showLaser) {
-      const timeout = setTimeout(() => setShowLaser(null), 120);
-      return () => clearTimeout(timeout);
-    }
-  }, [showLaser]);
-
   useEffect(() => {
     handleGameOverFn({
       targets,
@@ -345,158 +301,35 @@ const Game = ({ onHit, onMiss }) => {
 
   return (
     <div className={styles.gameContainer}>
-      {/* Blue flash overlay */}
-      {shieldActive && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0,0,255,0.3)', // Reduced opacity for better transparency
-            zIndex: 1000,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-      {/* Green flash overlay */}
-      {showGreenFlash && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0,255,0,0.3)', // Reduced opacity for better transparency
-            zIndex: 1000,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-      {/* Yellow flash overlay */}
-      {showYellowFlash && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(255,255,0,0.3)', // Reduced opacity for better transparency
-            zIndex: 1000,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-      {/* Purple flash overlay */}
-      {showPurpleFlash && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(128,0,128,0.3)', // Reduced opacity for better transparency
-            zIndex: 1000,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-      {/* Red flash overlay */}
-      {showRedFlash && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(255,0,0,0.3)', // Reduced opacity for better transparency
-            zIndex: 1000,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-      {/* Orange flash overlay */}
-      {showOrangeFlash && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(255,165,0,0.3)', // Reduced opacity for better transparency
-            zIndex: 1000,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-      {weapon === 'spread' && <ShotReticle />}
-      <Canvas
-        camera={{ position: [0, 0, 10], fov: 75 }}
-        style={{ background: '#000000', width: '100%', height: '100%' }} // Ensure Canvas fills the container
-      >
-        <PointerLockControls />
-        <MovementControls />
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <Player 
-          targets={targets} 
-          onTargetHit={handleTargetHit} 
-          speedBoostActive={speedBoostActive} 
-          invincibilityActive={invincibilityActive} 
-          isGameOver={gameOver} 
-          setShowBlueFlash={setShowBlueFlash} // Pass setShowBlueFlash as a prop
-        />
-        {/* Use the imported ShootingSystem component */}
-        <ShootingSystem
-          onHit={handleTargetHit}
-          onMiss={handleMiss}
-          isGameOver={gameOver}
-          weapon={weapon}
-          ammo={ammo}
-          setAmmo={setAmmo}
-          cooldowns={cooldowns}
-          setCooldowns={setCooldowns}
-          showLaser={showLaser}
-          setShowLaser={setShowLaser}
-          targets={targets} // Pass targets
-          setTargets={setTargets} // Pass setTargets
-          rapidFireActive={rapidFireActive} // Pass rapidFireActive to ShootingSystem
-        />
-        {showLaser && <LaserBeam lasers={showLaser} weaponType={weapon} />} {/* Pass weaponType */}
-        <GameLogic
-          gameOver={gameOver}
-          setShowLaser={setShowLaser}
-          showLaser={showLaser}
-          weapon={weapon}
-        />
-        <CollisionDetection targets={targets} setTargets={setTargets} setHealth={setHealth} onPlayerHit={handlePlayerHit} />
-        <TargetCollisionHandler targets={targets} setTargets={setTargets} />
-        <TargetList
-          targets={targets}
-          handleTargetHit={handleTargetHit}
-          handleRefCallback={handleRefCallback}
-          setTargets={setTargets}
-        />
-
-        {/* Cluster 1: Health Power-Ups */}
-        <PowerUp position={[10, 10, 0]} size={1.5} type="health" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[13, 12, 0]} size={1.5} type="health" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[16, 14, 0]} size={1.5} type="health" onCollect={handlePowerUpCollect} />
-
-        {/* Cluster 2: Shield Power-Ups */}
-        <PowerUp position={[-10, 10, 0]} size={1.5} type="shield" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[-13, 12, 0]} size={1.5} type="shield" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[-16, 14, 0]} size={1.5} type="shield" onCollect={handlePowerUpCollect} />
-
-        {/* Cluster 3: Rapid Fire Power-Ups */}
-        <PowerUp position={[0, -10, 0]} size={1.5} type="rapidFire" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[3, -12, 0]} size={1.5} type="rapidFire" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[6, -14, 0]} size={1.5} type="rapidFire" onCollect={handlePowerUpCollect} />
-
-        {/* Cluster 4: Slow Motion Power-Ups */}
-        <PowerUp position={[0, 0, 10]} size={1.5} type="slowMotion" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[3, 2, 12]} size={1.5} type="slowMotion" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[6, 4, 14]} size={1.5} type="slowMotion" onCollect={handlePowerUpCollect} />
-
-        {/* Cluster 5: Invincibility Power-Ups */}
-        <PowerUp position={[15, 0, 0]} size={1.5} type="invincibility" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[18, 2, 0]} size={1.5} type="invincibility" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[21, 4, 0]} size={1.5} type="invincibility" onCollect={handlePowerUpCollect} />
-
-        {/* Cluster 6: Speed Boost Power-Ups */}
-        <PowerUp position={[-15, 0, 0]} size={1.5} type="speedBoost" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[-18, 2, 0]} size={1.5} type="speedBoost" onCollect={handlePowerUpCollect} />
-        <PowerUp position={[-21, 4, 0]} size={1.5} type="speedBoost" onCollect={handlePowerUpCollect} />
-      </Canvas>
-      <div className={styles.crosshair}></div>
+      <FlashOverlays
+        showRedFlash={showRedFlash}
+        showGreenFlash={showGreenFlash}
+        showBlueFlash={showBlueFlash}
+        showYellowFlash={showYellowFlash}
+        showPurpleFlash={showPurpleFlash}
+        showOrangeFlash={showOrangeFlash}
+      />
+      <GameCanvas
+        gameOver={gameOver}
+        health={health}
+        targets={targets}
+        setTargets={setTargets}
+        setHealth={setHealth}
+        setGameOver={setGameOver}
+        playSound={playSound}
+        pauseSound={pauseSound}
+        onHit={onHit}
+        onMiss={onMiss}
+        setShowRedFlash={setShowRedFlash}
+        setShowBlueFlash={setShowBlueFlash}
+        weapon={weapon}
+        ammo={ammo}
+        cooldowns={cooldowns}
+        setCooldowns={setCooldowns}
+        showLaser={showLaser}
+        setShowLaser={setShowLaser}
+      />
+      {weapon === 'spread' && <ShotReticle />} {/* Render reticle for shotgun */}
       <ScoreDisplay score={score} />
       <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
       <div className={styles.statsDisplay}>

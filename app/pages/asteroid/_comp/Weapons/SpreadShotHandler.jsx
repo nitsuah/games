@@ -31,10 +31,10 @@ const SpreadShotHandler = ({
       if (angle <= SPREAD_ANGLE && distance <= SPREAD_RANGE) {
         hitTargets.add(target.id);
         playSound('hit');
-        return { ...target, isHit: true, hovered: true }; // Mark as hit and hovered
+        return { ...target, isHit: true }; // Mark as hit
       }
     }
-    return { ...target, hovered: false }; // Reset hover state for other targets
+    return target;
   });
 
   setTargets(updatedTargets); // Update targets state
@@ -59,10 +59,12 @@ const SpreadShotHandler = ({
     lasers.push({ from, to });
   }
 
-  setShowLaser(lasers); // Update visual feedback
-
-  // Remove lasers after 0.5 seconds
-  setTimeout(() => setShowLaser(null), 500);
+  if (typeof setShowLaser === 'function') {
+    setShowLaser(lasers); // Update visual feedback
+    setTimeout(() => setShowLaser(null), 120); // Remove lasers after 120 milliseconds
+  } else {
+    console.error('setShowLaser is not a function or is undefined.');
+  }
 };
 
 export default SpreadShotHandler;

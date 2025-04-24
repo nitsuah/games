@@ -33,6 +33,7 @@ export const handleHealthDepletion = ({
         pauseSound('bgm');
         playSound('gameOver');
         console.log('Game over state set.');
+        document.exitPointerLock(); // Ensure pointer lock is released
         return true;
       }
       return prev;
@@ -49,6 +50,8 @@ export const handleHealthDepletion = ({
       console.log('Health reached 0. Triggering game over.');
       setGameOver(true);
       pauseSound('bgm');
+      playSound('gameOver');
+      document.exitPointerLock(); // Ensure pointer lock is released
     }
     return newHealth;
   });

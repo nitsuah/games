@@ -9,30 +9,25 @@ const ExplosiveShotHandler = ({
   onMiss,
   targets,
   setTargets,
-  explosionRadius = 50, // Radius of the explosion sphere
-  maxRange = 500, // Maximum range of the explosive shot
-  triggerExplosion, // Callback to trigger an explosion
+  explosionRadius,
+  triggerExplosion,
 }) => {
   const from = camera.position.clone();
   const forwardDirection = new THREE.Vector3();
   camera.getWorldDirection(forwardDirection);
 
-  // Perform a raycast to detect collisions along the path
+  const maxRange = 100;
   const raycaster = new THREE.Raycaster(from, forwardDirection);
   const intersects = raycaster.intersectObjects(scene.children, true);
-  let impactPoint;
 
-  if (intersects.length > 0 && intersects[0]?.distance <= maxRange) {
-    // If a collision occurs within the max range, use the collision point
-    impactPoint = intersects[0].point.clone();
+  const impactPoint = intersects[0]?.point || from.clone().add(forwardDirection.multiplyScalar(maxRange));
+
+  if (typeof setShowLaser === 'function') {
+    setShowLaser([{ from, to: impactPoint }]); // Show the laser leading to the impact point
+    setTimeout(() => setShowLaser(null), 120); // Remove laser after 0.5 seconds
   } else {
-    // If no collision occurs, calculate the max range point
-    impactPoint = from.clone().add(forwardDirection.multiplyScalar(maxRange));
+    console.error('setShowLaser is not a function or is undefined.');
   }
-
-  // Visual feedback for the explosive shot
-  setShowLaser([{ from, to: impactPoint }]); // Show the laser leading to the impact point
-  setTimeout(() => setShowLaser(null), 500); // Remove laser after 0.5 seconds
 
   // Trigger explosion animation at the impact point
   triggerExplosion(impactPoint);
@@ -53,7 +48,7 @@ const ExplosiveShotHandler = ({
     return target;
   });
 
-  setTargets(updatedTargets); // Update targets state
+  setTargets(updatedTargets);
 
   // If no targets were hit, register a miss
   if (hitTargets.size === 0) {

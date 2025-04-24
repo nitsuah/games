@@ -36,7 +36,7 @@ export const useSound = () => {
     const initAudioContext = async () => {
       try {
         audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
-        console.log('✅ Audio context initialized');
+        console.debug('✅ Audio context initialized');
       } catch (e) {
         console.error('❌ Failed to initialize audio context:', e);
       }
