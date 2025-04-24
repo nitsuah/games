@@ -2,15 +2,15 @@ import * as THREE from 'three';
 
 const ExplosiveShotHandler = ({
   camera,
-  scene,
+  targets,
+  setTargets,
   setShowLaser,
   playSound,
   onHit,
   onMiss,
-  targets,
-  setTargets,
   explosionRadius,
   triggerExplosion,
+  scene,
 }) => {
   const from = camera.position.clone();
   const forwardDirection = new THREE.Vector3();
@@ -48,7 +48,7 @@ const ExplosiveShotHandler = ({
     return target;
   });
 
-  setTargets(updatedTargets);
+  setTargets(updatedTargets); // Update targets state
 
   // If no targets were hit, register a miss
   if (hitTargets.size === 0) {

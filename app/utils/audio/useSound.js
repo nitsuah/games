@@ -71,7 +71,7 @@ export const useSound = () => {
         const resumeAudio = async () => {
           if (audioContext.current && audioContext.current.state === 'suspended') {
             await audioContext.current.resume();
-            console.log('✅ Audio context resumed');
+            console.debug('✅ Audio context resumed');
           }
         };
 
@@ -113,7 +113,7 @@ export const useSound = () => {
       // Resume audio context if needed
       if (audioContext.current && audioContext.current.state === 'suspended') {
         await audioContext.current.resume();
-        console.log('✅ Audio context resumed before playing');
+        console.debug('✅ Audio context resumed before playing');
       }
 
       // Special handling for background music
@@ -121,7 +121,7 @@ export const useSound = () => {
         // Only play if it's not already playing
         if (sound.paused) {
           await sound.play();
-          console.log('✅ Started background music');
+          console.debug('✅ Started background music');
         }
       } else {
         // For other sounds, reset and play

@@ -31,7 +31,7 @@ const SpreadShotHandler = ({
       if (angle <= SPREAD_ANGLE && distance <= SPREAD_RANGE) {
         hitTargets.add(target.id);
         playSound('hit');
-        return { ...target, isHit: true }; // Mark as hit
+        return { ...target, isHit: true }; // Mark target as hit
       }
     }
     return target;

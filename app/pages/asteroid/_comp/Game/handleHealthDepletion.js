@@ -9,30 +9,30 @@ export const handleHealthDepletion = ({
   shieldActive,
   setShieldActive,
 }) => {
-  console.log('handleHealthDepletion called');
-  console.log(`Current Health: ${health}`);
-  console.log(`Shield Active: ${shieldActive}, Invincibility Active: ${invincibilityActive}`);
+  console.debug('handleHealthDepletion called');
+  console.debug(`Current Health: ${health}`);
+  console.debug(`Shield Active: ${shieldActive}, Invincibility Active: ${invincibilityActive}`);
 
   if (invincibilityActive) {
-    console.log('Player is invincible. No health reduction.');
+    console.debug('Player is invincible. No health reduction.');
     return;
   }
 
   if (shieldActive) {
-    console.log('Shield absorbed the damage.');
+    console.debug('Shield absorbed the damage.');
     playSound('hit'); // Play shield hit sound
-    console.log('Shield disabled.');
+    console.debug('Shield disabled.');
     setShieldActive(false); // Disable shield after absorbing damage
     return; // Skip health reduction if shield is active
   }
 
   if (health <= 0) {
-    console.log('Health is zero or below. Triggering game over.');
+    console.debug('Health is zero or below. Triggering game over.');
     setGameOver((prev) => {
       if (!prev) {
         pauseSound('bgm');
         playSound('gameOver');
-        console.log('Game over state set.');
+        console.debug('Game over state set.');
         document.exitPointerLock(); // Ensure pointer lock is released
         return true;
       }
@@ -42,12 +42,12 @@ export const handleHealthDepletion = ({
   }
 
   const hpLoss = 10;
-  console.log(`Reducing health by ${hpLoss}`);
+  console.debug(`Reducing health by ${hpLoss}`);
   setHealth((prevHealth) => {
     const newHealth = Math.max(prevHealth - hpLoss, 0);
-    console.log(`New Health: ${newHealth}`);
+    console.debug(`New Health: ${newHealth}`);
     if (newHealth === 0) {
-      console.log('Health reached 0. Triggering game over.');
+      console.debug('Health reached 0. Triggering game over.');
       setGameOver(true);
       pauseSound('bgm');
       playSound('gameOver');

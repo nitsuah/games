@@ -61,6 +61,7 @@ const Game = ({ onHit, onMiss }) => {
   });
   const [showLaser, setShowLaser] = useState([]);
 
+  // Power-up states
   const [shieldActive, setShieldActive] = useState(false);
   const [rapidFireActive, setRapidFireActive] = useState(false);
   const [slowMotionActive, setSlowMotionActive] = useState(false);

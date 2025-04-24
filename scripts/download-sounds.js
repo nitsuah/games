@@ -59,13 +59,13 @@ Object.entries(SOUND_URLS).forEach(([filename, url]) => {
   
   // Skip if file already exists
   if (fs.existsSync(filePath)) {
-    console.log(`Skipping ${filename} - already exists`);
+    console.debug(`Skipping ${filename} - already exists`);
     return;
   }
 
-  console.log(`Downloading ${filename}...`);
+  console.debug(`Downloading ${filename}...`);
   
   downloadFile(url, filePath)
-    .then(() => console.log(`Successfully downloaded ${filename}`))
+    .then(() => console.debug(`Successfully downloaded ${filename}`))
     .catch(err => console.error(`Error downloading ${filename}:`, err.message));
 }); 

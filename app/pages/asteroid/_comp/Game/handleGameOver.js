@@ -30,6 +30,6 @@ export const handleGameOver = ({
       window.localStorage.setItem('asteroidBestAccuracy', accuracy);
     }
 
-    console.log('Game over triggered by all targets being hit.');
+    console.debug('Game over triggered by all targets being hit.');
   }
 };
