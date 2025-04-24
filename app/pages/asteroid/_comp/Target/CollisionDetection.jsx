@@ -2,7 +2,7 @@ import React from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGameOver }) => {
+const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGameOver, shieldActive, setShieldActive }) => {
   const { camera } = useThree();
 
   useFrame(() => {
@@ -25,14 +25,16 @@ const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGam
 
           if (playerSphere.intersectsSphere(targetSphere)) {
             console.debug('Player Collision detected with target:', target.id);
-            onPlayerHit(); // Call the onPlayerHit callback
+
+            console.log(`Player hit by target: ${target.id}, emitting playerCollision event.`);
+            window.dispatchEvent(new Event('playerCollision')); // Emit custom event
+            onPlayerHit(target.size); // Call the onPlayerHit callback
             hasChanged = true;
             return { ...target, isHit: true };
           }
         }
         return target;
       });
-
       return hasChanged ? updatedTargets : prevTargets; // Only update state if changes occurred
     });
   });

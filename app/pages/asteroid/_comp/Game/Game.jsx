@@ -110,13 +110,13 @@ const Game = ({ onHit, onMiss }) => {
   const handlePowerUpCollect = (type) => {
     switch (type) {
       case 'health':
-        console.log('Health Power-Up activated!');
+        console.log('Health Power-Up enabled!');
         setHealth((prevHealth) => Math.min(prevHealth + 25, 100)); // Restore health up to 100
         setShowGreenFlash(true); // Trigger green flash
         setTimeout(() => setShowGreenFlash(false), 100); // Flash green briefly
         break;
       case 'speedBoost':
-        console.log('Speed Boost Power-Up activated!');
+        console.log('Speed Boost Power-Up enabled!');
         setSpeedBoostActive(true);
         setShowOrangeFlash(true); // Trigger orange flash
         setTimeout(() => {
@@ -125,8 +125,23 @@ const Game = ({ onHit, onMiss }) => {
           console.log('Speed Boost Power-Up expired!');
         }, 10000); // Deactivate after 10 seconds
         break;
+      case 'shield':
+        console.log('Shield Power-Up enabled!');
+        setShieldActive(true); // Activate shield
+        setShowBlueFlash(true); // Trigger blue flash
+        break; // Shield remains active until used
+      case 'invincibility':
+        console.log('Invincibility Power-Up enabled!');
+        setInvincibilityActive(true);
+        setShowYellowFlash(true); // Trigger yellow flash
+        setTimeout(() => {
+          setInvincibilityActive(false);
+          setShowYellowFlash(false); // End yellow flash
+          console.log('Invincibility Power-Up expired!');
+        }, 10000); // Deactivate after 10 seconds
+        break;
       case 'rapidFire':
-        console.log('Rapid Fire Power-Up activated!');
+        console.log('Rapid Fire Power-Up enabled!');
         setRapidFireActive(true);
         setShowRedFlash(true); // Trigger red flash
         setTimeout(() => {
@@ -135,13 +150,8 @@ const Game = ({ onHit, onMiss }) => {
           console.log('Rapid Fire Power-Up expired!');
         }, 10000); // Deactivate after 10 seconds
         break;
-      case 'shield':
-        console.log('Shield Power-Up activated!');
-        setShieldActive(true);
-        setShowBlueFlash(true); // Trigger blue flash
-        break; // Shield will now only expire when used
       case 'slowMotion':
-        console.log('Slow Motion Power-Up activated!');
+        console.log('Slow Motion Power-Up enabled!');
         setSlowMotionActive(true);
         setTargets((prevTargets) =>
           prevTargets.map((target) => ({
@@ -158,16 +168,6 @@ const Game = ({ onHit, onMiss }) => {
             }))
           );
           console.log('Slow Motion Power-Up expired!');
-        }, 10000); // Deactivate after 10 seconds
-        break;
-      case 'invincibility':
-        console.log('Invincibility Power-Up activated!');
-        setInvincibilityActive(true);
-        setShowYellowFlash(true); // Trigger yellow flash
-        setTimeout(() => {
-          setInvincibilityActive(false);
-          setShowYellowFlash(false); // End yellow flash
-          console.log('Invincibility Power-Up expired!');
         }, 10000); // Deactivate after 10 seconds
         break;
       default:
@@ -222,40 +222,42 @@ const Game = ({ onHit, onMiss }) => {
 
   // Handle player state
   useEffect(() => {
-    handleHealthDepletionFn({
-      health,
-      setGameOver,
-      pauseSound,
-      playSound,
-      setShowRedFlash,
-      invincibilityActive, // Pass invincibility state
-      shieldActive,        // Pass shield state
-      setShieldActive,     // Pass shield state setter
-    });
-  }, [health, setGameOver, pauseSound, playSound, setShowRedFlash, invincibilityActive, shieldActive, setShieldActive]);
+    const handleCollision = () => {
+      if (gameOver) {
+        console.log('Game is over. Skipping collision handling.');
+        return;
+      }
 
-  // Handle general game state
-  useEffect(() => {
-    handleGameOverFn({
-      targets,
-      setGameOver,
-      pauseSound,
-      playSound,
-      hits,
-      misses,
-      score,
-      highScore,
-      setHighScore,
-      setIsNewHighScore,
-      bestAccuracy,
-      setBestAccuracy,
-    });
-  }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound, playSound, setGameOver, setHighScore, setIsNewHighScore, setBestAccuracy]);
+      if (health > 0) {
+        console.log('Calling handleHealthDepletionFn...');
+        console.log(`shieldActive: ${shieldActive}, invincibilityActive: ${invincibilityActive}`);
 
-  // Prevent movement after game ends
+        handleHealthDepletionFn({
+          health,
+          setHealth,
+          setGameOver,
+          pauseSound,
+          playSound,
+          setShowRedFlash,
+          invincibilityActive,
+          shieldActive,
+          setShieldActive,
+        });
+      } else {
+        console.log('Health is already zero or game is over. Skipping handleHealthDepletionFn.');
+      }
+    };
+
+    window.addEventListener('playerCollision', handleCollision);
+
+    return () => {
+      window.removeEventListener('playerCollision', handleCollision);
+    };
+  }, [gameOver, shieldActive, invincibilityActive, health, setHealth, setGameOver, pauseSound, playSound, setShowRedFlash, setShieldActive]);
+
   useEffect(() => {
     if (gameOver) {
-      console.log('Game over! Disabling player movement.');
+      console.log('Game over! Disabling player movement and interactions.');
       window.removeEventListener('keydown', handleKeyDownFn);
       window.removeEventListener('keyup', handleKeyDownFn);
     }
@@ -324,15 +326,32 @@ const Game = ({ onHit, onMiss }) => {
     }
   }, [showLaser]);
 
+  useEffect(() => {
+    handleGameOverFn({
+      targets,
+      setGameOver,
+      pauseSound,
+      playSound,
+      hits,
+      misses,
+      score,
+      highScore,
+      setHighScore,
+      setIsNewHighScore,
+      bestAccuracy,
+      setBestAccuracy,
+    });
+  }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound, playSound, setGameOver, setHighScore, setIsNewHighScore, setBestAccuracy]);
+
   return (
     <div className={styles.gameContainer}>
       {/* Blue flash overlay */}
-      {showBlueFlash && (
+      {shieldActive && (
         <div
           style={{
             position: 'absolute',
             top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0,0,255,0.5)', // Higher opacity for visibility
+            background: 'rgba(0,0,255,0.3)', // Reduced opacity for better transparency
             zIndex: 1000,
             pointerEvents: 'none',
           }}
@@ -344,7 +363,7 @@ const Game = ({ onHit, onMiss }) => {
           style={{
             position: 'absolute',
             top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(0,255,0,0.5)', // Higher opacity for visibility
+            background: 'rgba(0,255,0,0.3)', // Reduced opacity for better transparency
             zIndex: 1000,
             pointerEvents: 'none',
           }}
@@ -356,7 +375,7 @@ const Game = ({ onHit, onMiss }) => {
           style={{
             position: 'absolute',
             top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(255,255,0,0.5)', // Higher opacity for visibility
+            background: 'rgba(255,255,0,0.3)', // Reduced opacity for better transparency
             zIndex: 1000,
             pointerEvents: 'none',
           }}
@@ -368,7 +387,7 @@ const Game = ({ onHit, onMiss }) => {
           style={{
             position: 'absolute',
             top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(128,0,128,0.5)', // Higher opacity for visibility
+            background: 'rgba(128,0,128,0.3)', // Reduced opacity for better transparency
             zIndex: 1000,
             pointerEvents: 'none',
           }}
@@ -380,7 +399,7 @@ const Game = ({ onHit, onMiss }) => {
           style={{
             position: 'absolute',
             top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(255,0,0,0.5)', // Higher opacity for visibility
+            background: 'rgba(255,0,0,0.3)', // Reduced opacity for better transparency
             zIndex: 1000,
             pointerEvents: 'none',
           }}
@@ -392,7 +411,7 @@ const Game = ({ onHit, onMiss }) => {
           style={{
             position: 'absolute',
             top: 0, left: 0, right: 0, bottom: 0,
-            background: 'rgba(255,165,0,0.5)', // Higher opacity for visibility
+            background: 'rgba(255,165,0,0.3)', // Reduced opacity for better transparency
             zIndex: 1000,
             pointerEvents: 'none',
           }}

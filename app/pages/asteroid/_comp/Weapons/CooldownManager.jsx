@@ -9,14 +9,14 @@ const CooldownManager = ({ cooldowns, setCooldowns, rapidFireActive }) => {
 
         Object.keys(updatedCooldowns).forEach((key) => {
           if (updatedCooldowns[key] > 0) {
-            const reduction = rapidFireActive ? 2 / 60 : 1 / 60; // Halve cooldown reduction if rapid fire is active
+            const reduction = rapidFireActive ? updatedCooldowns[key] * 0.99 : 1 / 60; // Reduce cooldown by 99% if rapid fire is active
             updatedCooldowns[key] = Math.max(0, updatedCooldowns[key] - reduction);
             hasChanged = true;
           }
         });
 
         if (hasChanged) {
-          console.log('Updated Cooldowns:', updatedCooldowns); // Log cooldowns for debugging
+          console.debug('Updated Cooldowns:', updatedCooldowns); // Log cooldowns for debugging
         }
 
         return hasChanged ? updatedCooldowns : prev; // Only update state if cooldowns have changed

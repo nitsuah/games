@@ -27,8 +27,9 @@ const Player = ({
   const [shieldActive, setShieldActive] = useState(true); // Shield state
 
   // Physics constants
-  const ACCELERATION = speedBoostActive ? 0.05 : 0.0002; // Cranked up acceleration for testing
-  const MAX_VELOCITY = speedBoostActive ? 0.5 : 0.002; // Cranked up max velocity for testing
+  const BASE_SPEED = 5; // Base speed in units per second
+  const SPEED_MULTIPLIER = speedBoostActive ? 3 : 1; // Apply 3x speed boost for testing
+  const MOVEMENT_SPEED = BASE_SPEED * SPEED_MULTIPLIER; // Final movement speed
   const ROTATION_SPEED = 0.00002;   // Mouse sensitivity remains unchanged
   const DAMPING = 0.98;           // Adjusted damping for smoother deceleration
 
@@ -113,27 +114,16 @@ const Player = ({
     if (keysRef.current.up) direction.add(upVector);
     if (keysRef.current.down) direction.add(upVector.negate());
 
-    // Apply acceleration to velocity
+    // Normalize direction and scale by movement speed and delta
     if (direction.length() > 0) {
-      direction.normalize().multiplyScalar(ACCELERATION * delta);
-      velocityRef.current.add(direction);
-    }
-
-    // Apply damping to velocity (drag)
-    velocityRef.current.multiplyScalar(DAMPING);
-
-    // Stop drifting if velocity is very low
-    if (velocityRef.current.length() < 0.001) {
-      velocityRef.current.set(0, 0, 0);
-    }
-
-    // Limit maximum velocity
-    if (velocityRef.current.length() > MAX_VELOCITY) {
-      velocityRef.current.normalize().multiplyScalar(MAX_VELOCITY);
+      direction.normalize().multiplyScalar(MOVEMENT_SPEED * delta); // Frame-rate independent movement
+      velocityRef.current.copy(direction); // Directly set velocity to avoid drift
+    } else {
+      velocityRef.current.set(0, 0, 0); // Stop movement if no keys are pressed
     }
 
     // Update camera position based on velocity
-    camera.position.add(velocityRef.current.clone().multiplyScalar(delta));
+    camera.position.add(velocityRef.current);
 
     // Update mesh (hitbox) to follow the camera
     const offset = new THREE.Vector3(0, -1, 0); // Offset hitbox slightly below the camera
@@ -171,9 +161,7 @@ const Player = ({
     }
 
     // Log for debugging
-    if (speedBoostActive) {
-      console.log(`SpeedBoostActive: ${speedBoostActive}, Velocity: ${velocityRef.current.length()}`);
-    }
+    console.debug(`SpeedBoostActive: ${speedBoostActive}, MovementSpeed: ${MOVEMENT_SPEED}, Velocity: ${velocityRef.current.length()}`);
   });
 
   return (
