@@ -6,7 +6,7 @@ import LaserShotHandler from './LaserShotHandler';
 import ExplosiveShotHandler from './ExplosiveShotHandler';
 import CooldownManager from './CooldownManager';
 import Explosion from '../../../../_components/effects/Explosion';
-import LaserBeam from './LaserBeam'; // Import LaserBeam for visual effects
+import LaserBeam from './LaserBeam';
 import { WEAPON_TYPES } from './constants';
 
 const ShootingSystem = ({
@@ -33,7 +33,13 @@ const ShootingSystem = ({
     // Check if the weapon is on cooldown
     if (cooldowns[weapon] > 0) {
       console.log(`Weapon: ${weapon} is on cooldown. Remaining: ${cooldowns[weapon].toFixed(2)}s`);
-      // playSound('empty');
+      return;
+    }
+
+    // Check if ammo is available
+    if (ammo[weapon] <= 0) {
+      console.log(`Weapon: ${weapon} is out of ammo.`);
+      playSound('empty'); // Play empty ammo sound
       return;
     }
 
@@ -45,6 +51,8 @@ const ShootingSystem = ({
         playSound,
         onHit,
         onMiss,
+        targets,
+        setTargets,
       });
     }
 
@@ -95,6 +103,7 @@ const ShootingSystem = ({
         ...prev,
         [weapon]: Math.max(0, prev[weapon] - 1),
       }));
+      console.log(`Ammo for ${weapon} decreased. Remaining: ${ammo[weapon] - 1}`);
     } else {
       console.error('setAmmo is not a function or is undefined.');
     }

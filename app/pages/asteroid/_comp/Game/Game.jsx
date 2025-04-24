@@ -16,7 +16,7 @@ import { handlePlayerHit as handlePlayerHitFn } from './handlePlayerHit';
 import { handleKeyDown as handleKeyDownFn } from './handleKeyDown';
 import { updateScore as updateScoreFn } from './updateScore';
 import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
-import ShotReticle from '../UI/ShotReticle'; // Import ShotReticle
+import ShotReticle from '../UI/ShotReticle';
 
 const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
@@ -142,7 +142,7 @@ const Game = ({ onHit, onMiss }) => {
       setTargets((prevTargets) =>
         prevTargets.map((target) => ({
           ...target,
-          speed: target.speed * 0.5, // Reduce target speed by 50%
+          speed: target.speed * 0.1, // Reduce target speed by 90%
         }))
       );
     }
@@ -324,6 +324,7 @@ const Game = ({ onHit, onMiss }) => {
         setShowBlueFlash={setShowBlueFlash}
         weapon={weapon}
         ammo={ammo}
+        setAmmo={setAmmo}
         cooldowns={cooldowns}
         setCooldowns={setCooldowns}
         showLaser={showLaser}
