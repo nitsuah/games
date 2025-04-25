@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         {/* Dynamic favicon based on the page */}
         <link rel="icon" href="/favicon-home.svg" />
-        <meta name="description" content="Asteroid Game" />
+        <meta name="description" content="Arcade Games" />
       </Head>
       <body>
         <Main />
