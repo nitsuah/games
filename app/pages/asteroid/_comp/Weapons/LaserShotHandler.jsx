@@ -2,7 +2,8 @@ import * as THREE from 'three';
 
 const LaserShotHandler = ({
   camera,
-  scene,
+  targets,
+  setTargets,
   setShowLaser,
   playSound,
   onHit,
@@ -12,31 +13,51 @@ const LaserShotHandler = ({
   const forwardDirection = new THREE.Vector3();
   camera.getWorldDirection(forwardDirection);
 
-  const raycaster = new THREE.Raycaster(from, forwardDirection);
-  const intersects = raycaster.intersectObjects(scene.children, true);
+  const hitTargets = new Set(); // Track hit targets to avoid duplicates
 
-  const to = intersects[0]?.point || from.clone().add(forwardDirection.multiplyScalar(100));
+  // Iterate through all targets
+  const updatedTargets = targets.map((target) => {
+    if (!target.isHit) {
+      const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
+      const distance = from.distanceTo(targetPosition);
 
-  if (typeof setShowLaser === 'function') {
-    setShowLaser([{ from, to }]);
-    setTimeout(() => setShowLaser(null), 200);
-  } else {
-    console.error('setShowLaser is not a function or is undefined.');
-  }
+      // Widen the precision by increasing the angle threshold
+      const isIntersected = forwardDirection.angleTo(
+        targetPosition.sub(from).normalize()
+      ) < 0.05 && distance <= 400; // Angle threshold of 0.05 radians (approx. 2.86 degrees)
 
-  const targetIntersect = intersects.find((intersect) => {
-    const parent = intersect.object.parent;
-    return parent?.userData?.isTarget && !parent?.userData?.isHit;
+      if (isIntersected) {
+        hitTargets.add(target.id);
+        playSound('hit');
+        return { ...target, isHit: true }; // Mark target as hit
+      }
+    }
+    return target;
   });
 
-  if (targetIntersect) {
-    const targetId = targetIntersect.object.parent.userData.targetId;
-    targetIntersect.object.parent.userData.isHit = true;
-    playSound('hit');
-    onHit(targetId);
-  } else {
+  setTargets(updatedTargets); // Update targets state
+
+  // If no targets were hit, register a miss
+  if (hitTargets.size === 0) {
     playSound('miss');
-    onMiss();
+    if (typeof onMiss === 'function') {
+      onMiss();
+    }
+  } else {
+    hitTargets.forEach((targetId) => {
+      if (typeof onHit === 'function') {
+        onHit(targetId); // Call onHit for each hit target
+      }
+    });
+  }
+
+  // Visual feedback for the laser
+  if (typeof setShowLaser === 'function') {
+    const to = from.clone().add(forwardDirection.multiplyScalar(100));
+    setShowLaser([{ from, to }]);
+    setTimeout(() => setShowLaser(null), 200); // Remove laser after 200ms
+  } else {
+    console.error('setShowLaser is not a function or is undefined.');
   }
 };
 
