@@ -161,7 +161,7 @@ const Player = ({
     }
 
     // Log for debugging
-    console.debug(`SpeedBoostActive: ${speedBoostActive}, MovementSpeed: ${MOVEMENT_SPEED}, Velocity: ${velocityRef.current.length()}`);
+    // console.debug(`SpeedBoostActive: ${speedBoostActive}, MovementSpeed: ${MOVEMENT_SPEED}, Velocity: ${velocityRef.current.length()}`);
   });
 
   return (

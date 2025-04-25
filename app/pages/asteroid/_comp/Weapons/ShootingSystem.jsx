@@ -32,13 +32,13 @@ const ShootingSystem = ({
 
     // Check if the weapon is on cooldown
     if (cooldowns[weapon] > 0) {
-      console.log(`Weapon: ${weapon} is on cooldown. Remaining: ${cooldowns[weapon].toFixed(2)}s`);
+      console.debug(`Weapon: ${weapon} is on cooldown. Remaining: ${cooldowns[weapon].toFixed(2)}s`);
       return;
     }
 
     // Check if ammo is available
     if (ammo[weapon] <= 0) {
-      console.log(`Weapon: ${weapon} is out of ammo.`);
+      console.debug(`Weapon: ${weapon} is out of ammo.`);
       playSound('empty'); // Play empty ammo sound
       return;
     }
@@ -103,7 +103,7 @@ const ShootingSystem = ({
         ...prev,
         [weapon]: Math.max(0, prev[weapon] - 1),
       }));
-      console.log(`Ammo for ${weapon} decreased. Remaining: ${ammo[weapon] - 1}`);
+      console.debug(`Ammo for ${weapon} decreased. Remaining: ${ammo[weapon] - 1}`);
     } else {
       console.error('setAmmo is not a function or is undefined.');
     }

@@ -170,7 +170,6 @@ const Game = ({ onHit, onMiss }) => {
   useEffect(() => {
     if (!gameOver) {
       playSound('bgm')
-        .then(() => console.debug('Background music started'))
         .catch((err) => console.error('Failed to play bgm:', err)); // Catch errors to avoid unhandled rejections
     }
 
