@@ -9,7 +9,7 @@ const SpreadShotHandler = ({
   onHit,
   onMiss,
   SPREAD_ANGLE = 0.25,
-  SPREAD_COUNT = 15,
+  SPREAD_COUNT = 10,
   SPREAD_RANGE = 100,
 }) => {
   const from = camera.position.clone();

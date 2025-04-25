@@ -24,7 +24,7 @@ const LaserShotHandler = ({
       // Widen the precision by increasing the angle threshold
       const isIntersected = forwardDirection.angleTo(
         targetPosition.sub(from).normalize()
-      ) < 0.05 && distance <= 400; // Angle threshold of 0.05 radians (approx. 2.86 degrees)
+      ) < 0.04 && distance <= 400; // Angle threshold of 0.04 radians (approx. 2.29 degrees)
 
       if (isIntersected) {
         hitTargets.add(target.id);
@@ -55,7 +55,7 @@ const LaserShotHandler = ({
   if (typeof setShowLaser === 'function') {
     const to = from.clone().add(forwardDirection.multiplyScalar(100));
     setShowLaser([{ from, to }]);
-    setTimeout(() => setShowLaser(null), 200); // Remove laser after 200ms
+    setTimeout(() => setShowLaser(null), 120); // Remove laser after 120ms
   } else {
     console.error('setShowLaser is not a function or is undefined.');
   }
