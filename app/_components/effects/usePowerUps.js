@@ -1,52 +1,44 @@
 import { useState, useCallback } from 'react';
 
-export default function usePowerUps(setHealth, setTargets) {
+export default function usePowerUps(setHealth, setTargets, showFlash = () => {}) {
   const [shieldActive, setShieldActive] = useState(false);
   const [rapidFireActive, setRapidFireActive] = useState(false);
   const [slowMotionActive, setSlowMotionActive] = useState(false);
   const [invincibilityActive, setInvincibilityActive] = useState(false);
   const [speedBoostActive, setSpeedBoostActive] = useState(false);
 
-  const [showRedFlash, setShowRedFlash] = useState(false);
-  const [showGreenFlash, setShowGreenFlash] = useState(false);
-  const [showBlueFlash, setShowBlueFlash] = useState(false);
-  const [showYellowFlash, setShowYellowFlash] = useState(false);
-  const [showPurpleFlash, setShowPurpleFlash] = useState(false);
-  const [showOrangeFlash, setShowOrangeFlash] = useState(false);
-
   const handlePowerUpCollect = useCallback((type) => {
     switch (type) {
       case 'health':
         setHealth((prevHealth) => Math.min(prevHealth + 25, 100));
-        setShowGreenFlash(true);
-        setTimeout(() => setShowGreenFlash(false), 100);
+        showFlash('green');
         break;
       case 'speedBoost':
         setSpeedBoostActive(true);
-        setShowOrangeFlash(true);
+        showFlash('orange', 100);
         setTimeout(() => {
           setSpeedBoostActive(false);
-          setShowOrangeFlash(false);
+          showFlash('orange', 0);
         }, 10000);
         break;
       case 'shield':
         setShieldActive(true);
-        setShowBlueFlash(true);
+        showFlash('blue');
         break;
       case 'invincibility':
         setInvincibilityActive(true);
-        setShowYellowFlash(true);
+        showFlash('yellow', 100);
         setTimeout(() => {
           setInvincibilityActive(false);
-          setShowYellowFlash(false);
+          showFlash('yellow', 0);
         }, 10000);
         break;
       case 'rapidFire':
         setRapidFireActive(true);
-        setShowRedFlash(true);
+        showFlash('red', 100);
         setTimeout(() => {
           setRapidFireActive(false);
-          setShowRedFlash(false);
+          showFlash('red', 0);
         }, 10000);
         break;
       case 'slowMotion':
@@ -70,7 +62,7 @@ export default function usePowerUps(setHealth, setTargets) {
       default:
         break;
     }
-  }, [setHealth, setTargets]);
+  }, [setHealth, setTargets, showFlash]);
 
   return {
     shieldActive,
@@ -83,18 +75,6 @@ export default function usePowerUps(setHealth, setTargets) {
     setInvincibilityActive,
     speedBoostActive,
     setSpeedBoostActive,
-    showRedFlash,
-    setShowRedFlash,
-    showGreenFlash,
-    setShowGreenFlash,
-    showBlueFlash,
-    setShowBlueFlash,
-    showYellowFlash,
-    setShowYellowFlash,
-    showPurpleFlash,
-    setShowPurpleFlash,
-    showOrangeFlash,
-    setShowOrangeFlash,
     handlePowerUpCollect,
   };
 }

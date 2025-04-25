@@ -56,6 +56,22 @@ const Game = ({ onHit, onMiss }) => {
   });
   const [showLaser, setShowLaser] = useState([]);
 
+  // Replace individual flash states with a single object
+  const [flashes, setFlashes] = useState({
+    red: false,
+    green: false,
+    blue: false,
+    yellow: false,
+    purple: false,
+    orange: false,
+  });
+
+  // Helper to show a flash by type
+  const showFlash = (type, duration = 100) => {
+    setFlashes((prev) => ({ ...prev, [type]: true }));
+    setTimeout(() => setFlashes((prev) => ({ ...prev, [type]: false })), duration);
+  };
+
   // Power-up and flash overlay state/logic
   const {
     shieldActive,
@@ -68,20 +84,8 @@ const Game = ({ onHit, onMiss }) => {
     setInvincibilityActive,
     speedBoostActive,
     setSpeedBoostActive,
-    showRedFlash,
-    setShowRedFlash,
-    showGreenFlash,
-    setShowGreenFlash,
-    showBlueFlash,
-    setShowBlueFlash,
-    showYellowFlash,
-    setShowYellowFlash,
-    showPurpleFlash,
-    setShowPurpleFlash,
-    showOrangeFlash,
-    setShowOrangeFlash,
     handlePowerUpCollect,
-  } = usePowerUps(setHealth, setTargets);
+  } = usePowerUps(setHealth, setTargets, showFlash);
 
   // Apply slow motion effect
   useEffect(() => {
@@ -145,7 +149,7 @@ const Game = ({ onHit, onMiss }) => {
           setGameOver,
           pauseSound,
           playSound,
-          setShowRedFlash,
+          showFlash,
           invincibilityActive,
           shieldActive,
           setShieldActive,
@@ -160,7 +164,7 @@ const Game = ({ onHit, onMiss }) => {
     return () => {
       window.removeEventListener('playerCollision', handleCollision);
     };
-  }, [gameOver, shieldActive, invincibilityActive, health, setHealth, setGameOver, pauseSound, playSound, setShowRedFlash, setShieldActive]);
+  }, [gameOver, shieldActive, invincibilityActive, health, setHealth, setGameOver, pauseSound, playSound, showFlash, setShieldActive]);
 
   useEffect(() => {
     const handleShoot = () => {
@@ -227,10 +231,10 @@ const Game = ({ onHit, onMiss }) => {
       handlePlayerHitFn({
         targetSize,
         setHealth,
-        setShowRedFlash,
+        showFlash,
         playSound,
       }),
-    [setHealth, setShowRedFlash, playSound]
+    [setHealth, showFlash, playSound]
   );
 
   useEffect(() => {
@@ -252,14 +256,7 @@ const Game = ({ onHit, onMiss }) => {
 
   return (
     <div className={styles.gameContainer}>
-      <FlashOverlays
-        showRedFlash={showRedFlash}
-        showGreenFlash={showGreenFlash}
-        showBlueFlash={showBlueFlash}
-        showYellowFlash={showYellowFlash}
-        showPurpleFlash={showPurpleFlash}
-        showOrangeFlash={showOrangeFlash}
-      />
+      <FlashOverlays flashes={flashes} />
       <GameCanvas
         gameOver={gameOver}
         health={health}
@@ -271,8 +268,6 @@ const Game = ({ onHit, onMiss }) => {
         pauseSound={pauseSound}
         onHit={onHit}
         onMiss={onMiss}
-        setShowRedFlash={setShowRedFlash}
-        setShowBlueFlash={setShowBlueFlash}
         weapon={weapon}
         ammo={ammo}
         setAmmo={setAmmo}
@@ -281,7 +276,7 @@ const Game = ({ onHit, onMiss }) => {
         showLaser={showLaser}
         setShowLaser={setShowLaser}
         handlePowerUpCollect={handlePowerUpCollect}
-        handleTargetHit={handleTargetHit} // Pass handleTargetHit to GameCanvas
+        handleTargetHit={handleTargetHit}
       />
       {weapon === 'spread' && <ShotReticle />} {/* Render reticle for shotgun */}
       <ScoreDisplay score={score} />
