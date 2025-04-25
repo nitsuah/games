@@ -1,0 +1,7 @@
+<!-- filepath: c:\Users\ajhar\code\games\app\public\favicon-fps.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" fill="#3F51B5" />
+  <rect x="16" y="32" width="32" height="12" fill="white" />
+  <rect x="24" y="28" width="16" height="4" fill="white" />
+  <rect x="40" y="36" width="12" height="4" fill="white" />
+</svg>
