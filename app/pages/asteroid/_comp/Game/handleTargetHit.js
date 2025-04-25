@@ -1,6 +1,6 @@
 import { now } from '@/utils/time';
 
-const MIN_ALIVE_TIME = 0.5;
+const MIN_ALIVE_TIME = 2; // Increased from 0.5 to 2 seconds
 
 export const handleTargetHit = ({
   targetId,
@@ -15,9 +15,11 @@ export const handleTargetHit = ({
   if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
     return;
   }
+
   setTargets((prevTargets) => {
     let updatedTargets = [];
     let newTargets = [];
+
     prevTargets.forEach((target) => {
       if (
         target.id === targetId &&
@@ -43,12 +45,12 @@ export const handleTargetHit = ({
               ? '#00ffff'
               : '#ffff00';
 
-          const offsetRange = 1.0;
+          const offsetRange = target.size + 3; // Use the target's size for offset
           const spawnTime = now();
           newTargets.push(
             {
               id: `${target.id}-1`,
-              x: currentX + Math.random() * offsetRange - offsetRange / 2,
+              x: currentX + offsetRange,
               y: currentY + Math.random() * offsetRange - offsetRange / 2,
               z: currentZ + Math.random() * offsetRange - offsetRange / 2,
               isHit: false,
@@ -59,7 +61,7 @@ export const handleTargetHit = ({
             },
             {
               id: `${target.id}-2`,
-              x: currentX + Math.random() * offsetRange - offsetRange / 2,
+              x: currentX - offsetRange,
               y: currentY + Math.random() * offsetRange - offsetRange / 2,
               z: currentZ + Math.random() * offsetRange - offsetRange / 2,
               isHit: false,
@@ -70,10 +72,15 @@ export const handleTargetHit = ({
             }
           );
         }
+
+        // Mark the original target as hit
+        updatedTargets.push({ ...target, isHit: true });
       } else {
         updatedTargets.push(target);
       }
     });
+
+    // Merge updated targets with new smaller targets
     return [...updatedTargets, ...newTargets];
   });
 

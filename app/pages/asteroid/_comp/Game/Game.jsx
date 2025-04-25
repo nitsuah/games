@@ -242,6 +242,10 @@ const Game = ({ onHit, onMiss }) => {
       }),
     [cooldowns, weapon, ammo, setTargets, setHits, onHit]
   );
+  // Add logging to confirm splitting logic
+  useEffect(() => {
+    console.debug('Targets updated:', targets);
+  }, [targets]);
 
   // HANDLE MISS
   const handleMiss = useCallback(
@@ -329,6 +333,8 @@ const Game = ({ onHit, onMiss }) => {
         setCooldowns={setCooldowns}
         showLaser={showLaser}
         setShowLaser={setShowLaser}
+        handlePowerUpCollect={handlePowerUpCollect}
+        handleTargetHit={handleTargetHit} // Pass handleTargetHit to GameCanvas
       />
       {weapon === 'spread' && <ShotReticle />} {/* Render reticle for shotgun */}
       <ScoreDisplay score={score} />

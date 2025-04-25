@@ -3,7 +3,7 @@
 ## Asteroid
 
 1. **Power-Ups**
-   - **Planned**: Add collectible power-ups (e.g., health restore, shield, rapid fire, slow motion, invincibility).
+   - **In Progress**: Add collectible power-ups (e.g., health restore, shield, rapid fire, slow motion, invincibility).
    - **Next Steps**: Implement floating power-ups that can be collected by colliding with them.
 
 2. **Player Shield**

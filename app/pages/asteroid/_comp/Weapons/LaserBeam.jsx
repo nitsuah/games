@@ -52,7 +52,7 @@ const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, off
             <cylinderGeometry
               args={[
                 thickness / 2, // Radius at the start
-                thickness / 2.5, // Radius at the end
+                thickness / 4, // Radius at the end
                 distance, // Height of the cylinder
                 16, // Radial segments
               ]}

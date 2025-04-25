@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { now } from '@/utils/time';
 
-const MIN_ALIVE_TIME = 0.5;
+const MIN_ALIVE_TIME = 2; // Increased from 0.5 to 1.5 seconds
 
 const TargetCollisionHandler = ({ targets, setTargets }) => {
   useFrame(() => {
