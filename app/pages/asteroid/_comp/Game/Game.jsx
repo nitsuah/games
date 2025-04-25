@@ -17,6 +17,7 @@ import { handleKeyDown as handleKeyDownFn } from './handleKeyDown';
 import { updateScore as updateScoreFn } from './updateScore';
 import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
 import ShotReticle from '../UI/ShotReticle';
+import usePowerUps from '../../../../_components/effects/usePowerUps';
 
 const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
@@ -27,12 +28,6 @@ const Game = ({ onHit, onMiss }) => {
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(100);
-  const [showRedFlash, setShowRedFlash] = useState(false);
-  const [showGreenFlash, setShowGreenFlash] = useState(false);
-  const [showBlueFlash, setShowBlueFlash] = useState(false);
-  const [showYellowFlash, setShowYellowFlash] = useState(false);
-  const [showPurpleFlash, setShowPurpleFlash] = useState(false);
-  const [showOrangeFlash, setShowOrangeFlash] = useState(false);
   const [targets, setTargets] = useState([
     { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
@@ -61,80 +56,32 @@ const Game = ({ onHit, onMiss }) => {
   });
   const [showLaser, setShowLaser] = useState([]);
 
-  // Power-up states
-  const [shieldActive, setShieldActive] = useState(false);
-  const [rapidFireActive, setRapidFireActive] = useState(false);
-  const [slowMotionActive, setSlowMotionActive] = useState(false);
-  const [invincibilityActive, setInvincibilityActive] = useState(false);
-  const [speedBoostActive, setSpeedBoostActive] = useState(false);
-
-  const handlePowerUpCollect = (type) => {
-    switch (type) {
-      case 'health':
-        console.log('Health Power-Up enabled!');
-        setHealth((prevHealth) => Math.min(prevHealth + 25, 100)); // Restore health up to 100
-        setShowGreenFlash(true); // Trigger green flash
-        setTimeout(() => setShowGreenFlash(false), 100); // Flash green briefly
-        break;
-      case 'speedBoost':
-        console.log('Speed Boost Power-Up enabled!');
-        setSpeedBoostActive(true);
-        setShowOrangeFlash(true); // Trigger orange flash
-        setTimeout(() => {
-          setSpeedBoostActive(false);
-          setShowOrangeFlash(false); // End orange flash
-          console.log('Speed Boost Power-Up expired!');
-        }, 10000); // Deactivate after 10 seconds
-        break;
-      case 'shield':
-        console.log('Shield Power-Up enabled!');
-        setShieldActive(true); // Activate shield
-        setShowBlueFlash(true); // Trigger blue flash
-        break; // Shield remains active until used
-      case 'invincibility':
-        console.log('Invincibility Power-Up enabled!');
-        setInvincibilityActive(true);
-        setShowYellowFlash(true); // Trigger yellow flash
-        setTimeout(() => {
-          setInvincibilityActive(false);
-          setShowYellowFlash(false); // End yellow flash
-          console.log('Invincibility Power-Up expired!');
-        }, 10000); // Deactivate after 10 seconds
-        break;
-      case 'rapidFire':
-        console.log('Rapid Fire Power-Up enabled!');
-        setRapidFireActive(true);
-        setShowRedFlash(true); // Trigger red flash
-        setTimeout(() => {
-          setRapidFireActive(false);
-          setShowRedFlash(false); // End red flash
-          console.log('Rapid Fire Power-Up expired!');
-        }, 10000); // Deactivate after 10 seconds
-        break;
-      case 'slowMotion':
-        console.log('Slow Motion Power-Up enabled!');
-        setSlowMotionActive(true);
-        setTargets((prevTargets) =>
-          prevTargets.map((target) => ({
-            ...target,
-            speed: target.speed * 0.5, // Reduce target speed by 50%
-          }))
-        );
-        setTimeout(() => {
-          setSlowMotionActive(false);
-          setTargets((prevTargets) =>
-            prevTargets.map((target) => ({
-              ...target,
-              speed: target.speed * 2, // Restore original speed
-            }))
-          );
-          console.log('Slow Motion Power-Up expired!');
-        }, 10000); // Deactivate after 10 seconds
-        break;
-      default:
-        console.warn('Unknown power-up type:', type);
-    }
-  };
+  // Power-up and flash overlay state/logic
+  const {
+    shieldActive,
+    setShieldActive,
+    rapidFireActive,
+    setRapidFireActive,
+    slowMotionActive,
+    setSlowMotionActive,
+    invincibilityActive,
+    setInvincibilityActive,
+    speedBoostActive,
+    setSpeedBoostActive,
+    showRedFlash,
+    setShowRedFlash,
+    showGreenFlash,
+    setShowGreenFlash,
+    showBlueFlash,
+    setShowBlueFlash,
+    showYellowFlash,
+    setShowYellowFlash,
+    showPurpleFlash,
+    setShowPurpleFlash,
+    showOrangeFlash,
+    setShowOrangeFlash,
+    handlePowerUpCollect,
+  } = usePowerUps(setHealth, setTargets);
 
   // Apply slow motion effect
   useEffect(() => {
@@ -244,7 +191,7 @@ const Game = ({ onHit, onMiss }) => {
   );
   // Add logging to confirm splitting logic
   useEffect(() => {
-    console.debug('Targets updated:', targets);
+    // console.debug('Targets updated:', targets);
   }, [targets]);
 
   // HANDLE MISS
