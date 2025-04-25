@@ -7,7 +7,7 @@
    - **Next Steps**: Implement floating power-ups that can be collected by colliding with them.
 
 2. **Player Shield**
-   - **Planned**: Temporary shield power-up that absorbs one or more hits before breaking.
+   - **In Progress**: Temporary shield power-up that absorbs one or more hits before breaking.
    - **Next Steps**: Add visual effect around the player when the shield is active.
 
 3. **Level Progression**

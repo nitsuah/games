@@ -136,6 +136,7 @@ const Game = ({ onHit, onMiss }) => {
   // Handle player state
   useEffect(() => {
     const handleCollision = () => {
+      console.log('[Game] playerCollision event received'); // Debug: confirm event is received
       if (gameOver) {
         console.log('Game is over. Skipping collision handling.');
         return;

@@ -26,16 +26,18 @@ const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGam
           );
 
           if (playerSphere.intersectsSphere(targetSphere)) {
-            console.debug('Player Collision detected with target:', target.id);
+            console.warn('Player Collision detected with target:', target.id);
 
+            // Always reduce health on collision
+            onPlayerHit(target.size);
+
+            // Optionally split large targets as before
             if (target.size > 1) {
               acc.push(...splitTarget(target));
-            } else {
-              onPlayerHit(target.size);
             }
-
+            // Do not add the original target (remove it)
             hasChanged = true;
-            return acc; // Do not add the original target
+            return acc;
           }
         }
         acc.push(target);
