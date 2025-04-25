@@ -3,7 +3,7 @@ import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 import CooldownManager from './CooldownManager';
 import Explosion from '../../../../_components/effects/Explosion';
-import { WEAPON_TYPES } from './constants';
+import { WEAPON_CONFIG, WEAPON_TYPES, INITIAL_AMMO  } from '../config';
 import { weaponHandler } from './weaponHandler';
 
 const ShootingSystem = ({
@@ -51,11 +51,11 @@ const ShootingSystem = ({
       onHit,
       onMiss,
       weaponParams: weapon === 'spread'
-        ? { SPREAD_ANGLE: 0.25, SPREAD_COUNT: 10, SPREAD_RANGE: 100 }
+        ? { SPREAD_ANGLE: WEAPON_CONFIG.spread.angle, SPREAD_COUNT: WEAPON_CONFIG.spread.count, SPREAD_RANGE: WEAPON_CONFIG.spread.range }
         : weapon === 'explosive'
-        ? { explosionRadius: 50, triggerExplosion: (position) => setExplosions((prev) => [...prev, { id: Date.now(), position, explosionRadius: 50 }]) }
+        ? { explosionRadius: WEAPON_CONFIG.explosive.radius, triggerExplosion: (position) => setExplosions((prev) => [...prev, { id: Date.now(), position, explosionRadius: WEAPON_CONFIG.explosive.radius }]) }
         : {},
-      triggerExplosion: (position) => setExplosions((prev) => [...prev, { id: Date.now(), position, explosionRadius: 50 }]),
+      triggerExplosion: (position) => setExplosions((prev) => [...prev, { id: Date.now(), position, explosionRadius: WEAPON_CONFIG.explosive.radius }]),
     });
 
     // Set the cooldown for the weapon

@@ -2,6 +2,7 @@ import React from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { splitTarget } from './splitTarget';
+import { PLAYER_SPHERE_RADIUS } from '../config';
 
 const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGameOver, shieldActive, setShieldActive }) => {
   const { camera } = useThree();
@@ -12,7 +13,7 @@ const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGam
       return; // Prevent updates when the game is over
     }
 
-    const playerSphere = new THREE.Sphere(camera.position.clone(), 2.0);
+    const playerSphere = new THREE.Sphere(camera.position.clone(), PLAYER_SPHERE_RADIUS);
 
     setTargets((prevTargets) => {
       let hasChanged = false;

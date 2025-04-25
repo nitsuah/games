@@ -1,7 +1,6 @@
 import { now } from '@/utils/time';
 import { splitTarget } from '../Target/splitTarget';
-
-const MIN_ALIVE_TIME = 2;
+import { MIN_ALIVE_TIME } from '../config';
 
 export const handleTargetHit = ({
   targetId,

@@ -1,4 +1,4 @@
-import { WEAPON_TYPES } from '../Weapons/constants';
+import { WEAPON_TYPES } from '../config';
 
 export const handleKeyDown = (e, setWeapon, setAmmo) => {
   if (e.code === 'Digit1') setWeapon('spread');

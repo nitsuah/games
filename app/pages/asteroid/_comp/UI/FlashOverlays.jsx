@@ -1,14 +1,5 @@
 import React from 'react';
-
-// Map flash types to their overlay color
-const FLASH_COLORS = {
-  red: 'rgba(255,0,0,0.3)',
-  green: 'rgba(0,255,0,0.3)',
-  blue: 'rgba(0,0,255,0.3)',
-  yellow: 'rgba(255,255,0,0.3)',
-  purple: 'rgba(128,0,128,0.3)',
-  orange: 'rgba(255,165,0,0.3)',
-};
+import { FLASH_COLORS } from '../config';
 
 const FlashOverlays = ({ flashQueue }) => (
   <>

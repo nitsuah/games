@@ -18,6 +18,16 @@ import { updateScore as updateScoreFn } from './updateScore';
 import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
 import ShotReticle from '../UI/ShotReticle';
 import usePowerUps from '../../../../_components/effects/usePowerUps';
+import { INITIAL_AMMO, INITIAL_HEALTH } from '../config';
+
+const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
+  <div className={styles.statsDisplay}>
+    Health: {health} <br />
+    Score: {score} <br />
+    High Score: {highScore} <br />
+    Best Accuracy: {bestAccuracy.toFixed(1)}%
+  </div>
+);
 
 const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
@@ -27,7 +37,7 @@ const Game = ({ onHit, onMiss }) => {
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
-  const [health, setHealth] = useState(100);
+  const [health, setHealth] = useState(INITIAL_HEALTH);
   const [targets, setTargets] = useState([
     { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
     { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
@@ -44,11 +54,7 @@ const Game = ({ onHit, onMiss }) => {
 
   // Weapon state
   const [weapon, setWeapon] = useState('spread');
-  const [ammo, setAmmo] = useState({
-    spread: 30,
-    laser: 10,
-    explosive: 5,
-  });
+  const [ammo, setAmmo] = useState({ ...INITIAL_AMMO });
   const [cooldowns, setCooldowns] = useState({
     spread: 0,
     laser: 0,
@@ -274,15 +280,15 @@ const Game = ({ onHit, onMiss }) => {
         handlePowerUpCollect={handlePowerUpCollect}
         handleTargetHit={handleTargetHit}
       />
-      {weapon === 'spread' && <ShotReticle />} {/* Render reticle for shotgun */}
       <ScoreDisplay score={score} />
       <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
-      <div className={styles.statsDisplay}>
-        Health: {health} <br />
-        Score: {score} <br />
-        High Score: {highScore} <br />
-        Best Accuracy: {bestAccuracy.toFixed(1)}%
-      </div>
+      {weapon === 'spread' && <ShotReticle />}
+      <StatsPanel
+        health={health}
+        score={score}
+        highScore={highScore}
+        bestAccuracy={bestAccuracy}
+      />
       {gameOver && (
         <GameOverOverlay
           score={score}

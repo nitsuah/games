@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './WeaponDisplay.module.css';
-import { WEAPON_TYPES } from '../Weapons/constants'; // Import WEAPON_TYPES
+import { WEAPON_TYPES } from '../config';
 
 const WeaponDisplay = ({ weapon, ammo, cooldowns }) => {
   const weaponData = WEAPON_TYPES.find((w) => w.key === weapon);
