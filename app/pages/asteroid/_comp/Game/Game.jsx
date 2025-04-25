@@ -56,20 +56,16 @@ const Game = ({ onHit, onMiss }) => {
   });
   const [showLaser, setShowLaser] = useState([]);
 
-  // Replace individual flash states with a single object
-  const [flashes, setFlashes] = useState({
-    red: false,
-    green: false,
-    blue: false,
-    yellow: false,
-    purple: false,
-    orange: false,
-  });
+  // Replace flashes state with a queue of active flashes
+  const [flashQueue, setFlashQueue] = useState([]);
 
-  // Helper to show a flash by type
+  // Helper to show a flash by type, supporting stacking/sequencing
   const showFlash = (type, duration = 100) => {
-    setFlashes((prev) => ({ ...prev, [type]: true }));
-    setTimeout(() => setFlashes((prev) => ({ ...prev, [type]: false })), duration);
+    const id = `${type}-${Date.now()}-${Math.random()}`;
+    setFlashQueue((prev) => [...prev, { id, type }]);
+    setTimeout(() => {
+      setFlashQueue((prev) => prev.filter((f) => f.id !== id));
+    }, duration);
   };
 
   // Power-up and flash overlay state/logic
@@ -256,7 +252,7 @@ const Game = ({ onHit, onMiss }) => {
 
   return (
     <div className={styles.gameContainer}>
-      <FlashOverlays flashes={flashes} />
+      <FlashOverlays flashQueue={flashQueue} />
       <GameCanvas
         gameOver={gameOver}
         health={health}
