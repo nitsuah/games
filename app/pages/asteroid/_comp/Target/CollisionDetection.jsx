@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { splitTarget } from './splitTarget';
 
 const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGameOver, shieldActive, setShieldActive }) => {
   const { camera } = useThree();
@@ -14,9 +15,9 @@ const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGam
     const playerSphere = new THREE.Sphere(camera.position.clone(), 2.0);
 
     setTargets((prevTargets) => {
-      let hasChanged = false; // Track if any target state has changed
+      let hasChanged = false;
 
-      const updatedTargets = prevTargets.map((target) => {
+      const updatedTargets = prevTargets.reduce((acc, target) => {
         if (!target.isHit) {
           const targetSphere = new THREE.Sphere(
             new THREE.Vector3(target.x, target.y, target.z),
@@ -26,16 +27,20 @@ const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGam
           if (playerSphere.intersectsSphere(targetSphere)) {
             console.debug('Player Collision detected with target:', target.id);
 
-            console.log(`Player hit by target: ${target.id}, emitting playerCollision event.`);
-            window.dispatchEvent(new Event('playerCollision')); // Emit custom event
-            onPlayerHit(target.size); // Call the onPlayerHit callback
+            if (target.size > 1) {
+              acc.push(...splitTarget(target));
+            } else {
+              onPlayerHit(target.size);
+            }
+
             hasChanged = true;
-            return { ...target, isHit: true };
+            return acc; // Do not add the original target
           }
         }
-        return target;
-      });
-      return hasChanged ? updatedTargets : prevTargets; // Only update state if changes occurred
+        acc.push(target);
+        return acc;
+      }, []);
+      return hasChanged ? updatedTargets : prevTargets;
     });
   });
 

@@ -1,6 +1,7 @@
 import { now } from '@/utils/time';
+import { splitTarget } from '../Target/splitTarget';
 
-const MIN_ALIVE_TIME = 2; // Increased from 0.5 to 2 seconds
+const MIN_ALIVE_TIME = 2;
 
 export const handleTargetHit = ({
   targetId,
@@ -32,55 +33,20 @@ export const handleTargetHit = ({
         const currentZ = meshRef?.current?.position.z || target.z;
 
         if (target.size > 1) {
-          const newSize = target.size * 0.5;
-          const newSpeed = target.speed * 2;
-          const newColor =
-            newSize > 4
-              ? '#0000ff'
-              : newSize > 3
-              ? '#800080'
-              : newSize > 2
-              ? '#ff4500'
-              : newSize > 1
-              ? '#00ffff'
-              : '#ffff00';
-
-          const offsetRange = target.size + 3; // Use the target's size for offset
-          const spawnTime = now();
-          newTargets.push(
-            {
-              id: `${target.id}-1`,
-              x: currentX + offsetRange,
-              y: currentY + Math.random() * offsetRange - offsetRange / 2,
-              z: currentZ + Math.random() * offsetRange - offsetRange / 2,
-              isHit: false,
-              size: newSize,
-              speed: newSpeed,
-              color: newColor,
-              spawnTime,
-            },
-            {
-              id: `${target.id}-2`,
-              x: currentX - offsetRange,
-              y: currentY + Math.random() * offsetRange - offsetRange / 2,
-              z: currentZ + Math.random() * offsetRange - offsetRange / 2,
-              isHit: false,
-              size: newSize,
-              speed: newSpeed,
-              color: newColor,
-              spawnTime,
-            }
+          // Use the shared splitTarget utility, but override x/y/z with current position
+          const fragments = splitTarget(
+            { ...target, x: currentX, y: currentY, z: currentZ },
+            now
           );
+          newTargets.push(...fragments);
         }
 
-        // Mark the original target as hit
         updatedTargets.push({ ...target, isHit: true });
       } else {
         updatedTargets.push(target);
       }
     });
 
-    // Merge updated targets with new smaller targets
     return [...updatedTargets, ...newTargets];
   });
 
