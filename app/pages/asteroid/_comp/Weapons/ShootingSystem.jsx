@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
-import SpreadShotHandler from './SpreadShotHandler';
-import LaserShotHandler from './LaserShotHandler';
-import ExplosiveShotHandler from './ExplosiveShotHandler';
 import CooldownManager from './CooldownManager';
 import Explosion from '../../../../_components/effects/Explosion';
-import LaserBeam from './LaserBeam';
 import { WEAPON_TYPES } from './constants';
+import { weaponHandler } from './weaponHandler';
 
 const ShootingSystem = ({
   onHit,
@@ -43,55 +40,27 @@ const ShootingSystem = ({
       return;
     }
 
-    if (weapon === 'laser') {
-      LaserShotHandler({
-        camera,
-        scene,
-        setShowLaser,
-        playSound,
-        onHit,
-        onMiss,
-        targets,
-        setTargets,
-      });
-    }
-
-    if (weapon === 'spread') {
-      SpreadShotHandler({
-        camera,
-        targets,
-        setTargets,
-        setShowLaser,
-        playSound,
-        onHit,
-        onMiss,
-      });
-    }
-
-    if (weapon === 'explosive') {
-      const explosionRadius = 50;
-      ExplosiveShotHandler({
-        camera,
-        scene,
-        setShowLaser,
-        playSound,
-        onHit,
-        onMiss,
-        targets,
-        setTargets,
-        explosionRadius,
-        triggerExplosion: (position) => {
-          setExplosions((prev) => [
-            ...prev,
-            { id: Date.now(), position, explosionRadius },
-          ]);
-        },
-      });
-    }
+    weaponHandler({
+      type: weapon,
+      camera,
+      scene,
+      targets,
+      setTargets,
+      setShowLaser,
+      playSound,
+      onHit,
+      onMiss,
+      weaponParams: weapon === 'spread'
+        ? { SPREAD_ANGLE: 0.25, SPREAD_COUNT: 10, SPREAD_RANGE: 100 }
+        : weapon === 'explosive'
+        ? { explosionRadius: 50, triggerExplosion: (position) => setExplosions((prev) => [...prev, { id: Date.now(), position, explosionRadius: 50 }]) }
+        : {},
+      triggerExplosion: (position) => setExplosions((prev) => [...prev, { id: Date.now(), position, explosionRadius: 50 }]),
+    });
 
     // Set the cooldown for the weapon
     const weaponCooldown = WEAPON_TYPES.find((w) => w.key === weapon).cooldown;
-    const adjustedCooldown = rapidFireActive ? weaponCooldown / 2 : weaponCooldown; // Halve cooldown if rapid fire is active
+    const adjustedCooldown = rapidFireActive ? weaponCooldown / 2 : weaponCooldown;
     setCooldowns((prev) => ({
       ...prev,
       [weapon]: adjustedCooldown,
