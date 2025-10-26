@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './AmmoIndicator.module.css';
 
 const AmmoIndicator = ({ weapon, ammo, maxAmmo = { spread: 30, laser: 10, explosive: 10 } }) => {

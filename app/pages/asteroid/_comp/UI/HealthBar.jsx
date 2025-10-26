@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './HealthBar.module.css';
 
 const HealthBar = ({ health, maxHealth = 100 }) => {

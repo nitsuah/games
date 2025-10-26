@@ -1,4 +1,3 @@
-import React from 'react';
 import Target from './Target';
 import { DEFAULT_TARGET_COLOR } from '../config';
 

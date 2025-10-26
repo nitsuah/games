@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './ShotReticle.module.css';
 
 const ShotReticle = () => (

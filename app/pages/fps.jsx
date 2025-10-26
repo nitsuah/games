@@ -1,5 +1,5 @@
 // fps.jsx
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Canvas, extend, useFrame } from '@react-three/fiber';
 import { Stats, Debug } from '@react-three/drei'; // Import Debug
 import { Physics, usePlane } from '@react-three/cannon';

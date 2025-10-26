@@ -1,4 +1,3 @@
-import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PointerLockControls } from '@react-three/drei';
 import Player from '../Player/Player';

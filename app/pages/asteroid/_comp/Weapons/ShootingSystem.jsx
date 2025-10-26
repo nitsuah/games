@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 import CooldownManager from './CooldownManager';

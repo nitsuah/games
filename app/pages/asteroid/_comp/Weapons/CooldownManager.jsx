@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 const CooldownManager = ({ cooldowns, setCooldowns, rapidFireActive }) => {
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
 import { handleHealthDepletion as handleHealthDepletionFn } from './handleHealthDepletion';

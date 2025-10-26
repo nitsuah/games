@@ -1,5 +1,4 @@
 // Floor.js
-import React from 'react';
 import { usePlane } from '@react-three/cannon';
 import { extend } from '@react-three/fiber';
 import * as THREE from 'three'; // Import THREE to extend its namespace

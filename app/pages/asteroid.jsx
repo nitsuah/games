@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Game from './asteroid/_comp/Game/Game';
 import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound';

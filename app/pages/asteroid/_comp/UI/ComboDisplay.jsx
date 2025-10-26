@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './ComboDisplay.module.css';
 
 const ComboDisplay = ({ combo, multiplier }) => {

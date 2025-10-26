@@ -1,4 +1,3 @@
-import React from 'react';
 import { FLASH_COLORS } from '../config';
 
 const FlashOverlays = ({ flashQueue }) => (

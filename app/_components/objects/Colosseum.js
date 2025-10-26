@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCylinder } from '@react-three/cannon';
 
 const Colosseum = ({ radius = 50, height = 20, thickness = 5, color = 'gray' }) => {

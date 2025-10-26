@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './WeaponDisplay.module.css';
 import { WEAPON_TYPES } from '../config';
 

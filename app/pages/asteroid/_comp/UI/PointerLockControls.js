@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { PointerLockControls as DreiPointerLockControls } from '@react-three/drei';
 
 const PointerLockControls = ({ isGameOver }) => {

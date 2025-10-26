@@ -1,4 +1,4 @@
-import React, { useMemo, forwardRef, useEffect, useState } from 'react';
+import { useMemo, forwardRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
 
