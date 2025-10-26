@@ -4,13 +4,13 @@ import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 
-const Player = ({ 
-  targets, 
-  onTargetHit, 
-  speedBoostActive, 
-  invincibilityActive, 
-  isGameOver, 
-  setShowBlueFlash // Add setShowBlueFlash as a prop
+const Player = ({
+  targets,
+  onTargetHit,
+  speedBoostActive,
+  invincibilityActive,
+  isGameOver,
+  setShowBlueFlash, // Add setShowBlueFlash as a prop
 }) => {
   const meshRef = useRef(); // Blue square (hitbox)
   const { camera } = useThree();
@@ -30,8 +30,8 @@ const Player = ({
   const BASE_SPEED = 5; // Base speed in units per second
   const SPEED_MULTIPLIER = speedBoostActive ? 3 : 1; // Apply 3x speed boost for testing
   const MOVEMENT_SPEED = BASE_SPEED * SPEED_MULTIPLIER; // Final movement speed
-  const ROTATION_SPEED = 0.00002;   // Mouse sensitivity remains unchanged
-  const DAMPING = 0.98;           // Adjusted damping for smoother deceleration
+  const ROTATION_SPEED = 0.00002; // Mouse sensitivity remains unchanged
+  const DAMPING = 0.98; // Adjusted damping for smoother deceleration
 
   useEffect(() => {
     camera.position.set(0, 1, 0); // Start camera slightly above ground

@@ -1,6 +1,6 @@
 // Cube.js
-import React from "react";
-import { useBox } from "@react-three/cannon";
+import React from 'react';
+import { useBox } from '@react-three/cannon';
 
 function Cube({ position, color }) {
   const [ref] = useBox(() => ({

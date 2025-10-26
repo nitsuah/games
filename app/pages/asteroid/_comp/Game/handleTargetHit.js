@@ -36,10 +36,7 @@ export const handleTargetHit = ({
 
         if (target.size > 1) {
           // Use the shared splitTarget utility, but override x/y/z with current position
-          const fragments = splitTarget(
-            { ...target, x: currentX, y: currentY, z: currentZ },
-            now
-          );
+          const fragments = splitTarget({ ...target, x: currentX, y: currentY, z: currentZ }, now);
           newTargets.push(...fragments);
         }
 

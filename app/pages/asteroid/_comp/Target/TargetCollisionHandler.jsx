@@ -14,7 +14,7 @@ const TargetCollisionHandler = ({ targets, setTargets }) => {
 
       for (let i = 0; i < updatedTargets.length; i++) {
         const targetA = updatedTargets[i];
-        if (targetA.isHit || (currentTime - (targetA.spawnTime || 0) < MIN_ALIVE_TIME)) continue;
+        if (targetA.isHit || currentTime - (targetA.spawnTime || 0) < MIN_ALIVE_TIME) continue;
 
         const sphereA = new THREE.Sphere(
           new THREE.Vector3(targetA.x, targetA.y, targetA.z),
@@ -23,11 +23,7 @@ const TargetCollisionHandler = ({ targets, setTargets }) => {
 
         for (let j = i + 1; j < updatedTargets.length; j++) {
           const targetB = updatedTargets[j];
-          if (
-            targetB.isHit ||
-            (currentTime - (targetB.spawnTime || 0) < MIN_ALIVE_TIME)
-          )
-            continue;
+          if (targetB.isHit || currentTime - (targetB.spawnTime || 0) < MIN_ALIVE_TIME) continue;
 
           const sphereB = new THREE.Sphere(
             new THREE.Vector3(targetB.x, targetB.y, targetB.z),
@@ -40,10 +36,7 @@ const TargetCollisionHandler = ({ targets, setTargets }) => {
             );
 
             // Use the shared splitTarget utility
-            newTargets.push(
-              ...splitTarget(targetA, now),
-              ...splitTarget(targetB, now)
-            );
+            newTargets.push(...splitTarget(targetA, now), ...splitTarget(targetB, now));
             break;
           }
         }

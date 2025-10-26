@@ -10,8 +10,7 @@ const GameOverOverlay = ({
   highScore,
   restartGame,
 }) => {
-  const finalAccuracy =
-    hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
+  const finalAccuracy = hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
 
   return (
     <div className={styles.gameOverOverlay}>

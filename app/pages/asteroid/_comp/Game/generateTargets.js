@@ -12,12 +12,12 @@ export const generateInitialTargets = (count = 10) => {
     { x: -15, y: 0, z: 0 },
     { x: 0, y: 15, z: 0 },
     { x: 0, y: -15, z: 0 },
-    
+
     // Pattern 2: Upper right quadrant
     { x: 12, y: 15, z: 0 },
     { x: 15, y: 17, z: 0 },
     { x: 18, y: 19, z: 0 },
-    
+
     // Pattern 3: Upper left quadrant
     { x: -12, y: 15, z: 0 },
     { x: -15, y: 17, z: 0 },

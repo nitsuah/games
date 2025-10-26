@@ -41,9 +41,7 @@ const AsteroidPage = () => {
 
   return (
     <GameContainer>
-      <Instructions>
-        Click to lock pointer as camera, Esc to exit
-      </Instructions>
+      <Instructions>Click to lock pointer as camera, Esc to exit</Instructions>
       <Crosshair />
       <Game onHit={handleHit} onMiss={handleMiss} />
     </GameContainer>

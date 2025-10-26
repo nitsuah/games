@@ -1,6 +1,6 @@
-import React, { useMemo, forwardRef, useEffect, useState } from "react";
-import * as THREE from "three";
-import { EXRLoader } from "three/examples/jsm/loaders/EXRLoader";
+import React, { useMemo, forwardRef, useEffect, useState } from 'react';
+import * as THREE from 'three';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
 
 // Simple value noise function (fallback)
 function valueNoise(x, z, seed = 0) {
@@ -30,9 +30,13 @@ function smoothHeightmap(data, maxDelta = 1) {
         const h = data[z][x];
         // Check neighbors
         [
-          [0, -1], [0, 1], [-1, 0], [1, 0]
+          [0, -1],
+          [0, 1],
+          [-1, 0],
+          [1, 0],
         ].forEach(([dz, dx]) => {
-          const nz = z + dz, nx = x + dx;
+          const nz = z + dz,
+            nx = x + dx;
           if (nz >= 0 && nz < height && nx >= 0 && nx < width) {
             const nh = data[nz][nx];
             const delta = h - nh;
@@ -55,9 +59,9 @@ const HillyFloor = forwardRef(
       width = 100,
       depth = 100,
       hillHeight = 6, // Increased default
-      color = "green",
+      color = 'green',
       heightmapUrl = null, // New prop for EXR heightmap
-      maxGradient = 1,     // New prop for max gradient between neighbors
+      maxGradient = 1, // New prop for max gradient between neighbors
     },
     ref
   ) => {
@@ -72,7 +76,8 @@ const HillyFloor = forwardRef(
       loader.load(heightmapUrl, (texture) => {
         const { width: imgW, height: imgH, data } = texture.image;
         // Find min/max for normalization
-        let min = Infinity, max = -Infinity;
+        let min = Infinity,
+          max = -Infinity;
         for (let i = 0; i < data.length; i += 4) {
           const h = data[i];
           if (h < min) min = h;
@@ -102,7 +107,8 @@ const HillyFloor = forwardRef(
     const [minMax, setMinMax] = useState([0, 1]);
     useEffect(() => {
       if (heightData) {
-        let min = Infinity, max = -Infinity;
+        let min = Infinity,
+          max = -Infinity;
         for (let z = 0; z < heightData.length; z++) {
           for (let x = 0; x < heightData[z].length; x++) {
             const h = heightData[z][x];
@@ -128,7 +134,8 @@ const HillyFloor = forwardRef(
         return arr;
       }
       // Fallback: procedural noise, normalized and bell curved
-      let min = Infinity, max = -Infinity;
+      let min = Infinity,
+        max = -Infinity;
       const data = [];
       for (let z = 0; z < depth; z++) {
         const row = [];
@@ -157,7 +164,8 @@ const HillyFloor = forwardRef(
       const vertices = geometry.attributes.position.array;
       const colors = [];
       // Use min/max from computedHeightData for color mapping
-      let min = Infinity, max = -Infinity;
+      let min = Infinity,
+        max = -Infinity;
       for (let z = 0; z < computedHeightData.length; z++) {
         for (let x = 0; x < computedHeightData[z].length; x++) {
           const h = computedHeightData[z][x];
@@ -181,7 +189,7 @@ const HillyFloor = forwardRef(
         );
         colors.push(color.r, color.g, color.b);
       }
-      geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
       geometry.computeVertexNormals();
       return geometry;
     }, [width, depth, computedHeightData]);

@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useSphere } from "@react-three/cannon";
-import * as THREE from "three";
+import React, { useRef, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useSphere } from '@react-three/cannon';
+import * as THREE from 'three';
 
 const Bullet = ({ start, end, onComplete }) => {
   const direction = new THREE.Vector3().subVectors(end, start).normalize();
@@ -19,11 +19,7 @@ const Bullet = ({ start, end, onComplete }) => {
 
   useEffect(() => {
     // Apply initial velocity in the direction of the target
-    api.velocity.set(
-      direction.x * speed,
-      direction.y * speed,
-      direction.z * speed
-    );
+    api.velocity.set(direction.x * speed, direction.y * speed, direction.z * speed);
   }, [api, direction, speed]);
 
   useEffect(() => {

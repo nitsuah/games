@@ -3,7 +3,7 @@ import styles from './HealthBar.module.css';
 
 const HealthBar = ({ health, maxHealth = 100 }) => {
   const percentage = Math.max(0, Math.min(100, (health / maxHealth) * 100));
-  
+
   // Determine bar color based on health level
   const getBarColor = () => {
     if (percentage > 60) return '#00ff00'; // Green
@@ -18,14 +18,16 @@ const HealthBar = ({ health, maxHealth = 100 }) => {
     <div className={styles.container}>
       <div className={styles.label}>Health</div>
       <div className={styles.barContainer}>
-        <div 
+        <div
           className={`${styles.bar} ${isCritical ? styles.critical : ''}`}
-          style={{ 
+          style={{
             width: `${percentage}%`,
-            backgroundColor: getBarColor()
+            backgroundColor: getBarColor(),
           }}
         />
-        <div className={styles.text}>{Math.round(health)} / {maxHealth}</div>
+        <div className={styles.text}>
+          {Math.round(health)} / {maxHealth}
+        </div>
       </div>
     </div>
   );

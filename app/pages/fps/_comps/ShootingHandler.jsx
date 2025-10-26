@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from "react";
-import { useThree } from "@react-three/fiber";
-import * as THREE from "three";
+import React, { useRef, useEffect } from 'react';
+import { useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 
 const ShootingHandler = ({ playerPosition, setBullets, setExplosions, setDecals, rapidFire }) => {
   const { camera, scene } = useThree();
@@ -50,12 +50,12 @@ const ShootingHandler = ({ playerPosition, setBullets, setExplosions, setDecals,
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.code === "Space") {
+      if (event.code === 'Space') {
         handleShoot(); // Fire bullet on spacebar press
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [camera, scene, rapidFire]);
 
   return null;

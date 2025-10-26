@@ -3,11 +3,7 @@ export const handlePlayerHit = ({
   setHealth,
   showFlash,
   playSound,
-  defense: {
-    shieldActive,
-    setShieldActive,
-    invincibilityActive
-  }
+  defense: { shieldActive, setShieldActive, invincibilityActive },
 }) => {
   // If invincible, ignore damage completely
   if (invincibilityActive) {
@@ -18,7 +14,7 @@ export const handlePlayerHit = ({
 
   // If shield is active, reduce shield hits instead of health
   if (shieldActive && shieldActive > 0) {
-    setShieldActive(prev => {
+    setShieldActive((prev) => {
       const newShieldValue = typeof prev === 'number' ? prev - 1 : 0;
       console.log(`Shield absorbed hit! Remaining hits: ${newShieldValue}`);
       if (newShieldValue === 0) {

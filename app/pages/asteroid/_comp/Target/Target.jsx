@@ -55,41 +55,34 @@ const Target = ({
       // Dynamically scale movement speed by the current speed property
       const scaledMovement = movementSpeed.current.clone().multiplyScalar(speed);
       meshRef.current.position.add(scaledMovement);
-  
+
       // Update the target's position in the state
       const { x, y, z } = meshRef.current.position;
       if (typeof setTargets === 'function') {
         setTargets((prevTargets) =>
-          prevTargets.map((target) =>
-            target.id === targetId ? { ...target, x, y, z } : target
-          )
+          prevTargets.map((target) => (target.id === targetId ? { ...target, x, y, z } : target))
         );
       }
-  
+
       // Bounce off boundaries
-      if (
-        meshRef.current.position.x < bounds.min.x ||
-        meshRef.current.position.x > bounds.max.x
-      ) {
+      if (meshRef.current.position.x < bounds.min.x || meshRef.current.position.x > bounds.max.x) {
         movementSpeed.current.x *= -1;
       }
-      if (
-        meshRef.current.position.y < bounds.min.y ||
-        meshRef.current.position.y > bounds.max.y
-      ) {
+      if (meshRef.current.position.y < bounds.min.y || meshRef.current.position.y > bounds.max.y) {
         movementSpeed.current.y *= -1;
       }
-      if (
-        meshRef.current.position.z < bounds.min.z ||
-        meshRef.current.position.z > bounds.max.z
-      ) {
+      if (meshRef.current.position.z < bounds.min.z || meshRef.current.position.z > bounds.max.z) {
         movementSpeed.current.z *= -1;
       }
     }
 
     // Create a sphere for the target
     const targetSphere = new THREE.Sphere(
-      new THREE.Vector3(meshRef.current.position.x, meshRef.current.position.y, meshRef.current.position.z), // Use updated positions
+      new THREE.Vector3(
+        meshRef.current.position.x,
+        meshRef.current.position.y,
+        meshRef.current.position.z
+      ), // Use updated positions
       size / 2
     );
   });
@@ -118,15 +111,7 @@ const Target = ({
     >
       <octahedronGeometry args={[1, 0]} />
       <meshStandardMaterial
-        color={
-          isHit
-            ? flash
-              ? '#ffffff'
-              : '#808080'
-            : hovered
-            ? '#ffaa00'
-            : color
-        }
+        color={isHit ? (flash ? '#ffffff' : '#808080') : hovered ? '#ffaa00' : color}
         metalness={0.5}
         roughness={0.2}
         transparent={true}

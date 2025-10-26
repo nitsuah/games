@@ -18,23 +18,19 @@ const AmmoIndicator = ({ weapon, ammo, maxAmmo = { spread: 30, laser: 10, explos
     <div className={styles.container}>
       <div className={styles.weaponName}>{weapon.toUpperCase()}</div>
       <div className={styles.ammoBar}>
-        <div 
+        <div
           className={`${styles.fill} ${isLow ? styles.critical : ''}`}
-          style={{ 
+          style={{
             width: `${percentage}%`,
-            backgroundColor: getAmmoColor()
+            backgroundColor: getAmmoColor(),
           }}
         />
       </div>
       <div className={styles.ammoText}>
         {currentAmmo} / {maxForWeapon}
       </div>
-      {isLow && currentAmmo > 0 && (
-        <div className={styles.warning}>LOW AMMO!</div>
-      )}
-      {currentAmmo === 0 && (
-        <div className={styles.empty}>OUT OF AMMO!</div>
-      )}
+      {isLow && currentAmmo > 0 && <div className={styles.warning}>LOW AMMO!</div>}
+      {currentAmmo === 0 && <div className={styles.empty}>OUT OF AMMO!</div>}
     </div>
   );
 };

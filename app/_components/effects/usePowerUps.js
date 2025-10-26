@@ -8,20 +8,23 @@ export default function usePowerUps(setHealth, setTargets, showFlash = () => {})
   const [invincibilityActive, setInvincibilityActive] = useState(false);
   const [speedBoostActive, setSpeedBoostActive] = useState(false);
 
-  const handlePowerUpCollect = useCallback((type) => {
-    const powerUp = POWER_UPS.find((p) => p.type === type);
-    if (!powerUp) return;
-    powerUp.effect({
-      setHealth,
-      setTargets,
-      showFlash,
-      setShieldActive,
-      setRapidFireActive,
-      setSlowMotionActive,
-      setInvincibilityActive,
-      setSpeedBoostActive,
-    });
-  }, [setHealth, setTargets, showFlash]);
+  const handlePowerUpCollect = useCallback(
+    (type) => {
+      const powerUp = POWER_UPS.find((p) => p.type === type);
+      if (!powerUp) return;
+      powerUp.effect({
+        setHealth,
+        setTargets,
+        showFlash,
+        setShieldActive,
+        setRapidFireActive,
+        setSlowMotionActive,
+        setInvincibilityActive,
+        setSpeedBoostActive,
+      });
+    },
+    [setHealth, setTargets, showFlash]
+  );
 
   return {
     shieldActive,

@@ -3,7 +3,7 @@ import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 import CooldownManager from './CooldownManager';
 import Explosion from '../../../../_components/effects/Explosion';
-import { WEAPON_CONFIG, WEAPON_TYPES, INITIAL_AMMO  } from '../config';
+import { WEAPON_CONFIG, WEAPON_TYPES, INITIAL_AMMO } from '../config';
 import { weaponHandler } from './weaponHandler';
 
 const ShootingSystem = ({
@@ -29,7 +29,9 @@ const ShootingSystem = ({
 
     // Check if the weapon is on cooldown
     if (cooldowns[weapon] > 0) {
-      console.debug(`Weapon: ${weapon} is on cooldown. Remaining: ${cooldowns[weapon].toFixed(2)}s`);
+      console.debug(
+        `Weapon: ${weapon} is on cooldown. Remaining: ${cooldowns[weapon].toFixed(2)}s`
+      );
       return;
     }
 
@@ -50,12 +52,28 @@ const ShootingSystem = ({
       playSound,
       onHit,
       onMiss,
-      weaponParams: weapon === 'spread'
-        ? { SPREAD_ANGLE: WEAPON_CONFIG.spread.angle, SPREAD_COUNT: WEAPON_CONFIG.spread.count, SPREAD_RANGE: WEAPON_CONFIG.spread.range }
-        : weapon === 'explosive'
-        ? { explosionRadius: WEAPON_CONFIG.explosive.radius, triggerExplosion: (position) => setExplosions((prev) => [...prev, { id: Date.now(), position, explosionRadius: WEAPON_CONFIG.explosive.radius }]) }
-        : {},
-      triggerExplosion: (position) => setExplosions((prev) => [...prev, { id: Date.now(), position, explosionRadius: WEAPON_CONFIG.explosive.radius }]),
+      weaponParams:
+        weapon === 'spread'
+          ? {
+              SPREAD_ANGLE: WEAPON_CONFIG.spread.angle,
+              SPREAD_COUNT: WEAPON_CONFIG.spread.count,
+              SPREAD_RANGE: WEAPON_CONFIG.spread.range,
+            }
+          : weapon === 'explosive'
+            ? {
+                explosionRadius: WEAPON_CONFIG.explosive.radius,
+                triggerExplosion: (position) =>
+                  setExplosions((prev) => [
+                    ...prev,
+                    { id: Date.now(), position, explosionRadius: WEAPON_CONFIG.explosive.radius },
+                  ]),
+              }
+            : {},
+      triggerExplosion: (position) =>
+        setExplosions((prev) => [
+          ...prev,
+          { id: Date.now(), position, explosionRadius: WEAPON_CONFIG.explosive.radius },
+        ]),
     });
 
     // Set the cooldown for the weapon
@@ -87,9 +105,9 @@ const ShootingSystem = ({
 
   return (
     <>
-      <CooldownManager 
-        cooldowns={cooldowns} 
-        setCooldowns={setCooldowns} 
+      <CooldownManager
+        cooldowns={cooldowns}
+        setCooldowns={setCooldowns}
         rapidFireActive={rapidFireActive}
       />
       {explosions.map((explosion) => (
@@ -97,11 +115,7 @@ const ShootingSystem = ({
           key={explosion.id}
           position={explosion.position}
           explosionRadius={explosion.explosionRadius}
-          onComplete={() =>
-            setExplosions((prev) =>
-              prev.filter((e) => e.id !== explosion.id)
-            )
-          }
+          onComplete={() => setExplosions((prev) => prev.filter((e) => e.id !== explosion.id))}
         />
       ))}
     </>

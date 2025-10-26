@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useThree } from "@react-three/fiber";
-import * as THREE from "three";
+import React, { useRef, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 
 const PlayerLogic = ({ onPositionChange }) => {
   const meshRef = useRef(); // Blue square (hitbox)

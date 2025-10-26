@@ -1,5 +1,5 @@
 // Learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
 
 // Mock canvas and WebGL for Three.js tests
 HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
@@ -27,7 +27,7 @@ HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
   transform: jest.fn(),
   rect: jest.fn(),
   clip: jest.fn(),
-}))
+}));
 
 // Mock Web Audio API for sound tests
 global.AudioContext = jest.fn().mockImplementation(() => ({
@@ -44,12 +44,12 @@ global.AudioContext = jest.fn().mockImplementation(() => ({
   })),
   currentTime: 0,
   destination: {},
-}))
+}));
 
 // Mock requestAnimationFrame for Three.js useFrame
 global.requestAnimationFrame = jest.fn((cb) => {
-  cb(0)
-  return 0
-})
+  cb(0);
+  return 0;
+});
 
-global.cancelAnimationFrame = jest.fn()
+global.cancelAnimationFrame = jest.fn();

@@ -8,7 +8,7 @@ class SoundManager {
 
   initialize() {
     if (this.isInitialized) return;
-    
+
     try {
       this.thrusterSound = generateThrusterSound();
       this.isInitialized = true;
@@ -38,4 +38,4 @@ class SoundManager {
 
 // Create a singleton instance
 const soundManager = new SoundManager();
-export default soundManager; 
+export default soundManager;

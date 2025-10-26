@@ -38,6 +38,6 @@ export function generateThrusterSound() {
       oscillator.disconnect();
       filterNode.disconnect();
       gainNode.disconnect();
-    }
+    },
   };
-} 
+}

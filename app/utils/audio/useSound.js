@@ -9,7 +9,7 @@ export const useSound = () => {
     const loadAudio = (src) => {
       return new Promise((resolve, reject) => {
         const audio = new Audio();
-        
+
         audio.addEventListener('canplaythrough', () => {
           if (process.env.NODE_ENV === 'development') {
             console.debug(`✅ Audio loaded: ${src}`);
@@ -23,10 +23,8 @@ export const useSound = () => {
         });
 
         // Use absolute path from public directory
-        audio.src = process.env.NODE_ENV === 'development' 
-          ? `http://localhost:3000${src}`
-          : src;
-          
+        audio.src = process.env.NODE_ENV === 'development' ? `http://localhost:3000${src}` : src;
+
         console.debug('Attempting to load audio from:', audio.src);
         audio.load();
       });
@@ -46,18 +44,18 @@ export const useSound = () => {
     const loadSounds = async () => {
       try {
         await initAudioContext();
-        
+
         const [shoot, hit, miss, bgm, thrusterSound, empty] = await Promise.all([
           loadAudio('/sounds/shoot.mp3'),
           loadAudio('/sounds/hit.mp3'),
           loadAudio('/sounds/miss.mp3'),
           loadAudio('/sounds/bgm.mp3'),
           loadAudio('/sounds/thruster.mp3'),
-          loadAudio('/sounds/empty.mp3')
+          loadAudio('/sounds/empty.mp3'),
         ]);
 
         sounds.current = { shoot, hit, miss, bgm, empty };
-        
+
         // Set up BGM
         sounds.current.bgm.loop = true;
         sounds.current.bgm.volume = 1;
@@ -86,7 +84,7 @@ export const useSound = () => {
     loadSounds();
 
     return () => {
-      Object.values(sounds.current).forEach(audio => {
+      Object.values(sounds.current).forEach((audio) => {
         if (audio) {
           audio.pause();
           audio.src = '';

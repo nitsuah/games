@@ -8,11 +8,11 @@ const ShieldEffect = ({ shieldActive }) => {
     if (shieldRef.current && shieldActive) {
       // Position shield around camera (player)
       shieldRef.current.position.copy(camera.position);
-      
+
       // Pulse animation
       const scale = 1 + Math.sin(clock.elapsedTime * 3) * 0.1;
       shieldRef.current.scale.setScalar(scale);
-      
+
       // Rotate for dynamic effect
       shieldRef.current.rotation.y += 0.01;
     }
@@ -23,9 +23,7 @@ const ShieldEffect = ({ shieldActive }) => {
   }
 
   // Determine opacity based on shield hits remaining
-  const opacity = typeof shieldActive === 'number' 
-    ? Math.min(0.7, 0.3 + (shieldActive * 0.2))
-    : 0.5;
+  const opacity = typeof shieldActive === 'number' ? Math.min(0.7, 0.3 + shieldActive * 0.2) : 0.5;
 
   return (
     <mesh ref={shieldRef}>

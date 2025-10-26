@@ -117,14 +117,39 @@ const GameCanvas = ({
       <PowerUp position={[6, 24, 14]} size={1} type="slowMotion" onCollect={handlePowerUpCollect} />
 
       {/* Cluster 5: Invincibility Power-Ups */}
-      <PowerUp position={[15, 0, 0]} size={1} type="invincibility" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[18, 12, 0]} size={1} type="invincibility" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[21, 24, 0]} size={1} type="invincibility" onCollect={handlePowerUpCollect} />
+      <PowerUp
+        position={[15, 0, 0]}
+        size={1}
+        type="invincibility"
+        onCollect={handlePowerUpCollect}
+      />
+      <PowerUp
+        position={[18, 12, 0]}
+        size={1}
+        type="invincibility"
+        onCollect={handlePowerUpCollect}
+      />
+      <PowerUp
+        position={[21, 24, 0]}
+        size={1}
+        type="invincibility"
+        onCollect={handlePowerUpCollect}
+      />
 
       {/* Cluster 6: Speed Boost Power-Ups */}
       <PowerUp position={[-15, 0, 0]} size={1} type="speedBoost" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[-18, 12, 0]} size={1} type="speedBoost" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[-21, 24, 0]} size={1} type="speedBoost" onCollect={handlePowerUpCollect} />
+      <PowerUp
+        position={[-18, 12, 0]}
+        size={1}
+        type="speedBoost"
+        onCollect={handlePowerUpCollect}
+      />
+      <PowerUp
+        position={[-21, 24, 0]}
+        size={1}
+        type="speedBoost"
+        onCollect={handlePowerUpCollect}
+      />
     </Canvas>
   );
 };

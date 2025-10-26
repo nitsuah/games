@@ -47,16 +47,116 @@ const Game = ({ onHit, onMiss }) => {
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(INITIAL_HEALTH);
   const [targets, setTargets] = useState([
-    { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 5, x: 12, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 6, x: 15, y: 17, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 7, x: 18, y: 19, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 8, x: -12, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 9, x: -15, y: 17, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 10, x: -18, y: 19, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    {
+      id: 1,
+      x: 15,
+      y: 0,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 2,
+      x: -15,
+      y: 0,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 3,
+      x: 0,
+      y: 15,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 4,
+      x: 0,
+      y: -15,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 5,
+      x: 12,
+      y: 15,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 6,
+      x: 15,
+      y: 17,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 7,
+      x: 18,
+      y: 19,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 8,
+      x: -12,
+      y: 15,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 9,
+      x: -15,
+      y: 17,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 10,
+      x: -18,
+      y: 19,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
   ]);
   const { playSound, pauseSound } = useSound();
 
@@ -126,12 +226,11 @@ const Game = ({ onHit, onMiss }) => {
   useEffect(() => {
     updateScoreFn({ hits, misses, setScore, comboMultiplier });
   }, [hits, misses, setScore, comboMultiplier]);
-  
+
   // Play background music on mount
   useEffect(() => {
     if (!gameOver) {
-      playSound('bgm')
-        .catch((err) => console.error('Failed to play bgm:', err)); // Catch errors to avoid unhandled rejections
+      playSound('bgm').catch((err) => console.error('Failed to play bgm:', err)); // Catch errors to avoid unhandled rejections
     }
 
     return () => {
@@ -175,7 +274,18 @@ const Game = ({ onHit, onMiss }) => {
     return () => {
       window.removeEventListener('playerCollision', handleCollision);
     };
-  }, [gameOver, shieldActive, invincibilityActive, health, setHealth, setGameOver, pauseSound, playSound, showFlash, setShieldActive]);
+  }, [
+    gameOver,
+    shieldActive,
+    invincibilityActive,
+    health,
+    setHealth,
+    setGameOver,
+    pauseSound,
+    playSound,
+    showFlash,
+    setShieldActive,
+  ]);
 
   useEffect(() => {
     const handleShoot = () => {
@@ -290,7 +400,20 @@ const Game = ({ onHit, onMiss }) => {
       bestAccuracy,
       setBestAccuracy,
     });
-  }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound, playSound, setGameOver, setHighScore, setIsNewHighScore, setBestAccuracy]);
+  }, [
+    targets,
+    hits,
+    misses,
+    score,
+    highScore,
+    bestAccuracy,
+    pauseSound,
+    playSound,
+    setGameOver,
+    setHighScore,
+    setIsNewHighScore,
+    setBestAccuracy,
+  ]);
 
   return (
     <div className={styles.gameContainer}>
@@ -334,12 +457,7 @@ const Game = ({ onHit, onMiss }) => {
         invincibilityActive={invincibilityActive}
         speedBoostActive={speedBoostActive}
       />
-      <StatsPanel
-        health={health}
-        score={score}
-        highScore={highScore}
-        bestAccuracy={bestAccuracy}
-      />
+      <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
       {gameOver && (
         <GameOverOverlay
           score={score}

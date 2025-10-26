@@ -1,7 +1,13 @@
 import React from 'react';
 import * as THREE from 'three';
 
-const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, -5, 0) }) => {
+const LaserBeam = ({
+  lasers,
+  weaponType,
+  thickness = 1,
+  glowIntensity = 0.8,
+  offset = new THREE.Vector3(0, -5, 0),
+}) => {
   if (!Array.isArray(lasers) || lasers.length === 0) return null; // Ensure lasers is an array
 
   // Determine the laser color based on the weapon type
@@ -20,7 +26,7 @@ const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, off
 
   const laserColor = getLaserColor();
 
-  console.debug("Rendering lasers with color:", laserColor); // Debugging laser color
+  console.debug('Rendering lasers with color:', laserColor); // Debugging laser color
 
   return (
     <>

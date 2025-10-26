@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
+import React, { useRef, useState, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
-const Target = ({ position, size = 1, color = "red", type = "default", onHit }) => {
+const Target = ({ position, size = 1, color = 'red', type = 'default', onHit }) => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
   const [hit, setHit] = useState(false);
@@ -22,7 +22,7 @@ const Target = ({ position, size = 1, color = "red", type = "default", onHit }) 
   useFrame(() => {
     if (hit && !exploded) {
       switch (type) {
-        case "explode":
+        case 'explode':
           if (scale < 5) {
             setScale((prev) => prev + 0.1); // Gradually grow in size
             setOpacity((prev) => Math.max(prev - 0.02, 0)); // Gradually fade out
@@ -31,12 +31,12 @@ const Target = ({ position, size = 1, color = "red", type = "default", onHit }) 
             setScale(0); // Reset scale to 0
           }
           break;
-        case "shrink":
+        case 'shrink':
           if (scale > 0) {
             setScale((prev) => Math.max(prev - 0.1, 0)); // Gradually shrink
           }
           break;
-        case "default":
+        case 'default':
           if (opacity > 0) {
             setOpacity((prev) => Math.max(prev - 0.02, 0)); // Gradually fade out
           }
@@ -66,7 +66,7 @@ const Target = ({ position, size = 1, color = "red", type = "default", onHit }) 
     >
       <sphereGeometry args={[0.5, 32, 32]} />
       <meshStandardMaterial
-        color={hovered ? "orange" : color} // Change color on hover
+        color={hovered ? 'orange' : color} // Change color on hover
         transparent
         opacity={opacity}
       />

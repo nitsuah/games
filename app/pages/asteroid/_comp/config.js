@@ -16,10 +16,10 @@ export const WEAPON_CONFIG = {
 };
 
 export const WEAPON_TYPES = [
-    { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
-    { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
-    { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 1 },
-  ];
+  { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
+  { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
+  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 1 },
+];
 
 export const POWER_UP_COLORS = {
   health: 'green',

@@ -26,8 +26,7 @@ export function weaponHandler({
         const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
         const distance = from.distanceTo(targetPosition);
         const isIntersected =
-          forwardDirection.angleTo(targetPosition.sub(from).normalize()) < 0.04 &&
-          distance <= 400;
+          forwardDirection.angleTo(targetPosition.sub(from).normalize()) < 0.04 && distance <= 400;
         if (isIntersected) {
           hitTargets.add(target.id);
           playSound('hit');
@@ -57,11 +56,7 @@ export function weaponHandler({
 
   if (type === 'spread') {
     // Spread logic
-    const {
-      SPREAD_ANGLE = 0.25,
-      SPREAD_COUNT = 10,
-      SPREAD_RANGE = 100,
-    } = weaponParams;
+    const { SPREAD_ANGLE = 0.25, SPREAD_COUNT = 10, SPREAD_RANGE = 100 } = weaponParams;
     const hitTargets = new Set();
     const lasers = [];
     const updatedTargets = targets.map((target) => {
@@ -86,13 +81,15 @@ export function weaponHandler({
     }
 
     for (let i = 0; i < SPREAD_COUNT; i++) {
-      const spreadDirection = forwardDirection.clone().applyEuler(
-        new THREE.Euler(
-          (Math.random() - 0.5) * SPREAD_ANGLE,
-          (Math.random() - 0.5) * SPREAD_ANGLE,
-          0
-        )
-      );
+      const spreadDirection = forwardDirection
+        .clone()
+        .applyEuler(
+          new THREE.Euler(
+            (Math.random() - 0.5) * SPREAD_ANGLE,
+            (Math.random() - 0.5) * SPREAD_ANGLE,
+            0
+          )
+        );
       const to = from.clone().add(spreadDirection.multiplyScalar(SPREAD_RANGE));
       lasers.push({ from, to });
     }

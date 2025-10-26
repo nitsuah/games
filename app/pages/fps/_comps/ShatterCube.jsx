@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
-import gsap from "gsap";
+import React, { useRef, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
+import gsap from 'gsap';
 
-const Cube = ({ position, color = "blue", size = 1 }) => {
+const Cube = ({ position, color = 'blue', size = 1 }) => {
   const cubeRef = useRef();
   const [shattered, setShattered] = useState(false);
   const [planePositionArray, setPlanePositionArray] = useState([]);
@@ -39,12 +39,29 @@ const Cube = ({ position, color = "blue", size = 1 }) => {
       }
 
       switch (i) {
-        case 0: planeGroup.position.y = size / 2; planeGroup.rotation.x = -Math.PI / 2; break; // Top
-        case 1: planeGroup.position.y = -size / 2; planeGroup.rotation.x = Math.PI / 2; break; // Bottom
-        case 2: planeGroup.position.z = size / 2; break; // Front
-        case 3: planeGroup.position.z = -size / 2; planeGroup.rotation.y = Math.PI; break; // Back
-        case 4: planeGroup.position.x = -size / 2; planeGroup.rotation.y = -Math.PI / 2; break; // Left
-        case 5: planeGroup.position.x = size / 2; planeGroup.rotation.y = Math.PI / 2; break; // Right
+        case 0:
+          planeGroup.position.y = size / 2;
+          planeGroup.rotation.x = -Math.PI / 2;
+          break; // Top
+        case 1:
+          planeGroup.position.y = -size / 2;
+          planeGroup.rotation.x = Math.PI / 2;
+          break; // Bottom
+        case 2:
+          planeGroup.position.z = size / 2;
+          break; // Front
+        case 3:
+          planeGroup.position.z = -size / 2;
+          planeGroup.rotation.y = Math.PI;
+          break; // Back
+        case 4:
+          planeGroup.position.x = -size / 2;
+          planeGroup.rotation.y = -Math.PI / 2;
+          break; // Left
+        case 5:
+          planeGroup.position.x = size / 2;
+          planeGroup.rotation.y = Math.PI / 2;
+          break; // Right
       }
 
       group.add(planeGroup);
@@ -65,15 +82,15 @@ const Cube = ({ position, color = "blue", size = 1 }) => {
         const y = gsap.utils.random(-5, 5);
         const z = gsap.utils.random(-5, 5);
 
-        gsap.to(plane.position, { x, y, z, duration: 1, ease: "power1.in" });
+        gsap.to(plane.position, { x, y, z, duration: 1, ease: 'power1.in' });
         gsap.to(plane.rotation, {
           x: gsap.utils.random(-Math.PI, Math.PI),
           y: gsap.utils.random(-Math.PI, Math.PI),
           z: gsap.utils.random(-Math.PI, Math.PI),
           duration: 1,
-          ease: "power1.in",
+          ease: 'power1.in',
         });
-        gsap.to(plane.material, { opacity: 0, duration: 1, ease: "power1.in" });
+        gsap.to(plane.material, { opacity: 0, duration: 1, ease: 'power1.in' });
       });
     });
 
@@ -93,10 +110,10 @@ const Cube = ({ position, color = "blue", size = 1 }) => {
           y: originalPosition.y,
           z: originalPosition.z,
           duration: 1,
-          ease: "power1.out",
+          ease: 'power1.out',
         });
-        gsap.to(plane.rotation, { x: 0, y: 0, z: 0, duration: 1, ease: "power1.out" });
-        gsap.to(plane.material, { opacity: 1, duration: 1, ease: "power1.out" });
+        gsap.to(plane.rotation, { x: 0, y: 0, z: 0, duration: 1, ease: 'power1.out' });
+        gsap.to(plane.material, { opacity: 1, duration: 1, ease: 'power1.out' });
       });
     });
 

@@ -1,7 +1,7 @@
-import React from "react";
-import { useCylinder } from "@react-three/cannon";
+import React from 'react';
+import { useCylinder } from '@react-three/cannon';
 
-const Colosseum = ({ radius = 50, height = 20, thickness = 5, color = "gray" }) => {
+const Colosseum = ({ radius = 50, height = 20, thickness = 5, color = 'gray' }) => {
   // Add physics to the colosseum
   const [ref] = useCylinder(() => ({
     mass: 0, // Static object

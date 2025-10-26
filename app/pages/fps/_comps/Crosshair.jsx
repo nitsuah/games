@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./Crosshair.module.css";
+import React from 'react';
+import styles from './Crosshair.module.css';
 
 const Crosshair = () => (
   <div className={styles.crosshairWrapper}>

@@ -1,22 +1,22 @@
 // fps.jsx
-import React, { useRef, useEffect, useState } from "react";
-import { Canvas, extend, useFrame } from "@react-three/fiber";
-import { Stats, Debug } from "@react-three/drei"; // Import Debug
-import { Physics, usePlane } from "@react-three/cannon";
-import * as THREE from "three";
-import { Raycaster } from "three";
-import Controls from "./fps/_comps/Controls";
-import PlayerLogic from "./fps/_comps/PlayerLogic";
-import Floor from "../_components/objects/Floor";
-import Cube from "../_components/objects/Cube";
-import Crosshair from "./fps/_comps/Crosshair";
-import Target from "./fps/_comps/Target";
-import Bullet from "./fps/_comps/Bullet";
-import Explosion from "../_components/effects/Explosion";
-import Decal from "./fps/_comps/Decal";
-import ShootingHandler from "./fps/_comps/ShootingHandler";
-import PowerUp from "./fps/_comps/PowerUp";
-import HillyFloor from "../_components/objects/HillyFloor";
+import React, { useRef, useEffect, useState } from 'react';
+import { Canvas, extend, useFrame } from '@react-three/fiber';
+import { Stats, Debug } from '@react-three/drei'; // Import Debug
+import { Physics, usePlane } from '@react-three/cannon';
+import * as THREE from 'three';
+import { Raycaster } from 'three';
+import Controls from './fps/_comps/Controls';
+import PlayerLogic from './fps/_comps/PlayerLogic';
+import Floor from '../_components/objects/Floor';
+import Cube from '../_components/objects/Cube';
+import Crosshair from './fps/_comps/Crosshair';
+import Target from './fps/_comps/Target';
+import Bullet from './fps/_comps/Bullet';
+import Explosion from '../_components/effects/Explosion';
+import Decal from './fps/_comps/Decal';
+import ShootingHandler from './fps/_comps/ShootingHandler';
+import PowerUp from './fps/_comps/PowerUp';
+import HillyFloor from '../_components/objects/HillyFloor';
 // Extend React Three Fiber's namespace to include BoxGeometry
 extend({ BoxGeometry: THREE.BoxGeometry });
 
@@ -39,12 +39,12 @@ function Range() {
 
   const handleTargetHit = () => {
     setScore((prevScore) => prevScore + 100);
-    console.log("Target hit! Score:", score + 100);
+    console.log('Target hit! Score:', score + 100);
   };
 
   const handleBulletHit = (hitPosition, normal) => {
     if (!hitPosition || !normal) {
-      console.warn("Invalid hit position or normal vector for decal placement.");
+      console.warn('Invalid hit position or normal vector for decal placement.');
       return;
     }
     const newDecal = { id: `${Date.now()}-${Math.random()}`, position: hitPosition, normal };
@@ -54,21 +54,21 @@ function Range() {
 
   const handlePowerUpCollect = (type) => {
     switch (type) {
-      case "health":
-        console.log("Collected Health Power-Up!");
+      case 'health':
+        console.log('Collected Health Power-Up!');
         setPlayerHealth((prevHealth) => Math.min(prevHealth + 25, 100)); // Restore health up to 100
         break;
-      case "shield":
-        console.log("Collected Shield Power-Up!");
+      case 'shield':
+        console.log('Collected Shield Power-Up!');
         // Implement shield activation logic here
         break;
-      case "rapidFire":
-        console.log("Collected Rapid Fire Power-Up!");
+      case 'rapidFire':
+        console.log('Collected Rapid Fire Power-Up!');
         setRapidFire(true);
         setTimeout(() => setRapidFire(false), 10000); // Deactivate after 10 seconds
         break;
-      case "speed":
-        console.log("Collected Speed Power-Up!");
+      case 'speed':
+        console.log('Collected Speed Power-Up!');
         setSpeedBoost(true);
         setPlayerSpeed(0.5); // Increase the speed
         setTimeout(() => {
@@ -76,12 +76,12 @@ function Range() {
           setPlayerSpeed(0.1); // Reset to default speed
         }, 10000); // Deactivate after 10 seconds
         break;
-      case "death":
-        console.log("Collected Death Debuff!");
+      case 'death':
+        console.log('Collected Death Debuff!');
         setPlayerHealth((prevHealth) => Math.max(prevHealth - 50, 0)); // Reduce health by 50, minimum 0
         break;
       default:
-        console.warn("Unknown Power-Up type:", type);
+        console.warn('Unknown Power-Up type:', type);
     }
   };
 
@@ -90,10 +90,13 @@ function Range() {
       <Canvas
         shadows
         gl={{ alpha: false }}
-        camera={{ position: [playerPosition[0], playerPosition[1] + 5, playerPosition[2] + 5], fov: 50 }}
-        style={{ background: "#000000", width: "99vw", height: "98vh" }}
+        camera={{
+          position: [playerPosition[0], playerPosition[1] + 5, playerPosition[2] + 5],
+          fov: 50,
+        }}
+        style={{ background: '#000000', width: '99vw', height: '98vh' }}
       >
-        <color attach="background" args={["lightblue"]} />
+        <color attach="background" args={['lightblue']} />
         <Stats showPanel={0} className="stats" />
         <Physics gravity={[0, -20, 0]}>
           <HillyFloor
@@ -103,12 +106,14 @@ function Range() {
             hillHeight={5}
             color="green"
             heightmapUrl="/_components/objects/terrain003.exr" // Pass as string path
-          /> {/* Terrain */}
+          />{' '}
+          {/* Terrain */}
           <Floor size={[500, 500]} color="black" position={[0, -1, 0]} /> {/* Gutter floor */}
           <hemisphereLight intensity={0.35} />
           <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} intensity={2} castShadow />
           <PlayerLogic ref={playerRef} onPositionChange={setPlayerPosition} />
-          <Controls playerRef={playerRef} terrainRef={terrainRef} playerSpeed={playerSpeed} /> {/* Pass player speed */}
+          <Controls playerRef={playerRef} terrainRef={terrainRef} playerSpeed={playerSpeed} />{' '}
+          {/* Pass player speed */}
           <PowerUp position={[10, 3, -10]} type="health" onCollect={handlePowerUpCollect} />
           <PowerUp position={[15, 3, -15]} type="shield" onCollect={handlePowerUpCollect} />
           <PowerUp position={[20, 3, -20]} type="rapidFire" onCollect={handlePowerUpCollect} />
@@ -143,15 +148,19 @@ function Range() {
                     handleBulletHit(point, face.normal); // Place decal at hit point
                   }
                 } catch (error) {
-                  console.error("Error in Bullet onComplete raycasting:", error);
+                  console.error('Error in Bullet onComplete raycasting:', error);
                 }
                 setBullets((prev) => prev.filter((b) => b.id !== bullet.id)); // Batch state update
               }}
             />
           ))}
-          {decals.slice(-50).map((decal) => ( // Limit rendered decals to the last 50
-            <Decal key={decal.id} position={decal.position} playerPosition={playerPosition} />
-          ))}
+          {decals.slice(-50).map(
+            (
+              decal // Limit rendered decals to the last 50
+            ) => (
+              <Decal key={decal.id} position={decal.position} playerPosition={playerPosition} />
+            )
+          )}
           <ShootingHandler
             playerPosition={playerPosition}
             setBullets={setBullets}
@@ -164,22 +173,22 @@ function Range() {
       <Crosshair />
       <div
         style={{
-          position: "absolute",
-          top: "50px",
-          left: "10px",
-          color: "white",
-          fontSize: "20px",
+          position: 'absolute',
+          top: '50px',
+          left: '10px',
+          color: 'white',
+          fontSize: '20px',
         }}
       >
         Score: {score}
       </div>
       <div
         style={{
-          position: "absolute",
-          top: "80px",
-          left: "10px",
-          color: "white",
-          fontSize: "20px",
+          position: 'absolute',
+          top: '80px',
+          left: '10px',
+          color: 'white',
+          fontSize: '20px',
         }}
       >
         Health: {playerHealth}

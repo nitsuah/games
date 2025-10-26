@@ -1,27 +1,27 @@
-import { handleMiss } from './handleMiss'
+import { handleMiss } from './handleMiss';
 
 describe('handleMiss - Combo Reset', () => {
-  let mockSetMisses
-  let mockSetCombo
-  let mockSetComboMultiplier
-  let mockOnMiss
-  let comboTimerRef
+  let mockSetMisses;
+  let mockSetCombo;
+  let mockSetComboMultiplier;
+  let mockOnMiss;
+  let comboTimerRef;
 
   beforeEach(() => {
-    mockSetMisses = jest.fn((fn) => fn(0))
-    mockSetCombo = jest.fn()
-    mockSetComboMultiplier = jest.fn()
-    mockOnMiss = jest.fn()
-    comboTimerRef = { current: null }
+    mockSetMisses = jest.fn((fn) => fn(0));
+    mockSetCombo = jest.fn();
+    mockSetComboMultiplier = jest.fn();
+    mockOnMiss = jest.fn();
+    comboTimerRef = { current: null };
 
-    jest.clearAllTimers()
-    jest.useFakeTimers()
-  })
+    jest.clearAllTimers();
+    jest.useFakeTimers();
+  });
 
   afterEach(() => {
-    jest.runOnlyPendingTimers()
-    jest.useRealTimers()
-  })
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
 
   test('increments misses counter', () => {
     const params = {
@@ -30,13 +30,13 @@ describe('handleMiss - Combo Reset', () => {
       setCombo: mockSetCombo,
       setComboMultiplier: mockSetComboMultiplier,
       comboTimerRef,
-    }
+    };
 
-    handleMiss(params)
+    handleMiss(params);
 
-    expect(mockSetMisses).toHaveBeenCalled()
-    expect(mockOnMiss).toHaveBeenCalled()
-  })
+    expect(mockSetMisses).toHaveBeenCalled();
+    expect(mockOnMiss).toHaveBeenCalled();
+  });
 
   test('resets combo to 0 on miss', () => {
     const params = {
@@ -45,12 +45,12 @@ describe('handleMiss - Combo Reset', () => {
       setCombo: mockSetCombo,
       setComboMultiplier: mockSetComboMultiplier,
       comboTimerRef,
-    }
+    };
 
-    handleMiss(params)
+    handleMiss(params);
 
-    expect(mockSetCombo).toHaveBeenCalledWith(0)
-  })
+    expect(mockSetCombo).toHaveBeenCalledWith(0);
+  });
 
   test('resets multiplier to 1x on miss', () => {
     const params = {
@@ -59,16 +59,16 @@ describe('handleMiss - Combo Reset', () => {
       setCombo: mockSetCombo,
       setComboMultiplier: mockSetComboMultiplier,
       comboTimerRef,
-    }
+    };
 
-    handleMiss(params)
+    handleMiss(params);
 
-    expect(mockSetComboMultiplier).toHaveBeenCalledWith(1)
-  })
+    expect(mockSetComboMultiplier).toHaveBeenCalledWith(1);
+  });
 
   test('clears combo timer on miss', () => {
-    const existingTimer = setTimeout(() => {}, 3000)
-    comboTimerRef.current = existingTimer
+    const existingTimer = setTimeout(() => {}, 3000);
+    comboTimerRef.current = existingTimer;
 
     const params = {
       setMisses: mockSetMisses,
@@ -76,12 +76,12 @@ describe('handleMiss - Combo Reset', () => {
       setCombo: mockSetCombo,
       setComboMultiplier: mockSetComboMultiplier,
       comboTimerRef,
-    }
+    };
 
-    handleMiss(params)
+    handleMiss(params);
 
     // Timer should be cleared
-    jest.runAllTimers()
-    expect(mockSetCombo).toHaveBeenCalledWith(0)
-  })
-})
+    jest.runAllTimers();
+    expect(mockSetCombo).toHaveBeenCalledWith(0);
+  });
+});
