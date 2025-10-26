@@ -7,7 +7,6 @@ const Bullet = ({ start, end, onComplete }) => {
   const direction = new THREE.Vector3().subVectors(end, start).normalize();
   const speed = 150; // Increased bullet speed
   const traveled = useRef(0);
-  const scale = useRef(0.1); // Start with a small scale
 
   // Add physics to the bullet
   const [ref, api] = useSphere(() => ({

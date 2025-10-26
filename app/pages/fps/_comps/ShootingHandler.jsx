@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const ShootingHandler = ({ playerPosition, setBullets, setExplosions, setDecals, rapidFire }) => {
+const ShootingHandler = ({ setBullets, rapidFire }) => {
   const { camera, scene } = useThree();
   const lastBulletTimeRef = useRef(0); // Track the last bullet fired time
   const bulletCooldown = rapidFire ? 1500 : 3000; // Cooldown in milliseconds (1.5s for rapid fire, 3s otherwise)

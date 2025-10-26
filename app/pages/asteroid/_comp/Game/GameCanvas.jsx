@@ -9,24 +9,13 @@ import PowerUp from '../../../../_components/effects/PowerUp';
 import LaserBeam from '../Weapons/LaserBeam';
 import ShieldEffect from '../UI/ShieldEffect';
 
-const getRandomPosition = (baseX, baseY, baseZ, range = 5) => [
-  baseX + Math.random() * range - range / 2,
-  baseY + Math.random() * range - range / 2,
-  baseZ + Math.random() * range - range / 2,
-];
-
 const GameCanvas = ({
   gameOver,
-  health,
   targets,
   setTargets,
   setHealth,
-  setGameOver,
-  playSound,
-  pauseSound,
   onHit,
   onMiss,
-  setShowRedFlash,
   setShowBlueFlash,
   weapon,
   ammo,

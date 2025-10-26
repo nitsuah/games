@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { PointerLockControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-const Controls = ({ playerRef, terrainRef, onPauseGame, playerSpeed = 0.1 }) => {
+const Controls = ({ terrainRef, onPauseGame, playerSpeed = 0.1 }) => {
   const controlsRef = useRef();
   const isLocked = useRef(false);
   const [movement, setMovement] = useState({

@@ -1,6 +1,5 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
 
 const Target = ({ position, size = 1, color = 'red', type = 'default', onHit }) => {
   const meshRef = useRef();

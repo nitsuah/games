@@ -2,7 +2,6 @@ export const handleGameOver = ({
   targets,
   setGameOver,
   pauseSound,
-  playSound,
   hits,
   misses,
   score,

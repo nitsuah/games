@@ -30,8 +30,6 @@ const Player = ({
   const BASE_SPEED = 5; // Base speed in units per second
   const SPEED_MULTIPLIER = speedBoostActive ? 3 : 1; // Apply 3x speed boost for testing
   const MOVEMENT_SPEED = BASE_SPEED * SPEED_MULTIPLIER; // Final movement speed
-  const ROTATION_SPEED = 0.00002; // Mouse sensitivity remains unchanged
-  const DAMPING = 0.98; // Adjusted damping for smoother deceleration
 
   useEffect(() => {
     camera.position.set(0, 1, 0); // Start camera slightly above ground

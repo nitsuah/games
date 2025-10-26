@@ -17,7 +17,6 @@ const Target = ({
   const [hovered, setHovered] = useState(false);
   const [flash, setFlash] = useState(false);
   const [opacity, setOpacity] = useState(1);
-  const [rotationSpeed] = useState(() => Math.random() * 0.02 - 0.01);
   const movementSpeed = useRef(
     new THREE.Vector3(
       (Math.random() - 0.5) * 0.02,

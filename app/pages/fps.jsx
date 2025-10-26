@@ -1,10 +1,9 @@
 // fps.jsx
-import { useRef, useEffect, useState } from 'react';
-import { Canvas, extend, useFrame } from '@react-three/fiber';
-import { Stats, Debug } from '@react-three/drei'; // Import Debug
-import { Physics, usePlane } from '@react-three/cannon';
+import { useRef, useState } from 'react';
+import { Canvas, extend } from '@react-three/fiber';
+import { Stats } from '@react-three/drei';
+import { Physics } from '@react-three/cannon';
 import * as THREE from 'three';
-import { Raycaster } from 'three';
 import Controls from './fps/_comps/Controls';
 import PlayerLogic from './fps/_comps/PlayerLogic';
 import Floor from '../_components/objects/Floor';
@@ -12,7 +11,6 @@ import Cube from '../_components/objects/Cube';
 import Crosshair from './fps/_comps/Crosshair';
 import Target from './fps/_comps/Target';
 import Bullet from './fps/_comps/Bullet';
-import Explosion from '../_components/effects/Explosion';
 import Decal from './fps/_comps/Decal';
 import ShootingHandler from './fps/_comps/ShootingHandler';
 import PowerUp from './fps/_comps/PowerUp';
@@ -23,15 +21,12 @@ extend({ BoxGeometry: THREE.BoxGeometry });
 function Range() {
   const playerRef = useRef();
   const terrainRef = useRef(); // Reference to the terrain mesh
-  const cameraRef = useRef(); // Reference to the camera
   const [playerPosition, setPlayerPosition] = useState([0, 1, 0]); // Start Y at 1
   const [playerHealth, setPlayerHealth] = useState(100); // Track player health
   const [score, setScore] = useState(0);
   const [bullets, setBullets] = useState([]);
-  const [explosions, setExplosions] = useState([]);
   const [decals, setDecals] = useState([]);
   const [rapidFire, setRapidFire] = useState(false); // Track rapid fire state
-  const [speedBoost, setSpeedBoost] = useState(false); // Track speed boost state
   const [playerSpeed, setPlayerSpeed] = useState(0.1); // Default player speed
 
   const decalsRef = useRef([]); // Use ref to store decals

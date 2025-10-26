@@ -5,7 +5,6 @@ import * as THREE from 'three';
 const Decal = ({ position, playerPosition }) => {
   const meshRef = useRef();
   const opacity = useRef(1); // Start fully visible
-  const scale = useRef(2); // Start with a larger default size
 
   useEffect(() => {
     const timeout = setTimeout(() => {

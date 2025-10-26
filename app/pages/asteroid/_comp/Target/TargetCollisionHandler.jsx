@@ -4,7 +4,7 @@ import { now } from '@/utils/time';
 import { splitTarget } from './splitTarget';
 import { MIN_ALIVE_TIME } from '../config';
 
-const TargetCollisionHandler = ({ targets, setTargets }) => {
+const TargetCollisionHandler = ({ setTargets }) => {
   useFrame(() => {
     const currentTime = now();
     setTargets((prevTargets) => {

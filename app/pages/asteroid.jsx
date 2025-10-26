@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Game from './asteroid/_comp/Game/Game';
 import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound';
@@ -25,17 +24,13 @@ const GameContainer = styled.div`
 `;
 
 const AsteroidPage = () => {
-  const [hitCount, setHitCount] = useState(0);
-  const [missCount, setMissCount] = useState(0);
   const { playSound } = useSound(); // Use the hook to access playSound
 
   const handleHit = () => {
-    setHitCount((prev) => prev + 1);
     playSound('hit');
   };
 
   const handleMiss = () => {
-    setMissCount((prev) => prev + 1);
     playSound('miss');
   };
 
