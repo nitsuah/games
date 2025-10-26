@@ -18,6 +18,9 @@ import { updateScore as updateScoreFn } from './updateScore';
 import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
 import ShotReticle from '../UI/ShotReticle';
 import PowerUpIndicator from '../UI/PowerUpIndicator';
+import HealthBar from '../UI/HealthBar';
+import FPSCounter from '../UI/FPSCounter';
+import PauseMenu from '../UI/PauseMenu';
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '../config';
 
@@ -35,6 +38,7 @@ const Game = ({ onHit, onMiss }) => {
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
@@ -220,6 +224,11 @@ const Game = ({ onHit, onMiss }) => {
       setAmmo,
       setCooldowns,
       setTargets,
+      setShieldActive,
+      setRapidFireActive,
+      setSlowMotionActive,
+      setInvincibilityActive,
+      setSpeedBoostActive,
     });
 
   // HANDLE REFS
@@ -299,6 +308,8 @@ const Game = ({ onHit, onMiss }) => {
         shieldActive={shieldActive}
         setShieldActive={setShieldActive}
       />
+      <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
+      <FPSCounter />
       <ScoreDisplay score={score} />
       <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
       {weapon === 'spread' && <ShotReticle />}
