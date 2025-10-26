@@ -11,6 +11,9 @@ export const handleTargetHit = ({
   setHits,
   onHit,
   targetRefs,
+  setCombo,
+  setComboMultiplier,
+  comboTimerRef,
 }) => {
   if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
     return;
@@ -50,6 +53,31 @@ export const handleTargetHit = ({
   });
 
   setHits((prevHits) => prevHits + 1);
+
+  // Combo logic
+  setCombo((prevCombo) => {
+    const newCombo = prevCombo + 1;
+    // Calculate multiplier based on combo
+    if (newCombo >= 10) {
+      setComboMultiplier(3);
+    } else if (newCombo >= 5) {
+      setComboMultiplier(2);
+    } else if (newCombo >= 2) {
+      setComboMultiplier(1.5);
+    } else {
+      setComboMultiplier(1);
+    }
+    return newCombo;
+  });
+
+  // Reset combo timer
+  if (comboTimerRef.current) {
+    clearTimeout(comboTimerRef.current);
+  }
+  comboTimerRef.current = setTimeout(() => {
+    setCombo(0);
+    setComboMultiplier(1);
+  }, 3000); // 3 seconds to maintain combo
 
   if (onHit) onHit();
 };

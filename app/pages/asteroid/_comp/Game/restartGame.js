@@ -15,6 +15,9 @@ export const restartGame = ({
   setSlowMotionActive,
   setInvincibilityActive,
   setSpeedBoostActive,
+  setCombo,
+  setComboMultiplier,
+  comboTimerRef,
 }) => {
   setScore(0);
   setHits(0);
@@ -31,6 +34,13 @@ export const restartGame = ({
   setSlowMotionActive(false);
   setInvincibilityActive(false);
   setSpeedBoostActive(false);
+  
+  // Reset combo
+  setCombo(0);
+  setComboMultiplier(1);
+  if (comboTimerRef.current) {
+    clearTimeout(comboTimerRef.current);
+  }
   
   setTargets([
     { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },

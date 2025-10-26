@@ -41,6 +41,7 @@ const GameCanvas = ({
   handlePlayerHit,
   shieldActive,
   setShieldActive,
+  rapidFireActive,
 }) => {
   return (
     <Canvas
@@ -68,6 +69,7 @@ const GameCanvas = ({
         cooldowns={cooldowns}
         setCooldowns={setCooldowns}
         setShowLaser={setShowLaser}
+        rapidFireActive={rapidFireActive}
       />
       <CollisionDetection
         targets={targets}

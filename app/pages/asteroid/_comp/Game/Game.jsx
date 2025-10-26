@@ -20,7 +20,8 @@ import ShotReticle from '../UI/ShotReticle';
 import PowerUpIndicator from '../UI/PowerUpIndicator';
 import HealthBar from '../UI/HealthBar';
 import FPSCounter from '../UI/FPSCounter';
-import PauseMenu from '../UI/PauseMenu';
+import AmmoIndicator from '../UI/AmmoIndicator';
+import ComboDisplay from '../UI/ComboDisplay';
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '../config';
 
@@ -37,8 +38,10 @@ const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [comboMultiplier, setComboMultiplier] = useState(1);
+  const comboTimerRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
@@ -121,8 +124,8 @@ const Game = ({ onHit, onMiss }) => {
 
   // Update score and accuracy
   useEffect(() => {
-    updateScoreFn({ hits, misses, setScore });
-  }, [hits, misses, setScore]);
+    updateScoreFn({ hits, misses, setScore, comboMultiplier });
+  }, [hits, misses, setScore, comboMultiplier]);
   
   // Play background music on mount
   useEffect(() => {
@@ -198,6 +201,9 @@ const Game = ({ onHit, onMiss }) => {
         setHits,
         onHit,
         targetRefs,
+        setCombo,
+        setComboMultiplier,
+        comboTimerRef,
       }),
     [cooldowns, weapon, ammo, setTargets, setHits, onHit]
   );
@@ -208,7 +214,7 @@ const Game = ({ onHit, onMiss }) => {
 
   // HANDLE MISS
   const handleMiss = useCallback(
-    () => handleMissFn({ setMisses, onMiss }),
+    () => handleMissFn({ setMisses, onMiss, setCombo, setComboMultiplier, comboTimerRef }),
     [setMisses, onMiss]
   );
 
@@ -229,6 +235,9 @@ const Game = ({ onHit, onMiss }) => {
       setSlowMotionActive,
       setInvincibilityActive,
       setSpeedBoostActive,
+      setCombo,
+      setComboMultiplier,
+      comboTimerRef,
     });
 
   // HANDLE REFS
@@ -307,10 +316,13 @@ const Game = ({ onHit, onMiss }) => {
         handlePlayerHit={handlePlayerHit}
         shieldActive={shieldActive}
         setShieldActive={setShieldActive}
+        rapidFireActive={rapidFireActive}
       />
       <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
       <FPSCounter />
       <ScoreDisplay score={score} />
+      <ComboDisplay combo={combo} multiplier={comboMultiplier} />
+      <AmmoIndicator weapon={weapon} ammo={ammo} />
       <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
       {weapon === 'spread' && <ShotReticle />}
       <PowerUpIndicator
