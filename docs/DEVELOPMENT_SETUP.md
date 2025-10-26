@@ -18,7 +18,7 @@
 
 ### 1. Install Dependencies
 ```powershell
-cd c:\Users\ajhar\code\games\app
+cd <your-project-directory>\app
 npm install
 ```
 

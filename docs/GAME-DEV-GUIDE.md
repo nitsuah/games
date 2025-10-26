@@ -3,24 +3,28 @@
 ## Core Principles
 
 ### 1. **Always Use WSL for Development**
+
 - All terminal commands MUST run through WSL: `wsl bash -c "cd /mnt/c/Users/ajhar/code/games && <command>"`
 - Verify environment before making changes
 - Check Node.js version and dependencies are correct
 
 ### 2. **Test Before You Commit**
+
 - **NEVER** add features without testing them first
 - Start dev server and manually verify changes in browser
 - Check browser console for errors
 - Validate game mechanics actually work as intended
 
 ### 3. **No Bloat - Quality Over Quantity**
+
 - Don't add features "just because" - every feature must serve the gameplay
 - If adding UI components, ensure they're actually needed and functional
 - Remove features cleanly if they don't fit (delete files, remove imports, update state)
 - Keep codebase lean and maintainable
 
 ### 4. **Incremental Development with Validation**
-```
+
+```txt
 For every feature:
 1. Plan the change (what files, what logic)
 2. Implement minimally (smallest working version)
@@ -31,6 +35,7 @@ For every feature:
 ```
 
 ### 5. **Proper Code Hygiene**
+
 - When removing features:
   - Delete all files (component + styles)
   - Remove all imports
@@ -47,6 +52,7 @@ For every feature:
   - Log critical paths for debugging
 
 ### 6. **Testing Strategy**
+
 - **Manual testing is required** for all gameplay changes
 - Eventually add automated tests:
   - Jest for unit tests (utility functions, game logic)
@@ -55,7 +61,8 @@ For every feature:
 - Keep test files next to source files: `Game.test.jsx` beside `Game.jsx`
 
 ### 7. **File Organization**
-```
+
+```text
 app/pages/{game}/_comp/
   Game/           # Main game logic and orchestration
   Player/         # Player-related components
@@ -65,6 +72,7 @@ app/pages/{game}/_comp/
 ```
 
 ### 8. **State Management Patterns**
+
 - Keep state as local as possible
 - Pass callbacks down, not state setters (unless necessary)
 - Use `useCallback` for handlers passed as props
@@ -72,12 +80,14 @@ app/pages/{game}/_comp/
 - Reset ALL state properly on game restart
 
 ### 9. **Error Handling**
+
 - Check for errors after file edits: `get_errors`
 - Add console.log for critical game events (hits, damage, power-ups)
 - Handle edge cases (division by zero, null refs, etc.)
 - Gracefully degrade if features fail
 
 ### 10. **Performance Considerations**
+
 - Monitor FPS (we have FPSCounter now)
 - Avoid creating objects in render loops
 - Use refs for Three.js mesh positions
@@ -87,6 +97,7 @@ app/pages/{game}/_comp/
 ## Workflow Checklist
 
 Before declaring a feature "done":
+
 - [ ] Code compiles without errors
 - [ ] Dev server starts successfully
 - [ ] Feature works in browser
@@ -168,6 +179,7 @@ wsl bash -c "cd /mnt/c/Users/ajhar/code/games && git add . && git commit -m 'fea
 ## Communication
 
 When reporting progress:
+
 - ✅ "Added combo system: tested in browser, combo chains work, multiplier applies to score, resets on miss"
 - ❌ "Added combo system" (untested, unknown state)
 

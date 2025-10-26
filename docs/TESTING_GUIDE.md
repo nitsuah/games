@@ -4,7 +4,7 @@
 
 1. **Start Dev Server** (if not running):
    ```bash
-   wsl bash -c "cd /mnt/c/Users/ajhar/code/games/app && npm run dev"
+   wsl bash -c "cd /mnt/c/path/to/games/app && npm run dev"
    ```
 
 2. **Open Game**: http://localhost:3000/asteroid
