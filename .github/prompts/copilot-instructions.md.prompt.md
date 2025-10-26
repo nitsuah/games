@@ -10,7 +10,7 @@ mode: agent
 **CRITICAL**: This project runs on Windows with WSL2. ALL terminal commands MUST use WSL:
 
 ```bash
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games && <command>"
+wsl bash -c "cd /mnt/c/path/to/games && <command>"
 ```
 
 Never run `npm`, `node`, or other commands directly in PowerShell.
@@ -19,7 +19,7 @@ Never run `npm`, `node`, or other commands directly in PowerShell.
 
 ### 1. Test-Driven Iteration
 - **NEVER** add code without testing it
-- Start dev server: `wsl bash -c "cd /mnt/c/Users/ajhar/code/games/app && npm run dev"`
+- Start dev server: `wsl bash -c "cd /mnt/c/path/to/games/app && npm run dev"`
 - Open browser to `http://localhost:3000`
 - Manually test feature before declaring it done
 - Check browser console for errors
@@ -315,19 +315,19 @@ Never sacrifice 1-4 for 5-6.
 
 ```bash
 # Start dev server
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games/app && npm run dev"
+wsl bash -c "cd /mnt/c/path/to/games/app && npm run dev"
 
 # Install packages
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games/app && npm install <package>"
+wsl bash -c "cd /mnt/c/path/to/games/app && npm install <package>"
 
 # Run tests (when implemented)
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games/app && npm test"
+wsl bash -c "cd /mnt/c/path/to/games/app && npm test"
 
 # Check git status
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games && git status"
+wsl bash -c "cd /mnt/c/path/to/games && git status"
 
 # Find files
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games && find app -name '*Component*'"
+wsl bash -c "cd /mnt/c/path/to/games && find app -name '*Component*'"
 ```
 
 ## Summary

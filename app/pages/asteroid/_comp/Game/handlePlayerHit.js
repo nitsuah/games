@@ -1,4 +1,14 @@
-export const handlePlayerHit = ({ targetSize, setHealth, showFlash, playSound, shieldActive, setShieldActive, invincibilityActive }) => {
+export const handlePlayerHit = ({
+  targetSize,
+  setHealth,
+  showFlash,
+  playSound,
+  defense: {
+    shieldActive,
+    setShieldActive,
+    invincibilityActive
+  }
+}) => {
   // If invincible, ignore damage completely
   if (invincibilityActive) {
     console.log('Player is invincible - no damage taken');

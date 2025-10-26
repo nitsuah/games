@@ -4,7 +4,7 @@
 
 ### 1. **Always Use WSL for Development**
 
-- All terminal commands MUST run through WSL: `wsl bash -c "cd /mnt/c/Users/ajhar/code/games && <command>"`
+- All terminal commands MUST run through WSL: `wsl bash -c "cd /mnt/c/path/to/games && <command>"`
 - Verify environment before making changes
 - Check Node.js version and dependencies are correct
 
@@ -165,15 +165,15 @@ const handleTimeFreezeActivation = useCallback(() => {
 
 ```bash
 # Always work in WSL
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games && git status"
+wsl bash -c "cd /mnt/c/path/to/games && git status"
 
 # Before committing
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games/app && npm run dev"
+wsl bash -c "cd /mnt/c/path/to/games/app && npm run dev"
 # Test in browser
 # Check for errors
 
 # Commit only working code
-wsl bash -c "cd /mnt/c/Users/ajhar/code/games && git add . && git commit -m 'feat: add time freeze power-up with full testing'"
+wsl bash -c "cd /mnt/c/path/to/games && git add . && git commit -m 'feat: add time freeze power-up with full testing'"
 ```
 
 ## Communication

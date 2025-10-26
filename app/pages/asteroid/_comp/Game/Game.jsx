@@ -255,9 +255,11 @@ const Game = ({ onHit, onMiss }) => {
         setHealth,
         showFlash,
         playSound,
-        shieldActive,
-        setShieldActive,
-        invincibilityActive,
+        defense: {
+          shieldActive,
+          setShieldActive,
+          invincibilityActive,
+        },
       }),
     [setHealth, showFlash, playSound, shieldActive, setShieldActive, invincibilityActive]
   );
