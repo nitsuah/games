@@ -8,6 +8,7 @@ import CollisionDetection from '../Target/CollisionDetection';
 import TargetCollisionHandler from '../Target/TargetCollisionHandler';
 import PowerUp from '../../../../_components/effects/PowerUp';
 import LaserBeam from '../Weapons/LaserBeam';
+import ShieldEffect from '../UI/ShieldEffect';
 
 const getRandomPosition = (baseX, baseY, baseZ, range = 5) => [
   baseX + Math.random() * range - range / 2,
@@ -83,6 +84,9 @@ const GameCanvas = ({
         handleTargetHit={handleTargetHit} // Pass handleTargetHit
         setTargets={setTargets}
       />
+
+      {/* Shield visual effect */}
+      <ShieldEffect shieldActive={shieldActive} />
 
       {/* Render LaserBeam */}
       {Array.isArray(showLaser) && showLaser.length > 0 && (

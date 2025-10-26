@@ -10,7 +10,10 @@ const PowerUpIndicator = ({
 }) => {
   const activePowerUps = [];
 
-  if (shieldActive) activePowerUps.push({ name: 'Shield', color: '#00f' });
+  if (shieldActive && shieldActive !== 0 && shieldActive !== false) {
+    const shieldHits = typeof shieldActive === 'number' ? shieldActive : '∞';
+    activePowerUps.push({ name: `Shield (${shieldHits} hits)`, color: '#00f' });
+  }
   if (rapidFireActive) activePowerUps.push({ name: 'Rapid Fire', color: '#f00' });
   if (slowMotionActive) activePowerUps.push({ name: 'Slow Motion', color: '#a0a' });
   if (invincibilityActive) activePowerUps.push({ name: 'Invincibility', color: '#ff0' });
