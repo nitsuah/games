@@ -1,0 +1,46 @@
+{
+  "name": "games-dev-tools",
+  "version": "1.0.0",
+  "description": "Development tools for games repository",
+  "scripts": {
+    "setup": "npm install --save-dev eslint prettier husky lint-staged @types/react @types/node",
+    "lint": "eslint app/**/*.{js,jsx} --fix",
+    "format": "prettier --write app/**/*.{js,jsx,css,md}",
+    "type-check": "tsc --noEmit",
+    "test": "echo 'Tests will be added in Phase 2' && exit 0",
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "app/**/*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0", 
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^15.0.0",
+    "prettier": "^3.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.0.0",
+    "typescript": "^5.0.0"
+  },
+  "eslintConfig": {
+    "extends": ["next/core-web-vitals"],
+    "rules": {
+      "no-unused-vars": "warn",
+      "no-console": "off",
+      "react-hooks/exhaustive-deps": "warn"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  }
+}

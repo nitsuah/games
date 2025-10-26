@@ -280,6 +280,9 @@ const Game = ({ onHit, onMiss }) => {
         setShowLaser={setShowLaser}
         handlePowerUpCollect={handlePowerUpCollect}
         handleTargetHit={handleTargetHit}
+        handlePlayerHit={handlePlayerHit}
+        shieldActive={shieldActive}
+        setShieldActive={setShieldActive}
       />
       <ScoreDisplay score={score} />
       <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />

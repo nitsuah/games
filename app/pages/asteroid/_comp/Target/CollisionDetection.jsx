@@ -28,7 +28,7 @@ const CollisionDetection = ({ targets, setTargets, setHealth, onPlayerHit, isGam
           if (playerSphere.intersectsSphere(targetSphere)) {
             console.warn('Player Collision detected with target:', target.id);
 
-            // Always reduce health on collision
+            // Call handlePlayerHit with target size
             onPlayerHit(target.size);
 
             // Optionally split large targets as before

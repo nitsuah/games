@@ -37,6 +37,9 @@ const GameCanvas = ({
   setShowLaser,
   handlePowerUpCollect,
   handleTargetHit,
+  handlePlayerHit,
+  shieldActive,
+  setShieldActive,
 }) => {
   return (
     <Canvas
@@ -69,7 +72,10 @@ const GameCanvas = ({
         targets={targets}
         setTargets={setTargets}
         setHealth={setHealth}
-        onPlayerHit={() => {}}
+        onPlayerHit={handlePlayerHit}
+        isGameOver={gameOver}
+        shieldActive={shieldActive}
+        setShieldActive={setShieldActive}
       />
       <TargetCollisionHandler targets={targets} setTargets={setTargets} />
       <TargetList
