@@ -20,10 +20,6 @@ const nextConfig = {
   },
   // Add asset prefix for development
   assetPrefix: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '',
-  // Configure public directory
-  publicRuntimeConfig: {
-    staticFolder: '/public',
-  },
 };
 
 module.exports = nextConfig;

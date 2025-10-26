@@ -4,7 +4,7 @@ export const handleHealthDepletion = ({
   setGameOver,
   pauseSound,
   playSound,
-  setShowRedFlash,
+  showFlash,
   invincibilityActive,
   shieldActive,
   setShieldActive,
@@ -56,6 +56,5 @@ export const handleHealthDepletion = ({
     return newHealth;
   });
 
-  setShowRedFlash(true);
-  setTimeout(() => setShowRedFlash(false), 100);
+  showFlash('red', 100);
 };

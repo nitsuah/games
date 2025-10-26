@@ -17,6 +17,7 @@ import { handleKeyDown as handleKeyDownFn } from './handleKeyDown';
 import { updateScore as updateScoreFn } from './updateScore';
 import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
 import ShotReticle from '../UI/ShotReticle';
+import PowerUpIndicator from '../UI/PowerUpIndicator';
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '../config';
 
@@ -236,9 +237,23 @@ const Game = ({ onHit, onMiss }) => {
         setHealth,
         showFlash,
         playSound,
+        shieldActive,
+        setShieldActive,
+        invincibilityActive,
       }),
-    [setHealth, showFlash, playSound]
+    [setHealth, showFlash, playSound, shieldActive, setShieldActive, invincibilityActive]
   );
+
+  // Check for game over when health reaches 0
+  useEffect(() => {
+    if (health <= 0 && !gameOver) {
+      console.log('Health depleted - triggering game over');
+      setGameOver(true);
+      pauseSound('bgm');
+      playSound('gameOver');
+      document.exitPointerLock();
+    }
+  }, [health, gameOver, setGameOver, pauseSound, playSound]);
 
   useEffect(() => {
     handleGameOverFn({
@@ -287,6 +302,13 @@ const Game = ({ onHit, onMiss }) => {
       <ScoreDisplay score={score} />
       <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
       {weapon === 'spread' && <ShotReticle />}
+      <PowerUpIndicator
+        shieldActive={shieldActive}
+        rapidFireActive={rapidFireActive}
+        slowMotionActive={slowMotionActive}
+        invincibilityActive={invincibilityActive}
+        speedBoostActive={speedBoostActive}
+      />
       <StatsPanel
         health={health}
         score={score}
