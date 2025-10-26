@@ -7,13 +7,22 @@ describe('handleTargetHit - Combo System', () => {
   let mockSetComboMultiplier
   let mockOnHit
   let comboTimerRef
+  let currentCombo
 
   beforeEach(() => {
+    currentCombo = 0
     mockSetTargets = jest.fn()
-    mockSetHits = jest.fn((fn) => fn(0))
+    mockSetHits = jest.fn((fn) => {
+      if (typeof fn === 'function') return fn(0)
+      return fn
+    })
     mockSetCombo = jest.fn((fn) => {
-      const newCombo = fn(0)
-      return newCombo
+      if (typeof fn === 'function') {
+        currentCombo = fn(currentCombo)
+        return currentCombo
+      }
+      currentCombo = fn
+      return fn
     })
     mockSetComboMultiplier = jest.fn()
     mockOnHit = jest.fn()
@@ -24,7 +33,7 @@ describe('handleTargetHit - Combo System', () => {
   })
 
   afterEach(() => {
-    jest.runOnlyPendingTimers()
+    jest.clearAllTimers()
     jest.useRealTimers()
   })
 
@@ -51,10 +60,7 @@ describe('handleTargetHit - Combo System', () => {
   })
 
   test('sets multiplier to 1.5x at combo 2', () => {
-    mockSetCombo = jest.fn((fn) => {
-      const newCombo = fn(1) // Previous combo was 1
-      return newCombo
-    })
+    currentCombo = 1 // Set current combo to 1
 
     const params = {
       targetId: 1,
@@ -76,10 +82,7 @@ describe('handleTargetHit - Combo System', () => {
   })
 
   test('sets multiplier to 2x at combo 5', () => {
-    mockSetCombo = jest.fn((fn) => {
-      const newCombo = fn(4) // Previous combo was 4
-      return newCombo
-    })
+    currentCombo = 4 // Set current combo to 4
 
     const params = {
       targetId: 1,
@@ -101,10 +104,7 @@ describe('handleTargetHit - Combo System', () => {
   })
 
   test('sets multiplier to 3x at combo 10', () => {
-    mockSetCombo = jest.fn((fn) => {
-      const newCombo = fn(9) // Previous combo was 9
-      return newCombo
-    })
+    currentCombo = 9 // Set current combo to 9
 
     const params = {
       targetId: 1,
