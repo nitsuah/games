@@ -35,11 +35,14 @@ const GameLink = styled(Link)`
   border-radius: 4px;
   text-align: center;
   font-size: 1.2rem;
-  transition: all 0.3s ease;
+    /* Only transform on hover to stay compositor-friendly; avoid animating background-color */
+    transition: transform 0.18s ease;
 
   &:hover {
     background: #4caf50;
-    transform: translateY(-2px);
+      /* Swap background instantly (no transition) and use transform for motion */
+      background: #4caf50;
+      transform: translateY(-2px);
   }
 `;
 
@@ -52,11 +55,11 @@ const TestButton = styled.button`
   font-size: 1.2rem;
   cursor: pointer;
   margin-top: 2rem;
-  transition: all 0.3s ease;
+    transition: transform 0.18s ease;
 
   &:hover {
     background: #1976d2;
-    transform: translateY(-2px);
+      transform: translateY(-2px);
   }
 `;
 

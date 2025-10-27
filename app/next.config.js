@@ -22,9 +22,12 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy-Report-Only',
-            // Slightly stricter report-only CSP that disallows eval and reports violations
+            // Report-only CSP: disallow inline scripts (improves Lighthouse CSP check) while
+            // keeping style-src permissive for inline styles used by styled-components.
+            // This remains report-only to avoid accidental runtime breakage; remove "Report-Only"
+            // if you want to enforce the policy after verifying no violations are reported.
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; frame-ancestors 'self'; base-uri 'self';",
+              "default-src 'self'; script-src 'self' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; frame-ancestors 'self'; base-uri 'self';",
           },
         ],
       },

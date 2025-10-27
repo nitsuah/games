@@ -31,8 +31,8 @@
   height: 100%;
   /* Use transform scaleX to animate fill for compositor-only animation */
   transform-origin: left center;
-  transition: transform 0.25s ease, background-color 0.3s ease;
-  will-change: transform, background-color;
+  transition: transform 0.25s ease;
+  will-change: transform, opacity;
   border-radius: 2px;
   box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.3);
 }
