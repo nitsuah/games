@@ -18,3 +18,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 } 
+
+/* Improve default contrast for Lighthouse color-contrast audit */
+html, body {
+  background: #ffffff;
+  color: #000000;
+}
