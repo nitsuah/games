@@ -1,7 +1,10 @@
-import Game from './asteroid/_comp/Game/Game';
+import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound';
-import Crosshair from './asteroid/_comp/UI/Crosshair';
+
+// Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
+const Game = dynamic(() => import('./asteroid/_comp/Game/Game'), { ssr: false });
+const Crosshair = dynamic(() => import('./asteroid/_comp/UI/Crosshair'), { ssr: false });
 
 const Instructions = styled.div`
   position: absolute;

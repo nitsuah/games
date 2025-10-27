@@ -3,11 +3,14 @@ import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
 import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
 import { handleGameOver as handleGameOverFn } from '@/lib/asteroid/_comp/Game/handleGameOver';
-import FlashOverlays from '../UI/FlashOverlays';
 import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
-import GameOverOverlay from '../UI/GameOverOverlay';
-import ScoreDisplay from '../UI/ScoreDisplay';
-import WeaponDisplay from '../UI/WeaponDisplay';
+import dynamic from 'next/dynamic';
+
+// Dynamically import overlays and UI components on the client to keep server bundles small
+const FlashOverlays = dynamic(() => import('../UI/FlashOverlays'), { ssr: false });
+const GameOverOverlay = dynamic(() => import('../UI/GameOverOverlay'), { ssr: false });
+const ScoreDisplay = dynamic(() => import('../UI/ScoreDisplay'), { ssr: false });
+const WeaponDisplay = dynamic(() => import('../UI/WeaponDisplay'), { ssr: false });
 import { now } from '@/utils/time';
 import { handleTargetHit as handleTargetHitFn } from '@/lib/asteroid/_comp/Game/handleTargetHit';
 import { restartGame as restartGameFn } from '@/lib/asteroid/_comp/Game/restartGame';
@@ -15,12 +18,12 @@ import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/
 import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
 import { updateScore as updateScoreFn } from '@/lib/asteroid/_comp/Game/updateScore';
 import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
-import ShotReticle from '../UI/ShotReticle';
-import PowerUpIndicator from '../UI/PowerUpIndicator';
-import HealthBar from '../UI/HealthBar';
-import FPSCounter from '../UI/FPSCounter';
-import AmmoIndicator from '../UI/AmmoIndicator';
-import ComboDisplay from '../UI/ComboDisplay';
+const ShotReticle = dynamic(() => import('../UI/ShotReticle'), { ssr: false });
+const PowerUpIndicator = dynamic(() => import('../UI/PowerUpIndicator'), { ssr: false });
+const HealthBar = dynamic(() => import('../UI/HealthBar'), { ssr: false });
+const FPSCounter = dynamic(() => import('../UI/FPSCounter'), { ssr: false });
+const AmmoIndicator = dynamic(() => import('../UI/AmmoIndicator'), { ssr: false });
+const ComboDisplay = dynamic(() => import('../UI/ComboDisplay'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 
