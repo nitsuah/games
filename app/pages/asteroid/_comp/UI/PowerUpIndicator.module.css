@@ -2,7 +2,8 @@
   position: fixed;
   top: 100px;
   right: 20px;
-  background: rgba(0, 0, 0, 0.7);
+  /* more opaque to help contrast */
+  background: rgba(0, 0, 0, 0.9);
   padding: 15px;
   border-radius: 8px;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -12,7 +13,7 @@
 }
 
 .title {
-  color: #fff;
+  color: #ffffff;
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 10px;

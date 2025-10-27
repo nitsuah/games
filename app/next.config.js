@@ -22,9 +22,9 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy-Report-Only',
-            // A conservative report-only CSP that mostly allows runtime behavior but is detected by Lighthouse
+            // Slightly stricter report-only CSP that disallows eval and reports violations
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'self'; base-uri 'self';",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; frame-ancestors 'self'; base-uri 'self';",
           },
         ],
       },
