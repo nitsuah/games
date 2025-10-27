@@ -1,0 +1,21 @@
+.crosshairWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.crosshairVertical {
+  width: 2px;
+  height: 24px;
+  background: white;
+  margin: 0 auto;
+}
+
+.crosshairHorizontal {
+  width: 24px;
+  height: 2px;
+  background: white;
+  margin-top: -2px;
+}
