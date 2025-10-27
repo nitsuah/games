@@ -15,7 +15,8 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-color: rgba(255, 0, 0, 0.6);
+    /* slightly reduced alpha so overlay doesn't cause widespread contrast failures */
+    background-color: rgba(255, 0, 0, 0.35);
     pointer-events: none;
     animation: flashOpacity 0.25s ease-in-out;
     will-change: opacity, transform;
@@ -39,9 +40,9 @@
   }
   
   .restartButton {
-    /* use a darker green to contrast against the red flash overlay */
-    background: #2e7d32;
-    color: white;
+    /* use a high-contrast white button with dark text to guarantee readability */
+    background: #ffffff;
+    color: #000000;
     border: none;
     padding: 1rem 2rem;
     font-size: 1.2rem;
@@ -50,6 +51,10 @@
     margin-top: 1rem;
     /* Use transform for hover feedback to keep animations compositor-friendly */
     transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .restartButton:hover {
+    background: #f3f3f3;
   }
   
   .restartButton:hover {

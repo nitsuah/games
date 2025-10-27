@@ -3,7 +3,7 @@
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.96);
+  background: rgba(0, 0, 0, 1);
   padding: 15px 25px;
   border-radius: 10px;
   border: 2px solid rgba(255, 255, 255, 0.3);
