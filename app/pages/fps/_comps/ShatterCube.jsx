@@ -1,11 +1,11 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 
 const Cube = ({ position, color = 'blue', size = 1 }) => {
   const cubeRef = useRef();
   const [shattered, setShattered] = useState(false);
-  const [planePositionArray, setPlanePositionArray] = useState([]);
+  const planePositionArrayRef = useRef([]);
 
   // Create planes for the cube
   const createCubePlanes = () => {
@@ -13,7 +13,7 @@ const Cube = ({ position, color = 'blue', size = 1 }) => {
     const boxSegment = 6; // Number of segments per face
     const planeSize = size / boxSegment;
 
-    const positions = []; // Store original positions for reforming
+  const positions = []; // Store original positions for reforming
 
     for (let i = 0; i < 6; i++) {
       const planeGroup = new THREE.Group();
@@ -66,9 +66,13 @@ const Cube = ({ position, color = 'blue', size = 1 }) => {
       group.add(planeGroup);
     }
 
-    setPlanePositionArray(positions);
+    // Save the original plane positions into a ref instead of state
+    planePositionArrayRef.current = positions;
     return group;
   };
+
+  // Build the cube planes once (memoized) so we don't recreate them on every render
+  const planesGroup = useMemo(() => createCubePlanes(), [size, color]);
 
   // Shatter the cube
   const shatterCube = () => {
@@ -103,7 +107,7 @@ const Cube = ({ position, color = 'blue', size = 1 }) => {
 
     cubeRef.current.children.forEach((planeGroup, groupIndex) => {
       planeGroup.children.forEach((plane, planeIndex) => {
-        const originalPosition = planePositionArray[groupIndex * 36 + planeIndex]; // 36 planes per face
+        const originalPosition = planePositionArrayRef.current[groupIndex * 36 + planeIndex]; // 36 planes per face
         gsap.to(plane.position, {
           x: originalPosition.x,
           y: originalPosition.y,
@@ -125,7 +129,8 @@ const Cube = ({ position, color = 'blue', size = 1 }) => {
       position={position}
       onClick={shatterCube} // Trigger shatter on click
     >
-      {createCubePlanes()}
+      {/* Render the pre-built Three.Group as a primitive */}
+      <primitive object={planesGroup} />
     </group>
   );
 };

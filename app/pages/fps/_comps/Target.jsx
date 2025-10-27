@@ -1,76 +1,11 @@
-import { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+// This file used to contain a react-three-fiber component that used hooks
+// (useFrame/useThree). Those hooks require a Canvas runtime and cannot be
+// executed during Next's server-side prerender. To keep the pages tree clean
+// and avoid prerender/runtime failures, the real component was moved to
+// `app/lib/fps/_comps/Target.jsx` and consumers import from there.
 
-const Target = ({ position, size = 1, color = 'red', type = 'default', onHit }) => {
-  const meshRef = useRef();
-  const [hovered, setHovered] = useState(false);
-  const [hit, setHit] = useState(false);
-  const [opacity, setOpacity] = useState(1);
-  const [scale, setScale] = useState(size);
-  const [exploded, setExploded] = useState(false); // Track if the target has fully exploded
-
-  // Safely handle rotation and other updates
-  useFrame(() => {
-    if (meshRef.current) {
-      // Safely modify rotation using rotateY
-      meshRef.current.rotation.y += 0.01;
-    }
-  });
-
-  // Animate effects over time
-  useFrame(() => {
-    if (hit && !exploded) {
-      switch (type) {
-        case 'explode':
-          if (scale < 5) {
-            setScale((prev) => prev + 0.1); // Gradually grow in size
-            setOpacity((prev) => Math.max(prev - 0.02, 0)); // Gradually fade out
-          } else {
-            setExploded(true); // Mark as fully exploded
-            setScale(0); // Reset scale to 0
-          }
-          break;
-        case 'shrink':
-          if (scale > 0) {
-            setScale((prev) => Math.max(prev - 0.1, 0)); // Gradually shrink
-          }
-          break;
-        case 'default':
-          if (opacity > 0) {
-            setOpacity((prev) => Math.max(prev - 0.02, 0)); // Gradually fade out
-          }
-          break;
-        default:
-          break;
-      }
-    }
-  });
-
-  // Handle collision detection
-  const handleCollision = () => {
-    if (!hit && onHit) {
-      setHit(true); // Mark as hit
-      onHit(); // Notify parent
-    }
-  };
-
-  return (
-    <mesh
-      ref={meshRef}
-      position={position}
-      scale={[scale, scale, scale]}
-      onClick={handleCollision} // Detect clicks as "hits"
-      onPointerOver={() => setHovered(true)} // Handle hover
-      onPointerOut={() => setHovered(false)} // Reset hover
-    >
-      <sphereGeometry args={[0.5, 32, 32]} />
-      <meshStandardMaterial
-        color={hovered ? 'orange' : color} // Change color on hover
-        transparent
-        opacity={opacity}
-      />
-    </mesh>
-  );
-};
-
-export default Target;
+// Keep a harmless placeholder here so Next's page collector can safely
+// import the module without executing react-three-fiber hooks.
+export default function TargetPlaceholder() {
+  return null;
+}

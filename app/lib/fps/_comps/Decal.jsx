@@ -30,7 +30,7 @@ const Decal = ({ position, playerPosition }) => {
 
       // Gradually fade out
       opacity.current = Math.max(opacity.current - 0.1, 0); // Fade out more slowly
-      meshRef.current.material.opacity = opacity.current;
+      if (meshRef.current.material) meshRef.current.material.opacity = opacity.current;
 
       // Remove the decal when fully faded
       if (opacity.current <= 0) {
