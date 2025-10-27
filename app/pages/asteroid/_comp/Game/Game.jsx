@@ -4,7 +4,7 @@ import styles from './Game.module.css';
 import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
 import { handleGameOver as handleGameOverFn } from '@/lib/asteroid/_comp/Game/handleGameOver';
 import FlashOverlays from '../UI/FlashOverlays';
-import GameCanvas from './GameCanvas';
+import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
 import GameOverOverlay from '../UI/GameOverOverlay';
 import ScoreDisplay from '../UI/ScoreDisplay';
 import WeaponDisplay from '../UI/WeaponDisplay';

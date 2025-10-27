@@ -1,9 +1,9 @@
 import styles from './AmmoIndicator.module.css';
 
-const AmmoIndicator = ({ weapon, ammo, maxAmmo = { spread: 30, laser: 10, explosive: 10 } }) => {
-  const currentAmmo = ammo[weapon] || 0;
-  const maxForWeapon = maxAmmo[weapon] || 30;
-  const percentage = (currentAmmo / maxForWeapon) * 100;
+const AmmoIndicator = ({ weapon = 'spread', ammo = {}, maxAmmo = { spread: 30, laser: 10, explosive: 10 } }) => {
+  const currentAmmo = (ammo && typeof weapon === 'string') ? ammo[weapon] || 0 : 0;
+  const maxForWeapon = (typeof weapon === 'string' && maxAmmo) ? maxAmmo[weapon] || 30 : 30;
+  const percentage = maxForWeapon > 0 ? (currentAmmo / maxForWeapon) * 100 : 0;
 
   const getAmmoColor = () => {
     if (percentage > 50) return '#00ff00';
@@ -15,7 +15,7 @@ const AmmoIndicator = ({ weapon, ammo, maxAmmo = { spread: 30, laser: 10, explos
 
   return (
     <div className={styles.container}>
-      <div className={styles.weaponName}>{weapon.toUpperCase()}</div>
+  <div className={styles.weaponName}>{(weapon || '').toString().toUpperCase()}</div>
       <div className={styles.ammoBar}>
         <div
           className={`${styles.fill} ${isLow ? styles.critical : ''}`}
