@@ -1,10 +1,9 @@
-import { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { useThree } from '@react-three/fiber';
+import React, { useRef, forwardRef } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const PlayerLogic = ({ onPositionChange }) => {
-  const meshRef = useRef(); // Blue square (hitbox)
+const PlayerLogic = forwardRef(function PlayerLogic({ onPositionChange }, ref) {
+  const meshRef = ref || useRef(); // Allow parent to pass a ref to the mesh
   const { camera } = useThree();
 
   useFrame(() => {
@@ -29,6 +28,6 @@ const PlayerLogic = ({ onPositionChange }) => {
       <meshStandardMaterial color="blue" />
     </mesh>
   );
-};
+});
 
 export default PlayerLogic;

@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { PointerLockControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-const Controls = ({ terrainRef, onPauseGame, playerSpeed = 0.1 }) => {
+const Controls = ({ playerRef, terrainRef, onPauseGame, playerSpeed = 0.1 }) => {
   const controlsRef = useRef();
   const isLocked = useRef(false);
   const [movement, setMovement] = useState({
@@ -128,6 +128,16 @@ const Controls = ({ terrainRef, onPauseGame, playerSpeed = 0.1 }) => {
   useFrame(() => {
     const rotationSpeed = 0.02; // Player rotation speed
     handleMovement(playerSpeed, rotationSpeed, movement); // Use playerSpeed for movement
+    // If a playerRef is provided keep the hitbox in sync with the controls object
+    try {
+      if (playerRef && playerRef.current && controlsRef.current) {
+        const controlsObject = controlsRef.current.getObject();
+        playerRef.current.position.copy(controlsObject.position);
+        playerRef.current.quaternion.copy(controlsObject.quaternion);
+      }
+    } catch {
+      // ignore synchronization errors
+    }
   });
 
   return (
