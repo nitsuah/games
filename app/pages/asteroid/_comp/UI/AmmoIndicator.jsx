@@ -20,7 +20,7 @@ const AmmoIndicator = ({ weapon = 'spread', ammo = {}, maxAmmo = { spread: 30, l
         <div
           className={`${styles.fill} ${isLow ? styles.critical : ''}`}
           style={{
-            width: `${percentage}%`,
+            transform: `scaleX(${percentage / 100})`,
             backgroundColor: getAmmoColor(),
           }}
         />

@@ -47,11 +47,13 @@
     border-radius: 4px;
     cursor: pointer;
     margin-top: 1rem;
-    transition: background 0.3s;
+    /* Use transform for hover feedback to keep animations compositor-friendly */
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
   
   .restartButton:hover {
-    background: #45a049;
+    transform: scale(1.03);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
   }
   
   .statsDisplay {

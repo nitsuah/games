@@ -20,7 +20,7 @@ const HealthBar = ({ health, maxHealth = 100 }) => {
         <div
           className={`${styles.bar} ${isCritical ? styles.critical : ''}`}
           style={{
-            width: `${percentage}%`,
+            transform: `scaleX(${percentage / 100})`,
             backgroundColor: getBarColor(),
           }}
         />
