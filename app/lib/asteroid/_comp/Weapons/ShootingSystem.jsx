@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 import CooldownManager from '@/lib/asteroid/_comp/Weapons/CooldownManager';
-import Explosion from '@/app/_components/effects/Explosion';
+import Explosion from '@/_components/effects/Explosion';
 import { WEAPON_CONFIG, WEAPON_TYPES } from '@/lib/asteroid/_comp/config';
 import { weaponHandler } from '@/lib/asteroid/_comp/Weapons/weaponHandler';
 

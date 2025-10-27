@@ -5,7 +5,7 @@ import TargetList from '@/lib/asteroid/_comp/Target/TargetList';
 import ShootingSystem from '@/lib/asteroid/_comp/Weapons/ShootingSystem';
 import CollisionDetection from '@/lib/asteroid/_comp/Target/CollisionDetection';
 import TargetCollisionHandler from '@/lib/asteroid/_comp/Target/TargetCollisionHandler';
-import PowerUp from '@/app/_components/effects/PowerUp';
+import PowerUp from '@/_components/effects/PowerUp';
 import LaserBeam from '@/lib/asteroid/_comp/Weapons/LaserBeam';
 import ShieldEffect from '@/lib/asteroid/_comp/UI/ShieldEffect';
 
