@@ -1,4 +1,4 @@
-import { generateInitialTargets, TARGET_CONFIG } from '../../../../pages/asteroid/_comp/Game/generateTargets';
+import { generateInitialTargets, TARGET_CONFIG } from '@/lib/asteroid/_comp/Game/generateTargets';
 
 describe('generateTargets - Target Initialization', () => {
   beforeEach(() => {

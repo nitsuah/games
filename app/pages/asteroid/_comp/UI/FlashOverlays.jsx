@@ -1,4 +1,4 @@
-import { FLASH_COLORS } from '../config';
+import { FLASH_COLORS } from '@/lib/asteroid/_comp/config';
 
 const FlashOverlays = ({ flashQueue }) => (
   <>

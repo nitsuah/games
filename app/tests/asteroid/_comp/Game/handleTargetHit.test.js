@@ -1,4 +1,4 @@
-import { handleTargetHit } from '../../../../pages/asteroid/_comp/Game/handleTargetHit';
+import { handleTargetHit } from '@/lib/asteroid/_comp/Game/handleTargetHit';
 
 describe('handleTargetHit - Combo System', () => {
   let mockSetTargets;

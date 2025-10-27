@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { now } from '@/utils/time';
-import { splitTarget } from './splitTarget';
-import { MIN_ALIVE_TIME } from '../config';
+import { splitTarget } from '@/lib/asteroid/_comp/Target/splitTarget';
+import { MIN_ALIVE_TIME } from '@/lib/asteroid/_comp/config';
 
 const TargetCollisionHandler = ({ setTargets }) => {
   useFrame(() => {

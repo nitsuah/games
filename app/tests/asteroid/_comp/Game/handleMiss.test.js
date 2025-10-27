@@ -1,4 +1,4 @@
-import { handleMiss } from '../../../../pages/asteroid/_comp/Game/handleMiss';
+import { handleMiss } from '@/lib/asteroid/_comp/Game/handleMiss';
 
 describe('handleMiss - Combo Reset', () => {
   let mockSetMisses;

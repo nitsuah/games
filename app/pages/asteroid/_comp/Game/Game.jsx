@@ -1,20 +1,20 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
-import { handleHealthDepletion as handleHealthDepletionFn } from './handleHealthDepletion';
-import { handleGameOver as handleGameOverFn } from './handleGameOver';
+import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
+import { handleGameOver as handleGameOverFn } from '@/lib/asteroid/_comp/Game/handleGameOver';
 import FlashOverlays from '../UI/FlashOverlays';
 import GameCanvas from './GameCanvas';
 import GameOverOverlay from '../UI/GameOverOverlay';
 import ScoreDisplay from '../UI/ScoreDisplay';
 import WeaponDisplay from '../UI/WeaponDisplay';
 import { now } from '@/utils/time';
-import { handleTargetHit as handleTargetHitFn } from './handleTargetHit';
-import { restartGame as restartGameFn } from './restartGame';
-import { handlePlayerHit as handlePlayerHitFn } from './handlePlayerHit';
-import { handleKeyDown as handleKeyDownFn } from './handleKeyDown';
-import { updateScore as updateScoreFn } from './updateScore';
-import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
+import { handleTargetHit as handleTargetHitFn } from '@/lib/asteroid/_comp/Game/handleTargetHit';
+import { restartGame as restartGameFn } from '@/lib/asteroid/_comp/Game/restartGame';
+import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/handlePlayerHit';
+import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
+import { updateScore as updateScoreFn } from '@/lib/asteroid/_comp/Game/updateScore';
+import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
 import ShotReticle from '../UI/ShotReticle';
 import PowerUpIndicator from '../UI/PowerUpIndicator';
 import HealthBar from '../UI/HealthBar';
@@ -22,7 +22,7 @@ import FPSCounter from '../UI/FPSCounter';
 import AmmoIndicator from '../UI/AmmoIndicator';
 import ComboDisplay from '../UI/ComboDisplay';
 import usePowerUps from '../../../../_components/effects/usePowerUps';
-import { INITIAL_AMMO, INITIAL_HEALTH } from '../config';
+import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 
 const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
   <div className={styles.statsDisplay}>

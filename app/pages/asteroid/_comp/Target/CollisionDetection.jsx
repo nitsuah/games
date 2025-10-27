@@ -1,7 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { splitTarget } from './splitTarget';
-import { PLAYER_SPHERE_RADIUS } from '../config';
+import { splitTarget } from '@/lib/asteroid/_comp/Target/splitTarget';
+import { PLAYER_SPHERE_RADIUS } from '@/lib/asteroid/_comp/config';
 
 const CollisionDetection = ({ setTargets, onPlayerHit, isGameOver, _setHealth, _shieldActive, _setShieldActive }) => {
   const { camera } = useThree();

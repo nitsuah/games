@@ -1,5 +1,5 @@
 import styles from './WeaponDisplay.module.css';
-import { WEAPON_TYPES } from '../config';
+import { WEAPON_TYPES } from '@/lib/asteroid/_comp/config';
 
 const WeaponDisplay = ({ weapon, ammo, cooldowns }) => {
   const weaponData = WEAPON_TYPES.find((w) => w.key === weapon);

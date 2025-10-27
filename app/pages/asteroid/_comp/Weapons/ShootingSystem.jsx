@@ -3,8 +3,8 @@ import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 import CooldownManager from './CooldownManager';
 import Explosion from '../../../../_components/effects/Explosion';
-import { WEAPON_CONFIG, WEAPON_TYPES } from '../config';
-import { weaponHandler } from './weaponHandler';
+import { WEAPON_CONFIG, WEAPON_TYPES } from '@/lib/asteroid/_comp/config';
+import { weaponHandler } from '@/lib/asteroid/_comp/Weapons/weaponHandler';
 
 const ShootingSystem = ({
   onHit,

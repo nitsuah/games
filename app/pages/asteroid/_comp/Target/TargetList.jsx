@@ -1,5 +1,5 @@
 import Target from './Target';
-import { DEFAULT_TARGET_COLOR } from '../config';
+import { DEFAULT_TARGET_COLOR } from '@/lib/asteroid/_comp/config';
 
 const TargetList = ({ targets, handleTargetHit, handleRefCallback, setTargets }) => (
   <>

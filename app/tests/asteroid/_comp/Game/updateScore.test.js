@@ -1,4 +1,4 @@
-import { updateScore } from '../../../../pages/asteroid/_comp/Game/updateScore';
+import { updateScore } from '@/lib/asteroid/_comp/Game/updateScore';
 
 describe('updateScore - Score Calculation with Multiplier', () => {
   let mockSetScore;
