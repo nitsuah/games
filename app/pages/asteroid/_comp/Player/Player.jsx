@@ -92,7 +92,7 @@ const Player = ({
 
   useFrame((state, delta) => {
     if (isGameOver) {
-      console.debug('Player movement disabled because the game is over.');
+      console.log('Player movement disabled because the game is over.');
       return; // Prevent movement when the game is over
     }
 
@@ -136,12 +136,12 @@ const Player = ({
 
       if (distance < playerRadius + targetRadius && !target.isHit) {
         if (shieldActive) {
-          console.debug('Shield absorbed the collision with target:', target.id);
+          console.log('Shield absorbed the collision with target:', target.id);
           setShieldActive(false); // Deactivate shield after absorbing the collision
           if (setShowBlueFlash) setShowBlueFlash(false); // End blue flash
           console.log('Shield Power-Up expired!');
         } else {
-          console.debug('Collision detected with target:', target.id, 'Size:', target.size);
+          console.log('Collision detected with target:', target.id, 'Size:', target.size);
           onTargetHit(target.id);
         }
       }

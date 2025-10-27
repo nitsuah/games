@@ -71,14 +71,14 @@ const HomePage = () => {
 
     // Add event listeners
     audio.addEventListener('canplaythrough', () => {
-      console.debug('Sound can play');
+      console.log('Sound can play');
       setStatus('Sound loaded, attempting to play...');
 
       // Try to play the sound
       audio
         .play()
         .then(() => {
-          console.debug('Sound playing');
+          console.log('Sound playing');
           setStatus('Sound playing!');
         })
         .catch((error) => {
@@ -94,7 +94,7 @@ const HomePage = () => {
 
     // Set the source - using the correct path from the public directory
     audio.src = '/sounds/shoot.mp3';
-    console.debug('Attempting to load sound from:', audio.src);
+  console.log('Attempting to load sound from:', audio.src);
 
     // Load the audio
     audio.load();

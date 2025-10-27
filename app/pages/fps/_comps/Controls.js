@@ -43,14 +43,14 @@ const Controls = ({ terrainRef, onPauseGame, playerSpeed = 0.1 }) => {
       const direction = new THREE.Vector3(0, -1, 0); // Point ray downward
       raycaster.set(origin, direction);
 
-      console.debug('Ray Origin:', origin); // Log ray origin
-      console.debug('Ray Direction:', direction); // Log ray direction
+  console.log('Ray Origin:', origin); // Log ray origin
+  console.log('Ray Direction:', direction); // Log ray direction
 
       const intersects = raycaster.intersectObject(terrainRef.current, true);
-      if (intersects.length > 0) {
+        if (intersects.length > 0) {
         const groundHeight = intersects[0].point.y; // Get the Y position of the terrain
-        console.debug('Raycast Hit:', intersects[0]); // Log the raycast hit details
-        console.debug('Raycast Y position:', groundHeight); // Log the Y position
+        console.log('Raycast Hit:', intersects[0]); // Log the raycast hit details
+        console.log('Raycast Y position:', groundHeight); // Log the Y position
         controlsObject.position.y = groundHeight + 1; // Adjust Y position
       } else {
         console.warn('Raycast did not hit the terrain.'); // Log if no intersection
@@ -58,7 +58,7 @@ const Controls = ({ terrainRef, onPauseGame, playerSpeed = 0.1 }) => {
     }
 
     // Log player coordinates to the console
-    console.debug(
+    console.log(
       'Player X:',
       controlsObject.position.x.toFixed(2),
       'Y:',
@@ -143,12 +143,12 @@ const Controls = ({ terrainRef, onPauseGame, playerSpeed = 0.1 }) => {
       onUpdate={() => {
         if (controlsRef.current) {
           controlsRef.current.addEventListener('lock', () => {
-            console.debug('lock');
+            console.log('lock');
             isLocked.current = true;
           });
 
           controlsRef.current.addEventListener('unlock', () => {
-            console.debug('unlock');
+            console.log('unlock');
             isLocked.current = false;
 
             // Pausing the game when controls are unlocked

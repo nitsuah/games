@@ -25,7 +25,7 @@ const LaserBeam = ({
 
   const laserColor = getLaserColor();
 
-  console.debug('Rendering lasers with color:', laserColor); // Debugging laser color
+  console.log('Rendering lasers with color:', laserColor); // Debugging laser color
 
   return (
     <>
@@ -36,7 +36,7 @@ const LaserBeam = ({
 
         // Skip rendering if the distance is less than 1
         if (distance < 1) {
-          console.debug(`Skipping laser ${index} due to short distance: ${distance}`);
+          console.log(`Skipping laser ${index} due to short distance: ${distance}`);
           return null;
         }
 
