@@ -1,8 +1,8 @@
 import { FLASH_COLORS } from '@/lib/asteroid/_comp/config';
 
-const FlashOverlays = ({ flashQueue }) => (
+const FlashOverlays = ({ flashQueue = [] }) => (
   <>
-    {flashQueue.map(({ id, type }) => (
+    {(flashQueue || []).map(({ id, type }) => (
       <div
         key={id}
         style={{
