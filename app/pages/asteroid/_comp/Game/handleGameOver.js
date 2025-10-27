@@ -1,34 +1,5 @@
-export const handleGameOver = ({
-  targets,
-  setGameOver,
-  pauseSound,
-  hits,
-  misses,
-  score,
-  highScore,
-  setHighScore,
-  setIsNewHighScore,
-  bestAccuracy,
-  setBestAccuracy,
-}) => {
-  if (targets.length > 0 && targets.every((t) => t.isHit)) {
-    setGameOver(true);
-    document.exitPointerLock();
-    pauseSound('bgm');
+export { handleGameOver } from '@/lib/asteroid/_comp/Game/handleGameOver';
 
-    const accuracy = hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0;
-
-    if (score > highScore) {
-      setHighScore(score);
-      window.localStorage.setItem('asteroidHighScore', score);
-      setIsNewHighScore(true);
-    }
-
-    if (accuracy > bestAccuracy) {
-      setBestAccuracy(accuracy);
-      window.localStorage.setItem('asteroidBestAccuracy', accuracy);
-    }
-
-    console.log('Game over triggered by all targets being hit.');
-  }
-};
+export default function _PagePlaceholder() {
+  return null;
+}

@@ -1,4 +1,6 @@
-export const updateScore = ({ hits, misses, setScore, comboMultiplier = 1 }) => {
-  const baseScore = hits * 100 + Math.round((hits / (hits + misses || 1)) * 100);
-  setScore(Math.round(baseScore * comboMultiplier));
-};
+export { updateScore } from '@/lib/asteroid/_comp/Game/updateScore';
+
+// Placeholder default export so Next won't treat this helper as a page without a React component
+export default function _PagePlaceholder() {
+  return null;
+}
