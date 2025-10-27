@@ -19,7 +19,20 @@ import PlayerLogic from '@/lib/fps/_comps/PlayerLogic';
 
 test('uses internal ref if none provided and notifies position', () => {
   const onPositionChange = jest.fn();
-  render(<PlayerLogic onPositionChange={onPositionChange} />);
+  const ref = React.createRef();
+  ref.current = { position: { copy: jest.fn().mockReturnThis(), add: jest.fn() }, quaternion: { copy: jest.fn() } };
+
+  // Temporarily silence console.error to hide react-three primitive warnings during render
+  const origConsoleError = console.error;
+  console.error = jest.fn();
+
+  render(<PlayerLogic ref={ref} onPositionChange={onPositionChange} />);
+
+  // Restore console.error now that render is complete
+  console.error = origConsoleError;
+
+  // Set internal ref object now that render completed
+  ref.current = { position: { copy: jest.fn().mockReturnThis(), add: jest.fn() }, quaternion: { copy: jest.fn() } };
 
   expect(typeof global.__triggerUseFrame).toBe('function');
 

@@ -26,10 +26,23 @@ describe('PlayerLogic', () => {
   });
 
   test('forwards ref and calls onPositionChange during frame', () => {
+    // Create a fake mesh ref with the shape PlayerLogic expects so useFrame can call copy/add
     const ref = createRef();
+    ref.current = { position: { copy: jest.fn().mockReturnThis(), add: jest.fn() }, quaternion: { copy: jest.fn() } };
     const onPositionChange = jest.fn();
 
+
+    // Temporarily silence console.error to hide react-three primitive warnings during render
+    const origConsoleError = console.error;
+    console.error = jest.fn();
+
     render(<PlayerLogic ref={ref} onPositionChange={onPositionChange} />);
+
+    // Restore console.error now that render is complete
+    console.error = origConsoleError;
+
+    // Ensure the mesh ref is present (React may overwrite a pre-set ref during render), set it now
+    ref.current = { position: { copy: jest.fn().mockReturnThis(), add: jest.fn() }, quaternion: { copy: jest.fn() } };
 
     // At this point useFrame should have registered a callback
     expect(typeof global.__triggerUseFrame).toBe('function');
