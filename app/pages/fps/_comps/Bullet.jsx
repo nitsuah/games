@@ -1,4 +1,5 @@
-// Placeholder stub to avoid running react-three-fiber hooks during Next.js prerender
-// Real implementation lives in app/lib/fps/_comps/Bullet.jsx
-const Bullet = () => null;
+import dynamic from 'next/dynamic';
+
+const Bullet = dynamic(() => import('@/lib/fps/_comps/Bullet'), { ssr: false });
+
 export default Bullet;

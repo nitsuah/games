@@ -1,4 +1,5 @@
-// Placeholder stub to avoid running react-three-fiber hooks during Next.js prerender
-// Real implementation lives in app/lib/fps/_comps/Controls.js
-const Controls = () => null;
+import dynamic from 'next/dynamic';
+
+const Controls = dynamic(() => import('@/lib/fps/_comps/Controls'), { ssr: false });
+
 export default Controls;

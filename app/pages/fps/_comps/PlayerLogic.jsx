@@ -1,4 +1,5 @@
-// Placeholder stub to avoid running react-three-fiber hooks during Next.js prerender
-// Real implementation lives in app/lib/fps/_comps/PlayerLogic.jsx
-const PlayerLogic = () => null;
+import dynamic from 'next/dynamic';
+
+const PlayerLogic = dynamic(() => import('@/lib/fps/_comps/PlayerLogic'), { ssr: false });
+
 export default PlayerLogic;

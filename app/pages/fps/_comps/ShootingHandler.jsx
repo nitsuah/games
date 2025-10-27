@@ -1,4 +1,5 @@
-// Placeholder stub to avoid running react-three-fiber hooks during Next.js prerender
-// Real implementation lives in app/lib/fps/_comps/ShootingHandler.jsx
-const ShootingHandler = () => null;
+import dynamic from 'next/dynamic';
+
+const ShootingHandler = dynamic(() => import('@/lib/fps/_comps/ShootingHandler'), { ssr: false });
+
 export default ShootingHandler;

@@ -6,6 +6,8 @@
 
 // Keep a harmless placeholder here so Next's page collector can safely
 // import the module without executing react-three-fiber hooks.
-export default function TargetPlaceholder() {
-  return null;
-}
+import dynamic from 'next/dynamic';
+
+const Target = dynamic(() => import('@/lib/fps/_comps/Target'), { ssr: false });
+
+export default Target;
