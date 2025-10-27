@@ -28,6 +28,8 @@ function Range() {
   const [decals, setDecals] = useState([]);
   const [rapidFire, setRapidFire] = useState(false); // Track rapid fire state
   const [playerSpeed, setPlayerSpeed] = useState(0.1); // Default player speed
+  const [_explosions, setExplosions] = useState([]); // Explosions state used by shooting systems
+  const [_speedBoost, setSpeedBoost] = useState(false); // Speed boost flag (setter used by power-ups)
 
   const decalsRef = useRef([]); // Use ref to store decals
   const raycaster = useRef(new THREE.Raycaster()); // Reuse a single raycaster instance

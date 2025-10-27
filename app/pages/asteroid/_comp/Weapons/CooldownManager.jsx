@@ -16,7 +16,7 @@ const CooldownManager = ({ _cooldowns, setCooldowns, rapidFireActive }) => {
         });
 
         if (hasChanged) {
-          console.debug('Updated Cooldowns:', updatedCooldowns); // Log cooldowns for debugging
+          console.log('Updated Cooldowns:', updatedCooldowns); // Log cooldowns for debugging
         }
 
         return hasChanged ? updatedCooldowns : prev; // Only update state if cooldowns have changed
