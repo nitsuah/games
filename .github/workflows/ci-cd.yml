@@ -136,3 +136,14 @@ jobs:
         # name (e.g. lhci-results-${{ github.run_id }}) in a follow-up change.
         uploadArtifacts: false
         temporaryPublicStorage: true
+    - name: Upload Lighthouse artifacts (safe)
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: lhci-results-${{ github.run_id }}
+        path: |
+          app/.lighthouseci
+          app/lighthouse-report
+          app/lhci-report
+      # Make this step non-fatal while we validate artifact paths
+      continue-on-error: true
