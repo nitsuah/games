@@ -6,6 +6,8 @@
     "next": "^15.3.0",
     "styled-components": "^6.1.17",
     "three": "^0.175.0"
+    ,
+    "gsap": "^3.12.2"
   },
   "scripts": {
     "dev": "next dev",
