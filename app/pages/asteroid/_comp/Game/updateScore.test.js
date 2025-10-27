@@ -1,3 +1,7 @@
+// Placeholder; real tests are under app/tests.
+export default function _PagePlaceholder() {
+  return null;
+}
 import { updateScore } from './updateScore';
 
 if (typeof describe === 'function') {
