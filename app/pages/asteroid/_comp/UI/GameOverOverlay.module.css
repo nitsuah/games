@@ -4,7 +4,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  color: #ffffff;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
@@ -15,7 +15,7 @@
   margin-top: 10px;
   padding: 10px 20px;
   background: #ff4500;
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 5px;
   cursor: pointer;

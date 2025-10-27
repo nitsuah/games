@@ -53,8 +53,8 @@
 }
 
 .multiplier {
-  /* use a more readable gold with higher contrast */
-  color: #ffd700;
+  /* use white for multiplier text to guarantee contrast */
+  color: #ffffff;
   font-size: 14px;
   font-weight: bold;
   margin-top: 8px;
