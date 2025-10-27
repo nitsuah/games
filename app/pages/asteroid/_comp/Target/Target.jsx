@@ -47,9 +47,7 @@ const Target = ({
     }
   }, [isHit]);
 
-  useFrame(({ camera }) => {
-    const playerSphere = new THREE.Sphere(camera.position.clone(), 1); // Use camera position
-
+  useFrame(() => {
     if (meshRef.current && !isHit) {
       // Dynamically scale movement speed by the current speed property
       const scaledMovement = movementSpeed.current.clone().multiplyScalar(speed);
@@ -75,15 +73,7 @@ const Target = ({
       }
     }
 
-    // Create a sphere for the target
-    const targetSphere = new THREE.Sphere(
-      new THREE.Vector3(
-        meshRef.current.position.x,
-        meshRef.current.position.y,
-        meshRef.current.position.z
-      ), // Use updated positions
-      size / 2
-    );
+    // targetSphere/playerSphere were removed; collision is handled centrally by CollisionDetection
   });
 
   const handleClick = (event) => {

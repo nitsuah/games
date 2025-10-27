@@ -59,7 +59,7 @@ const HillyFloor = forwardRef(
       width = 100,
       depth = 100,
       hillHeight = 6, // Increased default
-      color = 'green',
+      _color = 'green',
       heightmapUrl = null, // New prop for EXR heightmap
       maxGradient = 1, // New prop for max gradient between neighbors
     },
@@ -103,8 +103,8 @@ const HillyFloor = forwardRef(
       });
     }, [heightmapUrl, width, depth, hillHeight, maxGradient]);
 
-    // Compute min/max for color mapping
-    const [minMax, setMinMax] = useState([0, 1]);
+    // Compute min/max for color mapping (tracked but not used directly)
+    const [_minMax, setMinMax] = useState([0, 1]);
     useEffect(() => {
       if (heightData) {
         let min = Infinity,

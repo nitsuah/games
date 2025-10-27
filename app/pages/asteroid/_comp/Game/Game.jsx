@@ -10,7 +10,6 @@ import ScoreDisplay from '../UI/ScoreDisplay';
 import WeaponDisplay from '../UI/WeaponDisplay';
 import { now } from '@/utils/time';
 import { handleTargetHit as handleTargetHitFn } from './handleTargetHit';
-import { handleMiss as handleMissFn } from './handleMiss';
 import { restartGame as restartGameFn } from './restartGame';
 import { handlePlayerHit as handlePlayerHitFn } from './handlePlayerHit';
 import { handleKeyDown as handleKeyDownFn } from './handleKeyDown';
@@ -323,10 +322,7 @@ const Game = ({ onHit, onMiss }) => {
   }, [targets]);
 
   // HANDLE MISS
-  const handleMiss = useCallback(
-    () => handleMissFn({ setMisses, onMiss, setCombo, setComboMultiplier, comboTimerRef }),
-    [setMisses, onMiss]
-  );
+  // (handled inline by other systems) - removed unused wrapper to satisfy lint
 
   // HANDLE RESTART
   const restartGame = () =>
@@ -352,10 +348,6 @@ const Game = ({ onHit, onMiss }) => {
 
   // HANDLE REFS
   const targetRefs = useRef({});
-
-  const handleRefCallback = (targetId, ref) => {
-    targetRefs.current[targetId] = ref;
-  };
 
   // Red flash effect when player is hit
   const handlePlayerHit = useCallback(

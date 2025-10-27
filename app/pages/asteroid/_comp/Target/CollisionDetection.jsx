@@ -3,19 +3,12 @@ import * as THREE from 'three';
 import { splitTarget } from './splitTarget';
 import { PLAYER_SPHERE_RADIUS } from '../config';
 
-const CollisionDetection = ({
-  setTargets,
-  setHealth,
-  onPlayerHit,
-  isGameOver,
-  shieldActive,
-  setShieldActive,
-}) => {
+const CollisionDetection = ({ setTargets, onPlayerHit, isGameOver, _setHealth, _shieldActive, _setShieldActive }) => {
   const { camera } = useThree();
 
   useFrame(() => {
     if (isGameOver) {
-      console.debug('CollisionDetection stopped because the game is over.');
+      console.log('CollisionDetection stopped because the game is over.');
       return; // Prevent updates when the game is over
     }
 
