@@ -41,7 +41,7 @@ walk(PAGES_DIR, (file) => {
   for (const p of r3fPatterns) {
     const re = new RegExp("(^|\\n)\\s*import\\s+.*['\"]" + p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + "['\"]", 'm');
     if (re.test(content)) {
-      errors.push({ file, reason: `imports \"${p}\" — consider moving implementation to app/lib or use client-only dynamic imports` });
+      errors.push({ file, reason: `imports "${p}" — consider moving implementation to app/lib or use client-only dynamic imports` });
     }
   }
 });
