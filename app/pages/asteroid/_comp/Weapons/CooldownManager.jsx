@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const CooldownManager = ({ cooldowns, setCooldowns, rapidFireActive }) => {
+const CooldownManager = ({ _cooldowns, setCooldowns, rapidFireActive }) => {
   useEffect(() => {
     const updateCooldowns = () => {
       setCooldowns((prev) => {
