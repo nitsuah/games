@@ -1,28 +1,4 @@
-import { useEffect } from 'react';
-import { PointerLockControls as DreiPointerLockControls } from '@react-three/drei';
-
-const PointerLockControls = ({ isGameOver }) => {
-  useEffect(() => {
-    const handlePointerLockError = () => {
-      console.warn('Pointer Lock API error occurred.');
-    };
-
-    const handlePointerLockChange = () => {
-      if (document.pointerLockElement === null && !isGameOver) {
-        console.warn('Pointer Lock exited unexpectedly.');
-      }
-    };
-
-    document.addEventListener('pointerlockerror', handlePointerLockError);
-    document.addEventListener('pointerlockchange', handlePointerLockChange);
-
-    return () => {
-      document.removeEventListener('pointerlockerror', handlePointerLockError);
-      document.removeEventListener('pointerlockchange', handlePointerLockChange);
-    };
-  }, [isGameOver]);
-
-  return <DreiPointerLockControls />;
-};
-
+// Placeholder to avoid running react-three-fiber/drei controls during prerender
+// Real implementation is in app/lib/asteroid/_comp/UI/PointerLockControls.js
+const PointerLockControls = () => null;
 export default PointerLockControls;
