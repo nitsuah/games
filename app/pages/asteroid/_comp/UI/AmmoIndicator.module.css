@@ -3,7 +3,7 @@
   bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.95);
+  background: rgba(0, 0, 0, 0.96);
   padding: 15px 25px;
   border-radius: 10px;
   border: 2px solid rgba(255, 255, 255, 0.3);
@@ -11,6 +11,10 @@
   z-index: 1000;
   min-width: 200px;
   text-align: center;
+}
+
+.container, .container * {
+  color: #ffffff !important;
 }
 
 .weaponName {

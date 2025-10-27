@@ -39,7 +39,8 @@
   }
   
   .restartButton {
-    background: #4CAF50;
+    /* use a darker green to contrast against the red flash overlay */
+    background: #2e7d32;
     color: white;
     border: none;
     padding: 1rem 2rem;
