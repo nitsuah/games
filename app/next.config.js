@@ -4,6 +4,10 @@ const nextConfig = {
   compiler: {
     styledComponents: true, // Enables styled-components support
   },
+  // Enable experimental optimizations
+  experimental: {
+    optimizeCss: true, // Optimize CSS output
+  },
   // Optimize bundle to reduce unused JavaScript
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
@@ -12,6 +16,34 @@ const nextConfig = {
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
+        minimize: true,
+        // Split chunks more aggressively to reduce unused code per chunk
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Split framework code (react, react-dom, next)
+            framework: {
+              name: 'framework',
+              chunks: 'all',
+              test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
+              priority: 40,
+              enforce: true,
+            },
+            // Split other node_modules into smaller chunks
+            lib: {
+              test: /[\\/]node_modules[\\/]/,
+              name(module) {
+                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+                return `npm.${packageName.replace('@', '')}`;
+              },
+              priority: 30,
+              minChunks: 1,
+              reuseExistingChunk: true,
+            },
+          },
+        },
       };
     }
     return config;

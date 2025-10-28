@@ -4,7 +4,10 @@
       "url": ["http://localhost:3000"]
     },
     "assert": {
-      "preset": "lighthouse:recommended"
+      "preset": "lighthouse:recommended",
+      "assertions": {
+        "unused-javascript": ["error", {"maxLength": 3}]
+      }
     }
   }
 }
