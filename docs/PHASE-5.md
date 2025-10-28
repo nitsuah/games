@@ -1,90 +1,177 @@
-# Phase 5 - Future Enhancements & Improvements
+# Phase 5 - Future Work# Phase 5 - Future Enhancements & Improvements
 
-**Status**: Planning / Backlog  
-**Started**: TBD  
-**Last Updated**: October 28, 2025
 
-This document outlines future work after Phase 4 completion. Priorities will be reassessed based on user feedback and project goals.
 
----
+**Status**: Wave System Complete ✅  **Status**: Planning / Backlog  
 
-## 🎯 High Priority Features
+**Started**: October 28, 2025  **Started**: TBD  
+
+**Last Updated**: October 28, 2025**Last Updated**: October 28, 2025
+
+
+
+---This document outlines future work after Phase 4 completion. Priorities will be reassessed based on user feedback and project goals.
+
+
+
+## ✅ Phase 5.0 - COMPLETE---
+
+
+
+### Wave-Based Difficulty System (Asteroid Game)## 🎯 High Priority Features
+
+**Status**: ✅ SHIPPED & TESTED
 
 ### 1. AI Enemy System (FPS Game)
-**Goal**: Add basic AI enemy that moves and attacks player
 
-**Requirements**:
-- Enemy spawns at random positions
-- Pathfinding toward player using simple NavMesh
-- Basic attack behavior (shoots projectiles)
-- Takes damage and can be destroyed
-- Drops power-ups on death
+**What Works**:**Goal**: Add basic AI enemy that moves and attacks player
+
+- Progressive wave system (wave 1 → ∞)
+
+- Target count: 10 → 12 → 14 → 15 (capped)**Requirements**:
+
+- Speed increases 15% per wave- Enemy spawns at random positions
+
+- Wave counter UI (top-right corner)- Pathfinding toward player using simple NavMesh
+
+- Wave transition overlay (2s between waves)- Basic attack behavior (shoots projectiles)
+
+- High wave saved to localStorage- Takes damage and can be destroyed
+
+- 15 spawn patterns (up from 10)- Drops power-ups on death
+
 - Visual feedback for enemy state (idle/chase/attack)
 
-**Implementation Notes**:
-- Consider using simple state machine (idle → chase → attack)
-- Distance-based behavior transitions
-- Avoid complex pathfinding initially - direct approach acceptable
+**Tests**: 36 passing (added 6 wave tests)
+
+- `generateInitialTargets` with wave parameter**Implementation Notes**:
+
+- `getTargetCountForWave` function- Consider using simple state machine (idle → chase → attack)
+
+- Wave speed multipliers- Distance-based behavior transitions
+
+- Wave progression logic- Avoid complex pathfinding initially - direct approach acceptable
+
 - Pool enemy instances for performance
 
-**Files to Modify**:
-- Create `app/lib/fps/_comps/Enemy.jsx`
-- Create `app/lib/fps/_comps/EnemyAI.jsx`
-- Update `FpsCanvas.jsx` to spawn/manage enemies
+**Files**:
+
+- `generateTargets.js` - Wave parameters**Files to Modify**:
+
+- `restartGame.js` - Wave reset- Create `app/lib/fps/_comps/Enemy.jsx`
+
+- `Game.jsx` - Wave state & completion- Create `app/lib/fps/_comps/EnemyAI.jsx`
+
+- `WaveIndicator.jsx` - UI component- Update `FpsCanvas.jsx` to spawn/manage enemies
+
+- `generateTargets.test.js` - Full coverage
+
+---
 
 ---
 
 ### 2. Wave-Based Difficulty (Asteroid Game)
-**Goal**: Progressive difficulty with wave system
 
-**Requirements**:
-- Wave counter displayed in UI
-- Increasing target count per wave (10 → 15 → 20...)
-- Faster target speeds in later waves
-- Mix of small/medium/large targets
-- Boss wave every 5th wave
-- Brief cooldown between waves for preparation
+## 🎯 Phase 5.1 - Next (Not Started)**Goal**: Progressive difficulty with wave system
 
-**Implementation Notes**:
-- Add `waveNumber` to game state
-- Modify `generateTargets.js` to accept wave parameters
-- Add wave transition UI overlay
-- Persist high wave reached to localStorage
 
-**Files to Modify**:
+
+### AI Enemy System (FPS Game)**Requirements**:
+
+**Requirements**:- Wave counter displayed in UI
+
+- Enemy component with state machine- Increasing target count per wave (10 → 15 → 20...)
+
+- Pathfinding toward player- Faster target speeds in later waves
+
+- Attack behavior (damage + cooldown)- Mix of small/medium/large targets
+
+- Health system with death callbacks- Boss wave every 5th wave
+
+- **Unit tests required before merge**- Brief cooldown between waves for preparation
+
+
+
+**Must Test**:**Implementation Notes**:
+
+- State transitions- Add `waveNumber` to game state
+
+- Distance calculations- Modify `generateTargets.js` to accept wave parameters
+
+- Attack timing- Add wave transition UI overlay
+
+- Damage/death logic- Persist high wave reached to localStorage
+
+
+
+---**Files to Modify**:
+
 - `app/lib/asteroid/_comp/Game/GameCanvas.jsx`
-- `app/lib/asteroid/_comp/Game/generateTargets.js`
+
+## 📋 Future Priorities- `app/lib/asteroid/_comp/Game/generateTargets.js`
+
 - Create `app/lib/asteroid/_comp/UI/WaveIndicator.jsx`
 
----
+### Enhanced Weapon Visuals
 
-### 3. Enhanced Weapon System
-**Goal**: Complete and polish weapon mechanics
+- Muzzle flash effects---
+
+- Projectile tracers
+
+- Laser charge-up animation### 3. Enhanced Weapon System
+
+- Better explosions**Goal**: Complete and polish weapon mechanics
+
+- **Requires integration + tests**
 
 **Improvements Needed**:
-- Spread shot: Better visual feedback (muzzle flash, tracers)
-- Laser beam: Add beam charge-up animation
-- Explosive: Larger explosion effect, better AoE indicator
-- Add weapon unlock system (start with 1 weapon, unlock others)
-- Weapon upgrade system (damage, fire rate, ammo capacity)
 
-**Files to Modify**:
-- `app/lib/asteroid/_comp/Weapons/weaponHandler.js`
-- `app/lib/asteroid/_comp/Weapons/ShootingSystem.jsx`
-- Create weapon upgrade UI components
+### Performance Optimization- Spread shot: Better visual feedback (muzzle flash, tracers)
+
+- Object pooling for projectiles- Laser beam: Add beam charge-up animation
+
+- Texture optimization- Explosive: Larger explosion effect, better AoE indicator
+
+- LOD for distant objects- Add weapon unlock system (start with 1 weapon, unlock others)
+
+- Profiling & optimization- Weapon upgrade system (damage, fire rate, ammo capacity)
+
+
+
+### Code Quality**Files to Modify**:
+
+- Increase test coverage to 80%- `app/lib/asteroid/_comp/Weapons/weaponHandler.js`
+
+- TypeScript migration (gradual)- `app/lib/asteroid/_comp/Weapons/ShootingSystem.jsx`
+
+- Error boundaries- Create weapon upgrade UI components
+
+- Better documentation
+
+---
 
 ---
 
 ## 🔧 Technical Improvements
 
-### Performance Optimization
-- [ ] Implement object pooling for projectiles/particles
-- [ ] Optimize texture loading and reuse
-- [ ] Add LOD (Level of Detail) for distant objects
-- [ ] Profile and optimize useFrame callbacks
-- [ ] Reduce draw calls with instanced rendering
+## 📝 Notes
 
-### Code Quality
+### Performance Optimization
+
+**Development Philosophy**:- [ ] Implement object pooling for projectiles/particles
+
+- Quality over quantity- [ ] Optimize texture loading and reuse
+
+- Test before merge- [ ] Add LOD (Level of Detail) for distant objects
+
+- No half-baked features- [ ] Profile and optimize useFrame callbacks
+
+- Ship working code- [ ] Reduce draw calls with instanced rendering
+
+
+
+**Phase 5.0 Verdict**: Wave system is solid, tested, and ready. Everything else is backlog until properly implemented and tested.### Code Quality
+
 - [ ] Increase test coverage to 80%+ (currently ~60%)
 - [ ] Add TypeScript (gradual migration, start with new files)
 - [ ] Refactor game state to useReducer (better predictability)
