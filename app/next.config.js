@@ -4,10 +4,6 @@ const nextConfig = {
   compiler: {
     styledComponents: true, // Enables styled-components support
   },
-  // Enable experimental optimizations
-  experimental: {
-    optimizeCss: true, // Optimize CSS output
-  },
   // Optimize bundle to reduce unused JavaScript
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
