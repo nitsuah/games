@@ -7,19 +7,20 @@ mode: agent
 
 ## Environment Setup
 
-**CRITICAL**: This project runs on Windows with WSL2. ALL terminal commands MUST use WSL:
+**CRITICAL**: This project runs on Windows with native Node.js. Use PowerShell commands directly:
 
-```bash
-wsl bash -c "cd /mnt/c/path/to/games && <command>"
+```powershell
+cd c:\path\to\games
+npm run <command>
 ```
 
-Never run `npm`, `node`, or other commands directly in PowerShell.
+Node.js and npm are installed natively on Windows.
 
 ## Development Philosophy
 
 ### 1. Test-Driven Iteration
 - **NEVER** add code without testing it
-- Start dev server: `wsl bash -c "cd /mnt/c/path/to/games/app && npm run dev"`
+- Start dev server: `npm run dev` (from app directory)
 - Open browser to `http://localhost:3000`
 - Manually test feature before declaring it done
 - Check browser console for errors
@@ -315,7 +316,12 @@ Never sacrifice 1-4 for 5-6.
 
 ```bash
 # Start dev server
-wsl bash -c "cd /mnt/c/path/to/games/app && npm run dev"
+### Example Workflow
+1. **Planning**: Review task requirements
+2. **Implementation**: Write code with proper structure
+3. **Testing**: Start dev server and verify functionality
+4. **Validation**: Check console, test edge cases
+5. **Cleanup**: Remove unused code, update imports
 
 # Install packages
 wsl bash -c "cd /mnt/c/path/to/games/app && npm install <package>"

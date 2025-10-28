@@ -1,52 +1,162 @@
-# Phase 3 — Stabilize, Playtest & Consolidate
+# Phase 3 — Consolidated TODO & Backlog
 
-This phase collects remaining work required to stabilize the repository, finish manual validation/playtests, and consolidate documentation so the project has a single source of truth.
+This is the **single source of truth** for all remaining tasks, features, and improvements. All other TODO files redirect here.
 
-Goals:
-- Produce a canonical Lighthouse report locally and in CI.
-- Manual playtest and validation for all critical gameplay flows.
-- Consolidate docs and remove duplicates; make `docs/PHASE-3` the single remaining TODO list.
-
-High-level tasks:
-
-1) Lighthouse & Local Debugging
-- Troubleshoot WSL ↔ Windows Chrome connectivity so Lighthouse can run locally against a running Next production server.
-- Run Lighthouse (desktop) and save JSON report to `app/lighthouse-report.json`.
-- If local run fails, push branch to remote (with approval) to run CI Lighthouse and fetch the report.
-
-2) Playtest & Validation (manual)
-- Health system: confirm damage on collision, UI updates, red flash, sound.
-- Shield: collect shield power-up, confirm 3-hit absorption, visual barrier, indicator counter.
-- Power-ups: validate all types (health, rapid-fire, slow motion, invincibility, speed boost), durations and indicators.
-- Weapons: verify spread/laser/explosive behavior, ammo/cooldown and switching.
-- Game-over & Restart: confirm game stops, pointer lock released, restart resets state and scores.
-- Audio: confirm collision, shield, power-up and game-over sounds where configured.
-- Accessibility: run `app/scripts/contrast-check.js` and verify no remaining low-contrast flags.
-
-3) Tests & CI
-- Add quick smoke E2E (Playwright or Puppeteer) to check main pages load and pointer-lock basic flow.
-- Add the contrast-check script to CI as a non-blocking step initially.
-
-4) Docs Consolidation
-- Merge remaining TODOs and ad-hoc notes into `docs/PHASE-3` and remove or redirect the older `TODO.md`, `SESSION_IMPROVEMENTS.md`, and scattered notes.
-- Create `docs/DOCS_CONSOLIDATION.md` describing where canonical docs live: `docs/DEVELOPMENT_SETUP.md`, `docs/COPILOT_ROADMAP.md`, `docs/PHASE-3`.
-
-Acceptance criteria:
-- `app/lighthouse-report.json` exists (local or CI) and is parsed for selectors to fix.
-- Manual playtest checklist items marked as PASS/FAIL with any bugs filed as issues or TODO entries in `docs/PHASE-3`.
-- CI includes the contrast-check script and passes or reports issues clearly.
-
-Estimated time: 2-4 hours for local Lighthouse debug + 1-2 hours playtesting.
+Last updated: October 28, 2025
 
 ---
 
-Playtest checklist (copyable):
-- Start dev server: `wsl bash -c "cd /mnt/c/Users/ajhar/code/games/app && npm run dev"`
-- Open http://localhost:3000/asteroid and test the following:
-	- Health decreases on collisions (small/large targets)
-	- Shield absorbs exactly 3 hits and shows visual indicator
-	- Invincibility prevents damage for duration
-	- Power-ups appear in top-right indicator with correct durations
-	- Weapons switch and fire correctly; ammo/cooldowns function
-	- Game over triggers and restart resets state
-	- No low-contrast color pairs from `app/scripts/contrast-check.js`
+## 🎯 Current Sprint: Phase 4 Tasks
+
+### Lighthouse & Performance
+
+- [ ] Run Lighthouse locally with native Node.js
+- [ ] Generate `app/lighthouse-report.json` (desktop mode)
+- [ ] Parse report for color-contrast and accessibility issues
+- [ ] Fix any remaining Lighthouse failures
+
+### Testing & Quality Assurance
+- [ ] Add E2E smoke tests (Playwright/Puppeteer) for:
+  - Main menu loads successfully
+  - Asteroid game loads and starts
+  - FPS game loads and starts
+  - Pointer lock basic flow works
+- [ ] Add `app/scripts/contrast-check.js` to CI (non-blocking)
+- [ ] Verify test coverage for critical game mechanics
+
+### Manual Playtest Checklist
+
+#### Asteroid Game
+- [ ] Health system: damage on collision (small/large targets)
+- [ ] Health UI updates correctly
+- [ ] Red flash effect on player hit
+- [ ] Collision sound effects work
+- [ ] Shield power-up: collects correctly
+- [ ] Shield: absorbs exactly 3 hits
+- [ ] Shield: shows visual barrier effect
+- [ ] Shield: indicator counter displays
+- [ ] Invincibility power-up: prevents all damage
+- [ ] Health restore power-up: adds health correctly
+- [ ] Rapid fire power-up: increases fire rate
+- [ ] Slow motion power-up: affects game speed
+- [ ] Speed boost power-up: increases movement speed
+- [ ] Power-up indicators show in top-right UI
+- [ ] Power-up durations are correct
+- [ ] Weapon switching works (spread/laser/explosive)
+- [ ] Ammo system functions correctly
+- [ ] Cooldown bars display properly
+- [ ] Game over triggers when health = 0
+- [ ] Pointer lock releases on game over
+- [ ] Restart button resets all game state
+- [ ] Scores persist to localStorage
+- [ ] High score tracking works
+
+#### FPS Tank Game
+- [ ] Tank movement (WASD) is smooth
+- [ ] Mouse aim and shooting work
+- [ ] Targets can be destroyed
+- [ ] Score system tracks points
+- [ ] Health bar displays correctly
+- [ ] Damage feedback is clear
+- [ ] Power-ups spawn and can be collected
+- [ ] Speed boost (Shift) works with cooldown
+- [ ] Reload bar shows weapon cooldown
+- [ ] Game over screen appears at 0 health
+- [ ] Restart functionality works
+- [ ] Stats persist to localStorage
+
+#### Accessibility
+- [ ] Run `app/scripts/contrast-check.js` locally
+- [ ] Fix any low-contrast color pairs
+- [ ] Verify keyboard navigation works
+- [ ] Test screen reader compatibility (basic)
+
+---
+
+## 📋 Backlog: Future Features & Improvements
+
+### Asteroid Game Enhancements
+- [ ] Add waves/levels with increasing difficulty
+- [ ] Implement AI-controlled enemy ships
+- [ ] Add different asteroid types (armored, explosive, splitting)
+- [ ] Combo/multiplier system for quick successive hits
+- [ ] Online or local leaderboard
+- [ ] Cosmetic customization (ship skins, trails, crosshairs)
+- [ ] Environmental hazards (black holes, gravity wells)
+- [ ] Complete all weapon types from `WEAPON_TYPES` config
+
+### FPS Tank Enhancements
+- [ ] Add basic AI enemy that moves and attacks
+- [ ] Enemy drops power-ups on destruction
+- [ ] Multiple enemy types with unique behaviors
+- [ ] Boss encounters and special events
+- [ ] Level selection and progression tracking
+- [ ] Destructible environment objects
+- [ ] Advanced ammo system with different ammo types
+
+### Code Quality & Architecture
+- [ ] Increase test coverage to 80%+
+- [ ] Add TypeScript (gradual migration)
+- [ ] Implement object pooling for projectiles/particles
+- [ ] Optimize texture loading and asset management
+- [ ] Add performance monitoring and FPS counter
+- [ ] Refactor game state management to useReducer
+- [ ] Add error boundaries to prevent crashes
+
+### User Experience
+- [ ] Add loading screens with progress indicators
+- [ ] Improve responsive design for mobile devices
+- [ ] Implement settings/options menu (audio, graphics quality)
+- [ ] Add tutorial/onboarding for new players
+- [ ] Implement pause menu
+- [ ] Add background music with volume controls
+- [ ] Spatial audio for 3D positioning
+
+### Visual Polish
+- [ ] Enhanced particle effects for explosions
+- [ ] Improved lighting and shadows
+- [ ] Post-processing effects (bloom, motion blur)
+- [ ] Consistent visual theme across games
+- [ ] Better explosion animations
+- [ ] Trail effects for projectiles
+
+### Advanced Features (Long-term)
+- [ ] Multiplayer foundation (WebSocket support)
+- [ ] Lobby system and matchmaking
+- [ ] Player progression and XP system
+- [ ] Unlockable cosmetics and achievements
+- [ ] Analytics and telemetry (privacy-compliant)
+- [ ] A/B testing framework
+
+---
+
+## 🐛 Known Issues
+
+### Critical
+- None currently
+
+### Medium Priority
+- Lighthouse unused-javascript assertion too strict (adjusted to maxLength: 3)
+- Performance warnings on LCP, TBT in CI (acceptable for now)
+
+### Low Priority
+- Audio loading errors in console (non-blocking)
+- Service worker cache strategies could be optimized
+
+---
+
+## 📝 Notes
+
+- All critical Phase 1-3 items are complete
+- Focus is now on stabilization and validation (Phase 4)
+- Next major milestone: Add AI enemy to FPS game
+- Documentation is being consolidated (see `DOCS_CONSOLIDATION.md`)
+
+---
+
+## 🔗 Related Documentation
+
+- Development setup: `docs/DEVELOPMENT_SETUP.md`
+- Full roadmap: `docs/COPILOT_ROADMAP.md`
+- Phase 4 goals: `docs/PHASE-4.md`
+- Feature ideas: `docs/IDEAS.md`

@@ -57,6 +57,19 @@ jobs:
         cd app
         # Use the CI-specific test script to avoid interactive watch mode
         npm run test:ci --if-present
+    
+    - name: Run E2E tests
+      run: |
+        cd app
+        npx playwright install --with-deps chromium
+        npm run test:e2e --if-present
+      continue-on-error: false
+    
+    - name: Check color contrast
+      run: |
+        cd app
+        node scripts/contrast-check.js
+      continue-on-error: true
         
     - name: Build application
       run: |
