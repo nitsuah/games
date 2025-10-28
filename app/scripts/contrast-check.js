@@ -50,35 +50,48 @@ function findFiles(dir, exts = ['.css']) {
 }
 
 function parseColors(text) {
-  const colors = [];
-  const hexRe = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b/g;
+  // Return color declarations along with their position so we can search for a
+  // nearby background within the same CSS block (reduces false positives).
+  const out = [];
+  const colorDeclRe = /color\s*:\s*(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/g;
+  // Only consider explicit 'color' declarations (foreground text color).
   let m;
-  while ((m = hexRe.exec(text))) colors.push(m[0]);
-  const rgbaRe = /rgba?\([^)]+\)/g;
-  while ((m = rgbaRe.exec(text))) colors.push(m[0]);
-  return Array.from(new Set(colors));
+  while ((m = colorDeclRe.exec(text))) out.push({ color: m[1], index: m.index });
+  // Deduplicate by color+index
+  const uniq = [];
+  const seen = new Set();
+  for (const it of out) {
+    const key = `${it.color}@${it.index}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      uniq.push(it);
+    }
+  }
+  return uniq;
 }
 
 function resolveColor(str) {
   if (!str) return null;
   if (str.startsWith('#')) {
     const [r,g,b] = hexToRgb(str);
-    return { r, g, b };
+    return { r, g, b, a: 1 };
   }
   if (str.startsWith('rgb')) {
     const obj = rgbaStringToRgb(str);
     if (!obj) return null;
-    // blend against white background if alpha < 1
-    if (obj.a < 1) {
-      const bg = { r: 255, g: 255, b: 255 };
-      const r = Math.round(obj.r * obj.a + bg.r * (1 - obj.a));
-      const g = Math.round(obj.g * obj.a + bg.g * (1 - obj.a));
-      const b = Math.round(obj.b * obj.a + bg.b * (1 - obj.a));
-      return { r, g, b };
-    }
-    return { r: obj.r, g: obj.g, b: obj.b };
+    return { r: obj.r, g: obj.g, b: obj.b, a: obj.a };
   }
   return null;
+}
+
+function blendOver(fg, bg) {
+  // fg and bg are objects {r,g,b,a} with a optional (default 1)
+  const fa = fg.a !== undefined ? fg.a : 1;
+  // result = fg * fa + bg * (1 - fa)
+  const r = Math.round(fg.r * fa + bg.r * (1 - fa));
+  const g = Math.round(fg.g * fa + bg.g * (1 - fa));
+  const b = Math.round(fg.b * fa + bg.b * (1 - fa));
+  return { r, g, b };
 }
 
 function main() {
@@ -105,15 +118,35 @@ function main() {
   for (const f of files) {
     const txt = fs.readFileSync(f, 'utf8');
     const colors = parseColors(txt);
-    for (const col of colors) {
+    // collect background declarations with positions
+    const bgRe = /background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/g;
+    const bgs = [];
+    let bm;
+    while ((bm = bgRe.exec(txt))) {
+      bgs.push({ bg: bm[1], index: bm.index });
+    }
+    for (const colEntry of colors) {
+      const col = colEntry.color;
       const fg = resolveColor(col);
       if (!fg) continue;
-      // find nearby background declarations in same file
-  const bgMatch = txt.match(/background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/);
-      const bg = bgMatch ? resolveColor(bgMatch[1]) : defaultBg;
-      const ratio = contrastRatio(fg, bg);
+      // pick the nearest background declaration in the file (before or after)
+      const idx = colEntry.index;
+      let nearest = null;
+      let nearestDist = Infinity;
+      for (const bi of bgs) {
+        const d = Math.abs(bi.index - idx);
+        if (d < nearestDist) {
+          nearest = bi;
+          nearestDist = d;
+        }
+      }
+  const rawBg = nearest ? resolveColor(nearest.bg) : defaultBg;
+  // if fg or bg have alpha, blend fg over bg (bg default is opaque white)
+  const blendedFg = fg.a !== undefined && fg.a < 1 ? blendOver(fg, rawBg) : { r: fg.r, g: fg.g, b: fg.b };
+  const blendedBg = rawBg.a !== undefined && rawBg.a < 1 ? blendOver(rawBg, { r: 255, g: 255, b: 255 }) : { r: rawBg.r, g: rawBg.g, b: rawBg.b };
+  const ratio = contrastRatio(blendedFg, blendedBg);
       if (ratio < 4.5) {
-        issues.push({ file: path.relative(appDir, f), color: col, bg: bgMatch ? bgMatch[1] : '#ffffff', ratio: ratio.toFixed(2) });
+        issues.push({ file: path.relative(appDir, f), color: col, bg: nearest ? nearest.bg : '#ffffff', ratio: ratio.toFixed(2) });
       }
     }
   }

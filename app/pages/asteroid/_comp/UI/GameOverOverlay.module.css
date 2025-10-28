@@ -14,8 +14,9 @@
 .restartButton {
   margin-top: 10px;
   padding: 10px 20px;
-  background: #ff4500;
-  color: #ffffff;
+  /* use white background and dark text for guaranteed contrast */
+  background: #ffffff;
+  color: #000000;
   border: none;
   border-radius: 5px;
   cursor: pointer;
