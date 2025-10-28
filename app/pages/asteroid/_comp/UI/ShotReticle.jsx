@@ -1,5 +1,4 @@
-import React from "react";
-import styles from "./ShotReticle.module.css";
+import styles from './ShotReticle.module.css';
 
 const ShotReticle = () => (
   <div className={styles.reticleWrapper}>

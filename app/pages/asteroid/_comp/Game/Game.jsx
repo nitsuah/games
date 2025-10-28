@@ -1,24 +1,31 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
-import { handleHealthDepletion as handleHealthDepletionFn } from './handleHealthDepletion';
-import { handleGameOver as handleGameOverFn } from './handleGameOver';
-import FlashOverlays from '../UI/FlashOverlays';
-import GameCanvas from './GameCanvas';
-import GameOverOverlay from '../UI/GameOverOverlay';
-import ScoreDisplay from '../UI/ScoreDisplay';
-import WeaponDisplay from '../UI/WeaponDisplay';
+import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
+import { handleGameOver as handleGameOverFn } from '@/lib/asteroid/_comp/Game/handleGameOver';
+import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
+import dynamic from 'next/dynamic';
+
+// Dynamically import overlays and UI components on the client to keep server bundles small
+const FlashOverlays = dynamic(() => import('../UI/FlashOverlays'), { ssr: false });
+const GameOverOverlay = dynamic(() => import('../UI/GameOverOverlay'), { ssr: false });
+const ScoreDisplay = dynamic(() => import('../UI/ScoreDisplay'), { ssr: false });
+const WeaponDisplay = dynamic(() => import('../UI/WeaponDisplay'), { ssr: false });
 import { now } from '@/utils/time';
-import { handleTargetHit as handleTargetHitFn } from './handleTargetHit';
-import { handleMiss as handleMissFn } from './handleMiss';
-import { restartGame as restartGameFn } from './restartGame';
-import { handlePlayerHit as handlePlayerHitFn } from './handlePlayerHit';
-import { handleKeyDown as handleKeyDownFn } from './handleKeyDown';
-import { updateScore as updateScoreFn } from './updateScore';
-import { loadSavedScores as loadSavedScoresFn } from './loadSavedScores';
-import ShotReticle from '../UI/ShotReticle';
+import { handleTargetHit as handleTargetHitFn } from '@/lib/asteroid/_comp/Game/handleTargetHit';
+import { restartGame as restartGameFn } from '@/lib/asteroid/_comp/Game/restartGame';
+import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/handlePlayerHit';
+import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
+import { updateScore as updateScoreFn } from '@/lib/asteroid/_comp/Game/updateScore';
+import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
+const ShotReticle = dynamic(() => import('../UI/ShotReticle'), { ssr: false });
+const PowerUpIndicator = dynamic(() => import('../UI/PowerUpIndicator'), { ssr: false });
+const HealthBar = dynamic(() => import('../UI/HealthBar'), { ssr: false });
+const FPSCounter = dynamic(() => import('../UI/FPSCounter'), { ssr: false });
+const AmmoIndicator = dynamic(() => import('../UI/AmmoIndicator'), { ssr: false });
+const ComboDisplay = dynamic(() => import('../UI/ComboDisplay'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
-import { INITIAL_AMMO, INITIAL_HEALTH } from '../config';
+import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 
 const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
   <div className={styles.statsDisplay}>
@@ -33,22 +40,125 @@ const Game = ({ onHit, onMiss }) => {
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [comboMultiplier, setComboMultiplier] = useState(1);
+  const comboTimerRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(INITIAL_HEALTH);
   const [targets, setTargets] = useState([
-    { id: 1, x: 15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 2, x: -15, y: 0, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 3, x: 0, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 4, x: 0, y: -15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 5, x: 12, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 6, x: 15, y: 17, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 7, x: 18, y: 19, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 8, x: -12, y: 15, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 9, x: -15, y: 17, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
-    { id: 10, x: -18, y: 19, z: 0, isHit: false, size: 10, speed: 10, color: '#00ff00', spawnTime: now() },
+    {
+      id: 1,
+      x: 15,
+      y: 0,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 2,
+      x: -15,
+      y: 0,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 3,
+      x: 0,
+      y: 15,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 4,
+      x: 0,
+      y: -15,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 5,
+      x: 12,
+      y: 15,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 6,
+      x: 15,
+      y: 17,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 7,
+      x: 18,
+      y: 19,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 8,
+      x: -12,
+      y: 15,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 9,
+      x: -15,
+      y: 17,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
+    {
+      id: 10,
+      x: -18,
+      y: 19,
+      z: 0,
+      isHit: false,
+      size: 10,
+      speed: 10,
+      color: '#00ff00',
+      spawnTime: now(),
+    },
   ]);
   const { playSound, pauseSound } = useSound();
 
@@ -116,14 +226,13 @@ const Game = ({ onHit, onMiss }) => {
 
   // Update score and accuracy
   useEffect(() => {
-    updateScoreFn({ hits, misses, setScore });
-  }, [hits, misses, setScore]);
-  
+    updateScoreFn({ hits, misses, setScore, comboMultiplier });
+  }, [hits, misses, setScore, comboMultiplier]);
+
   // Play background music on mount
   useEffect(() => {
     if (!gameOver) {
-      playSound('bgm')
-        .catch((err) => console.error('Failed to play bgm:', err)); // Catch errors to avoid unhandled rejections
+      playSound('bgm').catch((err) => console.error('Failed to play bgm:', err)); // Catch errors to avoid unhandled rejections
     }
 
     return () => {
@@ -136,6 +245,7 @@ const Game = ({ onHit, onMiss }) => {
   // Handle player state
   useEffect(() => {
     const handleCollision = () => {
+      console.log('[Game] playerCollision event received'); // Debug: confirm event is received
       if (gameOver) {
         console.log('Game is over. Skipping collision handling.');
         return;
@@ -166,7 +276,18 @@ const Game = ({ onHit, onMiss }) => {
     return () => {
       window.removeEventListener('playerCollision', handleCollision);
     };
-  }, [gameOver, shieldActive, invincibilityActive, health, setHealth, setGameOver, pauseSound, playSound, showFlash, setShieldActive]);
+  }, [
+    gameOver,
+    shieldActive,
+    invincibilityActive,
+    health,
+    setHealth,
+    setGameOver,
+    pauseSound,
+    playSound,
+    showFlash,
+    setShieldActive,
+  ]);
 
   useEffect(() => {
     const handleShoot = () => {
@@ -192,6 +313,9 @@ const Game = ({ onHit, onMiss }) => {
         setHits,
         onHit,
         targetRefs,
+        setCombo,
+        setComboMultiplier,
+        comboTimerRef,
       }),
     [cooldowns, weapon, ammo, setTargets, setHits, onHit]
   );
@@ -201,10 +325,7 @@ const Game = ({ onHit, onMiss }) => {
   }, [targets]);
 
   // HANDLE MISS
-  const handleMiss = useCallback(
-    () => handleMissFn({ setMisses, onMiss }),
-    [setMisses, onMiss]
-  );
+  // (handled inline by other systems) - removed unused wrapper to satisfy lint
 
   // HANDLE RESTART
   const restartGame = () =>
@@ -218,14 +339,18 @@ const Game = ({ onHit, onMiss }) => {
       setAmmo,
       setCooldowns,
       setTargets,
+      setShieldActive,
+      setRapidFireActive,
+      setSlowMotionActive,
+      setInvincibilityActive,
+      setSpeedBoostActive,
+      setCombo,
+      setComboMultiplier,
+      comboTimerRef,
     });
 
   // HANDLE REFS
   const targetRefs = useRef({});
-
-  const handleRefCallback = (targetId, ref) => {
-    targetRefs.current[targetId] = ref;
-  };
 
   // Red flash effect when player is hit
   const handlePlayerHit = useCallback(
@@ -235,9 +360,25 @@ const Game = ({ onHit, onMiss }) => {
         setHealth,
         showFlash,
         playSound,
+        defense: {
+          shieldActive,
+          setShieldActive,
+          invincibilityActive,
+        },
       }),
-    [setHealth, showFlash, playSound]
+    [setHealth, showFlash, playSound, shieldActive, setShieldActive, invincibilityActive]
   );
+
+  // Check for game over when health reaches 0
+  useEffect(() => {
+    if (health <= 0 && !gameOver) {
+      console.log('Health depleted - triggering game over');
+      setGameOver(true);
+      pauseSound('bgm');
+      playSound('gameOver');
+      document.exitPointerLock();
+    }
+  }, [health, gameOver, setGameOver, pauseSound, playSound]);
 
   useEffect(() => {
     handleGameOverFn({
@@ -254,7 +395,20 @@ const Game = ({ onHit, onMiss }) => {
       bestAccuracy,
       setBestAccuracy,
     });
-  }, [targets, hits, misses, score, highScore, bestAccuracy, pauseSound, playSound, setGameOver, setHighScore, setIsNewHighScore, setBestAccuracy]);
+  }, [
+    targets,
+    hits,
+    misses,
+    score,
+    highScore,
+    bestAccuracy,
+    pauseSound,
+    playSound,
+    setGameOver,
+    setHighScore,
+    setIsNewHighScore,
+    setBestAccuracy,
+  ]);
 
   return (
     <div className={styles.gameContainer}>
@@ -279,16 +433,26 @@ const Game = ({ onHit, onMiss }) => {
         setShowLaser={setShowLaser}
         handlePowerUpCollect={handlePowerUpCollect}
         handleTargetHit={handleTargetHit}
+        handlePlayerHit={handlePlayerHit}
+        shieldActive={shieldActive}
+        setShieldActive={setShieldActive}
+        rapidFireActive={rapidFireActive}
       />
+      <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
+      <FPSCounter />
       <ScoreDisplay score={score} />
+      <ComboDisplay combo={combo} multiplier={comboMultiplier} />
+      <AmmoIndicator weapon={weapon} ammo={ammo} />
       <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
       {weapon === 'spread' && <ShotReticle />}
-      <StatsPanel
-        health={health}
-        score={score}
-        highScore={highScore}
-        bestAccuracy={bestAccuracy}
+      <PowerUpIndicator
+        shieldActive={shieldActive}
+        rapidFireActive={rapidFireActive}
+        slowMotionActive={slowMotionActive}
+        invincibilityActive={invincibilityActive}
+        speedBoostActive={speedBoostActive}
       />
+      <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
       {gameOver && (
         <GameOverOverlay
           score={score}

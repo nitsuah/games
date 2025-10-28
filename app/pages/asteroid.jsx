@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import Game from './asteroid/_comp/Game/Game';
+import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound';
-import Crosshair from './asteroid/_comp/UI/Crosshair';
+
+// Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
+const Game = dynamic(() => import('./asteroid/_comp/Game/Game'), { ssr: false });
+const Crosshair = dynamic(() => import('./asteroid/_comp/UI/Crosshair'), { ssr: false });
 
 const Instructions = styled.div`
   position: absolute;
@@ -25,25 +27,19 @@ const GameContainer = styled.div`
 `;
 
 const AsteroidPage = () => {
-  const [hitCount, setHitCount] = useState(0);
-  const [missCount, setMissCount] = useState(0);
   const { playSound } = useSound(); // Use the hook to access playSound
 
   const handleHit = () => {
-    setHitCount((prev) => prev + 1);
     playSound('hit');
   };
 
   const handleMiss = () => {
-    setMissCount((prev) => prev + 1);
     playSound('miss');
   };
 
   return (
     <GameContainer>
-      <Instructions>
-        Click to lock pointer as camera, Esc to exit
-      </Instructions>
+      <Instructions>Click to lock pointer as camera, Esc to exit</Instructions>
       <Crosshair />
       <Game onHit={handleHit} onMiss={handleMiss} />
     </GameContainer>

@@ -1,0 +1,149 @@
+name: Games CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: app/package.json
+        
+    - name: Install dependencies
+      run: |
+        cd app
+        npm ci
+        
+    - name: Run linting
+      run: |
+        cd app
+        npm run lint --if-present
+        
+    - name: Run type checking
+      run: |
+        cd app  
+        npm run type-check --if-present
+        
+    - name: Debug environment
+      run: |
+        cd app
+        echo "-- Node/npm versions --"
+        node -v || true
+        npm -v || true
+        npx -v || true
+        echo "-- Which binaries --"
+        which node || true
+        which npm || true
+        which npx || true
+        echo "-- Print tested command --"
+        echo "npm run test:ci --if-present"
+        echo "-- Print environment vars relevant to Node/NPM --"
+        env | grep -E "NODE|NPM|PATH" || true
+
+    - name: Run tests
+      run: |
+        cd app
+        # Use the CI-specific test script to avoid interactive watch mode
+        npm run test:ci --if-present
+        
+    - name: Build application
+      run: |
+        cd app
+        npm run build
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: app/.next/
+        
+  deploy:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: app/package.json
+        
+    - name: Install dependencies
+      run: |
+        cd app
+        npm ci
+        
+    - name: Build for deployment
+      run: |
+        cd app
+        npm run build
+        npm run export --if-present
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: app/out
+        
+  performance-audit:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: |
+        cd app
+        npm ci
+        
+    - name: Build application
+      run: |
+        cd app
+        npm run build
+        npm start &
+        sleep 10
+        
+    - name: Run Lighthouse audit
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        configPath: './.lighthouserc.json'
+        # Disable the action's built-in artifact upload to avoid artifact-name errors
+        # We will replace this with an explicit upload step that uses a safe artifact
+        # name (e.g. lhci-results-${{ github.run_id }}) in a follow-up change.
+        uploadArtifacts: false
+        temporaryPublicStorage: true
+    - name: Upload Lighthouse artifacts (safe)
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: lhci-results-${{ github.run_id }}
+        path: |
+          app/.lighthouseci
+          app/lighthouse-report
+          app/lhci-report
+      # Make this step non-fatal while we validate artifact paths
+      continue-on-error: true

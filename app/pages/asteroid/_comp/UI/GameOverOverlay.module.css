@@ -4,7 +4,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  color: #ffffff;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
@@ -14,8 +14,9 @@
 .restartButton {
   margin-top: 10px;
   padding: 10px 20px;
-  background: #ff4500;
-  color: #fff;
+  /* use white background and dark text for guaranteed contrast */
+  background: #ffffff;
+  color: #000000;
   border: none;
   border-radius: 5px;
   cursor: pointer;

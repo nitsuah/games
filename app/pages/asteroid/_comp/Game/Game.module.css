@@ -5,14 +5,27 @@
     overflow: hidden;
   }
 
+  /* Use opacity animation on a pseudo-element to keep animation composited
+     (avoid animating background-color which triggers layout/paint). */
   .flashRed {
-    background-color: rgba(255, 0, 0, 0.5);
-    animation: flash 0.2s ease-in-out;
+    position: relative;
   }
-  
-  @keyframes flash {
-    0% { background-color: rgba(255, 0, 0, 0.5); }
-    100% { background-color: transparent; }
+
+  .flashRed::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Use a centered radial-gradient flash so HUD/UI near edges isn't covered.
+       The gradient is compositor-friendly (opacity) and fades to transparent. */
+    background: radial-gradient(circle at 50% 50%, rgba(255,0,0,0.45) 0%, rgba(255,0,0,0.20) 30%, rgba(255,0,0,0) 60%);
+    pointer-events: none;
+    animation: flashOpacity 0.35s ease-in-out;
+    will-change: opacity, transform;
+  }
+
+  @keyframes flashOpacity {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.01); }
   }
   
   .gameOverOverlay {
@@ -28,19 +41,26 @@
   }
   
   .restartButton {
-    background: #4CAF50;
-    color: white;
+    /* use a high-contrast white button with dark text to guarantee readability */
+    background: #ffffff;
+    color: #000000;
     border: none;
     padding: 1rem 2rem;
     font-size: 1.2rem;
     border-radius: 4px;
     cursor: pointer;
     margin-top: 1rem;
-    transition: background 0.3s;
+    /* Use transform for hover feedback to keep animations compositor-friendly */
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .restartButton:hover {
+    background: #f3f3f3;
   }
   
   .restartButton:hover {
-    background: #45a049;
+    transform: scale(1.03);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
   }
   
   .statsDisplay {

@@ -23,8 +23,9 @@ export const POWER_UPS = [
     type: 'shield',
     duration: 0,
     effect: ({ setShieldActive, showFlash }) => {
-      setShieldActive(true);
-      showFlash('blue');
+      setShieldActive(3); // Shield with 3 hit points
+      showFlash('blue', 100);
+      console.log('Shield activated with 3 hit points');
     },
   },
   {

@@ -9,11 +9,11 @@ export const useSound = () => {
     const loadAudio = (src) => {
       return new Promise((resolve, reject) => {
         const audio = new Audio();
-        
+
         audio.addEventListener('canplaythrough', () => {
           if (process.env.NODE_ENV === 'development') {
-            console.debug(`✅ Audio loaded: ${src}`);
-          }
+              console.log(`✅ Audio loaded: ${src}`);
+            }
           resolve(audio);
         });
 
@@ -23,11 +23,9 @@ export const useSound = () => {
         });
 
         // Use absolute path from public directory
-        audio.src = process.env.NODE_ENV === 'development' 
-          ? `http://localhost:3000${src}`
-          : src;
-          
-        console.debug('Attempting to load audio from:', audio.src);
+        audio.src = process.env.NODE_ENV === 'development' ? `http://localhost:3000${src}` : src;
+
+  console.log('Attempting to load audio from:', audio.src);
         audio.load();
       });
     };
@@ -35,8 +33,8 @@ export const useSound = () => {
     // Initialize audio context
     const initAudioContext = async () => {
       try {
-        audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
-        console.debug('✅ Audio context initialized');
+  audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
+  console.log('✅ Audio context initialized');
       } catch (e) {
         console.error('❌ Failed to initialize audio context:', e);
       }
@@ -46,18 +44,18 @@ export const useSound = () => {
     const loadSounds = async () => {
       try {
         await initAudioContext();
-        
+
         const [shoot, hit, miss, bgm, thrusterSound, empty] = await Promise.all([
           loadAudio('/sounds/shoot.mp3'),
           loadAudio('/sounds/hit.mp3'),
           loadAudio('/sounds/miss.mp3'),
           loadAudio('/sounds/bgm.mp3'),
           loadAudio('/sounds/thruster.mp3'),
-          loadAudio('/sounds/empty.mp3')
+          loadAudio('/sounds/empty.mp3'),
         ]);
 
         sounds.current = { shoot, hit, miss, bgm, empty };
-        
+
         // Set up BGM
         sounds.current.bgm.loop = true;
         sounds.current.bgm.volume = 1;
@@ -69,9 +67,9 @@ export const useSound = () => {
 
         // Resume audio context on user interaction
         const resumeAudio = async () => {
-          if (audioContext.current && audioContext.current.state === 'suspended') {
+            if (audioContext.current && audioContext.current.state === 'suspended') {
             await audioContext.current.resume();
-            console.debug('✅ Audio context resumed');
+            console.log('✅ Audio context resumed');
           }
         };
 
@@ -86,7 +84,7 @@ export const useSound = () => {
     loadSounds();
 
     return () => {
-      Object.values(sounds.current).forEach(audio => {
+      Object.values(sounds.current).forEach((audio) => {
         if (audio) {
           audio.pause();
           audio.src = '';
@@ -111,23 +109,23 @@ export const useSound = () => {
 
     try {
       // Resume audio context if needed
-      if (audioContext.current && audioContext.current.state === 'suspended') {
+        if (audioContext.current && audioContext.current.state === 'suspended') {
         await audioContext.current.resume();
-        console.debug('✅ Audio context resumed before playing');
+        console.log('✅ Audio context resumed before playing');
       }
 
       // Special handling for background music
       if (name === 'bgm') {
         // Only play if it's not already playing
-        if (sound.paused) {
+          if (sound.paused) {
           await sound.play();
-          console.debug('✅ Started background music');
+          console.log('✅ Started background music');
         }
       } else {
         // For other sounds, reset and play
         sound.currentTime = 0;
-        await sound.play();
-        console.debug(`✅ Played sound: ${name}`);
+  await sound.play();
+  console.log(`✅ Played sound: ${name}`);
       }
     } catch (error) {
       console.error(`❌ Failed to play ${name}:`, error);
@@ -140,10 +138,10 @@ export const useSound = () => {
       thruster.current.volume = volume;
       if (volume > 0) {
         // Only play if paused and not already playing
-        if (thruster.current.paused && thruster.current.currentTime === 0) {
+            if (thruster.current.paused && thruster.current.currentTime === 0) {
           thruster.current.play().catch(() => {});
           if (process.env.NODE_ENV === 'development') {
-            console.debug('✅ Thruster sound started');
+            console.log('✅ Thruster sound started');
           }
         }
       } else {
@@ -152,13 +150,13 @@ export const useSound = () => {
           thruster.current.pause();
           thruster.current.currentTime = 0;
           if (process.env.NODE_ENV === 'development') {
-            console.debug('⏸️ Thruster sound paused');
+            console.log('⏸️ Thruster sound paused');
           }
         }
       }
       // Only log volume changes if the value actually changed
       if (process.env.NODE_ENV === 'development' && prevVolume !== volume) {
-        console.debug(`✅ Set thruster volume to: ${volume}`);
+        console.log(`✅ Set thruster volume to: ${volume}`);
       }
     }
   };

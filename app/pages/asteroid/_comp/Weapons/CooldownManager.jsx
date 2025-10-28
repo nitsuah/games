@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-const CooldownManager = ({ cooldowns, setCooldowns, rapidFireActive }) => {
+const CooldownManager = ({ _cooldowns, setCooldowns, rapidFireActive }) => {
   useEffect(() => {
     const updateCooldowns = () => {
       setCooldowns((prev) => {
@@ -16,7 +16,7 @@ const CooldownManager = ({ cooldowns, setCooldowns, rapidFireActive }) => {
         });
 
         if (hasChanged) {
-          console.debug('Updated Cooldowns:', updatedCooldowns); // Log cooldowns for debugging
+          console.log('Updated Cooldowns:', updatedCooldowns); // Log cooldowns for debugging
         }
 
         return hasChanged ? updatedCooldowns : prev; // Only update state if cooldowns have changed

@@ -1,17 +1,15 @@
-import React from 'react';
 import styles from './GameOverOverlay.module.css';
 
 const GameOverOverlay = ({
-  score,
-  isNewHighScore,
-  hits,
-  misses,
-  bestAccuracy,
-  highScore,
-  restartGame,
+  score = 0,
+  isNewHighScore = false,
+  hits = 0,
+  misses = 0,
+  bestAccuracy = 0,
+  highScore = 0,
+  restartGame = () => {},
 }) => {
-  const finalAccuracy =
-    hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
+  const finalAccuracy = hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
 
   return (
     <div className={styles.gameOverOverlay}>
@@ -21,10 +19,10 @@ const GameOverOverlay = ({
       </p>
       <p>
         Final Accuracy: {finalAccuracy}%{' '}
-        {parseFloat(finalAccuracy) > bestAccuracy && '🎯 New Best!'}
+        {parseFloat(finalAccuracy) > (bestAccuracy ?? 0) && '🎯 New Best!'}
       </p>
       <p>High Score: {highScore}</p>
-      <p>Best Accuracy: {bestAccuracy.toFixed(1)}%</p>
+      <p>Best Accuracy: {(bestAccuracy ?? 0).toFixed(1)}%</p>
       <button className={styles.restartButton} onClick={restartGame}>
         Play Again
       </button>

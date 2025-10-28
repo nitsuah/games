@@ -1,0 +1,37 @@
+:root {
+  --a-bg: #1a1a1a;
+  --a-text: #ffffff;
+  --a-muted: #9aa0a6;
+  --a-overlay: rgba(0,0,0,0.92);
+}
+
+/* Ensure server-rendered fallback is accessible */
+html, body {
+  background: var(--a-bg) !important;
+  color: var(--a-text) !important;
+}
+
+/* Utility helpers */
+.a11y-text { color: var(--a-text) !important; }
+.a11y-muted { color: var(--a-muted) !important; }
+.a11y-overlay { background: var(--a-overlay) !important; }
+
+/* Stronger overlay for UI modules that sit over canvas/images */
+.scoreDisplay, .scoreContainer, .ammoIndicator, .powerup-indicator, .game-ui, .ui-panel {
+  color: var(--a-text) !important;
+  background: var(--a-overlay) !important;
+}
+
+/* Force increased opacity for common translucent backings */
+[style*="rgba(0, 0, 0, 0.5)"],
+[style*="rgba(255, 255, 255, 0.5)"] {
+  background: var(--a-overlay) !important;
+}
+
+/* Avoid non-composited background-color transitions in critical UI */
+.scoreDisplay *, .ui-panel * {
+  transition-property: transform, opacity !important;
+}
+
+/* Slight adjustments for highlighted text */
+.highScoreText { color: #ffd700 !important; }

@@ -1,28 +1,5 @@
-import React, { useEffect } from 'react';
-import { PointerLockControls as DreiPointerLockControls } from '@react-three/drei';
+import dynamic from 'next/dynamic';
 
-const PointerLockControls = ({ isGameOver }) => {
-  useEffect(() => {
-    const handlePointerLockError = () => {
-      console.warn('Pointer Lock API error occurred.');
-    };
-
-    const handlePointerLockChange = () => {
-      if (document.pointerLockElement === null && !isGameOver) {
-        console.warn('Pointer Lock exited unexpectedly.');
-      }
-    };
-
-    document.addEventListener('pointerlockerror', handlePointerLockError);
-    document.addEventListener('pointerlockchange', handlePointerLockChange);
-
-    return () => {
-      document.removeEventListener('pointerlockerror', handlePointerLockError);
-      document.removeEventListener('pointerlockchange', handlePointerLockChange);
-    };
-  }, [isGameOver]);
-
-  return <DreiPointerLockControls />;
-};
+const PointerLockControls = dynamic(() => import('@/lib/asteroid/_comp/UI/PointerLockControls'), { ssr: false });
 
 export default PointerLockControls;
