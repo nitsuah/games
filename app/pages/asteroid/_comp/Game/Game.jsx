@@ -25,8 +25,10 @@ const HealthBar = dynamic(() => import('../UI/HealthBar'), { ssr: false });
 const FPSCounter = dynamic(() => import('../UI/FPSCounter'), { ssr: false });
 const AmmoIndicator = dynamic(() => import('../UI/AmmoIndicator'), { ssr: false });
 const ComboDisplay = dynamic(() => import('../UI/ComboDisplay'), { ssr: false });
+const WaveIndicator = dynamic(() => import('../UI/WaveIndicator'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
+import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
 
 const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
   <div className={styles.statsDisplay}>
@@ -50,6 +52,12 @@ const Game = ({ onHit, onMiss }) => {
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(INITIAL_HEALTH);
+  
+  // Wave system state
+  const [currentWave, setCurrentWave] = useState(1);
+  const [highestWave, setHighestWave] = useState(1);
+  const [showWaveTransition, setShowWaveTransition] = useState(false);
+  
   const [targets, setTargets] = useState([
     {
       id: 1,
@@ -339,6 +347,44 @@ const Game = ({ onHit, onMiss }) => {
     [setMisses, onMiss, setCombo, setComboMultiplier, comboTimerRef]
   );
 
+  // Wave completion - spawn next wave when all targets destroyed
+  useEffect(() => {
+    if (gameOver || paused) return;
+
+    const activeTargets = targets.filter((t) => !t.isHit);
+    
+    if (activeTargets.length === 0 && targets.length > 0) {
+      console.log(`Wave ${currentWave} complete! Starting wave ${currentWave + 1}`);
+      
+      // Show wave transition
+      setShowWaveTransition(true);
+      
+      // Update highest wave if needed
+      const nextWave = currentWave + 1;
+      if (nextWave > highestWave) {
+        setHighestWave(nextWave);
+        // Save to localStorage
+        localStorage.setItem('highestWave', nextWave.toString());
+      }
+      
+      // Wait 2 seconds then spawn next wave
+      setTimeout(() => {
+        setCurrentWave(nextWave);
+        const targetCount = getTargetCountForWave(nextWave);
+        setTargets(generateInitialTargets(targetCount, nextWave));
+        setShowWaveTransition(false);
+      }, 2000);
+    }
+  }, [targets, gameOver, paused, currentWave, highestWave, setHighestWave, setCurrentWave, setShowWaveTransition, setTargets]);
+
+  // Load highest wave from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('highestWave');
+    if (saved) {
+      setHighestWave(parseInt(saved, 10));
+    }
+  }, [setHighestWave]);
+
   // HANDLE RESTART
   const restartGame = () =>
     restartGameFn({
@@ -359,6 +405,8 @@ const Game = ({ onHit, onMiss }) => {
       setCombo,
       setComboMultiplier,
       comboTimerRef,
+      setCurrentWave,
+      setShowWaveTransition,
     });
 
   // HANDLE REFS
@@ -466,6 +514,7 @@ const Game = ({ onHit, onMiss }) => {
         speedBoostActive={speedBoostActive}
       />
       <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
+      <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
       {gameOver && (
         <GameOverOverlay
           score={score}

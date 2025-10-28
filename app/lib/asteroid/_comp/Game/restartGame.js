@@ -1,4 +1,4 @@
-import { generateInitialTargets } from './generateTargets';
+import { generateInitialTargets, getTargetCountForWave } from './generateTargets';
 
 export const restartGame = ({
   setScore,
@@ -18,6 +18,8 @@ export const restartGame = ({
   setCombo,
   setComboMultiplier,
   comboTimerRef,
+  setCurrentWave,
+  setShowWaveTransition,
 }) => {
   setScore(0);
   setHits(0);
@@ -42,6 +44,15 @@ export const restartGame = ({
     clearTimeout(comboTimerRef.current);
   }
 
-  // Generate initial targets using helper function
-  setTargets(generateInitialTargets(10));
+  // Reset to wave 1
+  if (setCurrentWave) {
+    setCurrentWave(1);
+  }
+  if (setShowWaveTransition) {
+    setShowWaveTransition(false);
+  }
+
+  // Generate initial targets for wave 1
+  const targetCount = getTargetCountForWave(1);
+  setTargets(generateInitialTargets(targetCount, 1));
 };
