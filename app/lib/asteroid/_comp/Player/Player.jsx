@@ -10,6 +10,7 @@ const Player = ({
   speedBoostActive,
   _invincibilityActive,
   isGameOver,
+  isPaused,
   setShowBlueFlash,
 }) => {
   const meshRef = useRef();
@@ -27,8 +28,14 @@ const Player = ({
   const [shieldActive, setShieldActive] = useState(true);
 
   const BASE_SPEED = 5;
-  const SPEED_MULTIPLIER = speedBoostActive ? 3 : 1;
+  const SPEED_MULTIPLIER = speedBoostActive ? 6.0 : 1; // Much more noticeable boost
   const MOVEMENT_SPEED = BASE_SPEED * SPEED_MULTIPLIER;
+
+  useEffect(() => {
+    if (speedBoostActive) {
+      console.log('🚀 SPEED BOOST ACTIVE - Speed multiplier:', SPEED_MULTIPLIER);
+    }
+  }, [speedBoostActive, SPEED_MULTIPLIER]);
 
   useEffect(() => {
     camera.position.set(0, 1, 0);
@@ -90,7 +97,7 @@ const Player = ({
   }, [camera]);
 
   useFrame((state, delta) => {
-    if (isGameOver) return;
+    if (isGameOver || isPaused) return;
     if (!meshRef.current) return;
 
     const direction = new THREE.Vector3();

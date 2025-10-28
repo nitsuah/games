@@ -7,20 +7,28 @@ const ShieldEffect = ({ shieldActive }) => {
   useFrame(({ camera, clock }) => {
     if (shieldRef.current && shieldActive) {
       shieldRef.current.position.copy(camera.position);
-      const scale = 1 + Math.sin(clock.elapsedTime * 3) * 0.1;
+      // Gentle pulsing scale instead of constant spinning
+      const scale = 1 + Math.sin(clock.elapsedTime * 2) * 0.08;
       shieldRef.current.scale.setScalar(scale);
-      shieldRef.current.rotation.y += 0.01;
+      // Slow rotation
+      shieldRef.current.rotation.y = clock.elapsedTime * 0.3;
     }
   });
 
   if (!shieldActive || shieldActive === 0 || shieldActive === false) return null;
 
-  const opacity = typeof shieldActive === 'number' ? Math.min(0.7, 0.3 + shieldActive * 0.2) : 0.5;
-
   return (
     <mesh ref={shieldRef}>
       <sphereGeometry args={[2.5, 32, 32]} />
-      <meshStandardMaterial color="#00ffff" transparent opacity={opacity} emissive="#00ffff" emissiveIntensity={0.5} wireframe />
+      <meshStandardMaterial 
+        color="#00ffff" 
+        transparent 
+        opacity={0.35}
+        emissive="#00ffff" 
+        emissiveIntensity={0.4}
+        wireframe={false}
+        side={2}
+      />
     </mesh>
   );
 };

@@ -23,9 +23,10 @@ export const POWER_UPS = [
     type: 'shield',
     duration: 0,
     effect: ({ setShieldActive, showFlash }) => {
-      setShieldActive(3); // Shield with 3 hit points
+      // Stack shield hits - add 3 to existing count
+      setShieldActive((prev) => (prev || 0) + 3);
       showFlash('blue', 100);
-      console.log('Shield activated with 3 hit points');
+      console.log('Shield activated - added 3 hit points');
     },
   },
   {

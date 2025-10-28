@@ -1,7 +1,7 @@
 import Target from '@/lib/asteroid/_comp/Target/Target';
 import { DEFAULT_TARGET_COLOR } from '@/lib/asteroid/_comp/config';
 
-const TargetList = ({ targets, handleTargetHit, handleRefCallback, setTargets }) => (
+const TargetList = ({ targets, handleTargetHit, handleRefCallback, setTargets, isGameOver = false, isPaused = false }) => (
   <>
     {targets.map((target) => (
       <Target
@@ -15,6 +15,8 @@ const TargetList = ({ targets, handleTargetHit, handleRefCallback, setTargets })
         color={target.color || DEFAULT_TARGET_COLOR}
         refCallback={handleRefCallback}
         setTargets={setTargets}
+        isGameOver={isGameOver}
+        isPaused={isPaused}
       />
     ))}
   </>

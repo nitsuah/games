@@ -24,6 +24,9 @@ const GameContainer = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background: #000000;
+  margin: 0;
+  padding: 0;
 `;
 
 const AsteroidPage = () => {

@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00', setTargets, refCallback, speed = 1 }) => {
+const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00', setTargets, refCallback, speed = 1, isGameOver = false, isPaused = false }) => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
   const [flash, setFlash] = useState(false);
@@ -28,23 +28,24 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
   }, [isHit]);
 
   useFrame(() => {
-    if (meshRef.current && !isHit) {
-      const scaledMovement = movementSpeed.current.clone().multiplyScalar(speed);
-      meshRef.current.position.add(scaledMovement);
-      const { x, y, z } = meshRef.current.position;
-      if (typeof setTargets === 'function') {
-        setTargets((prevTargets) => prevTargets.map((target) => (target.id === targetId ? { ...target, x, y, z } : target)));
-      }
+    // Stop movement when game is over or paused
+    if (isGameOver || isPaused || !meshRef.current || isHit) return;
+    
+    const scaledMovement = movementSpeed.current.clone().multiplyScalar(speed);
+    meshRef.current.position.add(scaledMovement);
+    const { x, y, z } = meshRef.current.position;
+    if (typeof setTargets === 'function') {
+      setTargets((prevTargets) => prevTargets.map((target) => (target.id === targetId ? { ...target, x, y, z } : target)));
+    }
 
-      if (meshRef.current.position.x < bounds.min.x || meshRef.current.position.x > bounds.max.x) {
-        movementSpeed.current.x *= -1;
-      }
-      if (meshRef.current.position.y < bounds.min.y || meshRef.current.position.y > bounds.max.y) {
-        movementSpeed.current.y *= -1;
-      }
-      if (meshRef.current.position.z < bounds.min.z || meshRef.current.position.z > bounds.max.z) {
-        movementSpeed.current.z *= -1;
-      }
+    if (meshRef.current.position.x < bounds.min.x || meshRef.current.position.x > bounds.max.x) {
+      movementSpeed.current.x *= -1;
+    }
+    if (meshRef.current.position.y < bounds.min.y || meshRef.current.position.y > bounds.max.y) {
+      movementSpeed.current.y *= -1;
+    }
+    if (meshRef.current.position.z < bounds.min.z || meshRef.current.position.z > bounds.max.z) {
+      movementSpeed.current.z *= -1;
     }
   });
 

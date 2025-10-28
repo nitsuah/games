@@ -24,17 +24,24 @@ export const generateInitialTargets = (count = 10) => {
     { x: -18, y: 19, z: 0 },
   ];
 
-  return patterns.slice(0, count).map((pos, index) => ({
-    id: index + 1,
-    x: pos.x,
-    y: pos.y,
-    z: pos.z,
-    isHit: false,
-    size: 10,
-    speed: 10,
-    color: '#00ff00',
-    spawnTime: now(),
-  }));
+  return patterns.slice(0, count).map((pos, index) => {
+    // Random size between 5-15 (small to large targets)
+    const size = 5 + Math.random() * 10;
+    // Color based on size: small=green, medium=yellow, large=red
+    const color = size < 8 ? '#00ff00' : size < 12 ? '#ffff00' : '#ff4400';
+    
+    return {
+      id: index + 1,
+      x: pos.x,
+      y: pos.y,
+      z: pos.z,
+      isHit: false,
+      size,
+      speed: 10,
+      color,
+      spawnTime: now(),
+    };
+  });
 };
 
 /**

@@ -25,6 +25,11 @@ jobs:
       run: |
         cd app
         npm ci
+    
+    - name: Install Playwright browsers
+      run: |
+        cd app
+        npx playwright install --with-deps chromium
         
     - name: Run linting
       run: |
@@ -57,11 +62,26 @@ jobs:
         cd app
         # Use the CI-specific test script to avoid interactive watch mode
         npm run test:ci --if-present
+    
+    - name: Check color contrast
+      run: |
+        cd app
+        node scripts/contrast-check.js
+      continue-on-error: true
         
     - name: Build application
       run: |
         cd app
         npm run build
+    
+    - name: Run E2E tests
+      run: |
+        cd app
+        # Start production server in background and run E2E tests
+        npm start &
+        sleep 10
+        npm run test:e2e
+      continue-on-error: false
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
