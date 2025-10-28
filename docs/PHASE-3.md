@@ -18,21 +18,21 @@ Last updated: October 28, 2025
    - [ ] Test Asteroid game (all features below)
    - [ ] Test FPS Tank game (all features below)
    - [ ] Document bugs in GitHub Issues or inline comments
-   
-2. **Bug Fixes Only** 
+
+2. **Bug Fixes Only**
    - [ ] Fix bugs discovered during playtest
    - [ ] No new features - stabilize what exists
-   
+
 3. **E2E Test Expansion**
    - [ ] Add E2E tests for critical flows validated during playtest
    - [ ] Ensure tests catch regressions
-   
+
 4. **Final Validation**
    - [ ] All manual tests pass
    - [ ] All E2E tests pass
    - [ ] CI is green
    - [ ] No console errors during gameplay
-   
+
 5. **Merge to Main**
    - [ ] Only after steps 1-4 complete
    - [ ] Create PR with detailed testing report
@@ -52,6 +52,7 @@ Last updated: October 28, 2025
 **Note**: Lighthouse runs successfully in CI. Local execution encounters NO_FCP issues with WebGL/Three.js in headless mode. For local debugging, use CI artifacts or run with visible browser window.
 
 ### Testing & Quality Assurance
+
 - [x] Add E2E smoke tests (Playwright/Puppeteer) for:
   - [x] Main menu loads successfully
   - [x] Asteroid game loads and starts
@@ -68,6 +69,7 @@ Last updated: October 28, 2025
 #### Asteroid Game
 
 **Health System** (Code: ✅ | Test: ⏳)
+
 - [ ] Health system: damage on collision (small/large targets)
   - Files: `handleHealthDepletion.js`, `handlePlayerHit.js`, `CollisionDetection.jsx`
 - [ ] Health UI updates correctly
@@ -78,6 +80,7 @@ Last updated: October 28, 2025
   - Files: `useSound.js`, sound manager integration
 
 **Shield Power-Up** (Code: ✅ | Test: ⏳)
+
 - [ ] Shield power-up: collects correctly
   - Files: `PowerUp.jsx` collision detection
 - [ ] Shield: absorbs exactly 3 hits
@@ -88,6 +91,7 @@ Last updated: October 28, 2025
   - Files: `PowerUpIndicator.jsx` shows shield hits remaining
 
 **Other Power-Ups** (Code: ✅ | Test: ⏳)
+
 - [ ] Invincibility power-up: prevents all damage
   - Files: `powerUpConfig.js` (10s duration), `handlePlayerHit.js` (checks invincibilityActive)
 - [ ] Health restore power-up: adds health correctly
@@ -104,6 +108,7 @@ Last updated: October 28, 2025
   - Files: `powerUpConfig.js` (all 10s except instant effects)
 
 **Weapon System** (Code: ✅ | Test: ⏳)
+
 - [ ] Weapon switching works (spread/laser/explosive)
   - Files: `handleKeyDown.js` (1/2/3 keys), `WEAPON_TYPES` config
 - [ ] Ammo system functions correctly
@@ -118,6 +123,7 @@ Last updated: October 28, 2025
   - Files: `weaponHandler.js` explosive logic, `Explosion.jsx`
 
 **Game Flow** (Code: ✅ | Test: ⏳)
+
 - [ ] Game over triggers when health = 0
   - Files: `handleHealthDepletion.js` triggers setGameOver
 - [ ] Pointer lock releases on game over
@@ -130,6 +136,7 @@ Last updated: October 28, 2025
   - Files: Score state management in `Game.jsx`
 
 #### FPS Tank Game
+
 - [ ] Tank movement (WASD) is smooth
 - [ ] Mouse aim and shooting work
 - [ ] Targets can be destroyed
@@ -157,6 +164,7 @@ Last updated: October 28, 2025
 ## 📋 Backlog: Future Features & Improvements
 
 ### Asteroid Game Enhancements
+
 - [ ] Add waves/levels with increasing difficulty
 - [ ] Implement AI-controlled enemy ships
 - [ ] Add different asteroid types (armored, explosive, splitting)
@@ -167,6 +175,7 @@ Last updated: October 28, 2025
 - [ ] Complete all weapon types from `WEAPON_TYPES` config
 
 ### FPS Tank Enhancements
+
 - [ ] Add basic AI enemy that moves and attacks
 - [ ] Enemy drops power-ups on destruction
 - [ ] Multiple enemy types with unique behaviors
@@ -176,6 +185,7 @@ Last updated: October 28, 2025
 - [ ] Advanced ammo system with different ammo types
 
 ### Code Quality & Architecture
+
 - [ ] Increase test coverage to 80%+
 - [ ] Add TypeScript (gradual migration)
 - [ ] Implement object pooling for projectiles/particles
@@ -185,6 +195,7 @@ Last updated: October 28, 2025
 - [ ] Add error boundaries to prevent crashes
 
 ### User Experience
+
 - [ ] Add loading screens with progress indicators
 - [ ] Improve responsive design for mobile devices
 - [ ] Implement settings/options menu (audio, graphics quality)
@@ -194,6 +205,7 @@ Last updated: October 28, 2025
 - [ ] Spatial audio for 3D positioning
 
 ### Visual Polish
+
 - [ ] Enhanced particle effects for explosions
 - [ ] Improved lighting and shadows
 - [ ] Post-processing effects (bloom, motion blur)
@@ -202,6 +214,7 @@ Last updated: October 28, 2025
 - [ ] Trail effects for projectiles
 
 ### Advanced Features (Long-term)
+
 - [ ] Multiplayer foundation (WebSocket support)
 - [ ] Lobby system and matchmaking
 - [ ] Player progression and XP system
@@ -214,13 +227,16 @@ Last updated: October 28, 2025
 ## 🐛 Known Issues
 
 ### Critical
+
 - None currently
 
 ### Medium Priority
+
 - Lighthouse unused-javascript assertion too strict (adjusted to maxLength: 3)
 - Performance warnings on LCP, TBT in CI (acceptable for now)
 
 ### Low Priority
+
 - Audio loading errors in console (non-blocking)
 - Service worker cache strategies could be optimized
 
