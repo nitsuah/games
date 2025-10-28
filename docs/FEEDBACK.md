@@ -1,39 +1,18 @@
-# FEEDBACK
+## FEEDBACK V2 -
 
-Dev server running at [http://localhost:3000](http://localhost:3000)
-Time to playtest! Go through this checklist for the Asteroid game:
+- initial games home seems to load but has a white border around the edges? like the app is within another app window? is that intended? same thing in asteroid game itself. looks like a windowed app inside another window. is that intended?
 
-## Health System - works
+- ASTEROID 
+- i can still move around and shoot when the game is paused but other stuff looks paused so thats good. fix that.
+- shield. still crazy distracting that the wireframe shield just keeps appearing and spinning. its just constant. it should fade in and out for now until we fix/add a pattern?
+- rapid fire - does not work as expected. firing seems WAY slower than expected. laser should switch to "automatic fire" mode where holding down mouse button fires continuously at a very high rate. currently its like slightly faster than normal but still single shots only.
+- explosive still only reloads to 5 ammo instead of full. also the explosion effect is very underwhelming. should be a big flashy explosion with sound and screen shake in the future. the visual is fine for now but needs more oomph.
 
-- Take damage from collisions (small/large targets) - works! but bigger targets should do more damage (didnt notice if they did)
-- Health bar updates correctly - nit: move health bar down a bit, move reload, and ammo counter from center to below health bar (tl;dr: group all UI elements together)
-- Red screen flash on damage - works!
-- when health hits zero game over triggers - works! but game does not pause, targets keep moving. should pause game loop too.
+- speedboost - still doesnt do shit. player speed seems the same as normal. needs to be much faster.
 
-## Power-ups (6 types)
+- shield does seem to stack now tho.
 
-- Shield (blue) - absorbs 3 hits, visual barrier - works! but is distracting. we should pick a pattern instead of polygons/wireframe/random noise. Also the shield hit counter is hard to see, maybe bigger font and different color? and organize in ui - also if we pickup another shield it should add to the total counters left (ie: if 3 and pickup new shield, go to 6, if 2 left and pickup new shield go to 5, etc.) but otherwise works well. it stops hits as expected and depletes correctly.
-- Invincibility (yellow) - prevents damage 10s, yellow flash - this works really well! - maybe the yellow flash could be a bit more subtle? or add a glow effect instead of full flash
-- Health restore (green) - +25 HP - also works well! we'll come back to this later - probably have it restore ammo as well in future
-- Rapid fire (red) - near-instant cooldown 10s - i didnt see this powerup located anywhere? maybe give blocks/enemies a chance to drop it on destruction?
-- Slow motion (purple) - targets slower 10s - this works really well!!!! im impressed!
-- Speed boost (orange) - player faster 10s - this doesnt seem to work very well? i barely notice any speed increase. maybe double the speed increase amount? or scale the player speed significantly by 2.5x instead of 1.2x?
+- combo and misses look like they are working now tho! - but we will need ot play around with the hit tracking a bit for lazers. its not exact (seems to miss on bigger objects like the hit box is smaller than the square. but small nit we can get to)
 
-## Weapons
-
-- Keys 1/2/3 switch weapons (spread/laser/explosive) - works well!
-- Ammo depletes, 'R' reloads - but doesnt always seem to fill the max? cant tell if because out of ammo or something else? ex: explosive only reloads 5 at a time? maybe we intended to reload it slowly? like 3 clips or something. might be cool/different.
-- Cooldowns display correctly - but should be re-organized in UI below health bar with ammo and reload
-
-## Game Flow
-
-- Game over triggers at health=0 - this works! but game loop should pause too
-- Pause/Escape releases pointer lock - does not work, does not pause game or release pointer lock
-- Restart (R) resets all state
-- Scores persist to localStorage - seems to work although the stats for accuracy and high score seem broken (always 100%, so may not be picking up "misses" correctly) low priority though
-
-## OTHER IDEAS
-
-## BUGS
-
-Report any bugs you find!
+- UI -  lets move the "weapon" and current ammo indicator to the top right below FPS. the current text "debug which is selected, can move to the bottom right witht he rest of the debug text.
+- 

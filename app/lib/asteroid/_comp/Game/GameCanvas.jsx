@@ -11,6 +11,7 @@ import ShieldEffect from '@/lib/asteroid/_comp/UI/ShieldEffect';
 
 const GameCanvas = ({
   gameOver,
+  paused,
   targets,
   setTargets,
   setHealth,
@@ -30,6 +31,7 @@ const GameCanvas = ({
   shieldActive,
   setShieldActive,
   rapidFireActive,
+  speedBoostActive,
 }) => {
   return (
     <Canvas
@@ -43,12 +45,15 @@ const GameCanvas = ({
         targets={targets}
         onTargetHit={onHit}
         isGameOver={gameOver}
+        isPaused={paused}
         setShowBlueFlash={setShowBlueFlash}
+        speedBoostActive={speedBoostActive}
       />
       <ShootingSystem
         onHit={onHit}
         onMiss={onMiss}
         isGameOver={gameOver}
+        isPaused={paused}
         targets={targets}
         setTargets={setTargets}
         weapon={weapon}
@@ -69,7 +74,7 @@ const GameCanvas = ({
         setShieldActive={setShieldActive}
       />
       <TargetCollisionHandler targets={targets} setTargets={setTargets} />
-      <TargetList targets={targets} handleTargetHit={handleTargetHit} setTargets={setTargets} />
+      <TargetList targets={targets} handleTargetHit={handleTargetHit} setTargets={setTargets} isGameOver={gameOver} isPaused={paused} />
 
       <ShieldEffect shieldActive={shieldActive} />
 

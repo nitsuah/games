@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
 import CooldownManager from '@/lib/asteroid/_comp/Weapons/CooldownManager';
@@ -10,6 +10,7 @@ const ShootingSystem = ({
   onHit,
   onMiss,
   isGameOver,
+  isPaused,
   weapon,
   ammo,
   setAmmo,
@@ -23,9 +24,11 @@ const ShootingSystem = ({
   const { camera, scene } = useThree();
   const { playSound } = useSound();
   const [explosions, setExplosions] = useState([]);
+  const mouseDownRef = useRef(false);
+  const autoFireIntervalRef = useRef(null);
 
   const handleShoot = () => {
-    if (isGameOver) return;
+    if (isGameOver || isPaused) return;
     if (cooldowns[weapon] > 0) return;
     if (ammo[weapon] <= 0) {
       playSound('empty');
@@ -78,9 +81,42 @@ const ShootingSystem = ({
   };
 
   useEffect(() => {
-    window.addEventListener('click', handleShoot);
-    return () => window.removeEventListener('click', handleShoot);
-  }, [handleShoot]);
+    const handleMouseDown = () => {
+      mouseDownRef.current = true;
+      handleShoot(); // Fire immediately on click
+      
+      // If rapid fire is active, start auto-firing
+      if (rapidFireActive) {
+        if (autoFireIntervalRef.current) {
+          clearInterval(autoFireIntervalRef.current);
+        }
+        autoFireIntervalRef.current = setInterval(() => {
+          if (mouseDownRef.current) {
+            handleShoot();
+          }
+        }, 100); // Fire every 100ms when holding mouse
+      }
+    };
+
+    const handleMouseUp = () => {
+      mouseDownRef.current = false;
+      if (autoFireIntervalRef.current) {
+        clearInterval(autoFireIntervalRef.current);
+        autoFireIntervalRef.current = null;
+      }
+    };
+
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+      if (autoFireIntervalRef.current) {
+        clearInterval(autoFireIntervalRef.current);
+      }
+    };
+  }, [handleShoot, rapidFireActive]);
 
   return (
     <>

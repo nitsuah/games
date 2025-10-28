@@ -13,6 +13,7 @@ const ScoreDisplay = dynamic(() => import('../UI/ScoreDisplay'), { ssr: false })
 const WeaponDisplay = dynamic(() => import('../UI/WeaponDisplay'), { ssr: false });
 import { now } from '@/utils/time';
 import { handleTargetHit as handleTargetHitFn } from '@/lib/asteroid/_comp/Game/handleTargetHit';
+import { handleMiss as handleMissFn } from '@/lib/asteroid/_comp/Game/handleMiss';
 import { restartGame as restartGameFn } from '@/lib/asteroid/_comp/Game/restartGame';
 import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/handlePlayerHit';
 import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
@@ -44,6 +45,7 @@ const Game = ({ onHit, onMiss }) => {
   const [comboMultiplier, setComboMultiplier] = useState(1);
   const comboTimerRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
@@ -214,7 +216,7 @@ const Game = ({ onHit, onMiss }) => {
 
   // Weapon switch, ammo, & reload handler
   useEffect(() => {
-    const handleKeyDown = (e) => handleKeyDownFn(e, setWeapon, setAmmo);
+    const handleKeyDown = (e) => handleKeyDownFn(e, setWeapon, setAmmo, setPaused);
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setWeapon, setAmmo]);
@@ -325,7 +327,17 @@ const Game = ({ onHit, onMiss }) => {
   }, [targets]);
 
   // HANDLE MISS
-  // (handled inline by other systems) - removed unused wrapper to satisfy lint
+  const handleMissCallback = useCallback(
+    () =>
+      handleMissFn({
+        setMisses,
+        onMiss,
+        setCombo,
+        setComboMultiplier,
+        comboTimerRef,
+      }),
+    [setMisses, onMiss, setCombo, setComboMultiplier, comboTimerRef]
+  );
 
   // HANDLE RESTART
   const restartGame = () =>
@@ -415,6 +427,7 @@ const Game = ({ onHit, onMiss }) => {
       <FlashOverlays flashQueue={flashQueue} />
       <GameCanvas
         gameOver={gameOver}
+        paused={paused}
         health={health}
         targets={targets}
         setTargets={setTargets}
@@ -423,7 +436,7 @@ const Game = ({ onHit, onMiss }) => {
         playSound={playSound}
         pauseSound={pauseSound}
         onHit={onHit}
-        onMiss={onMiss}
+        onMiss={handleMissCallback}
         weapon={weapon}
         ammo={ammo}
         setAmmo={setAmmo}
@@ -463,6 +476,24 @@ const Game = ({ onHit, onMiss }) => {
           highScore={highScore}
           restartGame={restartGame}
         />
+      )}
+      {paused && !gameOver && (
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          color: 'white',
+          fontSize: '48px',
+          fontWeight: 'bold',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+          zIndex: 1000,
+        }}>
+          PAUSED
+          <div style={{ fontSize: '24px', marginTop: '20px', textAlign: 'center' }}>
+            Press ESC to resume
+          </div>
+        </div>
       )}
     </div>
   );

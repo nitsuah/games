@@ -1,6 +1,13 @@
 import { WEAPON_TYPES } from '../config';
 
-export const handleKeyDown = (e, setWeapon, setAmmo) => {
+export const handleKeyDown = (e, setWeapon, setAmmo, setPaused) => {
+  if (e.code === 'Escape') {
+    setPaused((prev) => !prev);
+    if (document.pointerLockElement) {
+      document.exitPointerLock();
+    }
+    return;
+  }
   if (e.code === 'Digit1') setWeapon('spread');
   if (e.code === 'Digit2') setWeapon('laser');
   if (e.code === 'Digit3') setWeapon('explosive');
