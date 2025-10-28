@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 
@@ -17,7 +16,7 @@ const PageContainer = styled.div`
 const Title = styled.h1`
   font-size: 3rem;
   margin-bottom: 2rem;
-  color: #4caf50;
+  color: #66bb6a;
 `;
 
 const GameList = styled.div`
@@ -46,60 +45,7 @@ const GameLink = styled(Link)`
   }
 `;
 
-const TestButton = styled.button`
-  padding: 1rem 2rem;
-  background: #2196f3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  margin-top: 2rem;
-    transition: transform 0.18s ease;
-
-  &:hover {
-    background: #1976d2;
-      transform: translateY(-2px);
-  }
-`;
-
 const HomePage = () => {
-  const [status, setStatus] = useState('Ready to test');
-
-  const testSound = () => {
-    setStatus('Loading sound...');
-
-    // Create a new audio element
-    const audio = new Audio();
-
-    // Add event listeners
-    audio.addEventListener('canplaythrough', () => {
-      setStatus('Sound loaded, attempting to play...');
-
-      // Try to play the sound
-      audio
-        .play()
-        .then(() => {
-          setStatus('Sound playing!');
-        })
-        .catch((error) => {
-          console.error('Error playing sound:', error);
-          setStatus(`Error: ${error.message}`);
-        });
-    });
-
-    audio.addEventListener('error', (e) => {
-      console.error('Error loading sound:', e);
-      setStatus(`Error loading sound: ${e.message}`);
-    });
-
-    // Set the source - using the correct path from the public directory
-    audio.src = '/sounds/shoot.mp3';
-
-    // Load the audio
-    audio.load();
-  };
-
   return (
     <PageContainer>
       <Title>Game Selector</Title>
@@ -107,13 +53,6 @@ const HomePage = () => {
         <GameLink href="/asteroid">Asteroid</GameLink>
         <GameLink href="/fps">FPS</GameLink>
       </GameList>
-
-      <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-        <TestButton onClick={testSound}>Test Single Sound</TestButton>
-        <div style={{ marginTop: '1rem', color: '#ffffff', backgroundColor: '#1a1a1a', padding: '0.5rem' }}>
-          Status: {status}
-        </div>
-      </div>
     </PageContainer>
   );
 };

@@ -4,6 +4,18 @@ const nextConfig = {
   compiler: {
     styledComponents: true, // Enables styled-components support
   },
+  // Optimize bundle to reduce unused JavaScript
+  webpack: (config, { dev, isServer }) => {
+    if (!dev && !isServer) {
+      // Enable tree shaking and minimize unused code
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
+      };
+    }
+    return config;
+  },
   // Configure static file serving
   async headers() {
     return [
