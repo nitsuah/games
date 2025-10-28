@@ -16,16 +16,16 @@ const nextConfig = {
           },
         ],
       },
-      // Report-only CSP header to satisfy Lighthouse detection without risking site breakage
+      // Enforced CSP header. Lighthouse expects an effective CSP (not report-only).
+      // Keep style-src 'unsafe-inline' to allow styled-components server-rendered styles.
+      // script-src intentionally allows only 'self' and https: (no 'unsafe-inline') to be
+      // effective against XSS. If you use inline scripts that require CSP nonces, implement
+      // nonce injection in Document and update this policy accordingly.
       {
         source: '/(.*)',
         headers: [
           {
-            key: 'Content-Security-Policy-Report-Only',
-            // Report-only CSP: disallow inline scripts (improves Lighthouse CSP check) while
-            // keeping style-src permissive for inline styles used by styled-components.
-            // This remains report-only to avoid accidental runtime breakage; remove "Report-Only"
-            // if you want to enforce the policy after verifying no violations are reported.
+            key: 'Content-Security-Policy',
             value:
               "default-src 'self'; script-src 'self' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; frame-ancestors 'self'; base-uri 'self';",
           },
