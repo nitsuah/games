@@ -38,9 +38,12 @@ describe('generateTargets - Target Initialization', () => {
 
     expect(target.id).toBe(1);
     expect(target.isHit).toBe(false);
-    expect(target.size).toBe(TARGET_CONFIG.DEFAULT_SIZE);
+    // Size is now random between 5-15
+    expect(target.size).toBeGreaterThanOrEqual(5);
+    expect(target.size).toBeLessThanOrEqual(15);
     expect(target.speed).toBe(TARGET_CONFIG.DEFAULT_SPEED);
-    expect(target.color).toBe(TARGET_CONFIG.DEFAULT_COLOR);
+    // Color is now based on size (green/yellow/red)
+    expect(['#00ff00', '#ffff00', '#ff4400']).toContain(target.color);
     expect(target.spawnTime).toBeGreaterThan(0);
   });
 
