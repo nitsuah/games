@@ -21,6 +21,8 @@ body {
 
 /* Improve default contrast for Lighthouse color-contrast audit */
 html, body {
-  background: #ffffff;
-  color: #000000;
+  /* Use a dark default site background and white text to match the app pages
+     and ensure server-rendered/static fallback is accessible for Lighthouse. */
+  background: #1a1a1a;
+  color: #ffffff;
 }
