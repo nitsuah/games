@@ -6,12 +6,46 @@ Last updated: October 28, 2025
 
 ---
 
-## 🎯 Current Sprint: Phase 4 Tasks
+## 🎯 Current Sprint: Phase 4.1 - Playtest & Stabilize
+
+**Objective**: Test everything, fix bugs, ensure games actually work before merge.
+
+**Philosophy**: Ship working games, not broken promises. Test first, merge after.
+
+### Phase 4.1 Tasks (Current)
+
+1. **Manual Playtest Validation** ⏳
+   - [ ] Test Asteroid game (all features below)
+   - [ ] Test FPS Tank game (all features below)
+   - [ ] Document bugs in GitHub Issues or inline comments
+   
+2. **Bug Fixes Only** 
+   - [ ] Fix bugs discovered during playtest
+   - [ ] No new features - stabilize what exists
+   
+3. **E2E Test Expansion**
+   - [ ] Add E2E tests for critical flows validated during playtest
+   - [ ] Ensure tests catch regressions
+   
+4. **Final Validation**
+   - [ ] All manual tests pass
+   - [ ] All E2E tests pass
+   - [ ] CI is green
+   - [ ] No console errors during gameplay
+   
+5. **Merge to Main**
+   - [ ] Only after steps 1-4 complete
+   - [ ] Create PR with detailed testing report
+
+---
+
+## ✅ Phase 4 Complete (Infrastructure)
 
 ### Lighthouse & Performance
 
 - [x] Run Lighthouse locally with native Node.js (script created: `scripts/run-lighthouse.js`)
 - [x] Generate `app/lighthouse-report.json` (via CI - WebGL requires real browser)
+- [x] Contrast-check: PASSED - No issues found
 - [ ] Parse report for color-contrast and accessibility issues
 - [ ] Fix any remaining Lighthouse failures
 
@@ -24,7 +58,7 @@ Last updated: October 28, 2025
   - [x] FPS game loads and starts
   - [x] Pointer lock basic flow works
 - [x] Add `app/scripts/contrast-check.js` to CI (non-blocking)
-- [ ] Verify test coverage for critical game mechanics
+- [ ] Verify test coverage for critical game mechanics (Phase 4.1)
 
 ### Manual Playtest Checklist
 
