@@ -48,6 +48,7 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#000000" />
           <meta name="description" content="A small collection of tiny 3D games" />
           <title>Games</title>
+          <link rel="icon" type="image/svg+xml" href="/favicon-home.svg" />
           <link rel="manifest" href="/manifest.json" />
           <script src="/register-sw.js" nonce={nonce} defer />
         </Head>

@@ -1,0 +1,5 @@
+<!-- filepath: c:\Users\ajhar\code\games\app\public\favicon-home.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" fill="#4CAF50" />
+  <path d="M32 12L12 32H20V52H44V32H52L32 12Z" fill="white" />
+</svg>
