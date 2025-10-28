@@ -74,14 +74,12 @@ const HomePage = () => {
 
     // Add event listeners
     audio.addEventListener('canplaythrough', () => {
-      console.log('Sound can play');
       setStatus('Sound loaded, attempting to play...');
 
       // Try to play the sound
       audio
         .play()
         .then(() => {
-          console.log('Sound playing');
           setStatus('Sound playing!');
         })
         .catch((error) => {
@@ -97,7 +95,6 @@ const HomePage = () => {
 
     // Set the source - using the correct path from the public directory
     audio.src = '/sounds/shoot.mp3';
-  console.log('Attempting to load sound from:', audio.src);
 
     // Load the audio
     audio.load();
@@ -113,7 +110,9 @@ const HomePage = () => {
 
       <div style={{ marginTop: '2rem', textAlign: 'center' }}>
         <TestButton onClick={testSound}>Test Single Sound</TestButton>
-        <div style={{ marginTop: '1rem', color: 'white' }}>Status: {status}</div>
+        <div style={{ marginTop: '1rem', color: '#ffffff', backgroundColor: '#1a1a1a', padding: '0.5rem' }}>
+          Status: {status}
+        </div>
       </div>
     </PageContainer>
   );

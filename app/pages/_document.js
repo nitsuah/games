@@ -28,9 +28,8 @@ class MyDocument extends Document {
         const csp = `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`;
         try {
           ctx.res.setHeader('Content-Security-Policy', csp);
-        } catch (err) {
-          // Fail silently if header cannot be set
-          console.warn('Could not set CSP header on response:', err && err.message);
+        } catch {
+          // Fail silently if header cannot be set (avoid console warnings in production)
         }
       }
 
@@ -50,6 +49,7 @@ class MyDocument extends Document {
           <meta name="description" content="A small collection of tiny 3D games" />
           <title>Games</title>
           <link rel="manifest" href="/manifest.json" />
+          <script src="/register-sw.js" nonce={nonce} defer />
         </Head>
         <body>
           <Main />
