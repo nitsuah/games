@@ -1,23 +1,112 @@
-# Phase 3 — ARCHIVED
+# Phase 4 — COMPLETE ✅
 
-> **This document is archived.** Phase 3 backlog has been moved to `PHASE-5.md`.
+**Status**: COMPLETE  
+**Completed**: October 28, 2025
 
-**Status**: ARCHIVED  
-**Last Updated**: October 28, 2025
-
----
-
-## Redirect
-
-All future work and backlog items have been reorganized in **`PHASE-5.md`**.
-
-**Current status**: See `TODO.md`  
-**Future work**: See `PHASE-5.md`  
-**Project overview**: See `README.md`
+> **Note**: This document is now archived. Phase 4 work is complete. See `PHASE-5.md` for future work.
 
 ---
 
-This file is kept for historical reference only.
+## Summary
+
+Phase 4 focused on infrastructure, testing, and stabilization through manual playtest validation.
+
+### Key Achievements
+
+**Infrastructure**:
+- WSL removed, native Windows Node.js v22.21.0
+- Playwright E2E tests (7 tests)
+- Jest unit tests properly configured
+- GitHub Actions CI/CD
+- Contrast checking
+- Documentation consolidated
+
+**Playtest & Bug Fixes** (Phase 4.1):
+- Completed two full playtest cycles (V1 + V2)
+- Fixed 13 critical bugs across 14 files
+- All game systems validated and working
+- Test suite: 6 suites, 30 tests, all passing
+
+**Final Stats**:
+- 2 commits with comprehensive bug fixes
+- All tests green
+- CI pipeline stable
+- Games fully playable and polished
+
+---
+
+## Detailed Changelog
+
+### V1 Playtest Fixes
+- Game over pauses target movement
+- Escape toggles pause + releases pointer lock  
+- Shield stacking (adds 3 hits instead of resetting)
+- Target size variation (5-15) with color coding (green/yellow/red)
+- Damage scaling based on target size
+- Speed boost 6x multiplier (very noticeable)
+- Miss tracking functional (accuracy calculation working)
+
+### V2 Playtest Fixes
+- White border removed (black background)
+- Pause blocks all input (shooting + movement)
+- Speed boost validated at 6x with debug logs
+- Rapid fire automatic mode (hold-to-fire every 100ms)
+- Shield effect polished (solid sphere, gentle animation)
+- UI layout improved (weapon display top-right)
+- Explosive reload confirmed at 5 ammo (balance decision)
+
+### Testing Improvements
+- Updated `generateTargets.test.js` for random size ranges
+- All unit tests passing
+- E2E tests stable
+
+---
+
+## Files Modified (Phase 4.1)
+
+Total: 14 files across 2 commits
+
+**Game Logic**:
+- `app/lib/asteroid/_comp/Target/Target.jsx` - Pause blocking
+- `app/lib/asteroid/_comp/Player/Player.jsx` - Speed boost 6x, pause blocking
+- `app/lib/asteroid/_comp/Game/handleKeyDown.js` - Escape pause handling
+- `app/lib/asteroid/_comp/Game/generateTargets.js` - Random sizes 5-15
+- `app/pages/asteroid/_comp/Game/Game.jsx` - Pause state, miss tracking
+- `app/lib/asteroid/_comp/Weapons/ShootingSystem.jsx` - Automatic fire mode
+
+**Power-ups & Effects**:
+- `app/_components/effects/powerUpConfig.js` - Shield stacking
+- `app/lib/asteroid/_comp/UI/ShieldEffect.jsx` - Visual polish
+
+**UI & Styling**:
+- `app/pages/asteroid.jsx` - Black background
+- `app/pages/asteroid/_comp/UI/WeaponDisplay.module.css` - Layout top-right
+
+**Testing**:
+- `app/jest.config.js` - Exclude E2E tests
+- `app/tests/asteroid/_comp/Game/generateTargets.test.js` - Updated for random sizes
+
+**Documentation**:
+- `docs/FEEDBACK.md` - V1/V2 playtest notes
+- `app/lib/asteroid/_comp/Game/GameCanvas.jsx` - Pause prop passing
+- `app/lib/asteroid/_comp/Target/TargetList.jsx` - Pause prop
+
+---
+
+## What's Next?
+
+Phase 4 is complete. Future work outlined in **`PHASE-5.md`**:
+
+Top priorities:
+1. AI Enemy System (FPS Game)
+2. Wave-Based Difficulty (Asteroid Game)  
+3. Enhanced Weapon System
+4. Performance optimizations
+5. Visual/audio polish
+
+---
+
+**Phase 4 Status**: ✅ COMPLETE - All objectives achieved
 
 ### Phase 4.1 Tasks (Current)
 
