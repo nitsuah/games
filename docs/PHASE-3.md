@@ -28,30 +28,72 @@ Last updated: October 28, 2025
 
 ### Manual Playtest Checklist
 
+**Code Implementation Status**: ✅ All systems have code implemented  
+**Testing Status**: ⏳ Needs manual validation
+
 #### Asteroid Game
+
+**Health System** (Code: ✅ | Test: ⏳)
 - [ ] Health system: damage on collision (small/large targets)
+  - Files: `handleHealthDepletion.js`, `handlePlayerHit.js`, `CollisionDetection.jsx`
 - [ ] Health UI updates correctly
+  - Files: `HealthBar.jsx`, `HealthBar.module.css`
 - [ ] Red flash effect on player hit
+  - Files: `Game.jsx` (showFlash function), `flashQueue` state
 - [ ] Collision sound effects work
+  - Files: `useSound.js`, sound manager integration
+
+**Shield Power-Up** (Code: ✅ | Test: ⏳)
 - [ ] Shield power-up: collects correctly
+  - Files: `PowerUp.jsx` collision detection
 - [ ] Shield: absorbs exactly 3 hits
+  - Files: `powerUpConfig.js` (sets shieldActive=3), `handlePlayerHit.js` (decrements)
 - [ ] Shield: shows visual barrier effect
+  - Files: `ShieldEffect.jsx` (animated sphere around player)
 - [ ] Shield: indicator counter displays
+  - Files: `PowerUpIndicator.jsx` shows shield hits remaining
+
+**Other Power-Ups** (Code: ✅ | Test: ⏳)
 - [ ] Invincibility power-up: prevents all damage
+  - Files: `powerUpConfig.js` (10s duration), `handlePlayerHit.js` (checks invincibilityActive)
 - [ ] Health restore power-up: adds health correctly
+  - Files: `powerUpConfig.js` (adds 25, max 100)
 - [ ] Rapid fire power-up: increases fire rate
+  - Files: `CooldownManager.jsx` (99% cooldown reduction), `ShootingSystem.jsx`
 - [ ] Slow motion power-up: affects game speed
+  - Files: `powerUpConfig.js` (50% speed reduction), `Game.jsx` applies to targets
 - [ ] Speed boost power-up: increases movement speed
+  - Files: `powerUpConfig.js` (10s duration), `usePowerUps.js`
 - [ ] Power-up indicators show in top-right UI
+  - Files: `PowerUpIndicator.jsx`, `PowerUpIndicator.module.css`
 - [ ] Power-up durations are correct
+  - Files: `powerUpConfig.js` (all 10s except instant effects)
+
+**Weapon System** (Code: ✅ | Test: ⏳)
 - [ ] Weapon switching works (spread/laser/explosive)
+  - Files: `handleKeyDown.js` (1/2/3 keys), `WEAPON_TYPES` config
 - [ ] Ammo system functions correctly
+  - Files: `INITIAL_AMMO` config, `ShootingSystem.jsx` decrements ammo
 - [ ] Cooldown bars display properly
+  - Files: `CooldownManager.jsx`, `WeaponDisplay.jsx`
+- [ ] Spread shot: fires 10 projectiles in cone
+  - Files: `weaponHandler.js` spread logic, `WEAPON_CONFIG`
+- [ ] Laser beam: instant hitscan
+  - Files: `weaponHandler.js` laser logic, `LaserBeam.jsx` visual
+- [ ] Explosive shot: AoE damage with visual explosion
+  - Files: `weaponHandler.js` explosive logic, `Explosion.jsx`
+
+**Game Flow** (Code: ✅ | Test: ⏳)
 - [ ] Game over triggers when health = 0
+  - Files: `handleHealthDepletion.js` triggers setGameOver
 - [ ] Pointer lock releases on game over
+  - Files: `Game.jsx` disables controls when gameOver=true
 - [ ] Restart button resets all game state
+  - Files: `restartGame.js` resets health, ammo, power-ups, targets, scores
 - [ ] Scores persist to localStorage
+  - Files: `loadSavedScores.js`, score persistence logic
 - [ ] High score tracking works
+  - Files: Score state management in `Game.jsx`
 
 #### FPS Tank Game
 - [ ] Tank movement (WASD) is smooth
@@ -68,8 +110,11 @@ Last updated: October 28, 2025
 - [ ] Stats persist to localStorage
 
 #### Accessibility
-- [ ] Run `app/scripts/contrast-check.js` locally
+
+- [x] Run `app/scripts/contrast-check.js` locally
+  - **Result**: ✅ No low-contrast color pairs found (ratio < 4.5)
 - [ ] Fix any low-contrast color pairs
+  - **Result**: ✅ None found - no action needed
 - [ ] Verify keyboard navigation works
 - [ ] Test screen reader compatibility (basic)
 
