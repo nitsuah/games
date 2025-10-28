@@ -15,10 +15,11 @@
     content: '';
     position: absolute;
     inset: 0;
-    /* slightly reduced alpha so overlay doesn't cause widespread contrast failures */
-    background-color: rgba(255, 0, 0, 0.35);
+    /* Use a centered radial-gradient flash so HUD/UI near edges isn't covered.
+       The gradient is compositor-friendly (opacity) and fades to transparent. */
+    background: radial-gradient(circle at 50% 50%, rgba(255,0,0,0.45) 0%, rgba(255,0,0,0.20) 30%, rgba(255,0,0,0) 60%);
     pointer-events: none;
-    animation: flashOpacity 0.25s ease-in-out;
+    animation: flashOpacity 0.35s ease-in-out;
     will-change: opacity, transform;
   }
 
