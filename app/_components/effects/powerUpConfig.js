@@ -1,10 +1,46 @@
+import { WEAPON_TYPES } from '../../../app/lib/asteroid/_comp/config';
+
 export const POWER_UPS = [
   {
     type: 'health',
     duration: 0,
-    effect: ({ setHealth, showFlash }) => {
-      setHealth((prev) => Math.min(prev + 25, 100));
-      showFlash('green');
+    effect: ({ setHealth, setAmmo, showFlash }) => {
+      let collected = false;
+      
+      // Check if health needs restore
+      setHealth((prev) => {
+        if (prev < 100) {
+          collected = true;
+          return Math.min(prev + 25, 100);
+        }
+        return prev;
+      });
+      
+      // Check if any ammo needs restore
+      if (!collected && setAmmo) {
+        setAmmo((prev) => {
+          const needsAmmo = Object.keys(prev).some((key) => {
+            const maxAmmo = WEAPON_TYPES.find((w) => w.key === key)?.maxAmmo || 0;
+            return prev[key] < maxAmmo;
+          });
+          
+          if (needsAmmo) {
+            collected = true;
+            // Restore all ammo to max
+            return {
+              spread: WEAPON_TYPES.find((w) => w.key === 'spread').maxAmmo,
+              laser: WEAPON_TYPES.find((w) => w.key === 'laser').maxAmmo,
+              explosive: WEAPON_TYPES.find((w) => w.key === 'explosive').maxAmmo,
+            };
+          }
+          return prev;
+        });
+      }
+      
+      // Only flash if we actually collected it
+      if (collected) {
+        showFlash('green');
+      }
     },
   },
   {

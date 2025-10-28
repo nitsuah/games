@@ -18,7 +18,7 @@ export const WEAPON_CONFIG = {
 export const WEAPON_TYPES = [
   { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
-  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 1 },
+  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Increased to 10, longer cooldown
 ];
 
 export const POWER_UP_COLORS = {
@@ -39,7 +39,7 @@ export const EXPLOSION_DURATION = 120; // ms, for explosion visual timing
 export const INITIAL_AMMO = {
   spread: 30,
   laser: 10,
-  explosive: 5,
+  explosive: 10, // Match the maxAmmo
 };
 
 export const INITIAL_HEALTH = 100;

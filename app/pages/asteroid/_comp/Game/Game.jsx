@@ -207,7 +207,7 @@ const Game = ({ onHit, onMiss }) => {
     speedBoostActive,
     setSpeedBoostActive,
     handlePowerUpCollect,
-  } = usePowerUps(setHealth, setTargets, showFlash);
+  } = usePowerUps(setHealth, setTargets, showFlash, setAmmo);
 
   // Apply slow motion effect
   useEffect(() => {
@@ -349,11 +349,12 @@ const Game = ({ onHit, onMiss }) => {
 
   // Wave completion - spawn next wave when all targets destroyed
   useEffect(() => {
-    if (gameOver || paused) return;
+    if (gameOver || paused || showWaveTransition) return;
 
     const activeTargets = targets.filter((t) => !t.isHit);
     
-    if (activeTargets.length === 0 && targets.length > 0) {
+    // When all targets destroyed, start next wave (but not on initial render when targets is empty)
+    if (activeTargets.length === 0 && currentWave >= 1) {
       console.log(`Wave ${currentWave} complete! Starting wave ${currentWave + 1}`);
       
       // Show wave transition
@@ -375,7 +376,7 @@ const Game = ({ onHit, onMiss }) => {
         setShowWaveTransition(false);
       }, 2000);
     }
-  }, [targets, gameOver, paused, currentWave, highestWave, setHighestWave, setCurrentWave, setShowWaveTransition, setTargets]);
+  }, [targets, gameOver, paused, showWaveTransition, currentWave, highestWave, setHighestWave, setCurrentWave, setShowWaveTransition, setTargets]);
 
   // Load highest wave from localStorage on mount
   useEffect(() => {

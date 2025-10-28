@@ -70,7 +70,7 @@ const ShootingSystem = ({
     });
 
     const weaponCooldown = WEAPON_TYPES.find((w) => w.key === weapon).cooldown;
-    const adjustedCooldown = rapidFireActive ? weaponCooldown / 2 : weaponCooldown;
+    const adjustedCooldown = rapidFireActive ? weaponCooldown / 5 : weaponCooldown;
     setCooldowns((prev) => ({ ...prev, [weapon]: adjustedCooldown }));
 
     if (typeof setAmmo === 'function') {
@@ -94,7 +94,7 @@ const ShootingSystem = ({
           if (mouseDownRef.current) {
             handleShoot();
           }
-        }, 100); // Fire every 100ms when holding mouse
+        }, 50); // Fire every 50ms (20 rounds/sec) when holding mouse
       }
     };
 
