@@ -3,6 +3,8 @@
   padding: 0;
 }
 
+@import './accessibility-fixes.css';
+
 html,
 body {
   height: 100%;
