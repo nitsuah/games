@@ -1,5 +1,7 @@
 # Games Collection
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/25a0a90d-195b-4e53-9d94-9a4107321939/deploy-status)](https://app.netlify.com/projects/nitsuah-arcade/deploys)
+
 A collection of 3D web games built with Next.js, Three.js, and React Three Fiber.
 
 ## Asteroid
