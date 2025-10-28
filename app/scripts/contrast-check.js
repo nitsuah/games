@@ -54,7 +54,7 @@ function parseColors(text) {
   const hexRe = /#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b/g;
   let m;
   while ((m = hexRe.exec(text))) colors.push(m[0]);
-  const rgbaRe = /rgba?\([^\)]+\)/g;
+  const rgbaRe = /rgba?\([^)]+\)/g;
   while ((m = rgbaRe.exec(text))) colors.push(m[0]);
   return Array.from(new Set(colors));
 }
@@ -88,7 +88,7 @@ function main() {
   let defaultBg = { r: 255, g: 255, b: 255 };
   if (fs.existsSync(globalCss)) {
     const gtxt = fs.readFileSync(globalCss, 'utf8');
-    const m = gtxt.match(/background\s*:\s*(#[0-9a-fA-F]{3,6}|rgba?\([^\)]+\))/);
+  const m = gtxt.match(/background\s*:\s*(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/);
     if (m) {
       const c = resolveColor(m[1]);
       if (c) defaultBg = c;
@@ -109,7 +109,7 @@ function main() {
       const fg = resolveColor(col);
       if (!fg) continue;
       // find nearby background declarations in same file
-      const bgMatch = txt.match(/background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,6}|rgba?\([^\)]+\))/);
+  const bgMatch = txt.match(/background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,6}|rgba?\([^)]+\))/);
       const bg = bgMatch ? resolveColor(bgMatch[1]) : defaultBg;
       const ratio = contrastRatio(fg, bg);
       if (ratio < 4.5) {
