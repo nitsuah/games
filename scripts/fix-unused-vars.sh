@@ -6,7 +6,7 @@
 echo "Fixing unused variables..."
 
 # Find all .jsx and .js files in pages and _components
-find pages _components -type f \( -name "*.jsx" -o -name "*.js" \) | while read -r file; do
+find app/pages app/_components -type f \( -name "*.jsx" -o -name "*.js" \) | while read -r file; do
   # Create backup
   cp "$file" "$file.bak"
   
