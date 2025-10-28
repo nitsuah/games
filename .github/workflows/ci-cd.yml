@@ -25,6 +25,11 @@ jobs:
       run: |
         cd app
         npm ci
+    
+    - name: Install Playwright browsers
+      run: |
+        cd app
+        npx playwright install --with-deps chromium
         
     - name: Run linting
       run: |
@@ -69,22 +74,13 @@ jobs:
         cd app
         npm run build
     
-    - name: Cache Playwright browsers
-      uses: actions/cache@v4
-      with:
-        path: ~/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-${{ hashFiles('app/package-lock.json') }}
-        restore-keys: |
-          playwright-${{ runner.os }}-
-    
     - name: Run E2E tests
       run: |
         cd app
-        npx playwright install --with-deps chromium
         # Start production server in background and run E2E tests
         npm start &
         sleep 10
-        npm run test:e2e --if-present
+        npm run test:e2e
       continue-on-error: false
         
     - name: Upload build artifacts
