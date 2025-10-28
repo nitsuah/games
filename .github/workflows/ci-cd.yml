@@ -58,13 +58,6 @@ jobs:
         # Use the CI-specific test script to avoid interactive watch mode
         npm run test:ci --if-present
     
-    - name: Run E2E tests
-      run: |
-        cd app
-        npx playwright install --with-deps chromium
-        npm run test:e2e --if-present
-      continue-on-error: false
-    
     - name: Check color contrast
       run: |
         cd app
@@ -75,6 +68,16 @@ jobs:
       run: |
         cd app
         npm run build
+    
+    - name: Run E2E tests
+      run: |
+        cd app
+        npx playwright install --with-deps chromium
+        # Start production server in background and run E2E tests
+        npm start &
+        sleep 10
+        npm run test:e2e --if-present
+      continue-on-error: false
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
