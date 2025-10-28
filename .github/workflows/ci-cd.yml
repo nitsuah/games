@@ -69,6 +69,14 @@ jobs:
         cd app
         npm run build
     
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ hashFiles('app/package-lock.json') }}
+        restore-keys: |
+          playwright-${{ runner.os }}-
+    
     - name: Run E2E tests
       run: |
         cd app

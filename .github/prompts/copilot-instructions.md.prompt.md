@@ -57,7 +57,7 @@ For every change:
 
 3. VALIDATE
    - Check compilation: get_errors tool
-   - Start dev server in WSL
+   - Start dev server with native npm
    - Test in browser
    - Check console for errors
    - Verify existing features still work
@@ -263,7 +263,7 @@ const handleDoubleScoreActivation = useCallback(() => {
 // Test: Manually call activation, verify state changes
 
 // STEP 3: VALIDATE
-// - Start dev server in WSL
+// - Start dev server with native npm
 // - Collect power-up in game
 // - Verify UI shows active
 // - Verify score doubles
@@ -280,7 +280,6 @@ const handleDoubleScoreActivation = useCallback(() => {
 ## Anti-Patterns to Avoid
 
 ❌ Adding features without testing them  
-❌ Using PowerShell for npm commands (use WSL!)  
 ❌ Leaving commented-out code  
 ❌ Partial feature removals  
 ❌ Creating UI that doesn't reflect state  
@@ -314,32 +313,30 @@ Never sacrifice 1-4 for 5-6.
 
 ## Quick Reference Commands
 
-```bash
+```powershell
 # Start dev server
-### Example Workflow
-1. **Planning**: Review task requirements
-2. **Implementation**: Write code with proper structure
-3. **Testing**: Start dev server and verify functionality
-4. **Validation**: Check console, test edge cases
-5. **Cleanup**: Remove unused code, update imports
+cd .\app
+npm run dev
 
 # Install packages
-wsl bash -c "cd /mnt/c/path/to/games/app && npm install <package>"
+cd .\app
+npm install <package>
 
-# Run tests (when implemented)
-wsl bash -c "cd /mnt/c/path/to/games/app && npm test"
+# Run tests
+cd .\app
+npm test
 
 # Check git status
-wsl bash -c "cd /mnt/c/path/to/games && git status"
+git status
 
-# Find files
-wsl bash -c "cd /mnt/c/path/to/games && find app -name '*Component*'"
+# Find files (PowerShell)
+Get-ChildItem -Recurse -Filter "*Component*" -Path .\app
 ```
 
 ## Summary
 
 The key to success in this repository:
-1. **Always use WSL** for commands
+1. **Use native Node.js** - All commands run directly in PowerShell
 2. **Test everything** before declaring it done
 3. **Keep it lean** - no bloat, no broken features
 4. **Iterate carefully** - small changes, frequent validation

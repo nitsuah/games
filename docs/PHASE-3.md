@@ -16,12 +16,12 @@ Last updated: October 28, 2025
 - [ ] Fix any remaining Lighthouse failures
 
 ### Testing & Quality Assurance
-- [ ] Add E2E smoke tests (Playwright/Puppeteer) for:
-  - Main menu loads successfully
-  - Asteroid game loads and starts
-  - FPS game loads and starts
-  - Pointer lock basic flow works
-- [ ] Add `app/scripts/contrast-check.js` to CI (non-blocking)
+- [x] Add E2E smoke tests (Playwright/Puppeteer) for:
+  - [x] Main menu loads successfully
+  - [x] Asteroid game loads and starts
+  - [x] FPS game loads and starts
+  - [x] Pointer lock basic flow works
+- [x] Add `app/scripts/contrast-check.js` to CI (non-blocking)
 - [ ] Verify test coverage for critical game mechanics
 
 ### Manual Playtest Checklist
