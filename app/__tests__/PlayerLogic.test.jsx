@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import { createRef } from 'react';
 import { render, act } from '@testing-library/react';
 
 // Mock @react-three/fiber to provide useFrame and useThree hooks

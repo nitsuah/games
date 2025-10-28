@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef } from 'react';
+import { useRef, forwardRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
