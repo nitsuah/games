@@ -22,9 +22,10 @@ class MyDocument extends Document {
       // Attach nonce to styled-components style tags
       const styleElements = sheet.getStyleElement().map((el) => React.cloneElement(el, { nonce }));
 
-      // Set a per-request CSP header that includes the nonce so inline scripts/styles with the nonce are allowed
+      // Set a per-request CSP header that includes the nonce so approved inline scripts/styles are allowed.
+      // Keep this CSP aligned with the stricter baseline in next.config.js but allow the per-request nonce.
       if (ctx.res && typeof ctx.res.setHeader === 'function') {
-        const csp = `default-src 'self'; script-src 'self' 'nonce-${nonce}' https:; style-src 'self' 'nonce-${nonce}' https:; img-src 'self' data: https:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; frame-ancestors 'self'; base-uri 'self';`;
+        const csp = `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`;
         try {
           ctx.res.setHeader('Content-Security-Policy', csp);
         } catch (err) {
