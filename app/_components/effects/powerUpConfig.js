@@ -1,4 +1,4 @@
-import { WEAPON_TYPES } from '../../../app/lib/asteroid/_comp/config';
+import { WEAPON_TYPES } from '../../lib/asteroid/_comp/config';
 
 export const POWER_UPS = [
   {
