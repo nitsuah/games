@@ -500,12 +500,19 @@ const Game = ({ onHit, onMiss }) => {
         setShieldActive={setShieldActive}
         rapidFireActive={rapidFireActive}
       />
-      <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
-      <FPSCounter />
-      <ScoreDisplay score={score} />
-      <ComboDisplay combo={combo} multiplier={comboMultiplier} />
-      <AmmoIndicator weapon={weapon} ammo={ammo} />
-      <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
+      <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+        <FPSCounter />
+        <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
+        <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
+        <AmmoIndicator weapon={weapon} ammo={ammo} />
+        <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
+      </div>
+
+      {/* Bottom-right stack: score and combo to reduce top-right clutter */}
+      <div style={{ position: 'fixed', right: 12, bottom: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+        <ScoreDisplay score={score} />
+        <ComboDisplay combo={combo} multiplier={comboMultiplier} />
+      </div>
       {weapon === 'spread' && <ShotReticle />}
       <PowerUpIndicator
         shieldActive={shieldActive}
@@ -514,8 +521,10 @@ const Game = ({ onHit, onMiss }) => {
         invincibilityActive={invincibilityActive}
         speedBoostActive={speedBoostActive}
       />
-      <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
-      <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
+      {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
+      <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
+        <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
+      </div>
       {gameOver && (
         <GameOverOverlay
           score={score}

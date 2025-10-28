@@ -55,8 +55,8 @@ export function weaponHandler({
   }
 
   if (type === 'spread') {
-    // Spread logic
-    const { SPREAD_ANGLE = 0.25, SPREAD_COUNT = 10, SPREAD_RANGE = 100 } = weaponParams;
+    // Spread logic — widened and sped-up for better feel
+  const { SPREAD_ANGLE = 1.25, SPREAD_COUNT = 18, SPREAD_RANGE = 260 } = weaponParams;
     const hitTargets = new Set();
     const lasers = [];
     const updatedTargets = targets.map((target) => {
@@ -91,11 +91,13 @@ export function weaponHandler({
           )
         );
       const to = from.clone().add(spreadDirection.multiplyScalar(SPREAD_RANGE));
-      lasers.push({ from, to });
+      // attach a speed scalar to the tracer so the renderer can animate a trail
+      lasers.push({ from, to, speed: 1.6 + Math.random() * 0.8 });
     }
     if (setShowLaser) {
+      // Show tracers longer so the ShootingSystem can render fading trails
       setShowLaser(lasers);
-      setTimeout(() => setShowLaser(null), 120);
+      setTimeout(() => setShowLaser(null), 350);
     }
     return;
   }

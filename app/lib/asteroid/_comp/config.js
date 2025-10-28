@@ -10,7 +10,8 @@ export const FLASH_COLORS = {
 export const DEFAULT_TARGET_COLOR = '#00ff00';
 
 export const WEAPON_CONFIG = {
-  spread: { angle: 0.25, count: 10, range: 100 },
+  // Increase spread angle and range for more visible spread behavior
+  spread: { angle: 0.6, count: 12, range: 160 },
   laser: { color: 'cyan', range: 400 },
   explosive: { radius: 50, color: 'orange' },
 };
