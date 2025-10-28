@@ -1,41 +1,73 @@
 # Games Collection
 
-A collection of 3D web games built with Next.js, Three.js, and React Three Fiber.
+3D web games built with Next.js, Three.js, and React Three Fiber.
 
-## FPS Tank Game
+## 🎮 Games
 
-A first-person tank game where players control a tank, shoot targets, and survive against enemies. Built with Three.js and React Three Fiber, the game offers immersive gameplay with dynamic environments and challenging mechanics.
+### Asteroid Space Shooter
+- **Controls**: WASD to move, Mouse to aim, Click to shoot
+- **Weapons**: Press 1/2/3 to switch (Spread/Laser/Explosive), R to reload
+- **Power-ups**: Health (green), Shield (blue), Invincibility (yellow), Rapid Fire (red), Slow Motion (purple), Speed Boost (orange)
+- **Goal**: Destroy targets, survive, achieve high score
 
-### How to Play
+### FPS Tank Commander
+- **Controls**: WASD to move, Mouse to aim/shoot, Shift for speed boost
+- **Features**: Destructible targets, power-ups, dynamic terrain, health system
+- **Goal**: Destroy targets, survive, collect power-ups
 
-- Use **WASD** to move the tank forward/backward and rotate left/right.
-- Use the **Mouse** to aim and click to shoot.
-- Destroy targets to earn points and avoid hazards to survive.
-- Collect power-ups to gain temporary advantages.
-- Use **Shift** to boost/sprint for a short speed increase (with cooldown).
+## 🛠️ Development
 
-### Features (Implemented)
+### Quick Start
+```powershell
+cd app
+npm install
+npm run dev
+```
+Open `http://localhost:3000`
 
-1. **Crosshairs**: A visual aid for precise aiming.
-2. **Dynamic Terrain**: The tank's position dynamically adjusts based on the terrain height.
-3. **EXR Heightmap Support**: Terrain can be generated from EXR heightmap files.
-4. **Bell Curve Terrain**: Default Terrain heights follow a bell curve for natural elevation.
-5. **Height-Based Shading**: Terrain color shades from dark to light green based on height.
-6. **Targets**: Destructible targets that "explode" when hit.
-7. **Score System**: Tracks and displays the player's score.
-8. **Decals**: Bullet impact decals that fade out over time.
-9. **Bullet Physics**: Bullets with realistic physics and automatic cleanup after a few seconds.
-10. **Dynamic Lighting**: Lighting effects for explosions and events.
-11. **Game Over Screen**: Displays when health reaches zero, with an option to restart.
-12. **Persistent Stats**: Save high scores and stats using local storage.
-13. **Power-Ups**: Collectible items like health restore, rapid fire, speed boost, and (foundation for) ammo. (Note: shield power-up logic is not fully implemented)
-14. **Player Health System**: Tracks and displays player health.
-15. **Speed Boost and Rapid Fire**: Temporary power-ups that affect movement and shooting.
-16. **Reload Bar**: Visual indicator for weapon cooldown.
-17. **Ammo System**: Limited ammo, with pickups to replenish. (Foundation present, but full depletion/disable logic may not be complete)
+### Key Commands
+- `npm run dev` - Start dev server
+- `npm run build` - Production build
+- `npm test` - Run unit tests
+- `npm run test:e2e` - Run E2E tests
+- `npm run lint` - Check code quality
 
-# App README (moved)
+### Requirements
+- Node.js v22.21.0 (native Windows)
+- npm 10.9.4
+- Modern browser with WebGL support
 
-This file has been moved to `docs/app-README.md` to make repository documentation canonical in `docs/`.
+### Project Structure
+```
+app/
+├── pages/           # Next.js pages
+│   ├── asteroid/    # Asteroid game components
+│   └── fps/         # FPS game components
+├── lib/             # Shared game logic
+├── _components/     # Reusable components
+├── e2e/             # E2E tests (Playwright)
+└── scripts/         # Build/test scripts
+```
 
-See `../docs/app-README.md` for the full app-level documentation.
+## 📊 Status
+
+**Current Phase**: 4.1 - Playtest & Stabilize
+- ✅ All features implemented
+- ⏳ Manual playtest in progress
+- ⏳ Bug fixes as needed
+- 🎯 Target: Merge to main when stable
+
+See `TODO.md` for active tasks and `PHASE-3.md` for complete backlog.
+
+## 🐛 Known Issues
+
+Check `TODO.md` for current bugs discovered during playtest.
+
+## 🚀 CI/CD
+
+- **GitHub Actions**: Automated testing, linting, E2E tests, Lighthouse audits
+- **Status**: [![CI](https://github.com/nitsuah/games/actions/workflows/ci-cd.yml/badge.svg?branch=phase-4)](https://github.com/nitsuah/games/actions)
+
+---
+
+Built with ❤️ using Next.js 15, Three.js, React Three Fiber
