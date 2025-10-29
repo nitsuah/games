@@ -81,9 +81,11 @@ export const POWER_UPS = [
     type: 'rapidFire',
     duration: 10000,
     effect: ({ setRapidFireActive, showFlash }) => {
+      console.log('🔫 RAPID FIRE ACTIVATED!');
       setRapidFireActive(true);
       showFlash('red', 100);
       setTimeout(() => {
+        console.log('🔫 Rapid fire ended');
         setRapidFireActive(false);
         showFlash('red', 0);
       }, 10000);

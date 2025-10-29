@@ -48,8 +48,8 @@ const LaserBeamContent = ({ lasers, weaponType, thickness = 1, glowIntensity = 0
   const BASE_SEGMENTS = 6; // base number of sprite segments per tracer
   const SIZE_MULT = 0.9; // scale multiplier for sprite size
   
-  // Weapon-specific size scaling - make spread projectiles 50% smaller
-  const weaponSizeScale = weaponType === 'spread' ? 0.5 : 1.0;
+  // Weapon-specific size scaling - make spread projectiles even smaller (30% of original size)
+  const weaponSizeScale = weaponType === 'spread' ? 0.3 : 1.0;
 
   // Map trailQuality to numeric multipliers for density and scale
   const qualityMap = {
