@@ -26,6 +26,7 @@ const FPSCounter = dynamic(() => import('../UI/FPSCounter'), { ssr: false });
 const AmmoIndicator = dynamic(() => import('../UI/AmmoIndicator'), { ssr: false });
 const ComboDisplay = dynamic(() => import('../UI/ComboDisplay'), { ssr: false });
 const WaveIndicator = dynamic(() => import('../UI/WaveIndicator'), { ssr: false });
+const DebugMenu = dynamic(() => import('../UI/DebugMenu'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
@@ -536,38 +537,14 @@ const Game = ({ onHit, onMiss }) => {
         <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
       </div>
       
-      {/* Bottom right - Debug info (weapon, ammo, trail quality) */}
+      {/* Bottom right - Weapon and ammo info */}
       <div style={{ position: 'fixed', bottom: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
         <AmmoIndicator weapon={weapon} ammo={ammo} />
         <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
-        <div className="trail-quality-control" style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-          <span style={{fontSize: 12, color: 'white'}}>Trails:</span>
-          {['off','low','high'].map(q => (
-            <button
-              key={q}
-              aria-pressed={trailQuality === q}
-              aria-label={`Trail quality ${q}`}
-              onClick={() => {
-                setTrailQuality(q)
-                try { localStorage.setItem('trailQuality', q) } catch {
-                  // ignore
-                }
-              }}
-              style={{
-                padding: '4px 8px',
-                borderRadius: 4,
-                border: trailQuality === q ? '2px solid #fff' : '1px solid rgba(255,255,255,0.2)',
-                background: trailQuality === q ? 'rgba(255,255,255,0.06)' : 'transparent',
-                color: '#fff',
-                cursor: 'pointer',
-                fontSize: 12,
-              }}
-            >
-              {q === 'off' ? 'Off' : q === 'low' ? 'Low' : 'High'}
-            </button>
-          ))}
-        </div>
       </div>
+
+      {/* Debug menu - collapsible pill with settings */}
+      <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
 
       {/* Bottom-right stack: score and combo to reduce top-right clutter */}
       <div style={{ position: 'fixed', right: 12, bottom: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>

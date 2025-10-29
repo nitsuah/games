@@ -27,6 +27,50 @@ test.describe('Asteroid Game', () => {
     // Check that game didn't crash
     await expect(canvas).toBeVisible();
   });
+
+  test('should cycle trail quality with T key', async ({ page }) => {
+    await page.goto('/asteroid');
+    await page.waitForSelector('canvas', { timeout: 10000 });
+    
+    // Click canvas to focus the game
+    const canvas = page.locator('canvas');
+    await canvas.click();
+    
+    // Get initial trail quality from localStorage
+    const initialQuality = await page.evaluate(() => {
+      return localStorage.getItem('trailQuality') || 'high';
+    });
+    
+    // Press 'T' key to cycle trail quality
+    await page.keyboard.press('t');
+    
+    // Wait a bit for localStorage to update
+    await page.waitForTimeout(100);
+    
+    // Verify localStorage was updated
+    const newQuality = await page.evaluate(() => {
+      return localStorage.getItem('trailQuality');
+    });
+    
+    // Quality should have cycled: high -> off, off -> low, low -> high
+    const expectedCycle = {
+      'high': 'off',
+      'off': 'low',
+      'low': 'high'
+    };
+    
+    expect(newQuality).toBe(expectedCycle[initialQuality]);
+    
+    // Press 'T' again to verify full cycle
+    await page.keyboard.press('t');
+    await page.waitForTimeout(100);
+    
+    const thirdQuality = await page.evaluate(() => {
+      return localStorage.getItem('trailQuality');
+    });
+    
+    expect(thirdQuality).toBe(expectedCycle[newQuality]);
+  });
 });
 
 test.describe('FPS Game', () => {
