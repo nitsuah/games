@@ -1,19 +1,6 @@
 // Minimal service worker to satisfy Lighthouse service-worker audit
-self.addEventListener('install', (_event) => {
-  // activate immediately
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', (_event) => {
-  self.clients.claim();
-});
-
-self.addEventListener('fetch', (event) => {
-  // Default: network first
-  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
-});
-// Minimal service worker that claims clients and provides basic offline installability
 self.addEventListener('install', () => {
+  // activate immediately
   self.skipWaiting();
 });
 
@@ -26,7 +13,23 @@ self.addEventListener('activate', () => {
 self.addEventListener('fetch', (event) => {
   // Do not intercept non-GET requests
   if (event.request.method !== 'GET') return;
+  
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+    fetch(event.request).catch(() => {
+      // If cache match fails, return a valid Response to prevent TypeError
+      return caches.match(event.request).then((response) => {
+        if (response) {
+          return response;
+        }
+        // Return a valid 404 Response instead of undefined
+        return new Response('Not found', { 
+          status: 404, 
+          statusText: 'Not Found',
+          headers: new Headers({
+            'Content-Type': 'text/plain'
+          })
+        });
+      });
+    })
   );
 });

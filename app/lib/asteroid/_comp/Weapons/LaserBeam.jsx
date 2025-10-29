@@ -1,9 +1,32 @@
-import React from 'react';
+import React, { Suspense, Component } from 'react';
 import * as THREE from 'three';
 import { useLoader } from '@react-three/fiber';
 import { TextureLoader } from 'three';
 
-const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, -5, 0), trailQuality = 'high' }) => {
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('LaserBeam texture loading error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // Return null to hide the component on error
+      return null;
+    }
+    return this.props.children;
+  }
+}
+
+const LaserBeamContent = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, -5, 0), trailQuality = 'high' }) => {
   if (!Array.isArray(lasers) || lasers.length === 0) return null;
 
   const getLaserColor = () => {
@@ -22,11 +45,20 @@ const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, off
   const laserColor = getLaserColor();
 
   // Load per-weapon glow sprites (single set of loaders; pick texture after load)
-  const [spreadTex, laserTex, explosiveTex] = useLoader(TextureLoader, [
-    '/images/glow_spread.png',
-    '/images/glow_laser.png',
-    '/images/glow_explosive.png',
-  ]);
+  const textures = useLoader(
+    TextureLoader,
+    [
+      '/images/glow_spread.png',
+      '/images/glow_laser.png',
+      '/images/glow_explosive.png',
+    ],
+    (loader) => {
+      // Add error handling for texture loading
+      loader.crossOrigin = 'anonymous';
+    }
+  );
+  
+  const [spreadTex, laserTex, explosiveTex] = textures;
   const spriteTexture = weaponType === 'laser' ? laserTex : weaponType === 'explosive' ? explosiveTex : spreadTex;
 
   // Trail tuning constants (easy to tweak)
@@ -92,6 +124,16 @@ const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, off
         );
       })}
     </>
+  );
+};
+
+const LaserBeam = (props) => {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={null}>
+        <LaserBeamContent {...props} />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 
