@@ -1,13 +1,12 @@
 .scoreDisplay {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  /* Removed position:absolute - parent controls positioning */
   color: #ffffff;
-  /* stronger overlay background for contrast */
   background: rgba(0, 0, 0, 0.95);
-  padding: 8px;
-  border-radius: 6px;
+  padding: 10px 14px;
+  border-radius: 8px;
   font-size: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes pulse {
@@ -23,9 +22,7 @@
 }
 
 .scoreContainer {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+  /* Removed position:absolute - parent controls positioning */
   color: #ffffff;
   font-size: 24px;
   font-family: 'Arial', sans-serif;

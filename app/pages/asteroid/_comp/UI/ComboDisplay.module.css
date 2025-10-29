@@ -1,9 +1,6 @@
 .container {
-  position: fixed;
-  top: 50%;
-  right: 50px;
-  transform: translateY(-50%);
-  z-index: 1000;
+  /* Removed position:fixed - parent controls positioning */
+  display: inline-block;
 }
 
 .combo {

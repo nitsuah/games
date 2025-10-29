@@ -1,8 +1,5 @@
 .container {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
+  /* Removed position:fixed - parent controls positioning */
   min-width: 200px;
 }
 

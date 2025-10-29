@@ -537,14 +537,25 @@ const Game = ({ onHit, onMiss }) => {
         trailQuality={trailQuality}
       />
       {/* Top left - FPS counter */}
-      <div style={{ position: 'fixed', top: 12, left: 12, zIndex: 500 }}>
+      {/* HUD Layout - Organized in 4 corners */}
+      
+      {/* TOP LEFT - FPS & Score/Combo */}
+      <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
         <FPSCounter />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <ScoreDisplay score={score} />
+          <ComboDisplay combo={combo} multiplier={comboMultiplier} />
+        </div>
       </div>
       
-      {/* Top right - Wave, Health, Power-ups */}
-      <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+      {/* TOP RIGHT - Wave & Health */}
+      <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
         <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
         <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
+      </div>
+      
+      {/* RIGHT SIDE - Power-ups (below health) */}
+      <div style={{ position: 'fixed', top: '140px', right: 16, zIndex: 500 }}>
         <PowerUpIndicator
           shieldActive={shieldActive}
           rapidFireActive={rapidFireActive}
@@ -554,20 +565,14 @@ const Game = ({ onHit, onMiss }) => {
         />
       </div>
       
-      {/* Bottom right - Weapon and ammo info */}
-      <div style={{ position: 'fixed', bottom: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+      {/* BOTTOM RIGHT - Weapon & Ammo */}
+      <div style={{ position: 'fixed', bottom: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
         <AmmoIndicator weapon={weapon} ammo={ammo} />
         <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
       </div>
 
-      {/* Debug menu - collapsible pill with settings */}
+      {/* BOTTOM LEFT - Debug menu */}
       <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
-
-      {/* Bottom left - Score and combo */}
-      <div style={{ position: 'fixed', left: 12, bottom: 100, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
-        <ScoreDisplay score={score} />
-        <ComboDisplay combo={combo} multiplier={comboMultiplier} />
-      </div>
       {weapon === 'spread' && <ShotReticle />}
       {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
       <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
