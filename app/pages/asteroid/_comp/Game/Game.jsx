@@ -18,6 +18,7 @@ import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/
 import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
 import { updateScore as updateScoreFn } from '@/lib/asteroid/_comp/Game/updateScore';
 import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
+import { saveGameStats } from '@/utils/saveGameStats';
 const ShotReticle = dynamic(() => import('../UI/ShotReticle'), { ssr: false });
 const PowerUpIndicator = dynamic(() => import('../UI/PowerUpIndicator'), { ssr: false });
 const HealthBar = dynamic(() => import('../UI/HealthBar'), { ssr: false });
@@ -222,7 +223,9 @@ const Game = ({ onHit, onMiss }) => {
   // Apply slow motion effect
   useEffect(() => {
     if (slowMotionActive) {
-      console.log('Slow Motion is active. Target speeds are reduced.');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Slow Motion is active. Target speeds are reduced.');
+      }
       setTargets((prevTargets) =>
         prevTargets.map((target) => ({
           ...target,
@@ -284,15 +287,21 @@ const Game = ({ onHit, onMiss }) => {
   // Handle player state
   useEffect(() => {
     const handleCollision = () => {
-      console.log('[Game] playerCollision event received'); // Debug: confirm event is received
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[Game] playerCollision event received');
+      }
       if (gameOver) {
-        console.log('Game is over. Skipping collision handling.');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Game is over. Skipping collision handling.');
+        }
         return;
       }
 
       if (health > 0) {
-        console.log('Calling handleHealthDepletionFn...');
-        console.log(`shieldActive: ${shieldActive}, invincibilityActive: ${invincibilityActive}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Calling handleHealthDepletionFn...');
+          console.log(`shieldActive: ${shieldActive}, invincibilityActive: ${invincibilityActive}`);
+        }
 
         handleHealthDepletionFn({
           health,
@@ -306,7 +315,9 @@ const Game = ({ onHit, onMiss }) => {
           setShieldActive,
         });
       } else {
-        console.log('Health is already zero or game is over. Skipping handleHealthDepletionFn.');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Health is already zero or game is over. Skipping handleHealthDepletionFn.');
+        }
       }
     };
 
@@ -330,7 +341,9 @@ const Game = ({ onHit, onMiss }) => {
 
   useEffect(() => {
     const handleShoot = () => {
-      console.log('Shooting disabled because the game is over.');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Shooting disabled because the game is over.');
+      }
     };
 
     if (gameOver) {
@@ -384,7 +397,9 @@ const Game = ({ onHit, onMiss }) => {
     
     // When all targets destroyed, start next wave (but not on initial render when targets is empty)
     if (activeTargets.length === 0 && currentWave >= 1) {
-      console.log(`Wave ${currentWave} complete! Starting wave ${currentWave + 1}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Wave ${currentWave} complete! Starting wave ${currentWave + 1}`);
+      }
       
       // Show wave transition
       setShowWaveTransition(true);
@@ -462,34 +477,26 @@ const Game = ({ onHit, onMiss }) => {
   // Check for game over when health reaches 0
   useEffect(() => {
     if (health <= 0 && !gameOver) {
-      console.log('Health depleted - triggering game over');
-      console.log('Current score:', score, 'Hits:', hits, 'Misses:', misses);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Health depleted - triggering game over');
+        console.log('Current score:', score, 'Hits:', hits, 'Misses:', misses);
+      }
       setGameOver(true);
       pauseSound('bgm');
       playSound('gameOver');
       document.exitPointerLock();
       
-      // Save high score and accuracy
-      const accuracy = hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0;
-      
-      if (score > highScore) {
-        setHighScore(score);
-        setIsNewHighScore(true);
-        try {
-          localStorage.setItem('asteroidHighScore', String(score));
-        } catch (err) {
-          console.warn('Failed to save high score:', err);
-        }
-      }
-      
-      if (accuracy > bestAccuracy) {
-        setBestAccuracy(accuracy);
-        try {
-          localStorage.setItem('asteroidBestAccuracy', String(accuracy));
-        } catch (err) {
-          console.warn('Failed to save best accuracy:', err);
-        }
-      }
+      // Save high score and accuracy using utility function
+      saveGameStats({
+        score,
+        hits,
+        misses,
+        highScore,
+        bestAccuracy,
+        setHighScore,
+        setBestAccuracy,
+        setIsNewHighScore,
+      });
     }
   }, [health, gameOver, setGameOver, pauseSound, playSound, score, highScore, setHighScore, setIsNewHighScore, hits, misses, bestAccuracy, setBestAccuracy]);
 

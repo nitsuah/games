@@ -8,13 +8,17 @@ const PauseMenu = ({ onResume, onQuit, score }) => {
   const toggleSound = () => {
     setSoundEnabled(!soundEnabled);
     // TODO: Connect to actual sound system
-    console.log('Sound toggled:', !soundEnabled);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Sound toggled:', !soundEnabled);
+    }
   };
 
   const toggleMusic = () => {
     setMusicEnabled(!musicEnabled);
     // TODO: Connect to actual music system
-    console.log('Music toggled:', !musicEnabled);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Music toggled:', !musicEnabled);
+    }
   };
 
   return (
