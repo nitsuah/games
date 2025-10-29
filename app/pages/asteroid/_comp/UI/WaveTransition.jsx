@@ -1,6 +1,6 @@
 import styles from './WaveTransition.module.css';
 
-const WaveTransition = ({ wave, score, highScore, isNewHighScore, accuracy }) => {
+const WaveTransition = ({ wave = 1, score = 0, highScore = 0, isNewHighScore = false, accuracy = 0 }) => {
   return (
     <div className={styles.overlay}>
       <div className={styles.container}>
@@ -14,7 +14,7 @@ const WaveTransition = ({ wave, score, highScore, isNewHighScore, accuracy }) =>
           
           <div className={styles.statRow}>
             <span className={styles.label}>Accuracy:</span>
-            <span className={styles.value}>{accuracy.toFixed(1)}%</span>
+            <span className={styles.value}>{(accuracy ?? 0).toFixed(1)}%</span>
           </div>
           
           {isNewHighScore && (
