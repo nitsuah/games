@@ -9,6 +9,7 @@ import PowerUp from '@/_components/effects/PowerUp';
 import LaserBeam from '@/lib/asteroid/_comp/Weapons/LaserBeam';
 import ShieldEffect from '@/lib/asteroid/_comp/UI/ShieldEffect';
 import InvincibilityEffect from '@/lib/asteroid/_comp/UI/InvincibilityEffect';
+import BoundaryBox from '@/lib/asteroid/_comp/UI/BoundaryBox';
 
 const GameCanvas = ({
   gameOver,
@@ -81,6 +82,7 @@ const GameCanvas = ({
 
       <ShieldEffect shieldActive={shieldActive} />
       <InvincibilityEffect invincibilityActive={invincibilityActive} />
+      <BoundaryBox />
 
       {Array.isArray(showLaser) && showLaser.length > 0 && (
         <LaserBeam lasers={showLaser} weaponType={weapon} trailQuality={trailQuality} />

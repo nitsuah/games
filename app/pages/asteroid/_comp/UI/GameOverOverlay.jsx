@@ -9,6 +9,7 @@ const GameOverOverlay = ({
   highScore = 0,
   restartGame = () => {},
 }) => {
+  console.log('GameOverOverlay rendered with:', { score, hits, misses, highScore, bestAccuracy });
   const finalAccuracy = hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
 
   return (

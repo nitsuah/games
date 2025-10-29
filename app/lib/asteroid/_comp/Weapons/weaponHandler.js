@@ -67,8 +67,9 @@ export function weaponHandler({
   }
 
   if (type === 'spread') {
-    // Buckshot with soup can radius - extremely tight spread
-    const { SPREAD_ANGLE = 0.008, SPREAD_COUNT = 8, SPREAD_RANGE = 150 } = weaponParams; // Soup can tight - reduced from 0.025 to 0.008
+    // Buckshot with very tight spread that converges at optimal range
+    const { SPREAD_ANGLE = 0.005, SPREAD_COUNT = 8, SPREAD_RANGE = 150 } = weaponParams; // Tighter spread: 0.005 (was 0.008)
+    const CONVERGENCE_DISTANCE = 60; // Pellets converge at this distance
     const hitTargets = new Set();
     const lasers = [];
     
@@ -111,12 +112,16 @@ export function weaponHandler({
       const offsetX = Math.cos(angle) * radius;
       const offsetY = Math.sin(angle) * radius;
       
-      const spreadDirection = forwardDirection.clone()
-        .add(right.clone().multiplyScalar(offsetX))
-        .add(up.clone().multiplyScalar(offsetY))
+      // Add convergence: pellets angle inward slightly to converge at optimal range
+      // This makes the shotgun more effective at medium range
+      const convergencePoint = from.clone().add(forwardDirection.clone().multiplyScalar(CONVERGENCE_DISTANCE));
+      const toConvergence = convergencePoint.clone()
+        .add(right.clone().multiplyScalar(offsetX * CONVERGENCE_DISTANCE))
+        .add(up.clone().multiplyScalar(offsetY * CONVERGENCE_DISTANCE))
+        .sub(from)
         .normalize();
       
-      const to = from.clone().add(spreadDirection.multiplyScalar(SPREAD_RANGE));
+      const to = from.clone().add(toConvergence.multiplyScalar(SPREAD_RANGE));
       // Faster projectile speed (3.5 base + small variation)
       lasers.push({ from: from.clone(), to, speed: 3.5 + Math.random() * 0.5 });
     }

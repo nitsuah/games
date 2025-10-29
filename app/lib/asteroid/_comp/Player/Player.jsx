@@ -28,7 +28,7 @@ const Player = ({
   const [shieldActive, setShieldActive] = useState(true);
 
   const BASE_SPEED = 5;
-  const SPEED_MULTIPLIER = speedBoostActive ? 50.0 : 1; // 50x boost - SUPER FAST for testing
+  const SPEED_MULTIPLIER = speedBoostActive ? 100.0 : 1; // 100x boost - very noticeable speed increase
   const MOVEMENT_SPEED = BASE_SPEED * SPEED_MULTIPLIER;
 
   useEffect(() => {
@@ -123,8 +123,8 @@ const Player = ({
         velocityRef.current.setLength(maxVelocity);
       }
     } else {
-      // Apply damping when no keys pressed - coast to a stop (space physics)
-      velocityRef.current.multiplyScalar(0.92); // 92% of velocity each frame = gradual slowdown
+      // Apply stronger damping for more noticeable drift/inertia (space physics)
+      velocityRef.current.multiplyScalar(0.85); // 85% of velocity each frame = more drift before stopping
       
       // Stop completely when very slow
       if (velocityRef.current.length() < 0.001) {

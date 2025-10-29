@@ -55,20 +55,47 @@ const ShieldEffect = ({ shieldActive }) => {
 
   if (!visible && fadeRef.current <= 0) return null;
 
+  // Create a ring/halo effect using multiple rings at different angles
   return (
-    <mesh ref={shieldRef} frustumCulled={false}>
-      <sphereGeometry args={[2.6, 48, 48]} />
-      <meshStandardMaterial
-        ref={materialRef}
-        color="#00ffff"
-        transparent
-        opacity={0.15}
-        emissive="#00ffff"
-        emissiveIntensity={0.4}
-        wireframe={true}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
+    <group ref={shieldRef} frustumCulled={false}>
+      {/* Main horizontal ring */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[2.4, 0.08, 8, 48]} />
+        <meshStandardMaterial
+          ref={materialRef}
+          color="#00ffff"
+          transparent
+          opacity={0.4}
+          emissive="#00ffff"
+          emissiveIntensity={0.8}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      {/* Vertical ring 1 */}
+      <mesh rotation={[0, 0, 0]}>
+        <torusGeometry args={[2.4, 0.06, 8, 48]} />
+        <meshStandardMaterial
+          color="#00ffff"
+          transparent
+          opacity={0.25}
+          emissive="#00ffff"
+          emissiveIntensity={0.6}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      {/* Diagonal ring */}
+      <mesh rotation={[0, Math.PI / 4, Math.PI / 4]}>
+        <torusGeometry args={[2.4, 0.05, 8, 48]} />
+        <meshStandardMaterial
+          color="#00ffff"
+          transparent
+          opacity={0.2}
+          emissive="#00ffff"
+          emissiveIntensity={0.5}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
   );
 };
 

@@ -26,6 +26,8 @@ const AmmoIndicator = dynamic(() => import('../UI/AmmoIndicator'), { ssr: false 
 const ComboDisplay = dynamic(() => import('../UI/ComboDisplay'), { ssr: false });
 const WaveIndicator = dynamic(() => import('../UI/WaveIndicator'), { ssr: false });
 const DebugMenu = dynamic(() => import('../UI/DebugMenu'), { ssr: false });
+const WaveTransition = dynamic(() => import('../UI/WaveTransition'), { ssr: false });
+const PauseMenu = dynamic(() => import('../UI/PauseMenu'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
@@ -395,13 +397,13 @@ const Game = ({ onHit, onMiss }) => {
         localStorage.setItem('highestWave', nextWave.toString());
       }
       
-      // Wait 2 seconds then spawn next wave
+      // Wait 5 seconds then spawn next wave (increased for stats visibility)
       setTimeout(() => {
         setCurrentWave(nextWave);
         const targetCount = getTargetCountForWave(nextWave);
         setTargets(generateInitialTargets(targetCount, nextWave));
         setShowWaveTransition(false);
-      }, 2000);
+      }, 5000);
     }
   }, [targets, gameOver, paused, showWaveTransition, currentWave, highestWave, setHighestWave, setCurrentWave, setShowWaveTransition, setTargets]);
 
@@ -461,6 +463,7 @@ const Game = ({ onHit, onMiss }) => {
   useEffect(() => {
     if (health <= 0 && !gameOver) {
       console.log('Health depleted - triggering game over');
+      console.log('Current score:', score, 'Hits:', hits, 'Misses:', misses);
       setGameOver(true);
       pauseSound('bgm');
       playSound('gameOver');
@@ -572,23 +575,27 @@ const Game = ({ onHit, onMiss }) => {
           restartGame={restartGame}
         />
       )}
+      {showWaveTransition && !gameOver && (
+        <WaveTransition 
+          wave={currentWave}
+          score={score}
+          highScore={highScore}
+          isNewHighScore={score > highScore}
+          accuracy={hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0}
+        />
+      )}
       {paused && !gameOver && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          color: 'white',
-          fontSize: '48px',
-          fontWeight: 'bold',
-          textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
-          zIndex: 1000,
-        }}>
-          PAUSED
-          <div style={{ fontSize: '24px', marginTop: '20px', textAlign: 'center' }}>
-            Press ESC to resume
-          </div>
-        </div>
+        <PauseMenu 
+          onResume={() => setPaused(false)}
+          onQuit={() => {
+            // Quit to main menu with current score (treat as game over)
+            setGameOver(true);
+            pauseSound('bgm');
+            playSound('gameOver');
+            document.exitPointerLock();
+          }}
+          score={score}
+        />
       )}
     </div>
   );
