@@ -526,12 +526,18 @@ const Game = ({ onHit, onMiss }) => {
         shieldActive={shieldActive}
         setShieldActive={setShieldActive}
         rapidFireActive={rapidFireActive}
+        invincibilityActive={invincibilityActive}
         trailQuality={trailQuality}
       />
+      {/* Top right - User info (wave, health, FPS) */}
       <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
         <FPSCounter />
         <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
         <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
+      </div>
+      
+      {/* Bottom right - Debug info (weapon, ammo, trail quality) */}
+      <div style={{ position: 'fixed', bottom: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
         <AmmoIndicator weapon={weapon} ammo={ammo} />
         <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
         <div className="trail-quality-control" style={{display: 'flex', gap: 8, alignItems: 'center'}}>

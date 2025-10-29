@@ -29,9 +29,9 @@ const ShieldEffect = ({ shieldActive }) => {
     // follow camera
     shieldRef.current.position.copy(camera.position);
 
-  // pulse scale (slightly stronger pulse when visible)
-  const pulseAmp = 0.08;
-  const pulse = 1 + Math.sin(clock.elapsedTime * 2.5) * pulseAmp;
+    // More pronounced pulse: vary both scale and slight back-and-forth rotation
+    const pulseAmp = 0.20; // Increased from 0.08
+    const pulse = 1 + Math.sin(clock.elapsedTime * 2.5) * pulseAmp;
     shieldRef.current.scale.setScalar(pulse);
 
     // animate fade in/out
@@ -41,12 +41,16 @@ const ShieldEffect = ({ shieldActive }) => {
     if (fadeRef.current < target) fadeRef.current = Math.min(target, fadeRef.current + delta * speed);
     if (fadeRef.current > target) fadeRef.current = Math.max(target, fadeRef.current - delta * speed);
 
-  const opacity = fadeRef.current;
-  // wireframe should be subtle; emissive pulses with opacity
-  materialRef.current.opacity = 0.08 * opacity + 0.02 * (1 - opacity);
-  materialRef.current.emissiveIntensity = 0.9 * opacity;
-    // subtle rotation so it feels alive
+    const opacity = fadeRef.current;
+    // More pronounced wireframe - increased base opacity and emissive
+    materialRef.current.opacity = 0.25 * opacity + 0.04 * (1 - opacity);
+    materialRef.current.emissiveIntensity = 1.6 * opacity;
+    
+    // Gentle back-and-forth rotation (subtle wave effect)
+    const rotationWave = Math.sin(clock.elapsedTime * 1.5) * 0.15;
     shieldRef.current.rotation.y += delta * 0.25;
+    shieldRef.current.rotation.x = rotationWave * 0.5;
+    shieldRef.current.rotation.z = rotationWave * 0.3;
   });
 
   if (!visible && fadeRef.current <= 0) return null;

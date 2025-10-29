@@ -14,9 +14,18 @@ export function weaponHandler({
   weaponParams = {},
   triggerExplosion,
 }) {
-  const from = camera.position.clone();
   const forwardDirection = new THREE.Vector3();
   camera.getWorldDirection(forwardDirection);
+  
+  // Different weapons need different starting positions:
+  // - All weapons now start forward of camera for proper visualization
+  // - Spread: starts forward with slight down offset (projectile travels through space)
+  // - Laser/Explosive: start forward (beam renders from weapon position)
+  const weaponOffset = type === 'spread' 
+    ? forwardDirection.clone().multiplyScalar(2).add(new THREE.Vector3(0, -0.5, 0))
+    : forwardDirection.clone().multiplyScalar(2.5).add(new THREE.Vector3(0, -0.3, 0));
+  
+  const from = camera.position.clone().add(weaponOffset);
 
   if (type === 'laser') {
     // Laser logic
@@ -55,17 +64,21 @@ export function weaponHandler({
   }
 
   if (type === 'spread') {
-    // Spread logic — widened and sped-up for better feel
-  const { SPREAD_ANGLE = 1.25, SPREAD_COUNT = 18, SPREAD_RANGE = 260 } = weaponParams;
+    // Buckshot with tight spread pattern
+    const { SPREAD_ANGLE = 0.035, SPREAD_COUNT = 8, SPREAD_RANGE = 150 } = weaponParams; // Tightened from 0.06 to 0.035
     const hitTargets = new Set();
     const lasers = [];
+    
+    // TODO: Shotgun hit detection is too generous - hitting everything
+    // Need to review and tighten the hit cone or improve collision logic
+    // Check if we're hitting anything with the spread cone
     const updatedTargets = targets.map((target) => {
       if (!target.isHit) {
         const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
-        const toTarget = targetPosition.sub(from).normalize();
+        const toTarget = targetPosition.clone().sub(from).normalize();
         const distance = from.distanceTo(targetPosition);
         const angle = forwardDirection.angleTo(toTarget);
-        if (angle <= SPREAD_ANGLE && distance <= SPREAD_RANGE) {
+        if (angle <= SPREAD_ANGLE * 3 && distance <= SPREAD_RANGE) {
           hitTargets.add(target.id);
           playSound('hit');
           return { ...target, isHit: true };
@@ -80,22 +93,32 @@ export function weaponHandler({
       if (onMiss) onMiss();
     }
 
+    // Create buckshot pattern with full randomization
+    const right = new THREE.Vector3();
+    const up = new THREE.Vector3();
+    right.crossVectors(forwardDirection, camera.up).normalize();
+    up.crossVectors(right, forwardDirection).normalize();
+
     for (let i = 0; i < SPREAD_COUNT; i++) {
-      const spreadDirection = forwardDirection
-        .clone()
-        .applyEuler(
-          new THREE.Euler(
-            (Math.random() - 0.5) * SPREAD_ANGLE,
-            (Math.random() - 0.5) * SPREAD_ANGLE,
-            0
-          )
-        );
+      // Fully random angle for each pellet (not evenly distributed)
+      const angle = Math.random() * Math.PI * 2;
+      // Random radius within the spread cone
+      const radius = SPREAD_ANGLE * Math.random();
+      
+      const offsetX = Math.cos(angle) * radius;
+      const offsetY = Math.sin(angle) * radius;
+      
+      const spreadDirection = forwardDirection.clone()
+        .add(right.clone().multiplyScalar(offsetX))
+        .add(up.clone().multiplyScalar(offsetY))
+        .normalize();
+      
       const to = from.clone().add(spreadDirection.multiplyScalar(SPREAD_RANGE));
-      // attach a speed scalar to the tracer so the renderer can animate a trail
-      lasers.push({ from, to, speed: 1.6 + Math.random() * 0.8 });
+      // Faster projectile speed (3.5 base + small variation)
+      lasers.push({ from: from.clone(), to, speed: 3.5 + Math.random() * 0.5 });
     }
+    
     if (setShowLaser) {
-      // Show tracers longer so the ShootingSystem can render fading trails
       setShowLaser(lasers);
       setTimeout(() => setShowLaser(null), 350);
     }
@@ -112,7 +135,7 @@ export function weaponHandler({
       intersects[0]?.point || from.clone().add(forwardDirection.multiplyScalar(maxRange));
     if (setShowLaser) {
       setShowLaser([{ from, to: impactPoint }]);
-      setTimeout(() => setShowLaser(null), 120);
+      setTimeout(() => setShowLaser(null), 600); // Increased from 350ms to 600ms - show beam even longer
     }
     if (triggerExplosion) triggerExplosion(impactPoint);
 

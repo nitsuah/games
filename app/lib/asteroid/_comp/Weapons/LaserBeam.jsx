@@ -1,7 +1,5 @@
 import React, { Suspense, Component } from 'react';
 import * as THREE from 'three';
-import { useLoader } from '@react-three/fiber';
-import { TextureLoader } from 'three';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -26,7 +24,7 @@ class ErrorBoundary extends Component {
   }
 }
 
-const LaserBeamContent = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, -5, 0), trailQuality = 'high' }) => {
+const LaserBeamContent = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, 0, 0), trailQuality = 'high' }) => {
   if (!Array.isArray(lasers) || lasers.length === 0) return null;
 
   const getLaserColor = () => {
@@ -44,26 +42,14 @@ const LaserBeamContent = ({ lasers, weaponType, thickness = 1, glowIntensity = 0
 
   const laserColor = getLaserColor();
 
-  // Load per-weapon glow sprites (single set of loaders; pick texture after load)
-  const textures = useLoader(
-    TextureLoader,
-    [
-      '/images/glow_spread.png',
-      '/images/glow_laser.png',
-      '/images/glow_explosive.png',
-    ],
-    (loader) => {
-      // Add error handling for texture loading
-      loader.crossOrigin = 'anonymous';
-    }
-  );
-  
-  const [spreadTex, laserTex, explosiveTex] = textures;
-  const spriteTexture = weaponType === 'laser' ? laserTex : weaponType === 'explosive' ? explosiveTex : spreadTex;
+  // Removed texture loading to fix errors - using solid colors instead
 
   // Trail tuning constants (easy to tweak)
   const BASE_SEGMENTS = 6; // base number of sprite segments per tracer
   const SIZE_MULT = 0.9; // scale multiplier for sprite size
+  
+  // Weapon-specific size scaling - make spread projectiles 50% smaller
+  const weaponSizeScale = weaponType === 'spread' ? 0.5 : 1.0;
 
   // Map trailQuality to numeric multipliers for density and scale
   const qualityMap = {
@@ -81,7 +67,6 @@ const LaserBeamContent = ({ lasers, weaponType, thickness = 1, glowIntensity = 0
         if (distance < 1) return null;
 
         const direction = new THREE.Vector3().subVectors(laser.to, adjustedFrom).normalize();
-        const quaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
 
         // If laser has a 'speed' field, render it as a segmented fading trail to simulate a particle trail
         // respect trailQuality: off => no sprites, low => fewer segments
@@ -89,19 +74,18 @@ const LaserBeamContent = ({ lasers, weaponType, thickness = 1, glowIntensity = 0
           laser.speed && qualityMult > 0 ? Math.max(3, Math.floor(laser.speed * BASE_SEGMENTS * qualityMult)) : 1;
 
         if (segments > 1 && qualityMult > 0) {
-          const segLength = distance / segments;
+          // Render sprites along the beam path
           return (
-            <group key={index} position={adjustedFrom.clone()} quaternion={quaternion}>
+            <group key={index}>
               {Array.from({ length: segments }).map((_, sIdx) => {
                 const t = sIdx / segments; // 0..1 along the beam
-                const segPos = direction.clone().multiplyScalar(segLength * (sIdx + 0.5));
+                const segPos = new THREE.Vector3().lerpVectors(adjustedFrom, laser.to, t + 0.5 / segments);
                 const segOpacity = Math.max(0.04, 0.95 * (1 - t));
-                const segScale = Math.max(0.06, SIZE_MULT * qualityMult * (1 - t));
+                const segScale = Math.max(0.06, SIZE_MULT * qualityMult * weaponSizeScale * (1 - t));
 
                 return (
                   <sprite key={sIdx} position={segPos} scale={[segScale, segScale, 1]}>
                     <spriteMaterial
-                      map={spriteTexture}
                       color={laserColor}
                       transparent
                       opacity={segOpacity}
@@ -116,8 +100,10 @@ const LaserBeamContent = ({ lasers, weaponType, thickness = 1, glowIntensity = 0
         }
 
         // Fallback: render a solid cylinder beam when no segmented trail is desired
+        const beamMidpoint = new THREE.Vector3().addVectors(adjustedFrom, laser.to).multiplyScalar(0.5);
+        const beamQuat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
         return (
-          <mesh key={index} position={adjustedFrom.clone().add(laser.to).multiplyScalar(0.5)} quaternion={quaternion}>
+          <mesh key={index} position={beamMidpoint} quaternion={beamQuat}>
             <cylinderGeometry args={[thickness / 2, thickness / 4, distance, 16]} />
             <meshStandardMaterial color={laserColor} emissive={laserColor} emissiveIntensity={glowIntensity} transparent opacity={0.8} />
           </mesh>

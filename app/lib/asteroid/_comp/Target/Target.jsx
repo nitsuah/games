@@ -51,6 +51,8 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
 
   const handleClick = (event) => {
     event.stopPropagation();
+    // Prevent clicking when game is over or paused
+    if (isGameOver || isPaused) return;
     if (!isHit && onHit) onHit(targetId);
   };
 

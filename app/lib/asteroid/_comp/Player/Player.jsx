@@ -28,7 +28,7 @@ const Player = ({
   const [shieldActive, setShieldActive] = useState(true);
 
   const BASE_SPEED = 5;
-  const SPEED_MULTIPLIER = speedBoostActive ? 10.0 : 1; // 10x boost - VERY noticeable
+  const SPEED_MULTIPLIER = speedBoostActive ? 50.0 : 1; // 50x boost - SUPER FAST for testing
   const MOVEMENT_SPEED = BASE_SPEED * SPEED_MULTIPLIER;
 
   useEffect(() => {

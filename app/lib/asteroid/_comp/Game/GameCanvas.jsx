@@ -8,6 +8,7 @@ import TargetCollisionHandler from '@/lib/asteroid/_comp/Target/TargetCollisionH
 import PowerUp from '@/_components/effects/PowerUp';
 import LaserBeam from '@/lib/asteroid/_comp/Weapons/LaserBeam';
 import ShieldEffect from '@/lib/asteroid/_comp/UI/ShieldEffect';
+import InvincibilityEffect from '@/lib/asteroid/_comp/UI/InvincibilityEffect';
 
 const GameCanvas = ({
   gameOver,
@@ -32,6 +33,7 @@ const GameCanvas = ({
   setShieldActive,
   rapidFireActive,
   speedBoostActive,
+  invincibilityActive,
   trailQuality = 'high',
 }) => {
   return (
@@ -78,6 +80,7 @@ const GameCanvas = ({
       <TargetList targets={targets} handleTargetHit={handleTargetHit} setTargets={setTargets} isGameOver={gameOver} isPaused={paused} />
 
       <ShieldEffect shieldActive={shieldActive} />
+      <InvincibilityEffect invincibilityActive={invincibilityActive} />
 
       {Array.isArray(showLaser) && showLaser.length > 0 && (
         <LaserBeam lasers={showLaser} weaponType={weapon} trailQuality={trailQuality} />

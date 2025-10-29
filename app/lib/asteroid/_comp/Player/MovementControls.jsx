@@ -5,9 +5,9 @@ import { useSound } from '@/utils/audio/useSound';
 
 const MovementControls = () => {
   const { camera } = useThree();
-  const MAX_SPEED = 0.06; // cap world units per frame
-  const ACCEL = 0.0016; // stronger acceleration for responsive feel
-  const DAMPING = 0.92; // per-frame multiplier when no input
+  const MAX_SPEED = 0.25; // significantly increased max speed
+  const ACCEL = 0.008; // much stronger acceleration (5x)
+  const DAMPING = 0.85; // lower damping for more drift/inertia
   const keys = useRef({});
   const velocityRef = useRef(new THREE.Vector3());
   const { setThrusterVolume: _setThrusterVolume = () => {} } = useSound();
@@ -30,7 +30,7 @@ const MovementControls = () => {
     const moveCamera = () => {
       if (!document.pointerLockElement) return;
 
-  const frontVector = new THREE.Vector3();
+      const frontVector = new THREE.Vector3();
       const sideVector = new THREE.Vector3();
       const upVector = new THREE.Vector3(0, 1, 0);
 
@@ -52,14 +52,14 @@ const MovementControls = () => {
       }
       _setThrusterVolume(isMoving ? 0.3 : 0);
 
-  // acceleration based on inputs (use temporary vectors to avoid mutating frontVector/sideVector)
-  const accel = ACCEL;
-  if (keys.current['KeyW']) velocityRef.current.add(frontVector.clone().multiplyScalar(accel));
-  if (keys.current['KeyS']) velocityRef.current.sub(frontVector.clone().multiplyScalar(accel));
-  if (keys.current['KeyA']) velocityRef.current.add(sideVector.clone().multiplyScalar(accel));
-  if (keys.current['KeyD']) velocityRef.current.sub(sideVector.clone().multiplyScalar(accel));
-  if (keys.current['Space']) velocityRef.current.add(upVector.clone().multiplyScalar(accel));
-  if (keys.current['ShiftLeft']) velocityRef.current.sub(upVector.clone().multiplyScalar(accel));
+      // acceleration based on inputs (use temporary vectors to avoid mutating frontVector/sideVector)
+      const accel = ACCEL;
+      if (keys.current['KeyW']) velocityRef.current.add(frontVector.clone().multiplyScalar(accel));
+      if (keys.current['KeyS']) velocityRef.current.sub(frontVector.clone().multiplyScalar(accel));
+      if (keys.current['KeyA']) velocityRef.current.add(sideVector.clone().multiplyScalar(accel));
+      if (keys.current['KeyD']) velocityRef.current.sub(sideVector.clone().multiplyScalar(accel));
+      if (keys.current['Space']) velocityRef.current.add(upVector.clone().multiplyScalar(accel));
+      if (keys.current['ShiftLeft']) velocityRef.current.sub(upVector.clone().multiplyScalar(accel));
 
       // clamp velocity
       if (velocityRef.current.length() > MAX_SPEED) {
