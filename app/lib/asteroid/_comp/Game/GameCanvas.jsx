@@ -91,35 +91,35 @@ const GameCanvas = ({
         <LaserBeam lasers={showLaser} weaponType={weapon} trailQuality={trailQuality} />
       )}
 
-      {/* Health power-ups - spread across upper right quadrant */}
-      <PowerUp position={[25, 18, 0]} size={1} type="health" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[35, 8, 5]} size={1} type="health" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[20, 28, -5]} size={1} type="health" onCollect={handlePowerUpCollect} />
+      {/* Health power-ups - spread across upper right quadrant, larger and more spread out */}
+      <PowerUp position={[28, 22, 0]} size={1.8} type="health" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[42, 10, 8]} size={1.8} type="health" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[22, 35, -8]} size={1.8} type="health" onCollect={handlePowerUpCollect} />
 
-      {/* Shield power-ups - spread across upper left quadrant */}
-      <PowerUp position={[-25, 18, 0]} size={1} type="shield" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[-35, 8, 5]} size={1} type="shield" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[-20, 28, -5]} size={1} type="shield" onCollect={handlePowerUpCollect} />
+      {/* Shield power-ups - spread across upper left quadrant, larger and more spread out */}
+      <PowerUp position={[-28, 22, 0]} size={1.8} type="shield" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[-42, 10, 8]} size={1.8} type="shield" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[-22, 35, -8]} size={1.8} type="shield" onCollect={handlePowerUpCollect} />
 
-      {/* Rapid fire - spread across lower right quadrant */}
-      <PowerUp position={[25, -18, 0]} size={1} type="rapidFire" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[35, -8, 5]} size={1} type="rapidFire" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[20, -28, -5]} size={1} type="rapidFire" onCollect={handlePowerUpCollect} />
+      {/* Rapid fire - spread across lower right quadrant, larger and more spread out */}
+      <PowerUp position={[28, -22, 0]} size={1.8} type="rapidFire" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[42, -10, 8]} size={1.8} type="rapidFire" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[22, -35, -8]} size={1.8} type="rapidFire" onCollect={handlePowerUpCollect} />
 
-      {/* Slow motion - spread in center with Z variation */}
-      <PowerUp position={[0, 0, 15]} size={1} type="slowMotion" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[8, 12, 20]} size={1} type="slowMotion" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[-8, -12, 25]} size={1} type="slowMotion" onCollect={handlePowerUpCollect} />
+      {/* Slow motion - spread in center with Z variation, larger and more spread out */}
+      <PowerUp position={[0, 0, 18]} size={1.8} type="slowMotion" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[12, 16, 28]} size={1.8} type="slowMotion" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[-12, -16, 35]} size={1.8} type="slowMotion" onCollect={handlePowerUpCollect} />
 
-      {/* Invincibility - spread far right with depth */}
-      <PowerUp position={[40, 0, 0]} size={1} type="invincibility" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[38, 15, 10]} size={1} type="invincibility" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[42, -15, 8]} size={1} type="invincibility" onCollect={handlePowerUpCollect} />
+      {/* Invincibility - spread far right with depth, larger and more spread out */}
+      <PowerUp position={[48, 0, 0]} size={1.8} type="invincibility" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[45, 20, 15]} size={1.8} type="invincibility" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[50, -20, 12]} size={1.8} type="invincibility" onCollect={handlePowerUpCollect} />
 
-      {/* Speed boost - spread far left with depth */}
-      <PowerUp position={[-40, 0, 0]} size={1} type="speedBoost" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[-38, 15, 10]} size={1} type="speedBoost" onCollect={handlePowerUpCollect} />
-      <PowerUp position={[-42, -15, 8]} size={1} type="speedBoost" onCollect={handlePowerUpCollect} />
+      {/* Speed boost - spread far left with depth, larger and more spread out */}
+      <PowerUp position={[-48, 0, 0]} size={1.8} type="speedBoost" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[-45, 20, 15]} size={1.8} type="speedBoost" onCollect={handlePowerUpCollect} />
+      <PowerUp position={[-50, -20, 12]} size={1.8} type="speedBoost" onCollect={handlePowerUpCollect} />
     </Canvas>
   );
 };
