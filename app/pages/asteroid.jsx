@@ -1,6 +1,8 @@
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
+import { AudioProvider, useAudio } from '@/contexts/AudioContext';
 
 // Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
 const Game = dynamic(() => import('./asteroid/_comp/Game/Game'), { ssr: false });
@@ -30,7 +32,23 @@ const GameContainer = styled.div`
 `;
 
 const AsteroidPage = () => {
+  return (
+    <AudioProvider>
+      <AsteroidContent />
+    </AudioProvider>
+  );
+};
+
+const AsteroidContent = () => {
+  const { soundEnabled } = useAudio(); // Get soundEnabled state
   const { playSound } = useSound(); // Use the hook to access playSound
+
+  // Sync SoundManager with audio settings
+  useEffect(() => {
+    import('@/utils/audio/SoundManager').then((module) => {
+      module.default.setSoundEnabled(soundEnabled);
+    });
+  }, [soundEnabled]);
 
   const handleHit = () => {
     playSound('hit');

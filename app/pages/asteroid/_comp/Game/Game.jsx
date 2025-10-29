@@ -596,6 +596,29 @@ const Game = ({ onHit, onMiss }) => {
       {paused && !gameOver && (
         <PauseMenu 
           onResume={() => setPaused(false)}
+          onRestart={() => {
+            // Reset all game state to initial values
+            setScore(0);
+            setHits(0);
+            setMisses(0);
+            setCombo(0);
+            setComboMultiplier(1);
+            setHealth(INITIAL_HEALTH);
+            setCurrentWave(1);
+            setShowWaveTransition(false);
+            setTargets(generateInitialTargets(1));
+            setWeapon('spread');
+            setAmmo({ ...INITIAL_AMMO });
+            setCooldowns({ spread: 0, laser: 0, explosive: 0 });
+            setShowLaser([]);
+            setFlashQueue([]);
+            setPaused(false);
+            setGameOver(false);
+            setIsNewHighScore(false);
+            // Restart background music
+            pauseSound('bgm');
+            playSound('bgm');
+          }}
           onQuit={() => {
             // Quit to main menu with current score (treat as game over)
             setGameOver(true);

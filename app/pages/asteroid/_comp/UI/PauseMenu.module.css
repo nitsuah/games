@@ -98,6 +98,26 @@
   box-shadow: 0 8px 20px rgba(255, 68, 68, 0.4);
 }
 
+.warningButton {
+  background: linear-gradient(135deg, #ff6600, #ff9900) !important;
+  border-color: #ff6600 !important;
+  animation: pulse 1s infinite;
+}
+
+.warningButton:hover {
+  background: linear-gradient(135deg, #ff8800, #ffaa00) !important;
+  box-shadow: 0 8px 20px rgba(255, 102, 0, 0.6) !important;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 102, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 102, 0, 0.8);
+  }
+}
+
 .hint {
   font-size: 14px;
   padding: 4px 12px;

@@ -1,24 +1,34 @@
 import { useState } from 'react';
 import styles from './PauseMenu.module.css';
+import { useAudio } from '@/contexts/AudioContext';
 
-const PauseMenu = ({ onResume, onQuit, score }) => {
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [musicEnabled, setMusicEnabled] = useState(true);
+const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
+  const { soundEnabled, musicEnabled, toggleSound, toggleMusic } = useAudio();
+  const [showQuitConfirm, setShowQuitConfirm] = useState(false);
+  const [showRestartConfirm, setShowRestartConfirm] = useState(false);
 
-  const toggleSound = () => {
-    setSoundEnabled(!soundEnabled);
-    // TODO: Connect to actual sound system
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Sound toggled:', !soundEnabled);
+  const handleQuitClick = () => {
+    if (showQuitConfirm) {
+      onQuit();
+    } else {
+      setShowQuitConfirm(true);
     }
   };
 
-  const toggleMusic = () => {
-    setMusicEnabled(!musicEnabled);
-    // TODO: Connect to actual music system
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Music toggled:', !musicEnabled);
+  const handleRestartClick = () => {
+    if (showRestartConfirm) {
+      onRestart();
+    } else {
+      setShowRestartConfirm(true);
     }
+  };
+
+  const handleCancelQuit = () => {
+    setShowQuitConfirm(false);
+  };
+
+  const handleCancelRestart = () => {
+    setShowRestartConfirm(false);
   };
 
   return (
@@ -53,13 +63,35 @@ const PauseMenu = ({ onResume, onQuit, score }) => {
             </button>
           </div>
 
+          {onRestart && (
+            <button 
+              className={`${styles.button} ${showRestartConfirm ? styles.warningButton : ''}`} 
+              onClick={handleRestartClick}
+            >
+              {showRestartConfirm ? '⚠️ Confirm Restart?' : 'Restart Game'}
+              {!showRestartConfirm && <span className={styles.hintSmall}>Start over from Wave 1</span>}
+            </button>
+          )}
+
+          {showRestartConfirm && (
+            <button className={styles.button} onClick={handleCancelRestart}>
+              Cancel
+            </button>
+          )}
+
           <button 
-            className={`${styles.button} ${styles.quitButton}`} 
-            onClick={onQuit}
+            className={`${styles.button} ${styles.quitButton} ${showQuitConfirm ? styles.warningButton : ''}`} 
+            onClick={handleQuitClick}
           >
-            Quit to Main Menu
-            <span className={styles.hintSmall}>Game Over with current score</span>
+            {showQuitConfirm ? '⚠️ Confirm Quit?' : 'Quit to Main Menu'}
+            {!showQuitConfirm && <span className={styles.hintSmall}>Game Over with current score</span>}
           </button>
+
+          {showQuitConfirm && (
+            <button className={styles.button} onClick={handleCancelQuit}>
+              Cancel
+            </button>
+          )}
         </div>
 
         <p className={styles.help}>

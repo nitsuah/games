@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { useAudio } from '@/contexts/AudioContext';
 
 export const useSound = () => {
+  const { soundEnabled, musicEnabled, registerSounds } = useAudio();
   const sounds = useRef({});
   const thruster = useRef(null);
   const audioContext = useRef(null);
@@ -56,6 +58,9 @@ export const useSound = () => {
 
         sounds.current = { shoot, hit, miss, bgm, empty };
 
+        // Register sounds with audio context
+        registerSounds(sounds.current);
+
         // Set up BGM
         sounds.current.bgm.loop = true;
         sounds.current.bgm.volume = 1;
@@ -105,6 +110,13 @@ export const useSound = () => {
     if (!sound) {
       console.error(`❌ Sound not found: ${name}`);
       return;
+    }
+
+    // Check if sound/music is enabled
+    if (name === 'bgm') {
+      if (!musicEnabled) return;
+    } else {
+      if (!soundEnabled) return;
     }
 
     try {
