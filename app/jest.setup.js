@@ -1,6 +1,27 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
+// Suppress React Three Fiber primitive casing warnings in tests
+const originalError = console.error;
+beforeAll(() => {
+  console.error = (...args) => {
+    // Filter out react-three-fiber primitive warnings
+    if (
+      typeof args[0] === 'string' &&
+      (args[0].includes('react-three') || 
+       args[0].includes('primitive') ||
+       args[0].includes('lower case'))
+    ) {
+      return;
+    }
+    originalError.call(console, ...args);
+  };
+});
+
+afterAll(() => {
+  console.error = originalError;
+});
+
 // Mock canvas and WebGL for Three.js tests
 HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
   fillRect: jest.fn(),

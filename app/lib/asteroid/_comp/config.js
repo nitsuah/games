@@ -10,7 +10,8 @@ export const FLASH_COLORS = {
 export const DEFAULT_TARGET_COLOR = '#00ff00';
 
 export const WEAPON_CONFIG = {
-  spread: { angle: 0.25, count: 10, range: 100 },
+  // Increase spread angle and range for more visible spread behavior
+  spread: { angle: 0.6, count: 12, range: 160 },
   laser: { color: 'cyan', range: 400 },
   explosive: { radius: 50, color: 'orange' },
 };
@@ -18,7 +19,7 @@ export const WEAPON_CONFIG = {
 export const WEAPON_TYPES = [
   { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
-  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 5, cooldown: 1 },
+  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Increased to 10, longer cooldown
 ];
 
 export const POWER_UP_COLORS = {
@@ -39,7 +40,7 @@ export const EXPLOSION_DURATION = 120; // ms, for explosion visual timing
 export const INITIAL_AMMO = {
   spread: 30,
   laser: 10,
-  explosive: 5,
+  explosive: 10, // Match the maxAmmo
 };
 
 export const INITIAL_HEALTH = 100;

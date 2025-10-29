@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { POWER_UPS } from './powerUpConfig';
 
-export default function usePowerUps(setHealth, setTargets, showFlash = () => {}) {
+export default function usePowerUps(setHealth, setTargets, showFlash = () => {}, setAmmo = () => {}) {
   const [shieldActive, setShieldActive] = useState(false);
   const [rapidFireActive, setRapidFireActive] = useState(false);
   const [slowMotionActive, setSlowMotionActive] = useState(false);
@@ -21,9 +21,10 @@ export default function usePowerUps(setHealth, setTargets, showFlash = () => {})
         setSlowMotionActive,
         setInvincibilityActive,
         setSpeedBoostActive,
+        setAmmo,
       });
     },
-    [setHealth, setTargets, showFlash]
+    [setHealth, setTargets, showFlash, setAmmo]
   );
 
   return {

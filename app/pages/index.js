@@ -43,6 +43,12 @@ const GameLink = styled(Link)`
       background: #4caf50;
       transform: translateY(-2px);
   }
+
+  /* Remove default focus outline but keep an accessible visible focus ring */
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.22);
+  }
 `;
 
 const HomePage = () => {

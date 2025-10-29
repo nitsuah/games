@@ -25,8 +25,10 @@ const HealthBar = dynamic(() => import('../UI/HealthBar'), { ssr: false });
 const FPSCounter = dynamic(() => import('../UI/FPSCounter'), { ssr: false });
 const AmmoIndicator = dynamic(() => import('../UI/AmmoIndicator'), { ssr: false });
 const ComboDisplay = dynamic(() => import('../UI/ComboDisplay'), { ssr: false });
+const WaveIndicator = dynamic(() => import('../UI/WaveIndicator'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
+import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
 
 const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
   <div className={styles.statsDisplay}>
@@ -50,6 +52,20 @@ const Game = ({ onHit, onMiss }) => {
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(INITIAL_HEALTH);
+  const [trailQuality, setTrailQuality] = useState(() => {
+    try {
+      if (typeof localStorage !== 'undefined') return localStorage.getItem('trailQuality') || 'high'
+    } catch {
+      // ignore
+    }
+    return 'high'
+  })
+  
+  // Wave system state
+  const [currentWave, setCurrentWave] = useState(1);
+  const [highestWave, setHighestWave] = useState(1);
+  const [showWaveTransition, setShowWaveTransition] = useState(false);
+  
   const [targets, setTargets] = useState([
     {
       id: 1,
@@ -199,7 +215,7 @@ const Game = ({ onHit, onMiss }) => {
     speedBoostActive,
     setSpeedBoostActive,
     handlePowerUpCollect,
-  } = usePowerUps(setHealth, setTargets, showFlash);
+  } = usePowerUps(setHealth, setTargets, showFlash, setAmmo);
 
   // Apply slow motion effect
   useEffect(() => {
@@ -220,6 +236,25 @@ const Game = ({ onHit, onMiss }) => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setWeapon, setAmmo]);
+
+  // Keyboard shortcut: press 't' to cycle trail quality Off -> Low -> High
+  useEffect(() => {
+    const cycle = (q) => (q === 'off' ? 'low' : q === 'low' ? 'high' : 'off');
+    const onKey = (e) => {
+      // ignore when typing in inputs
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      if (e.key && e.key.toLowerCase() === 't') {
+        setTrailQuality((prev) => {
+          const next = cycle(prev);
+          try { localStorage.setItem('trailQuality', next) } catch { /* ignore */ }
+          return next;
+        });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [setTrailQuality]);
 
   // Load saved scores
   useEffect(() => {
@@ -339,6 +374,45 @@ const Game = ({ onHit, onMiss }) => {
     [setMisses, onMiss, setCombo, setComboMultiplier, comboTimerRef]
   );
 
+  // Wave completion - spawn next wave when all targets destroyed
+  useEffect(() => {
+    if (gameOver || paused || showWaveTransition) return;
+
+    const activeTargets = targets.filter((t) => !t.isHit);
+    
+    // When all targets destroyed, start next wave (but not on initial render when targets is empty)
+    if (activeTargets.length === 0 && currentWave >= 1) {
+      console.log(`Wave ${currentWave} complete! Starting wave ${currentWave + 1}`);
+      
+      // Show wave transition
+      setShowWaveTransition(true);
+      
+      // Update highest wave if needed
+      const nextWave = currentWave + 1;
+      if (nextWave > highestWave) {
+        setHighestWave(nextWave);
+        // Save to localStorage
+        localStorage.setItem('highestWave', nextWave.toString());
+      }
+      
+      // Wait 2 seconds then spawn next wave
+      setTimeout(() => {
+        setCurrentWave(nextWave);
+        const targetCount = getTargetCountForWave(nextWave);
+        setTargets(generateInitialTargets(targetCount, nextWave));
+        setShowWaveTransition(false);
+      }, 2000);
+    }
+  }, [targets, gameOver, paused, showWaveTransition, currentWave, highestWave, setHighestWave, setCurrentWave, setShowWaveTransition, setTargets]);
+
+  // Load highest wave from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('highestWave');
+    if (saved) {
+      setHighestWave(parseInt(saved, 10));
+    }
+  }, [setHighestWave]);
+
   // HANDLE RESTART
   const restartGame = () =>
     restartGameFn({
@@ -359,6 +433,8 @@ const Game = ({ onHit, onMiss }) => {
       setCombo,
       setComboMultiplier,
       comboTimerRef,
+      setCurrentWave,
+      setShowWaveTransition,
     });
 
   // HANDLE REFS
@@ -450,13 +526,54 @@ const Game = ({ onHit, onMiss }) => {
         shieldActive={shieldActive}
         setShieldActive={setShieldActive}
         rapidFireActive={rapidFireActive}
+        invincibilityActive={invincibilityActive}
+        trailQuality={trailQuality}
       />
-      <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
-      <FPSCounter />
-      <ScoreDisplay score={score} />
-      <ComboDisplay combo={combo} multiplier={comboMultiplier} />
-      <AmmoIndicator weapon={weapon} ammo={ammo} />
-      <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
+      {/* Top right - User info (wave, health, FPS) */}
+      <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+        <FPSCounter />
+        <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
+        <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
+      </div>
+      
+      {/* Bottom right - Debug info (weapon, ammo, trail quality) */}
+      <div style={{ position: 'fixed', bottom: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+        <AmmoIndicator weapon={weapon} ammo={ammo} />
+        <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
+        <div className="trail-quality-control" style={{display: 'flex', gap: 8, alignItems: 'center'}}>
+          <span style={{fontSize: 12, color: 'white'}}>Trails:</span>
+          {['off','low','high'].map(q => (
+            <button
+              key={q}
+              aria-pressed={trailQuality === q}
+              aria-label={`Trail quality ${q}`}
+              onClick={() => {
+                setTrailQuality(q)
+                try { localStorage.setItem('trailQuality', q) } catch {
+                  // ignore
+                }
+              }}
+              style={{
+                padding: '4px 8px',
+                borderRadius: 4,
+                border: trailQuality === q ? '2px solid #fff' : '1px solid rgba(255,255,255,0.2)',
+                background: trailQuality === q ? 'rgba(255,255,255,0.06)' : 'transparent',
+                color: '#fff',
+                cursor: 'pointer',
+                fontSize: 12,
+              }}
+            >
+              {q === 'off' ? 'Off' : q === 'low' ? 'Low' : 'High'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom-right stack: score and combo to reduce top-right clutter */}
+      <div style={{ position: 'fixed', right: 12, bottom: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+        <ScoreDisplay score={score} />
+        <ComboDisplay combo={combo} multiplier={comboMultiplier} />
+      </div>
       {weapon === 'spread' && <ShotReticle />}
       <PowerUpIndicator
         shieldActive={shieldActive}
@@ -465,7 +582,10 @@ const Game = ({ onHit, onMiss }) => {
         invincibilityActive={invincibilityActive}
         speedBoostActive={speedBoostActive}
       />
-      <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
+      {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
+      <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
+        <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
+      </div>
       {gameOver && (
         <GameOverOverlay
           score={score}

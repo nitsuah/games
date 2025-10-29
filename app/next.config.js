@@ -56,6 +56,15 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       // Provide a baseline CSP header to ensure a CSP is present for crawlers / Lighthouse.
       // _document.js will still set a per-request CSP with nonces for inline scripts/styles.
       {
@@ -68,15 +77,13 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value:
               process.env.NODE_ENV === 'development'
-                ? "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: ws:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self';"
+                ? "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: ws: wss: http://localhost:*; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self';"
                 : "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;",
           },
         ],
       },
     ];
   },
-  // Add asset prefix for development
-  assetPrefix: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '',
 };
 
 module.exports = nextConfig;

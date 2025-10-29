@@ -28,7 +28,7 @@ const Player = ({
   const [shieldActive, setShieldActive] = useState(true);
 
   const BASE_SPEED = 5;
-  const SPEED_MULTIPLIER = speedBoostActive ? 6.0 : 1; // Much more noticeable boost
+  const SPEED_MULTIPLIER = speedBoostActive ? 50.0 : 1; // 50x boost - SUPER FAST for testing
   const MOVEMENT_SPEED = BASE_SPEED * SPEED_MULTIPLIER;
 
   useEffect(() => {
@@ -113,10 +113,23 @@ const Player = ({
     if (keysRef.current.down) direction.add(upVector.negate());
 
     if (direction.length() > 0) {
+      // Apply acceleration when keys are pressed
       direction.normalize().multiplyScalar(MOVEMENT_SPEED * delta);
-      velocityRef.current.copy(direction);
+      velocityRef.current.add(direction);
+      
+      // Clamp max velocity
+      const maxVelocity = MOVEMENT_SPEED * 0.1;
+      if (velocityRef.current.length() > maxVelocity) {
+        velocityRef.current.setLength(maxVelocity);
+      }
     } else {
-      velocityRef.current.set(0, 0, 0);
+      // Apply damping when no keys pressed - coast to a stop (space physics)
+      velocityRef.current.multiplyScalar(0.92); // 92% of velocity each frame = gradual slowdown
+      
+      // Stop completely when very slow
+      if (velocityRef.current.length() < 0.001) {
+        velocityRef.current.set(0, 0, 0);
+      }
     }
 
     camera.position.add(velocityRef.current);

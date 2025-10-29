@@ -10,8 +10,8 @@ const Explosion = ({ position, explosionRadius = 20, onComplete }) => {
   useFrame(() => {
     if (meshRef.current && !exploded) {
       if (scale < explosionRadius * 2) {
-        setScale((prev) => prev + explosionRadius * 0.1); // Gradually grow to match the explosion diameter
-        setOpacity((prev) => Math.max(prev - 0.02, 0)); // Gradually fade out
+        setScale((prev) => prev + explosionRadius * 0.015); // Even slower growth (was 0.025) - slower animation
+        setOpacity((prev) => Math.max(prev - 0.003, 0)); // Even slower fade (was 0.005) - stays visible longer
       } else {
         setExploded(true); // Mark as fully exploded
         setScale(0); // Reset scale to 0

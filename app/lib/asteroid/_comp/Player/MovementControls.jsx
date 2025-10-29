@@ -5,8 +5,11 @@ import { useSound } from '@/utils/audio/useSound';
 
 const MovementControls = () => {
   const { camera } = useThree();
-  const moveSpeed = 0.0005; // INITIAL SPEED
+  const MAX_SPEED = 0.25; // significantly increased max speed
+  const ACCEL = 0.008; // much stronger acceleration (5x)
+  const DAMPING = 0.85; // lower damping for more drift/inertia
   const keys = useRef({});
+  const velocityRef = useRef(new THREE.Vector3());
   const { setThrusterVolume: _setThrusterVolume = () => {} } = useSound();
   const isMovingRef = useRef(false);
 
@@ -27,7 +30,6 @@ const MovementControls = () => {
     const moveCamera = () => {
       if (!document.pointerLockElement) return;
 
-      const direction = new THREE.Vector3(0, 0, 0);
       const frontVector = new THREE.Vector3();
       const sideVector = new THREE.Vector3();
       const upVector = new THREE.Vector3(0, 1, 0);
@@ -50,14 +52,33 @@ const MovementControls = () => {
       }
       _setThrusterVolume(isMoving ? 0.3 : 0);
 
-      if (keys.current['KeyW']) direction.add(frontVector.multiplyScalar(moveSpeed));
-      if (keys.current['KeyS']) direction.sub(frontVector.multiplyScalar(moveSpeed));
-      if (keys.current['KeyA']) direction.add(sideVector.multiplyScalar(moveSpeed));
-      if (keys.current['KeyD']) direction.sub(sideVector.multiplyScalar(moveSpeed));
-      if (keys.current['Space']) direction.add(upVector.multiplyScalar(moveSpeed));
-      if (keys.current['ShiftLeft']) direction.sub(upVector.multiplyScalar(moveSpeed));
+      // acceleration based on inputs (use temporary vectors to avoid mutating frontVector/sideVector)
+      const accel = ACCEL;
+      if (keys.current['KeyW']) velocityRef.current.add(frontVector.clone().multiplyScalar(accel));
+      if (keys.current['KeyS']) velocityRef.current.sub(frontVector.clone().multiplyScalar(accel));
+      if (keys.current['KeyA']) velocityRef.current.add(sideVector.clone().multiplyScalar(accel));
+      if (keys.current['KeyD']) velocityRef.current.sub(sideVector.clone().multiplyScalar(accel));
+      if (keys.current['Space']) velocityRef.current.add(upVector.clone().multiplyScalar(accel));
+      if (keys.current['ShiftLeft']) velocityRef.current.sub(upVector.clone().multiplyScalar(accel));
 
-      camera.position.add(direction);
+      // clamp velocity
+      if (velocityRef.current.length() > MAX_SPEED) {
+        velocityRef.current.setLength(MAX_SPEED);
+      }
+
+      // apply damping when no input to create inertia
+      if (!isMoving) {
+        velocityRef.current.multiplyScalar(DAMPING);
+        // tiny cutoff
+        if (velocityRef.current.length() < 0.00002) velocityRef.current.set(0, 0, 0);
+      } else {
+        // small damping while moving to keep behavior stable
+        velocityRef.current.multiplyScalar(0.995);
+      }
+
+      camera.position.add(velocityRef.current);
+
+      // Note: pointer-based rotation is handled elsewhere; we only manage translational inertia here.
     };
 
     const animate = () => {
