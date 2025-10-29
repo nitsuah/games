@@ -237,6 +237,25 @@ const Game = ({ onHit, onMiss }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setWeapon, setAmmo]);
 
+  // Keyboard shortcut: press 't' to cycle trail quality Off -> Low -> High
+  useEffect(() => {
+    const cycle = (q) => (q === 'off' ? 'low' : q === 'low' ? 'high' : 'off');
+    const onKey = (e) => {
+      // ignore when typing in inputs
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
+      if (e.key && e.key.toLowerCase() === 't') {
+        setTrailQuality((prev) => {
+          const next = cycle(prev);
+          try { localStorage.setItem('trailQuality', next) } catch { /* ignore */ }
+          return next;
+        });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [setTrailQuality]);
+
   // Load saved scores
   useEffect(() => {
     loadSavedScoresFn({ setHighScore, setBestAccuracy });
@@ -520,6 +539,8 @@ const Game = ({ onHit, onMiss }) => {
           {['off','low','high'].map(q => (
             <button
               key={q}
+              aria-pressed={trailQuality === q}
+              aria-label={`Trail quality ${q}`}
               onClick={() => {
                 setTrailQuality(q)
                 try { localStorage.setItem('trailQuality', q) } catch {
