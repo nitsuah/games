@@ -118,25 +118,36 @@ const ShootingSystem = ({
     const handleMouseDown = () => {
       mouseDownRef.current = true;
       
-      // Shotgun: fire burst of 3 shots
-      if (weapon === 'spread') {
+      // Shotgun behavior:
+      // - WITHOUT rapid fire: single shot
+      // - WITH rapid fire: burst of 3 shots
+      if (weapon === 'spread' && rapidFireActive) {
         handleShoot();
         setTimeout(() => mouseDownRef.current && handleShoot(), 100);
         setTimeout(() => mouseDownRef.current && handleShoot(), 200);
       } else {
-        handleShoot(); // Fire immediately on click
+        handleShoot(); // Fire immediately on click for all weapons
       }
       
-      // Laser: continuous fire while mouse is held (always, not just with rapid fire)
-      // Other weapons: continuous fire only with rapid fire active
+      // Full-auto continuous fire:
+      // - Laser: always continuous while mouse held
+      // - All weapons with rapid fire: continuous fire
       if (weapon === 'laser' || rapidFireActive) {
         if (autoFireIntervalRef.current) {
           clearInterval(autoFireIntervalRef.current);
         }
-        const fireRate = weapon === 'laser' ? 100 : 50; // Laser: 10 rounds/sec, rapid fire: 20 rounds/sec
+        const fireRate = weapon === 'laser' ? 100 : (weapon === 'spread' ? 250 : 50);
+        // Laser: 10 rounds/sec, Spread: 4 rounds/sec (with 3-shot burst), Others: 20 rounds/sec
         autoFireIntervalRef.current = setInterval(() => {
-          if (mouseDownRef.current) {
-            handleShoot();
+          if (mouseDownRef.current && ammo[weapon] > 0) {
+            // For shotgun with rapid fire, fire burst of 3
+            if (weapon === 'spread' && rapidFireActive) {
+              handleShoot();
+              setTimeout(() => mouseDownRef.current && ammo[weapon] > 0 && handleShoot(), 100);
+              setTimeout(() => mouseDownRef.current && ammo[weapon] > 0 && handleShoot(), 200);
+            } else {
+              handleShoot();
+            }
           }
         }, fireRate);
       }
