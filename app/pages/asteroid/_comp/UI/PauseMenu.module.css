@@ -1,0 +1,168 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.menu {
+  background: rgba(30, 30, 50, 0.95);
+  border: 3px solid #00ffff;
+  border-radius: 16px;
+  padding: 40px 50px;
+  min-width: 500px;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+}
+
+.title {
+  font-size: 56px;
+  font-weight: bold;
+  color: #00ffff;
+  text-align: center;
+  margin: 0 0 30px 0;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+  letter-spacing: 8px;
+}
+
+.scoreDisplay {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid #00ffff;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.scoreLabel {
+  font-size: 18px;
+  color: #aaaaaa;
+}
+
+.scoreValue {
+  font-size: 32px;
+  font-weight: bold;
+  color: #00ffff;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 30px 0;
+}
+
+.button {
+  width: 100%;
+  padding: 18px 30px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0088ff, #00ffff);
+  border: 2px solid #00ffff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 255, 255, 0.4);
+  background: linear-gradient(135deg, #00aaff, #00ffff);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+.quitButton {
+  background: linear-gradient(135deg, #ff4444, #ff8888);
+  border-color: #ff4444;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.quitButton:hover {
+  background: linear-gradient(135deg, #ff6666, #ffaaaa);
+  box-shadow: 0 8px 20px rgba(255, 68, 68, 0.4);
+}
+
+.hint {
+  font-size: 14px;
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  font-family: monospace;
+}
+
+.hintSmall {
+  font-size: 12px;
+  font-weight: normal;
+  color: #ffaaaa;
+  font-style: italic;
+}
+
+.toggleGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.toggleButton {
+  flex: 1;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #888888;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid #444444;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggleButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #666666;
+}
+
+.toggleButton.active {
+  color: #00ffff;
+  background: rgba(0, 255, 255, 0.15);
+  border-color: #00ffff;
+}
+
+.help {
+  text-align: center;
+  font-size: 16px;
+  color: #888888;
+  margin: 20px 0 0 0;
+}
+
+.help kbd {
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #666666;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #00ffff;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

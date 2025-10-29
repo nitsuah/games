@@ -8,14 +8,14 @@
 
 ### Asteroid Space Shooter
 
-- **Controls**: WASD to move, Mouse to aim, Click to shoot
+- **Controls**: `W A S D` to move, Mouse to aim, Click to shoot
 - **Weapons**: Press 1/2/3 to switch (Spread/Laser/Explosive), R to reload
 - **Power-ups**: Health (green), Shield (blue), Invincibility (yellow), Rapid Fire (red), Slow Motion (purple), Speed Boost (orange)
 - **Goal**: Destroy targets, survive, achieve high score
 
 ### FPS Tank Commander
 
-- **Controls**: WASD to move, Mouse to aim/shoot, Shift for speed boost
+- **Controls**: `W A S D` to move, Mouse to aim/shoot, Shift for speed boost
 - **Features**: Destructible targets, power-ups, dynamic terrain, health system
 - **Goal**: Destroy targets, survive, collect power-ups
 
@@ -28,6 +28,7 @@ cd app
 npm install
 npm run dev
 ```
+
 Open `http://localhost:3000`
 
 ### Key Commands
@@ -60,17 +61,18 @@ app/
 ## 📊 Status
 
 **Current Phase**: Phase 4 COMPLETE ✅
+
 - ✅ All features implemented and tested
-- ✅ Manual playtest complete (V1 + V2 cycles)
+- ✅ Manual play-test complete (V1 + V2 cycles)
 - ✅ All bugs fixed and validated
 - ✅ CI/CD pipeline green
 - 🚀 Ready for Phase 5
 
-See `TODO.md` for Phase 4 summary and `PHASE-5.md` for next steps.
+See `TODO.md` for Phase 4 summary and `PHASE-#.md` or `PHASE#.md` for next steps. ex: `PHASE-5.md`
 
 ## 🐛 Known Issues
 
-Check `TODO.md` for current bugs discovered during playtest.
+Check `TODO.md` or `FEEDBACK.md` for current bugs discovered during play-test.
 
 ## 🚀 CI/CD
 

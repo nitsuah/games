@@ -100,7 +100,10 @@ const ShootingSystem = ({
     });
 
     const weaponCooldown = WEAPON_TYPES.find((w) => w.key === weapon).cooldown;
-    const adjustedCooldown = rapidFireActive ? weaponCooldown / 5 : weaponCooldown;
+    // Explosive: 0 cooldown with rapid fire for fastest firing mode
+    const adjustedCooldown = rapidFireActive 
+      ? (weapon === 'explosive' ? 0 : weaponCooldown / 5)
+      : weaponCooldown;
     setCooldowns((prev) => ({ ...prev, [weapon]: adjustedCooldown }));
 
     if (typeof setAmmo === 'function') {
@@ -113,18 +116,28 @@ const ShootingSystem = ({
   useEffect(() => {
     const handleMouseDown = () => {
       mouseDownRef.current = true;
-      handleShoot(); // Fire immediately on click
       
-      // If rapid fire is active, start auto-firing
-      if (rapidFireActive) {
+      // Shotgun: fire burst of 3 shots
+      if (weapon === 'spread') {
+        handleShoot();
+        setTimeout(() => mouseDownRef.current && handleShoot(), 100);
+        setTimeout(() => mouseDownRef.current && handleShoot(), 200);
+      } else {
+        handleShoot(); // Fire immediately on click
+      }
+      
+      // Laser: continuous fire while mouse is held (always, not just with rapid fire)
+      // Other weapons: continuous fire only with rapid fire active
+      if (weapon === 'laser' || rapidFireActive) {
         if (autoFireIntervalRef.current) {
           clearInterval(autoFireIntervalRef.current);
         }
+        const fireRate = weapon === 'laser' ? 100 : 50; // Laser: 10 rounds/sec, rapid fire: 20 rounds/sec
         autoFireIntervalRef.current = setInterval(() => {
           if (mouseDownRef.current) {
             handleShoot();
           }
-        }, 50); // Fire every 50ms (20 rounds/sec) when holding mouse
+        }, fireRate);
       }
     };
 
@@ -146,7 +159,7 @@ const ShootingSystem = ({
         clearInterval(autoFireIntervalRef.current);
       }
     };
-  }, [handleShoot, rapidFireActive]);
+  }, [handleShoot, rapidFireActive, weapon]);
 
   return (
     <>

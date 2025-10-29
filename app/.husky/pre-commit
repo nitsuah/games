@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Change to the app directory where package.json lives
+cd "$(dirname "$0")/.."
+
 # Cross-platform pre-commit hook: try common node package managers, fall back safely.
-# This avoids hard failures on environments where `npm` isn't on PATH (e.g. some Windows setups)
+# Use test:ci to avoid watch mode issues on Windows
 if command -v npm >/dev/null 2>&1; then
-	npm test
+	npm run test:ci
 elif command -v yarn >/dev/null 2>&1; then
-	yarn test
+	yarn test:ci
 elif command -v pnpm >/dev/null 2>&1; then
-	pnpm test
+	pnpm test:ci
 elif command -v npx >/dev/null 2>&1; then
 	# Try to run the project's test script via npx without forcing an install
-	npx --no-install npm run test || true
+	npx --no-install npm run test:ci || true
 else
 	echo "Warning: no npm/yarn/pnpm/npx found in PATH — skipping pre-commit tests." >&2
 fi

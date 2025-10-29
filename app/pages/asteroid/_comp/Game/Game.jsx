@@ -2,7 +2,6 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
 import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
-import { handleGameOver as handleGameOverFn } from '@/lib/asteroid/_comp/Game/handleGameOver';
 import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
 import dynamic from 'next/dynamic';
 
@@ -26,6 +25,9 @@ const FPSCounter = dynamic(() => import('../UI/FPSCounter'), { ssr: false });
 const AmmoIndicator = dynamic(() => import('../UI/AmmoIndicator'), { ssr: false });
 const ComboDisplay = dynamic(() => import('../UI/ComboDisplay'), { ssr: false });
 const WaveIndicator = dynamic(() => import('../UI/WaveIndicator'), { ssr: false });
+const DebugMenu = dynamic(() => import('../UI/DebugMenu'), { ssr: false });
+const WaveTransition = dynamic(() => import('../UI/WaveTransition'), { ssr: false });
+const PauseMenu = dynamic(() => import('../UI/PauseMenu'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
@@ -395,13 +397,13 @@ const Game = ({ onHit, onMiss }) => {
         localStorage.setItem('highestWave', nextWave.toString());
       }
       
-      // Wait 2 seconds then spawn next wave
+      // Wait 5 seconds then spawn next wave (increased for stats visibility)
       setTimeout(() => {
         setCurrentWave(nextWave);
         const targetCount = getTargetCountForWave(nextWave);
         setTargets(generateInitialTargets(targetCount, nextWave));
         setShowWaveTransition(false);
-      }, 2000);
+      }, 5000);
     }
   }, [targets, gameOver, paused, showWaveTransition, currentWave, highestWave, setHighestWave, setCurrentWave, setShowWaveTransition, setTargets]);
 
@@ -461,42 +463,38 @@ const Game = ({ onHit, onMiss }) => {
   useEffect(() => {
     if (health <= 0 && !gameOver) {
       console.log('Health depleted - triggering game over');
+      console.log('Current score:', score, 'Hits:', hits, 'Misses:', misses);
       setGameOver(true);
       pauseSound('bgm');
       playSound('gameOver');
       document.exitPointerLock();
+      
+      // Save high score and accuracy
+      const accuracy = hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0;
+      
+      if (score > highScore) {
+        setHighScore(score);
+        setIsNewHighScore(true);
+        try {
+          localStorage.setItem('asteroidHighScore', String(score));
+        } catch (err) {
+          console.warn('Failed to save high score:', err);
+        }
+      }
+      
+      if (accuracy > bestAccuracy) {
+        setBestAccuracy(accuracy);
+        try {
+          localStorage.setItem('asteroidBestAccuracy', String(accuracy));
+        } catch (err) {
+          console.warn('Failed to save best accuracy:', err);
+        }
+      }
     }
-  }, [health, gameOver, setGameOver, pauseSound, playSound]);
+  }, [health, gameOver, setGameOver, pauseSound, playSound, score, highScore, setHighScore, setIsNewHighScore, hits, misses, bestAccuracy, setBestAccuracy]);
 
-  useEffect(() => {
-    handleGameOverFn({
-      targets,
-      setGameOver,
-      pauseSound,
-      playSound,
-      hits,
-      misses,
-      score,
-      highScore,
-      setHighScore,
-      setIsNewHighScore,
-      bestAccuracy,
-      setBestAccuracy,
-    });
-  }, [
-    targets,
-    hits,
-    misses,
-    score,
-    highScore,
-    bestAccuracy,
-    pauseSound,
-    playSound,
-    setGameOver,
-    setHighScore,
-    setIsNewHighScore,
-    setBestAccuracy,
-  ]);
+  // Removed handleGameOver effect - wave transitions handle target completion now
+  // Game only ends when health reaches 0
 
   return (
     <div className={styles.gameContainer}>
@@ -529,59 +527,39 @@ const Game = ({ onHit, onMiss }) => {
         invincibilityActive={invincibilityActive}
         trailQuality={trailQuality}
       />
-      {/* Top right - User info (wave, health, FPS) */}
-      <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+      {/* Top left - FPS counter */}
+      <div style={{ position: 'fixed', top: 12, left: 12, zIndex: 500 }}>
         <FPSCounter />
-        <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
-        <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
       </div>
       
-      {/* Bottom right - Debug info (weapon, ammo, trail quality) */}
+      {/* Top right - Wave, Health, Power-ups */}
+      <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+        <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
+        <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
+        <PowerUpIndicator
+          shieldActive={shieldActive}
+          rapidFireActive={rapidFireActive}
+          slowMotionActive={slowMotionActive}
+          invincibilityActive={invincibilityActive}
+          speedBoostActive={speedBoostActive}
+        />
+      </div>
+      
+      {/* Bottom right - Weapon and ammo info */}
       <div style={{ position: 'fixed', bottom: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
         <AmmoIndicator weapon={weapon} ammo={ammo} />
         <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
-        <div className="trail-quality-control" style={{display: 'flex', gap: 8, alignItems: 'center'}}>
-          <span style={{fontSize: 12, color: 'white'}}>Trails:</span>
-          {['off','low','high'].map(q => (
-            <button
-              key={q}
-              aria-pressed={trailQuality === q}
-              aria-label={`Trail quality ${q}`}
-              onClick={() => {
-                setTrailQuality(q)
-                try { localStorage.setItem('trailQuality', q) } catch {
-                  // ignore
-                }
-              }}
-              style={{
-                padding: '4px 8px',
-                borderRadius: 4,
-                border: trailQuality === q ? '2px solid #fff' : '1px solid rgba(255,255,255,0.2)',
-                background: trailQuality === q ? 'rgba(255,255,255,0.06)' : 'transparent',
-                color: '#fff',
-                cursor: 'pointer',
-                fontSize: 12,
-              }}
-            >
-              {q === 'off' ? 'Off' : q === 'low' ? 'Low' : 'High'}
-            </button>
-          ))}
-        </div>
       </div>
 
-      {/* Bottom-right stack: score and combo to reduce top-right clutter */}
-      <div style={{ position: 'fixed', right: 12, bottom: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+      {/* Debug menu - collapsible pill with settings */}
+      <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
+
+      {/* Bottom left - Score and combo */}
+      <div style={{ position: 'fixed', left: 12, bottom: 100, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
         <ScoreDisplay score={score} />
         <ComboDisplay combo={combo} multiplier={comboMultiplier} />
       </div>
       {weapon === 'spread' && <ShotReticle />}
-      <PowerUpIndicator
-        shieldActive={shieldActive}
-        rapidFireActive={rapidFireActive}
-        slowMotionActive={slowMotionActive}
-        invincibilityActive={invincibilityActive}
-        speedBoostActive={speedBoostActive}
-      />
       {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
       <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
         <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
@@ -597,23 +575,27 @@ const Game = ({ onHit, onMiss }) => {
           restartGame={restartGame}
         />
       )}
+      {showWaveTransition && !gameOver && (
+        <WaveTransition 
+          wave={currentWave}
+          score={score}
+          highScore={highScore}
+          isNewHighScore={score > highScore}
+          accuracy={hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0}
+        />
+      )}
       {paused && !gameOver && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          color: 'white',
-          fontSize: '48px',
-          fontWeight: 'bold',
-          textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
-          zIndex: 1000,
-        }}>
-          PAUSED
-          <div style={{ fontSize: '24px', marginTop: '20px', textAlign: 'center' }}>
-            Press ESC to resume
-          </div>
-        </div>
+        <PauseMenu 
+          onResume={() => setPaused(false)}
+          onQuit={() => {
+            // Quit to main menu with current score (treat as game over)
+            setGameOver(true);
+            pauseSound('bgm');
+            playSound('gameOver');
+            document.exitPointerLock();
+          }}
+          score={score}
+        />
       )}
     </div>
   );
