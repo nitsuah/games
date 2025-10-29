@@ -1,3 +1,5 @@
+@import './ui-variables.css';
+
 .container {
   /* Removed position:fixed - parent controls positioning */
   display: inline-block;
@@ -5,21 +7,21 @@
 
 .combo {
   background: linear-gradient(135deg, rgba(255, 100, 0, 0.9), rgba(255, 50, 0, 0.9));
-  padding: 20px 30px;
-  border-radius: 15px;
+  padding: var(--ui-space-lg) var(--ui-space-xl);
+  border-radius: var(--ui-radius-lg);
   border: 3px solid rgba(255, 200, 0, 0.8);
   box-shadow: 
     0 0 20px rgba(255, 100, 0, 0.6),
     0 0 40px rgba(255, 100, 0, 0.4),
     inset 0 0 20px rgba(255, 200, 0, 0.2);
   text-align: center;
-  animation: pulse 0.5s ease-in-out infinite alternate;
+  animation: pulse var(--ui-transition-slow) ease-in-out infinite alternate;
 }
 
 .combo.mega {
   background: linear-gradient(135deg, rgba(255, 0, 255, 0.9), rgba(200, 0, 255, 0.9));
   border-color: rgba(255, 100, 255, 0.8);
-  animation: megaPulse 0.3s ease-in-out infinite alternate;
+  animation: megaPulse var(--ui-transition-medium) ease-in-out infinite alternate;
   box-shadow: 
     0 0 30px rgba(255, 0, 255, 0.8),
     0 0 60px rgba(255, 0, 255, 0.6),
@@ -27,21 +29,21 @@
 }
 
 .comboText {
-  color: #ffffff;
-  font-size: 18px;
+  color: var(--ui-text-primary);
+  font-size: var(--ui-text-lg);
   font-weight: bold;
   letter-spacing: 3px;
   text-shadow: 
     0 0 10px rgba(255, 255, 0, 0.8),
-    2px 2px 4px rgba(0, 0, 0, 0.9);
-  margin-bottom: 5px;
+    var(--ui-text-shadow);
+  margin-bottom: var(--ui-space-xs);
 }
 
 .comboValue {
-  color: #ffffff;
-  font-size: 48px;
+  color: var(--ui-text-primary);
+  font-size: var(--ui-text-3xl);
   font-weight: bold;
-  font-family: 'Arial Black', sans-serif;
+  font-family: var(--ui-font-bold);
   text-shadow: 
     0 0 15px rgba(255, 255, 0, 1),
     0 0 30px rgba(255, 200, 0, 0.8),
@@ -50,14 +52,13 @@
 }
 
 .multiplier {
-  /* use white for multiplier text to guarantee contrast */
-  color: #ffffff;
-  font-size: 14px;
+  color: var(--ui-text-primary);
+  font-size: var(--ui-text-sm);
   font-weight: bold;
-  margin-top: 8px;
+  margin-top: var(--ui-space-sm);
   text-shadow: 
     0 0 5px rgba(255, 255, 0, 0.8),
-    1px 1px 2px rgba(0, 0, 0, 0.8);
+    var(--ui-text-shadow);
   letter-spacing: 1px;
 }
 
@@ -65,10 +66,10 @@
 .comboText, .comboValue, .multiplier {
   display: inline-block;
   /* stronger backing to guarantee contrast over bright backgrounds */
-  background: rgba(0,0,0,0.92);
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: #ffffff;
+  background: var(--ui-bg-dark);
+  padding: 2px var(--ui-space-xs);
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-text-primary);
 }
 
 @keyframes pulse {

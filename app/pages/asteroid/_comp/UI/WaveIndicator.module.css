@@ -1,24 +1,26 @@
+@import './ui-variables.css';
+
 .waveCounter {
   /* Removed position:fixed - parent controls positioning */
-  background: rgba(0, 0, 0, 0.85);
-  padding: 12px 18px;
-  border-radius: 8px;
-  border: 2px solid #00ffff;
-  font-family: 'Courier New', monospace;
+  background: var(--ui-bg-overlay);
+  padding: var(--ui-space-sm) var(--ui-space-lg);
+  border-radius: var(--ui-radius-md);
+  border: 2px solid var(--ui-border-accent);
+  font-family: var(--ui-font-mono);
   text-align: right;
   min-width: 140px;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  box-shadow: var(--ui-shadow-md);
 }
 
 .waveNumber {
-  font-size: 18px;
+  font-size: var(--ui-text-lg);
   font-weight: bold;
-  color: #00ffff;
-  text-shadow: 0 0 5px #00ffff;
+  color: var(--ui-text-accent);
+  text-shadow: var(--ui-text-shadow-glow);
 }
 
 .highestWave {
-  font-size: 12px;
+  font-size: var(--ui-text-xs);
   color: #ffaa00;
   margin-top: 3px;
 }
@@ -29,43 +31,43 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: var(--ui-bg-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeIn var(--ui-transition-medium) ease-in;
 }
 
 .waveTransitionContent {
   text-align: center;
-  color: white;
-  animation: slideUp 0.5s ease-out;
+  color: var(--ui-text-primary);
+  animation: slideUp var(--ui-transition-slow) ease-out;
 }
 
 .waveTitle {
   font-size: 72px;
   font-weight: bold;
-  color: #00ffff;
-  text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+  color: var(--ui-primary);
+  text-shadow: 0 0 20px var(--ui-primary), 0 0 40px var(--ui-primary);
   margin: 0;
-  font-family: 'Courier New', monospace;
+  font-family: var(--ui-font-mono);
 }
 
 .waveSubtitle {
-  font-size: 24px;
+  font-size: var(--ui-text-xl);
   color: #ffaa00;
-  margin-top: 20px;
-  font-family: 'Courier New', monospace;
+  margin-top: var(--ui-space-lg);
+  font-family: var(--ui-font-mono);
 }
 
 .countdown {
   font-size: 120px;
   font-weight: bold;
-  color: #00ff00;
-  text-shadow: 0 0 30px #00ff00, 0 0 60px #00ff00;
-  margin-top: 20px;
-  font-family: 'Courier New', monospace;
+  color: var(--ui-success);
+  text-shadow: 0 0 30px var(--ui-success), 0 0 60px var(--ui-success);
+  margin-top: var(--ui-space-lg);
+  font-family: var(--ui-font-mono);
   animation: countdownPulse 0.666s ease-in-out;
 }
 

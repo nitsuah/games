@@ -1,12 +1,14 @@
+@import './ui-variables.css';
+
 .scoreDisplay {
   /* Removed position:absolute - parent controls positioning */
-  color: #ffffff;
-  background: rgba(0, 0, 0, 0.95);
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: var(--ui-text-primary);
+  background: var(--ui-bg-dark);
+  padding: var(--ui-space-sm) var(--ui-space-md);
+  border-radius: var(--ui-radius-md);
+  font-size: var(--ui-text-md);
+  border: 2px solid var(--ui-border-primary);
+  box-shadow: var(--ui-shadow-sm);
 }
 
 @keyframes pulse {
@@ -23,26 +25,26 @@
 
 .scoreContainer {
   /* Removed position:absolute - parent controls positioning */
-  color: #ffffff;
-  font-size: 24px;
-  font-family: 'Arial', sans-serif;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: var(--ui-text-primary);
+  font-size: var(--ui-text-xl);
+  font-family: var(--ui-font-primary);
+  text-shadow: var(--ui-text-shadow);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
+  gap: var(--ui-space-sm);
 }
 
 .scoreText {
-  transition: transform 0.5s ease-in-out;
+  transition: transform var(--ui-transition-slow);
 }
 
 .scoreUpdated {
-  animation: pulse 0.5s ease-in-out;
+  animation: pulse var(--ui-transition-slow) ease-in-out;
 }
 
 .highScoreText {
-  font-size: 16px;
+  font-size: var(--ui-text-md);
   color: #ffd700;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: var(--ui-text-shadow);
 }

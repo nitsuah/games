@@ -1,33 +1,35 @@
+@import './ui-variables.css';
+
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
+  background: var(--ui-bg-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease-in;
+  animation: fadeIn var(--ui-transition-fast) ease-in;
 }
 
 .menu {
-  background: rgba(30, 30, 50, 0.95);
-  border: 3px solid #00ffff;
-  border-radius: 16px;
+  background: var(--ui-bg-medium);
+  border: 3px solid var(--ui-border-accent);
+  border-radius: var(--ui-radius-xl);
   padding: 40px 50px;
   min-width: 500px;
-  box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+  box-shadow: var(--ui-shadow-lg);
 }
 
 .title {
-  font-size: 56px;
+  font-size: var(--ui-text-4xl);
   font-weight: bold;
-  color: #00ffff;
+  color: var(--ui-primary);
   text-align: center;
-  margin: 0 0 30px 0;
-  text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+  margin: 0 0 var(--ui-space-xl) 0;
+  text-shadow: 0 0 20px var(--ui-primary-glow);
   letter-spacing: 8px;
 }
 
@@ -35,42 +37,42 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 25px;
+  padding: var(--ui-space-md) 25px;
   background: rgba(0, 255, 255, 0.1);
-  border: 1px solid #00ffff;
-  border-radius: 8px;
-  margin-bottom: 30px;
+  border: 1px solid var(--ui-border-accent);
+  border-radius: var(--ui-radius-md);
+  margin-bottom: var(--ui-space-xl);
 }
 
 .scoreLabel {
-  font-size: 18px;
-  color: #aaaaaa;
+  font-size: var(--ui-text-lg);
+  color: var(--ui-text-secondary);
 }
 
 .scoreValue {
-  font-size: 32px;
+  font-size: var(--ui-text-2xl);
   font-weight: bold;
-  color: #00ffff;
+  color: var(--ui-primary);
 }
 
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin: 30px 0;
+  gap: var(--ui-space-md);
+  margin: var(--ui-space-xl) 0;
 }
 
 .button {
   width: 100%;
-  padding: 18px 30px;
-  font-size: 20px;
+  padding: var(--ui-space-lg) var(--ui-space-xl);
+  font-size: var(--ui-text-lg);
   font-weight: bold;
-  color: #ffffff;
-  background: linear-gradient(135deg, #0088ff, #00ffff);
-  border: 2px solid #00ffff;
-  border-radius: 10px;
+  color: var(--ui-text-primary);
+  background: linear-gradient(135deg, var(--ui-secondary), var(--ui-primary));
+  border: 2px solid var(--ui-border-accent);
+  border-radius: var(--ui-radius-lg);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--ui-transition-medium);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -78,8 +80,8 @@
 
 .button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 255, 255, 0.4);
-  background: linear-gradient(135deg, #00aaff, #00ffff);
+  box-shadow: var(--ui-shadow-md);
+  background: linear-gradient(135deg, #00aaff, var(--ui-primary));
 }
 
 .button:active {
@@ -87,10 +89,10 @@
 }
 
 .quitButton {
-  background: linear-gradient(135deg, #ff4444, #ff8888);
-  border-color: #ff4444;
+  background: linear-gradient(135deg, var(--ui-danger), #ff8888);
+  border-color: var(--ui-border-danger);
   flex-direction: column;
-  gap: 5px;
+  gap: var(--ui-space-xs);
 }
 
 .quitButton:hover {
@@ -99,8 +101,8 @@
 }
 
 .warningButton {
-  background: linear-gradient(135deg, #ff6600, #ff9900) !important;
-  border-color: #ff6600 !important;
+  background: linear-gradient(135deg, var(--ui-warning), #ff9900) !important;
+  border-color: var(--ui-warning) !important;
   animation: pulse 1s infinite;
 }
 
@@ -119,15 +121,15 @@
 }
 
 .hint {
-  font-size: 14px;
-  padding: 4px 12px;
+  font-size: var(--ui-text-sm);
+  padding: 4px var(--ui-space-sm);
   background: rgba(0, 0, 0, 0.3);
-  border-radius: 6px;
-  font-family: monospace;
+  border-radius: var(--ui-radius-md);
+  font-family: var(--ui-font-mono);
 }
 
 .hintSmall {
-  font-size: 12px;
+  font-size: var(--ui-text-xs);
   font-weight: normal;
   color: #ffaaaa;
   font-style: italic;
@@ -135,20 +137,20 @@
 
 .toggleGroup {
   display: flex;
-  gap: 10px;
+  gap: var(--ui-space-sm);
 }
 
 .toggleButton {
   flex: 1;
-  padding: 15px 20px;
-  font-size: 16px;
+  padding: var(--ui-space-md) var(--ui-space-lg);
+  font-size: var(--ui-text-md);
   font-weight: bold;
   color: #888888;
   background: rgba(255, 255, 255, 0.05);
   border: 2px solid #444444;
-  border-radius: 8px;
+  border-radius: var(--ui-radius-md);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--ui-transition-medium);
 }
 
 .toggleButton:hover {
@@ -157,25 +159,25 @@
 }
 
 .toggleButton.active {
-  color: #00ffff;
+  color: var(--ui-primary);
   background: rgba(0, 255, 255, 0.15);
-  border-color: #00ffff;
+  border-color: var(--ui-border-accent);
 }
 
 .help {
   text-align: center;
-  font-size: 16px;
-  color: #888888;
-  margin: 20px 0 0 0;
+  font-size: var(--ui-text-md);
+  color: var(--ui-text-secondary);
+  margin: var(--ui-space-lg) 0 0 0;
 }
 
 .help kbd {
-  padding: 4px 8px;
-  background: rgba(0, 0, 0, 0.5);
+  padding: 4px var(--ui-space-sm);
+  background: var(--ui-bg-glass);
   border: 1px solid #666666;
-  border-radius: 4px;
-  font-family: monospace;
-  color: #00ffff;
+  border-radius: var(--ui-radius-sm);
+  font-family: var(--ui-font-mono);
+  color: var(--ui-primary);
 }
 
 @keyframes fadeIn {
