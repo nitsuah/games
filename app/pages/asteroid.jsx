@@ -5,8 +5,8 @@ import { useSound } from '@/utils/audio/useSound';
 import { AudioProvider, useAudio } from '@/contexts/AudioContext';
 
 // Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
-const Game = dynamic(() => import('./asteroid/_comp/Game/Game'), { ssr: false });
-const Crosshair = dynamic(() => import('./asteroid/_comp/UI/Crosshair'), { ssr: false });
+const Game = dynamic(() => import('@/lib/asteroid/_comp/Game/Game'), { ssr: false });
+const Crosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/Crosshair'), { ssr: false });
 
 const Instructions = styled.div`
   position: absolute;

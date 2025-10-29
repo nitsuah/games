@@ -1,0 +1,47 @@
+.gameOverOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--ui-bg-medium);
+  color: var(--ui-text-primary);
+  padding: var(--ui-space-xl) 50px;
+  border-radius: var(--ui-radius-xl);
+  border: 3px solid var(--ui-border-accent);
+  text-align: center;
+  z-index: 1000;
+  box-shadow: var(--ui-shadow-lg);
+  min-width: 400px;
+}
+
+.gameOverOverlay h2 {
+  font-size: var(--ui-text-4xl);
+  color: var(--ui-danger);
+  margin: 0 0 var(--ui-space-lg) 0;
+  text-shadow: 0 0 20px var(--ui-danger);
+}
+
+.gameOverOverlay p {
+  font-size: var(--ui-text-lg);
+  margin: var(--ui-space-sm) 0;
+  color: var(--ui-text-primary);
+}
+
+.restartButton {
+  margin-top: var(--ui-space-lg);
+  padding: var(--ui-space-lg) var(--ui-space-xl);
+  background: linear-gradient(135deg, var(--ui-secondary), var(--ui-primary));
+  color: var(--ui-text-primary);
+  border: 2px solid var(--ui-border-accent);
+  border-radius: var(--ui-radius-lg);
+  cursor: pointer;
+  font-size: var(--ui-text-lg);
+  font-weight: bold;
+  transition: all var(--ui-transition-medium);
+}
+
+.restartButton:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ui-shadow-md);
+  background: linear-gradient(135deg, #00aaff, var(--ui-primary));
+}
