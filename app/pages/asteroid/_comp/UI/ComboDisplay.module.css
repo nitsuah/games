@@ -1,5 +1,3 @@
-@import './ui-variables.css';
-
 .container {
   /* Removed position:fixed - parent controls positioning */
   display: inline-block;

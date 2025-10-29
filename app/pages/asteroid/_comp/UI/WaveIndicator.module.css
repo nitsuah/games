@@ -1,5 +1,3 @@
-@import './ui-variables.css';
-
 .waveCounter {
   /* Removed position:fixed - parent controls positioning */
   background: var(--ui-bg-overlay);

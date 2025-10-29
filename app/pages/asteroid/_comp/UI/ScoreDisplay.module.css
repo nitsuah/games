@@ -1,5 +1,3 @@
-@import './ui-variables.css';
-
 .scoreDisplay {
   /* Removed position:absolute - parent controls positioning */
   color: var(--ui-text-primary);
