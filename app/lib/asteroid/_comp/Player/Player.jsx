@@ -11,6 +11,7 @@ const Player = ({
   _invincibilityActive,
   isGameOver,
   isPaused,
+  showWaveTransition,
   setShowBlueFlash,
 }) => {
   const meshRef = useRef();
@@ -97,7 +98,7 @@ const Player = ({
   }, [camera]);
 
   useFrame((state, delta) => {
-    if (isGameOver || isPaused) return;
+    if (isGameOver || isPaused || showWaveTransition) return;
     if (!meshRef.current) return;
 
     const direction = new THREE.Vector3();

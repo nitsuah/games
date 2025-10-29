@@ -14,6 +14,7 @@ import BoundaryBox from '@/lib/asteroid/_comp/UI/BoundaryBox';
 const GameCanvas = ({
   gameOver,
   paused,
+  showWaveTransition,
   targets,
   setTargets,
   setHealth,
@@ -50,6 +51,7 @@ const GameCanvas = ({
         onTargetHit={onHit}
         isGameOver={gameOver}
         isPaused={paused}
+        showWaveTransition={showWaveTransition}
         setShowBlueFlash={setShowBlueFlash}
         speedBoostActive={speedBoostActive}
       />
@@ -58,6 +60,7 @@ const GameCanvas = ({
         onMiss={onMiss}
         isGameOver={gameOver}
         isPaused={paused}
+        showWaveTransition={showWaveTransition}
         targets={targets}
         setTargets={setTargets}
         weapon={weapon}

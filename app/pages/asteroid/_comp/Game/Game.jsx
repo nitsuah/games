@@ -509,6 +509,7 @@ const Game = ({ onHit, onMiss }) => {
       <GameCanvas
         gameOver={gameOver}
         paused={paused}
+        showWaveTransition={showWaveTransition}
         health={health}
         targets={targets}
         setTargets={setTargets}
@@ -532,6 +533,7 @@ const Game = ({ onHit, onMiss }) => {
         setShieldActive={setShieldActive}
         rapidFireActive={rapidFireActive}
         invincibilityActive={invincibilityActive}
+        speedBoostActive={speedBoostActive}
         trailQuality={trailQuality}
       />
       {/* Top left - FPS counter */}

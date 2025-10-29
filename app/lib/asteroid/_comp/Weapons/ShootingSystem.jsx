@@ -12,6 +12,7 @@ const ShootingSystem = ({
   onMiss,
   isGameOver,
   isPaused,
+  showWaveTransition,
   weapon,
   ammo,
   setAmmo,
@@ -29,7 +30,7 @@ const ShootingSystem = ({
   const autoFireIntervalRef = useRef(null);
 
   const handleShoot = () => {
-    if (isGameOver || isPaused) return;
+    if (isGameOver || isPaused || showWaveTransition) return;
     if (cooldowns[weapon] > 0) return;
     if (ammo[weapon] <= 0) {
       playSound('empty');
