@@ -1,13 +1,25 @@
-# GAME FEEDBACK V4
+# GAME FEEDBACK for next PHASE/PATCH
+
+If feedback is too complex, added next relative `PHASE.md` or if can be completed then add as a patch/commit to the current branch of work.
 
 ## Game Testing Feedback
 
-- [x] rapid fire is still not working as expected. the laser stops after one shot. it should just fire continuously while the mouse button is held down. for shot gun. maybe have it fire a burst of 3 shots per click instead of one shot? and for explosion just decrease the cooldown time to 0 as test/control for "fastest" firing mode.
-- [x] the wireframe is still a bit distracting. maybe tone it down a bit more or make it a "ring"/halo around the user instead of a fill circular pattern? it just gets in the way visually right now. i still like how the invivincibility behaves.
-- [x] wireframe the boundary of what things are bouncing off so we understand the "playing field" eventually we'll want to restrict the user to this zone as well. but its fine for now to see it. the bouncing behavior is fun for the current behavior of the blocks/asteroids. we'll similarly want the user to behave that way.
-- [x] we should show the accuracy and score in between waves. increase the delay between waves to 5 seconds to give time to see this info. also show high score if its a new high score.
-- [x] the player movment is much better in asteroid, but the speed boost doesnt seem to do very much. and there still doesnt seem to be any inertia or we slow down very quickly when we stop pressing movement keys. can we make the speed boost more noticable and also add some inertia so we slide a bit when we stop moving? just really fix the "drift"/inertia feel of the player movment.
-- [ ] maybe the speed boost should fill a meter that depletes over time when active, and recharges when not active? so its not just an instant on/off thing but something you have to manage a bit more strategically? we could show this meter around the player as a circular or progress bar near the weapon info in the center or hte health to the right? but either way can/should be engaged with "shift" key.
-- [x] shotgun is still pretty spread out. can we tighten the spread even more? maybe have the pellets converge slightly at a certain distance out to make it more effective at range?
-- [x] improve the pause menu. allow a quit that takes you back to main menu but exits with your current score(game over). also add sound/music toggle buttons here for convenience or planned (settings/etc)
-- [x] Game Over! - might not be tracking final score/accuracy properly between all of the rounds? i got a final score of 0 and 0% accuracy even though i got to Wave 8 had a score of 1500+ and some accuracy during the game.
+This is feedback from recently play tests (the last phase so check other MD files ot confirm if fixes or feedback was already received). We can implement this during the next phase we work on.
+
+- [ ] we can still "Shoot" and move between waves (the menu is up but we can shoot behind it still)
+- [ ] The "inertia" space ship movement sucks. we just come to a halt instead of having some "drift" like asteroid should have. needs to feel more floaty and slippery.
+- [ ] make the pickups slightly picker and spread them out more. they spawn too close together and are hard to grab the right one sometimes.
+- [ ] i like the new shield! give it some pizzazz like invincibility but keep it "blue" themed.
+- [ ] similarly invincibility needs some more pizazz. make it more like the shield but keep the random color theme.
+- [ ] the speed boost is kind of useless since we have inertia movement. maybe make it increase acceleration and max speed more significantly to fix it?
+- [ ] the shotgun is now "triple shot all of the time. should only do that when rapid fire is active. the spread is STILL too wide. SOUP CAN WIDE. needs to be much tighter spread.
+- [ ] rapid fire is still kind of broken. for shotgun it fires the 3 then just stops (which seems to just be its default  behavior). it should loop until out of ammo or button released or timer for rapid fire ends. rapid fire still doesn't work as expected for the basic laser. but does work as expected for the explosion (control test to see if we should adjust some weapons that way.) tl;dr guns should really just go "FULL AUTO" until out of ammo or timer ends or button released.
+- [ ] the explosion is still a bit too big. should be smaller and affect less targets similarly (so the radius should just change).
+- [ ] score and accuracy still seem bugged out or not tracking/persisting properly.
+- [ ] Pause menu appears but music/sound toggles don't work. music and sounds should stop when paused.
+- [ ] Pause menu should have a restart button, but make it "confirm" style to avoid accidental restarts. similarly the quit button should have a confirm style prompt and redirect you back up a level to the main menu/home screen.
+- [ ] keep ui elements consistent. the pause menu uses different fonts and styles than the rest of the game. should be uniform. also reorganize the hud elements to be more clear. move the power-up indicators to the top right corner near the ammo/health so all status indicators are in one area. move score to top left corner with wave indicator so all game progress info is in one area. health should in the top right corner with ammo and power-ups.
+- [ ] slow motion should give a influenced effect to the player that time is slowed. maybe a purple tint or slight blur around the edges or something? tough as the entire background is black so not much to work with there. think on this
+- [ ] when power ups are active they overlap the wave info so make sure all ui elements have enough space and don't overlap.
+- [ ] the "reload" rate should show as a progress bar or something on the ammo indicator so we can see when we will be reloaded and ready to fire again - some weapons are "bolt-action" and have a visible reload time like explosion, vs laser is instant reload, vs. shotgun is in between those two extremes so we can see the reload time visually but config in their config and ensure we are moving in this direction more or less - especially during FULL AUTO rapid fire mode, the shotgun should fire 3 shots then have a visible reload time before it can fire again normally. but under rapid it should blast continuously until out of ammo or timer ends or button released. for explosion it can function as it does now both as it currently defaults and under rapid fire where reload is 0 but have a visible reload bar so we can see when it will be ready to fire again and the remaining ammo. but this way we can play around with ammo and reload differently to get different feels for each weapon. as well as different visual affects that affect the gameplay differently so we can easily tweak and toggle and add new gun varieties based on some basic core concepts and extrapolate/combine from there.
+- [ ] 
