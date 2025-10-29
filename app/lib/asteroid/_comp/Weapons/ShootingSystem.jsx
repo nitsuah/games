@@ -5,6 +5,7 @@ import CooldownManager from '@/lib/asteroid/_comp/Weapons/CooldownManager';
 import Explosion from '@/_components/effects/Explosion';
 import { WEAPON_CONFIG, WEAPON_TYPES } from '@/lib/asteroid/_comp/config';
 import { weaponHandler } from '@/lib/asteroid/_comp/Weapons/weaponHandler';
+import soundManager from '@/utils/audio/SoundManager';
 
 const ShootingSystem = ({
   onHit,
@@ -54,19 +55,44 @@ const ShootingSystem = ({
             }
           : weapon === 'explosive'
           ? {
-              explosionRadius: WEAPON_CONFIG.explosive.radius,
-              triggerExplosion: (position) =>
-                setExplosions((prev) => [
-                  ...prev,
-                  { id: Date.now(), position, explosionRadius: WEAPON_CONFIG.explosive.radius },
-                ]),
-            }
+                  explosionRadius: WEAPON_CONFIG.explosive.radius,
+                  triggerExplosion: (position) => {
+                    const radius = WEAPON_CONFIG.explosive.radius;
+                    setExplosions((prev) => [
+                      ...prev,
+                      { id: Date.now(), position, explosionRadius: radius },
+                    ]);
+                    // Map explosion size to nearby target sizes for more characterful sound
+                    try {
+                      // Find targets within radius*1.5 and use the largest target size as bias
+                      const nearby = targets.filter((t) => {
+                        const dx = t.x - position.x;
+                        const dy = t.y - position.y;
+                        const dz = (t.z || 0) - (position.z || 0);
+                        const dist2 = dx * dx + dy * dy + dz * dz;
+                        return dist2 <= (radius * 1.5) * (radius * 1.5);
+                      });
+                      const largest = nearby.reduce((max, t) => Math.max(max, t.size || 1), 0) || 1;
+                      const sizeFactor = Math.max(0.5, Math.min(3, largest / 10));
+                      soundManager.playExplosion(sizeFactor);
+                    } catch {
+                      /* ignore */
+                    }
+                  },
+                }
           : {},
-      triggerExplosion: (position) =>
+      triggerExplosion: (position) => {
+        const radius = WEAPON_CONFIG.explosive.radius;
         setExplosions((prev) => [
           ...prev,
-          { id: Date.now(), position, explosionRadius: WEAPON_CONFIG.explosive.radius },
-        ]),
+          { id: Date.now(), position, explosionRadius: radius },
+        ]);
+        try {
+          soundManager.playExplosion(Math.max(0.5, radius / 50));
+        } catch {
+          /* ignore */
+        }
+      },
     });
 
     const weaponCooldown = WEAPON_TYPES.find((w) => w.key === weapon).cooldown;
