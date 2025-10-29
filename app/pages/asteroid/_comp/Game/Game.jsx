@@ -2,7 +2,6 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import styles from './Game.module.css';
 import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
-import { handleGameOver as handleGameOverFn } from '@/lib/asteroid/_comp/Game/handleGameOver';
 import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
 import dynamic from 'next/dynamic';
 
