@@ -29,6 +29,7 @@ const WaveIndicator = dynamic(() => import('../UI/WaveIndicator'), { ssr: false 
 const DebugMenu = dynamic(() => import('../UI/DebugMenu'), { ssr: false });
 const WaveTransition = dynamic(() => import('../UI/WaveTransition'), { ssr: false });
 const PauseMenu = dynamic(() => import('../UI/PauseMenu'), { ssr: false });
+const SlowMotionOverlay = dynamic(() => import('../UI/SlowMotionOverlay'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
@@ -634,6 +635,7 @@ const Game = ({ onHit, onMiss }) => {
           score={score}
         />
       )}
+      <SlowMotionOverlay active={slowMotionActive} />
     </div>
   );
 };

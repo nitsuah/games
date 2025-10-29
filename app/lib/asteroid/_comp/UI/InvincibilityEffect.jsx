@@ -70,20 +70,83 @@ const InvincibilityEffect = ({ invincibilityActive }) => {
 
   if (!visible && fadeRef.current <= 0) return null;
 
+  const currentColor = colors[colorIndexRef.current];
+
   return (
-    <mesh ref={shieldRef} frustumCulled={false}>
-      <sphereGeometry args={[2.8, 32, 32]} />
-      <meshStandardMaterial
-        ref={materialRef}
-        color={colors[0]}
-        transparent
-        opacity={0.15}
-        emissive={colors[0]}
-        emissiveIntensity={0.6}
-        wireframe={true}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
+    <group ref={shieldRef} frustumCulled={false}>
+      {/* Outer glowing aura */}
+      <mesh>
+        <sphereGeometry args={[3.5, 16, 16]} />
+        <meshBasicMaterial
+          color={currentColor}
+          transparent
+          opacity={0.15 * fadeRef.current}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      
+      {/* Main wireframe sphere with color cycling */}
+      <mesh>
+        <sphereGeometry args={[2.8, 32, 32]} />
+        <meshStandardMaterial
+          ref={materialRef}
+          color={currentColor}
+          transparent
+          opacity={0.25}
+          emissive={currentColor}
+          emissiveIntensity={1.2}
+          wireframe={true}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      
+      {/* Inner rotating wireframe */}
+      <mesh rotation={[Math.PI / 4, Math.PI / 4, 0]}>
+        <sphereGeometry args={[2.2, 16, 16]} />
+        <meshStandardMaterial
+          color={currentColor}
+          transparent
+          opacity={0.18}
+          emissive={currentColor}
+          emissiveIntensity={0.8}
+          wireframe={true}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      
+      {/* Pulsing energy rings */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[2.5, 0.15, 8, 32]} />
+        <meshStandardMaterial
+          color={currentColor}
+          transparent
+          opacity={0.4 * fadeRef.current}
+          emissive={currentColor}
+          emissiveIntensity={1.5}
+        />
+      </mesh>
+      
+      <mesh rotation={[0, Math.PI / 2, 0]}>
+        <torusGeometry args={[2.5, 0.12, 8, 32]} />
+        <meshStandardMaterial
+          color={currentColor}
+          transparent
+          opacity={0.35 * fadeRef.current}
+          emissive={currentColor}
+          emissiveIntensity={1.3}
+        />
+      </mesh>
+      
+      {/* Bright core */}
+      <mesh>
+        <sphereGeometry args={[0.5, 16, 16]} />
+        <meshBasicMaterial
+          color={currentColor}
+          transparent
+          opacity={0.8 * fadeRef.current}
+        />
+      </mesh>
+    </group>
   );
 };
 
