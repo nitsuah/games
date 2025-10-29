@@ -52,6 +52,14 @@ const Game = ({ onHit, onMiss }) => {
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
   const [health, setHealth] = useState(INITIAL_HEALTH);
+  const [trailQuality, setTrailQuality] = useState(() => {
+    try {
+      if (typeof localStorage !== 'undefined') return localStorage.getItem('trailQuality') || 'high'
+    } catch {
+      // ignore
+    }
+    return 'high'
+  })
   
   // Wave system state
   const [currentWave, setCurrentWave] = useState(1);
@@ -499,6 +507,7 @@ const Game = ({ onHit, onMiss }) => {
         shieldActive={shieldActive}
         setShieldActive={setShieldActive}
         rapidFireActive={rapidFireActive}
+        trailQuality={trailQuality}
       />
       <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
         <FPSCounter />
@@ -506,6 +515,31 @@ const Game = ({ onHit, onMiss }) => {
         <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
         <AmmoIndicator weapon={weapon} ammo={ammo} />
         <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
+        <div className="trail-quality-control" style={{display: 'flex', gap: 8, alignItems: 'center'}}>
+          <span style={{fontSize: 12, color: 'white'}}>Trails:</span>
+          {['off','low','high'].map(q => (
+            <button
+              key={q}
+              onClick={() => {
+                setTrailQuality(q)
+                try { localStorage.setItem('trailQuality', q) } catch {
+                  // ignore
+                }
+              }}
+              style={{
+                padding: '4px 8px',
+                borderRadius: 4,
+                border: trailQuality === q ? '2px solid #fff' : '1px solid rgba(255,255,255,0.2)',
+                background: trailQuality === q ? 'rgba(255,255,255,0.06)' : 'transparent',
+                color: '#fff',
+                cursor: 'pointer',
+                fontSize: 12,
+              }}
+            >
+              {q === 'off' ? 'Off' : q === 'low' ? 'Low' : 'High'}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Bottom-right stack: score and combo to reduce top-right clutter */}

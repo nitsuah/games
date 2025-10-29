@@ -1,7 +1,9 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import * as THREE from 'three';
+import { useLoader } from '@react-three/fiber';
+import { TextureLoader } from 'three';
 
-const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, -5, 0) }) => {
+const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, offset = new THREE.Vector3(0, -5, 0), trailQuality = 'high' }) => {
   if (!Array.isArray(lasers) || lasers.length === 0) return null;
 
   const getLaserColor = () => {
@@ -19,25 +21,16 @@ const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, off
 
   const laserColor = getLaserColor();
 
-  const spriteTexture = useMemo(() => {
-    // Create a small radial gradient canvas texture for glow sprites (client-only)
-    if (typeof document === 'undefined') return null;
-    const size = 64;
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    const grd = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-    grd.addColorStop(0, 'rgba(255,255,255,1)');
-    grd.addColorStop(0.25, 'rgba(255,200,160,0.95)');
-    grd.addColorStop(0.45, 'rgba(255,120,60,0.6)');
-    grd.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, size, size);
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.needsUpdate = true;
-    return tex;
-  }, []);
+  // Load per-weapon glow sprites
+  const spreadTex = useLoader(TextureLoader, '/images/glow_spread.png');
+  const laserTex = useLoader(TextureLoader, '/images/glow_laser.png');
+  const explosiveTex = useLoader(TextureLoader, '/images/glow_explosive.png');
+  const defaultTex = useLoader(TextureLoader, '/images/glow_spread.png');
+  const spriteTexture = weaponType === 'laser' ? laserTex : weaponType === 'explosive' ? explosiveTex : spreadTex || defaultTex;
+
+  // Trail tuning constants (easy to tweak)
+  const BASE_SEGMENTS = 6; // base number of sprite segments per tracer
+  const SIZE_MULT = 0.9; // scale multiplier for sprite size
 
   return (
     <>
@@ -49,8 +42,10 @@ const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, off
         const direction = new THREE.Vector3().subVectors(laser.to, adjustedFrom).normalize();
         const quaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction);
 
-        // If laser has a 'speed' field, render it as a segmented fading trail to simulate a particle trail
-        const segments = laser.speed ? Math.max(3, Math.floor(laser.speed * 6)) : 1;
+  // If laser has a 'speed' field, render it as a segmented fading trail to simulate a particle trail
+        // respect trailQuality: off => no sprites, low => fewer segments
+        const baseSegMult = trailQuality === 'off' ? 0 : trailQuality === 'low' ? 0.6 : 1;
+        const segments = laser.speed && baseSegMult > 0 ? Math.max(3, Math.floor(laser.speed * BASE_SEGMENTS * baseSegMult)) : 1;
         if (segments > 1) {
           const segLength = distance / segments;
           return (
@@ -59,8 +54,9 @@ const LaserBeam = ({ lasers, weaponType, thickness = 1, glowIntensity = 0.8, off
                 const t = sIdx / segments; // 0..1 along the beam
                 const segPos = direction.clone().multiplyScalar(segLength * (sIdx + 0.5));
                 const segOpacity = Math.max(0.04, 0.95 * (1 - t));
-                const segScale = Math.max(0.12, 0.8 * (1 - t));
+                const segScale = Math.max(0.12, SIZE_MULT * (1 - t));
                 // Use sprites so trails always face camera and are cheap to render
+                if (trailQuality === 'off') return null;
                 return (
                   <sprite key={sIdx} position={segPos} scale={[segScale, segScale, 1]}>
                     <spriteMaterial

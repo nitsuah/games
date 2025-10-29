@@ -74,7 +74,11 @@ const ShootingSystem = ({
                       });
                       const largest = nearby.reduce((max, t) => Math.max(max, t.size || 1), 0) || 1;
                       const sizeFactor = Math.max(0.5, Math.min(3, largest / 10));
-                      soundManager.playExplosion(sizeFactor);
+                      // Compute simple pan based on x offset from camera
+                      const camPos = camera.position || { x: 0, y: 0, z: 0 };
+                      const dx = (position.x || 0) - camPos.x;
+                      const pan = Math.max(-1, Math.min(1, dx / 50));
+                      soundManager.playExplosion(sizeFactor, pan);
                     } catch {
                       /* ignore */
                     }

@@ -32,6 +32,7 @@ const GameCanvas = ({
   setShieldActive,
   rapidFireActive,
   speedBoostActive,
+  trailQuality = 'high',
 }) => {
   return (
     <Canvas
@@ -79,7 +80,7 @@ const GameCanvas = ({
       <ShieldEffect shieldActive={shieldActive} />
 
       {Array.isArray(showLaser) && showLaser.length > 0 && (
-        <LaserBeam lasers={showLaser} weaponType={weapon} />
+        <LaserBeam lasers={showLaser} weaponType={weapon} trailQuality={trailQuality} />
       )}
 
       <PowerUp position={[10, 10, 0]} size={1} type="health" onCollect={handlePowerUpCollect} />

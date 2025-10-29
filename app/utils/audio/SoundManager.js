@@ -49,7 +49,8 @@ class SoundManager {
   }
 
   // Play a simple explosion-like one-shot. 'size' biases the sound: larger -> deeper, longer decay.
-  playExplosion(size = 1) {
+  // Accepts optional pan parameter (-1 left .. 1 right) for spatialization.
+  playExplosion(size = 1, pan = 0) {
     if (typeof window === 'undefined') return;
     if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -89,15 +90,43 @@ class SoundManager {
     oscGain.gain.exponentialRampToValueAtTime(0.9, now + 0.01);
     oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8 * Math.min(Math.max(size, 0.5), 2));
 
-    // routing
-    noise.connect(noiseGain).connect(ctx.destination);
-    osc.connect(oscGain).connect(ctx.destination);
+    // Add a low-pass rumble layer to make big explosions feel weighty
+    const rumbleOsc = ctx.createOscillator();
+    rumbleOsc.type = 'triangle';
+    rumbleOsc.frequency.setValueAtTime(60 / Math.max(0.5, size), now);
+    const rumbleGain = ctx.createGain();
+    rumbleGain.gain.setValueAtTime(0.0001, now);
+    rumbleGain.gain.exponentialRampToValueAtTime(0.7 * Math.min(size, 2), now + 0.02);
+    rumbleGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2 * Math.min(Math.max(size, 0.5), 2));
+    const lowpass = ctx.createBiquadFilter();
+    lowpass.type = 'lowpass';
+    lowpass.frequency.setValueAtTime(300, now);
+
+    // panning node if supported
+    let panNode = null;
+    if (ctx.createStereoPanner) {
+      panNode = ctx.createStereoPanner();
+      panNode.pan.setValueAtTime(Math.max(-1, Math.min(1, pan)), now);
+    }
+
+    // routing: noise + osc + rumble -> optional pan -> destination
+    if (panNode) {
+      noise.connect(noiseGain).connect(panNode).connect(ctx.destination);
+      osc.connect(oscGain).connect(panNode).connect(ctx.destination);
+      rumbleOsc.connect(rumbleGain).connect(lowpass).connect(panNode).connect(ctx.destination);
+    } else {
+      noise.connect(noiseGain).connect(ctx.destination);
+      osc.connect(oscGain).connect(ctx.destination);
+      rumbleOsc.connect(rumbleGain).connect(lowpass).connect(ctx.destination);
+    }
 
     // start/stop
     noise.start(now);
     osc.start(now);
+    rumbleOsc.start(now);
     noise.stop(now + 1.0);
     osc.stop(now + 1.0);
+    rumbleOsc.stop(now + 1.0);
   }
 }
 
