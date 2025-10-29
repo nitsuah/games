@@ -466,38 +466,33 @@ const Game = ({ onHit, onMiss }) => {
       pauseSound('bgm');
       playSound('gameOver');
       document.exitPointerLock();
+      
+      // Save high score and accuracy
+      const accuracy = hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0;
+      
+      if (score > highScore) {
+        setHighScore(score);
+        setIsNewHighScore(true);
+        try {
+          localStorage.setItem('asteroidHighScore', String(score));
+        } catch (err) {
+          console.warn('Failed to save high score:', err);
+        }
+      }
+      
+      if (accuracy > bestAccuracy) {
+        setBestAccuracy(accuracy);
+        try {
+          localStorage.setItem('asteroidBestAccuracy', String(accuracy));
+        } catch (err) {
+          console.warn('Failed to save best accuracy:', err);
+        }
+      }
     }
-  }, [health, gameOver, setGameOver, pauseSound, playSound]);
+  }, [health, gameOver, setGameOver, pauseSound, playSound, score, highScore, setHighScore, setIsNewHighScore, hits, misses, bestAccuracy, setBestAccuracy]);
 
-  useEffect(() => {
-    handleGameOverFn({
-      targets,
-      setGameOver,
-      pauseSound,
-      playSound,
-      hits,
-      misses,
-      score,
-      highScore,
-      setHighScore,
-      setIsNewHighScore,
-      bestAccuracy,
-      setBestAccuracy,
-    });
-  }, [
-    targets,
-    hits,
-    misses,
-    score,
-    highScore,
-    bestAccuracy,
-    pauseSound,
-    playSound,
-    setGameOver,
-    setHighScore,
-    setIsNewHighScore,
-    setBestAccuracy,
-  ]);
+  // Removed handleGameOver effect - wave transitions handle target completion now
+  // Game only ends when health reaches 0
 
   return (
     <div className={styles.gameContainer}>
@@ -530,11 +525,22 @@ const Game = ({ onHit, onMiss }) => {
         invincibilityActive={invincibilityActive}
         trailQuality={trailQuality}
       />
-      {/* Top right - User info (wave, health, FPS) */}
-      <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+      {/* Top left - FPS counter */}
+      <div style={{ position: 'fixed', top: 12, left: 12, zIndex: 500 }}>
         <FPSCounter />
+      </div>
+      
+      {/* Top right - Wave, Health, Power-ups */}
+      <div style={{ position: 'fixed', top: 12, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
         <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
         <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
+        <PowerUpIndicator
+          shieldActive={shieldActive}
+          rapidFireActive={rapidFireActive}
+          slowMotionActive={slowMotionActive}
+          invincibilityActive={invincibilityActive}
+          speedBoostActive={speedBoostActive}
+        />
       </div>
       
       {/* Bottom right - Weapon and ammo info */}
@@ -546,19 +552,12 @@ const Game = ({ onHit, onMiss }) => {
       {/* Debug menu - collapsible pill with settings */}
       <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
 
-      {/* Bottom-right stack: score and combo to reduce top-right clutter */}
-      <div style={{ position: 'fixed', right: 12, bottom: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+      {/* Bottom left - Score and combo */}
+      <div style={{ position: 'fixed', left: 12, bottom: 100, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-start' }}>
         <ScoreDisplay score={score} />
         <ComboDisplay combo={combo} multiplier={comboMultiplier} />
       </div>
       {weapon === 'spread' && <ShotReticle />}
-      <PowerUpIndicator
-        shieldActive={shieldActive}
-        rapidFireActive={rapidFireActive}
-        slowMotionActive={slowMotionActive}
-        invincibilityActive={invincibilityActive}
-        speedBoostActive={speedBoostActive}
-      />
       {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
       <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
         <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />

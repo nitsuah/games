@@ -67,8 +67,8 @@ export function weaponHandler({
   }
 
   if (type === 'spread') {
-    // Buckshot with very tight spread pattern
-    const { SPREAD_ANGLE = 0.025, SPREAD_COUNT = 8, SPREAD_RANGE = 150 } = weaponParams; // Tightened from 0.035 to 0.025
+    // Buckshot with soup can radius - extremely tight spread
+    const { SPREAD_ANGLE = 0.008, SPREAD_COUNT = 8, SPREAD_RANGE = 150 } = weaponParams; // Soup can tight - reduced from 0.025 to 0.008
     const hitTargets = new Set();
     const lasers = [];
     
@@ -130,7 +130,7 @@ export function weaponHandler({
 
   if (type === 'explosive') {
     // Explosive logic
-    const { explosionRadius = 30 } = weaponParams; // Reduced from 50 to 30 - smaller explosion
+    const { explosionRadius = 15 } = weaponParams; // Cut in half from 30 to 15
     const maxRange = 100;
     const raycaster = new THREE.Raycaster(from, forwardDirection);
     const intersects = raycaster.intersectObjects(scene.children, true);

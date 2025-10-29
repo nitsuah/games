@@ -38,7 +38,7 @@ const Player = ({
   }, [speedBoostActive, SPEED_MULTIPLIER]);
 
   useEffect(() => {
-    camera.position.set(0, 1, 0);
+    camera.position.set(0, 1, -25); // Moved player back 25 units from spawn points
     camera.rotation.order = 'YXZ';
 
     const handleKeyDown = (e) => {
