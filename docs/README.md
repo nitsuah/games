@@ -68,8 +68,6 @@ app/
 - ✅ Visual effects polish (shield/invincibility)
 - ✅ Code quality improvements and optimizations
 
-See `docs/PHASE-7.md` for detailed completion summary.
-
 **Next**: Ready for Phase 8 (new features, game modes, advanced polish)
 
 ## 🐛 Known Issues
