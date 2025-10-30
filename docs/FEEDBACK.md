@@ -55,7 +55,7 @@
 
 ### Issues Found
 
-*List any bugs or unexpected behavior*
+- List any bugs or unexpected behavior
 
 ### Performance Notes
 
@@ -65,4 +65,4 @@
 
 ### Suggestions
 
-*Feature requests or improvement ideas*
+- Feature requests or improvement ideas
