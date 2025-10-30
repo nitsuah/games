@@ -118,36 +118,26 @@ const ShootingSystem = ({
     const handleMouseDown = () => {
       mouseDownRef.current = true;
       
-      // Shotgun behavior:
-      // - WITHOUT rapid fire: single shot
-      // - WITH rapid fire: burst of 3 shots
-      if (weapon === 'spread' && rapidFireActive) {
-        handleShoot();
-        setTimeout(() => mouseDownRef.current && handleShoot(), 100);
-        setTimeout(() => mouseDownRef.current && handleShoot(), 200);
-      } else {
-        handleShoot(); // Fire immediately on click for all weapons
-      }
+      // Fire immediately on click for all weapons
+      handleShoot();
       
-      // Full-auto continuous fire:
-      // - Laser: always continuous while mouse held
-      // - All weapons with rapid fire: continuous fire
-      if (weapon === 'laser' || rapidFireActive) {
+      // Full-auto continuous fire behavior:
+      // - Laser: ALWAYS continuous (like holding a beam)
+      // - Explosive with rapid fire: continuous
+      // - Spread with rapid fire: continuous but with 3-shot bursts
+      const shouldAutoFire = weapon === 'laser' || (rapidFireActive && (weapon === 'explosive' || weapon === 'spread'));
+      
+      if (shouldAutoFire) {
         if (autoFireIntervalRef.current) {
           clearInterval(autoFireIntervalRef.current);
         }
-        const fireRate = weapon === 'laser' ? 100 : (weapon === 'spread' ? 250 : 50);
-        // Laser: 10 rounds/sec, Spread: 4 rounds/sec (with 3-shot burst), Others: 20 rounds/sec
+        
+        // Fire rates: Laser ultra-fast (continuous beam feel), Spread slower bursts, Explosive fast
+        const fireRate = weapon === 'laser' ? 50 : (weapon === 'spread' ? 300 : 80);
+        
         autoFireIntervalRef.current = setInterval(() => {
-          if (mouseDownRef.current && ammo[weapon] > 0) {
-            // For shotgun with rapid fire, fire burst of 3
-            if (weapon === 'spread' && rapidFireActive) {
-              handleShoot();
-              setTimeout(() => mouseDownRef.current && ammo[weapon] > 0 && handleShoot(), 100);
-              setTimeout(() => mouseDownRef.current && ammo[weapon] > 0 && handleShoot(), 200);
-            } else {
-              handleShoot();
-            }
+          if (mouseDownRef.current) {
+            handleShoot();
           }
         }, fireRate);
       }
@@ -171,7 +161,7 @@ const ShootingSystem = ({
         clearInterval(autoFireIntervalRef.current);
       }
     };
-  }, [handleShoot, rapidFireActive, weapon]);
+  }, [handleShoot, rapidFireActive, weapon, ammo]);
 
   return (
     <>

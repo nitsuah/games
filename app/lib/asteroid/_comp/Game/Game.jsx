@@ -16,7 +16,6 @@ import { handleMiss as handleMissFn } from '@/lib/asteroid/_comp/Game/handleMiss
 import { restartGame as restartGameFn } from '@/lib/asteroid/_comp/Game/restartGame';
 import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/handlePlayerHit';
 import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
-import { updateScore as updateScoreFn } from '@/lib/asteroid/_comp/Game/updateScore';
 import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
 import { saveGameStats } from '@/utils/saveGameStats';
 const ShotReticle = dynamic(() => import('@/lib/asteroid/_comp/UI/ShotReticle'), { ssr: false });
@@ -267,10 +266,7 @@ const Game = ({ onHit, onMiss }) => {
     loadSavedScoresFn({ setHighScore, setBestAccuracy });
   }, [setHighScore, setBestAccuracy]);
 
-  // Update score and accuracy
-  useEffect(() => {
-    updateScoreFn({ hits, misses, setScore, comboMultiplier });
-  }, [hits, misses, setScore, comboMultiplier]);
+  // Score is now updated incrementally in handleTargetHit, no need for recalculation effect
 
   // Play background music on mount
   useEffect(() => {
@@ -364,13 +360,14 @@ const Game = ({ onHit, onMiss }) => {
         ammo,
         setTargets,
         setHits,
+        setScore,
         onHit,
         targetRefs,
         setCombo,
         setComboMultiplier,
         comboTimerRef,
       }),
-    [cooldowns, weapon, ammo, setTargets, setHits, onHit]
+    [cooldowns, weapon, ammo, setTargets, setHits, setScore, onHit]
   );
   // Add logging to confirm splitting logic
   useEffect(() => {

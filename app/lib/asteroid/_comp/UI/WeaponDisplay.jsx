@@ -1,8 +1,11 @@
 import styles from './WeaponDisplay.module.css';
 import { WEAPON_TYPES } from '@/lib/asteroid/_comp/config';
 
+// Define fallback as constant to avoid creating new object on every render
+const FALLBACK_WEAPON = { name: 'Unknown', maxAmmo: 0, cooldown: 0 };
+
 const WeaponDisplay = ({ weapon = '', ammo = {}, cooldowns = {} }) => {
-  const weaponData = WEAPON_TYPES.find((w) => w.key === weapon) || { name: 'Unknown', maxAmmo: 0, cooldown: 0 };
+  const weaponData = WEAPON_TYPES.find((w) => w.key === weapon) || FALLBACK_WEAPON;
   const ammoCount = (weapon && ammo && typeof ammo === 'object') ? (ammo[weapon] ?? 0) : 0;
   const cooldownVal = (cooldowns && typeof cooldowns === 'object' && typeof cooldowns[weapon] === 'number') ? cooldowns[weapon] : 0;
 

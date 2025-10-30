@@ -9,6 +9,7 @@ export const handleTargetHit = ({
   ammo,
   setTargets,
   setHits,
+  setScore,
   onHit,
   targetRefs,
   setCombo,
@@ -18,6 +19,8 @@ export const handleTargetHit = ({
   if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
     return;
   }
+
+  let pointsEarned = 0;
 
   setTargets((prevTargets) => {
     let updatedTargets = [];
@@ -33,6 +36,9 @@ export const handleTargetHit = ({
         const currentX = meshRef?.current?.position.x || target.x;
         const currentY = meshRef?.current?.position.y || target.y;
         const currentZ = meshRef?.current?.position.z || target.z;
+
+        // Base points per hit
+        pointsEarned = 100;
 
         if (target.size > 1) {
           // Use the shared splitTarget utility, but override x/y/z with current position
@@ -52,20 +58,30 @@ export const handleTargetHit = ({
   setHits((prevHits) => prevHits + 1);
 
   // Combo logic
+  let multiplier = 1;
   setCombo((prevCombo) => {
     const newCombo = prevCombo + 1;
     // Calculate multiplier based on combo
     if (newCombo >= 10) {
       setComboMultiplier(3);
+      multiplier = 3;
     } else if (newCombo >= 5) {
       setComboMultiplier(2);
+      multiplier = 2;
     } else if (newCombo >= 2) {
       setComboMultiplier(1.5);
+      multiplier = 1.5;
     } else {
       setComboMultiplier(1);
+      multiplier = 1;
     }
     return newCombo;
   });
+
+  // Add score incrementally with multiplier
+  if (pointsEarned > 0) {
+    setScore((prevScore) => prevScore + Math.round(pointsEarned * multiplier));
+  }
 
   // Reset combo timer
   if (comboTimerRef.current) {

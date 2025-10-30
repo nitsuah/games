@@ -12,7 +12,7 @@ export const DEFAULT_TARGET_COLOR = '#00ff00';
 export const WEAPON_CONFIG = {
   // Tighter spread - no longer "soup can wide"
   // Default: single shot. Triple shot only with rapid fire active
-  spread: { angle: 0.15, count: 12, range: 160 }, // Reduced angle from 0.6 to 0.15 for tighter spread
+  spread: { angle: 0.15, count: 12, range: 80 }, // Reduced max range from 160 to 80 for faster trail fade
   laser: { color: 'cyan', range: 400 },
   explosive: { radius: 30, color: 'orange' }, // Reduced from 50 to 30 for smaller explosion
 };

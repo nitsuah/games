@@ -68,8 +68,8 @@ export function weaponHandler({
 
   if (type === 'spread') {
     // Buckshot with very tight spread that converges at optimal range
-    const { SPREAD_ANGLE = 0.005, SPREAD_COUNT = 8, SPREAD_RANGE = 150 } = weaponParams; // Tighter spread: 0.005 (was 0.008)
-    const CONVERGENCE_DISTANCE = 60; // Pellets converge at this distance
+    const { SPREAD_ANGLE = 0.005, SPREAD_COUNT = 8, SPREAD_RANGE = 80 } = weaponParams; // Reduced max range from 150 to 80
+    const CONVERGENCE_DISTANCE = 40; // Pellets converge at this distance (reduced from 60)
     const hitTargets = new Set();
     const lasers = [];
     

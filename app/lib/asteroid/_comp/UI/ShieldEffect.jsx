@@ -42,9 +42,10 @@ const ShieldEffect = ({ shieldActive }) => {
     if (fadeRef.current > target) fadeRef.current = Math.max(target, fadeRef.current - delta * speed);
 
     const opacity = fadeRef.current;
-    // More pronounced wireframe - increased base opacity and emissive
-    materialRef.current.opacity = 0.25 * opacity + 0.04 * (1 - opacity);
-    materialRef.current.emissiveIntensity = 1.6 * opacity;
+    // Subtle halo effect with pulsing - reduced opacity by 50%
+    const pulsingOpacity = 0.5 + Math.sin(clock.elapsedTime * 3) * 0.25;
+    materialRef.current.opacity = 0.25 * opacity * pulsingOpacity;
+    materialRef.current.emissiveIntensity = 0.6 * opacity * pulsingOpacity;
     
     // Gentle back-and-forth rotation (subtle wave effect)
     const rotationWave = Math.sin(clock.elapsedTime * 1.5) * 0.15;
@@ -55,82 +56,70 @@ const ShieldEffect = ({ shieldActive }) => {
 
   if (!visible && fadeRef.current <= 0) return null;
 
-  // Create a ring/halo effect using multiple rings at different angles + outer sphere
+  // Pulsing fade animation (opacity fades in/out while active)
+  const pulsingOpacity = 0.5 + Math.sin(fadeRef.current * 10) * 0.25; // 0.25 to 0.75 range
+  
+  // Create a blue-themed halo effect using rings at different angles
   return (
     <group ref={shieldRef} frustumCulled={false}>
-      {/* Outer pulsing wireframe sphere */}
+      {/* Outer glowing blue aura */}
       <mesh>
-        <sphereGeometry args={[3.2, 16, 16]} />
+        <sphereGeometry args={[3.2, 32, 32]} />
         <meshBasicMaterial
-          color="#00aaff"
+          color="#0099ff"
           transparent
-          opacity={0.12 * fadeRef.current}
-          wireframe
+          opacity={0.06 * fadeRef.current * pulsingOpacity}
           side={THREE.DoubleSide}
         />
       </mesh>
       
-      {/* Hexagonal shield panels effect */}
-      <mesh>
-        <sphereGeometry args={[2.8, 8, 8]} />
+      {/* Main horizontal blue halo ring */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[2.4, 0.12, 12, 64]} />
+        <meshStandardMaterial
+          ref={materialRef}
+          color="#00ccff"
+          transparent
+          opacity={0.25 * pulsingOpacity}
+          emissive="#00ffff"
+          emissiveIntensity={0.6 * pulsingOpacity}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      
+      {/* Vertical blue halo ring */}
+      <mesh rotation={[0, 0, 0]}>
+        <torusGeometry args={[2.4, 0.10, 10, 64]} />
+        <meshStandardMaterial
+          color="#0099ff"
+          transparent
+          opacity={0.18 * pulsingOpacity}
+          emissive="#00ddff"
+          emissiveIntensity={0.5 * pulsingOpacity}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      
+      {/* Diagonal blue halo ring */}
+      <mesh rotation={[Math.PI / 4, Math.PI / 4, 0]}>
+        <torusGeometry args={[2.4, 0.08, 8, 64]} />
         <meshStandardMaterial
           color="#0088ff"
           transparent
-          opacity={0.08 * fadeRef.current}
-          emissive="#00ffff"
-          emissiveIntensity={0.3 * fadeRef.current}
-          wireframe
+          opacity={0.15 * pulsingOpacity}
+          emissive="#00aaff"
+          emissiveIntensity={0.4 * pulsingOpacity}
           side={THREE.DoubleSide}
         />
       </mesh>
       
-      {/* Main horizontal ring */}
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[2.4, 0.10, 10, 64]} />
-        <meshStandardMaterial
-          ref={materialRef}
-          color="#00ffff"
-          transparent
-          opacity={0.5}
-          emissive="#00ffff"
-          emissiveIntensity={1.2}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-      
-      {/* Vertical ring 1 */}
-      <mesh rotation={[0, 0, 0]}>
-        <torusGeometry args={[2.4, 0.08, 10, 64]} />
-        <meshStandardMaterial
-          color="#00ddff"
-          transparent
-          opacity={0.35}
-          emissive="#00ffff"
-          emissiveIntensity={0.8}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-      
-      {/* Diagonal ring */}
-      <mesh rotation={[0, Math.PI / 4, Math.PI / 4]}>
-        <torusGeometry args={[2.4, 0.07, 8, 64]} />
-        <meshStandardMaterial
-          color="#00ccff"
-          transparent
-          opacity={0.25}
-          emissive="#00ffff"
-          emissiveIntensity={0.6}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-      
-      {/* Energy core glow */}
+      {/* Bright blue energy core */}
       <mesh>
         <sphereGeometry args={[0.3, 16, 16]} />
         <meshBasicMaterial
           color="#00ffff"
           transparent
-          opacity={0.6 * fadeRef.current}
+          opacity={0.3 * fadeRef.current * pulsingOpacity}
         />
       </mesh>
     </group>

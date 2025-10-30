@@ -47,9 +47,10 @@ const InvincibilityEffect = ({ invincibilityActive }) => {
     if (fadeRef.current > target) fadeRef.current = Math.max(target, fadeRef.current - delta * speed);
 
     const opacity = fadeRef.current;
-    // More visible wireframe
-    materialRef.current.opacity = 0.30 * opacity + 0.05 * (1 - opacity);
-    materialRef.current.emissiveIntensity = 1.8 * opacity;
+    // Subtle halo effect with pulsing
+    const pulsingOpacity = 0.5 + Math.sin(clock.elapsedTime * 3) * 0.25;
+    materialRef.current.opacity = 0.25 * opacity * pulsingOpacity;
+    materialRef.current.emissiveIntensity = 0.9 * opacity * pulsingOpacity;
 
     // Cycle through colors over time
     const colorChangeSpeed = 3; // changes per second
@@ -72,78 +73,69 @@ const InvincibilityEffect = ({ invincibilityActive }) => {
 
   const currentColor = colors[colorIndexRef.current];
 
+  // Pulsing fade animation (opacity fades in/out while active)
+  const pulsingOpacity = 0.5 + Math.sin(fadeRef.current * 10) * 0.25; // 0.25 to 0.75 range
+  
   return (
     <group ref={shieldRef} frustumCulled={false}>
-      {/* Outer glowing aura */}
+      {/* Outer glowing halo aura */}
       <mesh>
-        <sphereGeometry args={[3.5, 16, 16]} />
+        <sphereGeometry args={[3.5, 32, 32]} />
         <meshBasicMaterial
           color={currentColor}
           transparent
-          opacity={0.15 * fadeRef.current}
+          opacity={0.08 * fadeRef.current * pulsingOpacity}
           side={THREE.DoubleSide}
         />
       </mesh>
       
-      {/* Main wireframe sphere with color cycling */}
-      <mesh>
-        <sphereGeometry args={[2.8, 32, 32]} />
+      {/* Main horizontal halo ring */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[2.5, 0.15, 12, 64]} />
         <meshStandardMaterial
           ref={materialRef}
           color={currentColor}
           transparent
-          opacity={0.25}
+          opacity={0.25 * pulsingOpacity}
           emissive={currentColor}
-          emissiveIntensity={1.2}
-          wireframe={true}
+          emissiveIntensity={0.9 * pulsingOpacity}
           side={THREE.DoubleSide}
         />
       </mesh>
       
-      {/* Inner rotating wireframe */}
+      {/* Vertical halo ring */}
+      <mesh rotation={[0, 0, 0]}>
+        <torusGeometry args={[2.5, 0.12, 10, 64]} />
+        <meshStandardMaterial
+          color={currentColor}
+          transparent
+          opacity={0.20 * pulsingOpacity}
+          emissive={currentColor}
+          emissiveIntensity={0.65 * pulsingOpacity}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      
+      {/* Diagonal halo ring */}
       <mesh rotation={[Math.PI / 4, Math.PI / 4, 0]}>
-        <sphereGeometry args={[2.2, 16, 16]} />
+        <torusGeometry args={[2.5, 0.10, 8, 64]} />
         <meshStandardMaterial
           color={currentColor}
           transparent
-          opacity={0.18}
+          opacity={0.18 * pulsingOpacity}
           emissive={currentColor}
-          emissiveIntensity={0.8}
-          wireframe={true}
+          emissiveIntensity={0.5 * pulsingOpacity}
           side={THREE.DoubleSide}
         />
       </mesh>
       
-      {/* Pulsing energy rings */}
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[2.5, 0.15, 8, 32]} />
-        <meshStandardMaterial
-          color={currentColor}
-          transparent
-          opacity={0.4 * fadeRef.current}
-          emissive={currentColor}
-          emissiveIntensity={1.5}
-        />
-      </mesh>
-      
-      <mesh rotation={[0, Math.PI / 2, 0]}>
-        <torusGeometry args={[2.5, 0.12, 8, 32]} />
-        <meshStandardMaterial
-          color={currentColor}
-          transparent
-          opacity={0.35 * fadeRef.current}
-          emissive={currentColor}
-          emissiveIntensity={1.3}
-        />
-      </mesh>
-      
-      {/* Bright core */}
+      {/* Bright energy core */}
       <mesh>
-        <sphereGeometry args={[0.5, 16, 16]} />
+        <sphereGeometry args={[0.4, 16, 16]} />
         <meshBasicMaterial
           color={currentColor}
           transparent
-          opacity={0.8 * fadeRef.current}
+          opacity={0.4 * fadeRef.current * pulsingOpacity}
         />
       </mesh>
     </group>

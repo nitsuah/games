@@ -25,7 +25,11 @@ export const AudioProvider = ({ children }) => {
       // Pause or resume background music based on new state
       if (soundsRef.current?.bgm) {
         if (newValue) {
-          soundsRef.current.bgm.play().catch(() => {});
+          soundsRef.current.bgm.play().catch((err) => {
+            if (process.env.NODE_ENV === 'development') {
+              console.warn('Failed to play BGM:', err);
+            }
+          });
         } else {
           soundsRef.current.bgm.pause();
         }

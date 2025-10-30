@@ -64,7 +64,7 @@ app/
 
 - ✅ Code quality improvements (PR feedback addressed)
 - 🚧 Gameplay fixes and polish in progress
-- � See `PHASE-7.md` for detailed plan
+ ℹ️ See `PHASE-7.md` for detailed plan
 
 Previous phases (1-6) completed successfully.
 

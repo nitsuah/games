@@ -1,26 +1,27 @@
 .waveCounter {
-  /* Removed position:fixed - parent controls positioning */
-  background: var(--ui-bg-overlay);
-  padding: var(--ui-space-sm) var(--ui-space-lg);
-  border-radius: var(--ui-radius-md);
-  border: 2px solid var(--ui-border-accent);
-  font-family: var(--ui-font-mono);
-  text-align: right;
-  min-width: 140px;
-  box-shadow: var(--ui-shadow-md);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px 18px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  min-width: 160px;
 }
 
 .waveNumber {
-  font-size: var(--ui-text-lg);
+  font-size: 18px;
   font-weight: bold;
-  color: var(--ui-text-accent);
-  text-shadow: var(--ui-text-shadow-glow);
+  color: #00ffff;
+  text-shadow: 0 0 8px rgba(0,255,255,0.9);
 }
 
 .highestWave {
-  font-size: var(--ui-text-xs);
+  font-size: 12px;
   color: #ffaa00;
-  margin-top: 3px;
+  margin-top: 4px;
+  text-shadow: 0 0 6px rgba(255,170,0,0.7);
 }
 
 .waveTransition {

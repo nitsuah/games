@@ -22,23 +22,27 @@
 }
 
 .scoreContainer {
-  /* Removed position:absolute - parent controls positioning */
-  color: var(--ui-text-primary);
-  font-size: var(--ui-text-xl);
-  font-family: var(--ui-font-primary);
-  text-shadow: var(--ui-text-shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--ui-space-sm);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px 18px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  min-width: 160px;
+  text-align: center;
 }
 
 .scoreText {
-  transition: transform var(--ui-transition-slow);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 8px rgba(255,255,255,0.9);
+  transition: transform 0.3s ease;
 }
 
 .scoreUpdated {
-  animation: pulse var(--ui-transition-slow) ease-in-out;
+  animation: pulse 0.3s ease-in-out;
 }
 
 .highScoreText {

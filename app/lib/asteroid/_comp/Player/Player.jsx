@@ -28,10 +28,10 @@ const Player = ({
   const { setThrusterVolume: _setThrusterVolume } = useSound();
   const [shieldActive, setShieldActive] = useState(true);
 
-  // Physics constants for space-like movement
+  // Physics constants for space-like movement with more drift/inertia
   const BASE_ACCELERATION = speedBoostActive ? 80.0 : 15.0; // Acceleration force
   const MAX_VELOCITY = speedBoostActive ? 2.5 : 0.5; // Maximum velocity
-  const DRAG_COEFFICIENT = 0.92; // 0.92 = floaty drift, lower = more drift
+  const DRAG_COEFFICIENT = 0.85; // Lower = more drift/inertia, 0.85 = tokyo drift!
   const VELOCITY_THRESHOLD = 0.001; // Stop completely when very slow
 
   useEffect(() => {
