@@ -3,8 +3,8 @@ import Link from 'next/link';
 import styled, { keyframes } from 'styled-components';
 
 const flicker = keyframes`
-  0%, 100% { opacity: 1; text-shadow: 0 0 20px #ffff00, 0 0 40px #ffff00, 0 4px 0 rgba(0, 0, 0, 0.8); }
-  50% { opacity: 0.95; text-shadow: 0 0 15px #ffff00, 0 0 30px #ffff00, 0 4px 0 rgba(0, 0, 0, 0.8); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
 `;
 
 const scanlineAnim = keyframes`
@@ -72,6 +72,7 @@ const ArcadeFrame = styled.div`
   position: relative;
   z-index: 2;
   animation: ${slideIn} 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, opacity;
 `;
 
 const Scanline = styled.div`
@@ -89,6 +90,7 @@ const Scanline = styled.div`
   animation: ${scanlineAnim} 4s linear infinite;
   pointer-events: none;
   opacity: 0.5;
+  will-change: transform;
 `;
 
 const Header = styled.div`
@@ -110,6 +112,7 @@ const Title = styled.h1`
   font-family: 'Courier New', monospace;
   animation: ${flicker} 3s infinite alternate;
   text-transform: uppercase;
+  will-change: opacity;
 `;
 
 const Subtitle = styled.div`
@@ -298,6 +301,7 @@ const ButtonDecoration = styled.div`
       inset 0 -4px 10px rgba(0, 0, 0, 0.5),
       inset 0 4px 10px rgba(255, 255, 255, 0.4);
     animation: ${pulse} 3s ease-in-out infinite;
+    will-change: opacity;
   }
 
   span:nth-child(1) {
@@ -404,6 +408,7 @@ const MarqueeText = styled.div`
   letter-spacing: 8px;
   z-index: 4;
   animation: ${flicker} 2s infinite alternate;
+  will-change: opacity;
 `;
 
 const HomePage = () => {
