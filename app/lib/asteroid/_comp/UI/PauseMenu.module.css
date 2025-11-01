@@ -67,7 +67,7 @@
   border-radius: 12px;
   padding: 20px;
   text-align: center;
-  transition: all 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 .scoreCard:hover {
@@ -106,7 +106,7 @@
   font-weight: bold;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s, border-color 0.3s;
   display: flex;
   align-items: center;
   gap: 15px;
@@ -120,15 +120,16 @@
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  transform: translateX(-100%);
+  transition: transform 0.5s;
 }
 
 .button:hover::before {
-  left: 100%;
+  transform: translateX(100%);
 }
 
 .buttonIcon {
@@ -223,7 +224,7 @@
   border: 3px solid #333333;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -233,12 +234,12 @@
 
 .toggleIcon {
   font-size: 32px;
-  filter: grayscale(100%);
-  transition: filter 0.3s;
+  opacity: 0.3;
+  transition: opacity 0.3s;
 }
 
 .toggleButton.active .toggleIcon {
-  filter: grayscale(0%);
+  opacity: 1;
 }
 
 .toggleLabel {
