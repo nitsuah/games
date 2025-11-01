@@ -5,6 +5,16 @@
 
 ---
 
+## Recent Fixes ✅
+
+### Arcade Homepage Complete (Nov 1, 2025)
+- ✅ **Full arcade redesign** - CRT screen effects, neon cyan glows, scanlines, arcade fonts
+- ✅ **Game cards** - Hover animations, sweep effects, lift on hover
+- ✅ **Visual polish** - Flicker animation, retro monospace fonts, "INSERT COIN" footer
+- 🐛 **Explosive weapon matrixWorld error** - Fixed null check in weaponHandler.js (raycaster filtering)
+
+---
+
 ## Outstanding Issues for Phase 9
 
 ### Power-Ups

@@ -140,7 +140,11 @@ export function weaponHandler({
     const { explosionRadius = 15 } = weaponParams; // Cut in half from 30 to 15
     const maxRange = 100;
     const raycaster = new THREE.Raycaster(from, forwardDirection);
-    const intersects = raycaster.intersectObjects(scene.children, true);
+    
+    // Filter out objects with null matrixWorld to prevent runtime errors
+    const validObjects = scene.children.filter(obj => obj.matrixWorld !== null);
+    const intersects = raycaster.intersectObjects(validObjects, true);
+    
     const impactPoint =
       intersects[0]?.point || from.clone().add(forwardDirection.multiplyScalar(maxRange));
     if (setShowLaser) {
