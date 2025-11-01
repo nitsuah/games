@@ -44,10 +44,18 @@ const GameOverOverlay = ({
 
           <div className={styles.statCard}>
             <div className={styles.statLabel}>ACCURACY</div>
-            <div className={`${styles.statValue} ${parseFloat(finalAccuracy) > (bestAccuracy ?? 0) ? styles.highlight : ''}`}>
-              {finalAccuracy}%
-            </div>
-            {parseFloat(finalAccuracy) > (bestAccuracy ?? 0) && <div className={styles.badge}>🎯 NEW BEST!</div>}
+            {(() => {
+              const accuracyValue = parseFloat(finalAccuracy);
+              const isNewBest = accuracyValue > (bestAccuracy ?? 0);
+              return (
+                <>
+                  <div className={`${styles.statValue} ${isNewBest ? styles.highlight : ''}`}>
+                    {finalAccuracy}%
+                  </div>
+                  {isNewBest && <div className={styles.badge}>🎯 NEW BEST!</div>}
+                </>
+              );
+            })()}
           </div>
 
           <div className={styles.statCard}>

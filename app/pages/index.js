@@ -416,10 +416,19 @@ const HomePage = () => {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    // Create audio element
-    audioRef.current = new Audio('/sounds/arcade.mp3');
-    audioRef.current.loop = true;
-    audioRef.current.volume = 0.3;
+    // Create audio element with error handling
+    try {
+      audioRef.current = new Audio('/sounds/arcade.mp3');
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.3;
+      
+      // Handle audio loading errors
+      audioRef.current.addEventListener('error', (e) => {
+        console.error('Failed to load audio file:', e);
+      });
+    } catch (error) {
+      console.error('Failed to create Audio element:', error);
+    }
 
     return () => {
       if (audioRef.current) {
@@ -432,7 +441,13 @@ const HomePage = () => {
   const toggleMute = () => {
     if (audioRef.current) {
       if (muted) {
-        audioRef.current.play().catch(e => console.log('Audio play failed:', e));
+        audioRef.current.play().catch(e => {
+          console.error(
+            `Audio playback failed: ${e && e.name ? e.name + ': ' : ''}${e && e.message ? e.message : e}. ` +
+            'This may be due to browser autoplay restrictions, unsupported audio format, or lack of user interaction.',
+            e
+          );
+        });
       } else {
         audioRef.current.pause();
       }

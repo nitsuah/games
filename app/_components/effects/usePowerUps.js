@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { POWER_UPS } from './powerUpConfig';
 
 export default function usePowerUps(setHealth, setTargets, showFlash = () => {}, setAmmo = () => {}) {
@@ -7,12 +7,24 @@ export default function usePowerUps(setHealth, setTargets, showFlash = () => {},
   const [slowMotionActive, setSlowMotionActive] = useState(false);
   const [invincibilityActive, setInvincibilityActive] = useState(false);
   const [speedBoostActive, setSpeedBoostActive] = useState(false);
+  
+  // Track cleanup functions for timeouts
+  const cleanupFunctionsRef = useRef([]);
+  
+  // Cleanup all timeouts on unmount
+  useEffect(() => {
+    return () => {
+      cleanupFunctionsRef.current.forEach(cleanup => cleanup());
+      cleanupFunctionsRef.current = [];
+    };
+  }, []);
 
   const handlePowerUpCollect = useCallback(
     (type) => {
       const powerUp = POWER_UPS.find((p) => p.type === type);
       if (!powerUp) return;
-      powerUp.effect({
+      
+      const cleanup = powerUp.effect({
         setHealth,
         setTargets,
         showFlash,
@@ -23,6 +35,11 @@ export default function usePowerUps(setHealth, setTargets, showFlash = () => {},
         setSpeedBoostActive,
         setAmmo,
       });
+      
+      // Store cleanup function if returned
+      if (cleanup && typeof cleanup === 'function') {
+        cleanupFunctionsRef.current.push(cleanup);
+      }
     },
     [setHealth, setTargets, showFlash, setAmmo]
   );

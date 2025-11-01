@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 import { useSound } from '@/utils/audio/useSound';
+import { PLAYER_PHYSICS } from '../config';
 
 const Player = ({
   targets,
@@ -35,15 +36,19 @@ const Player = ({
   const { setThrusterVolume: _setThrusterVolume } = useSound();
   const [shieldActive, setShieldActive] = useState(true);
 
-  // Physics constants for space-like movement with MORE drift/inertia (Phase 8)
-  const BASE_ACCELERATION = speedBoostActive ? 60.0 : 12.0; // Reduced for smoother acceleration
-  const MAX_VELOCITY = speedBoostActive ? 2.8 : 0.65; // Slightly increased for better flow
-  const DRAG_COEFFICIENT = 0.96; // Increased from 0.85 to 0.96 for MUCH more drift ("tokyo drift feel")
-  const VELOCITY_THRESHOLD = 0.001; // Stop completely when very slow
-  const ANGULAR_DRAG = 0.92; // Camera rotation drag
-  const ROLL_ACCELERATION = 0.8; // Roll speed
-  const YAW_ACCELERATION = 0.6; // Yaw speed
-  const MAX_ANGULAR_VELOCITY = 1.5; // Max rotation speed
+  // Physics constants from config - use speed boost values when active
+  const BASE_ACCELERATION = speedBoostActive 
+    ? PLAYER_PHYSICS.SPEED_BOOST_ACCELERATION 
+    : PLAYER_PHYSICS.BASE_ACCELERATION;
+  const MAX_VELOCITY = speedBoostActive 
+    ? PLAYER_PHYSICS.SPEED_BOOST_MAX_VELOCITY 
+    : PLAYER_PHYSICS.MAX_VELOCITY;
+  const DRAG_COEFFICIENT = PLAYER_PHYSICS.DRAG_COEFFICIENT;
+  const VELOCITY_THRESHOLD = PLAYER_PHYSICS.VELOCITY_THRESHOLD;
+  const ANGULAR_DRAG = PLAYER_PHYSICS.ANGULAR_DRAG;
+  const ROLL_ACCELERATION = PLAYER_PHYSICS.ROLL_ACCELERATION;
+  const YAW_ACCELERATION = PLAYER_PHYSICS.YAW_ACCELERATION;
+  const MAX_ANGULAR_VELOCITY = PLAYER_PHYSICS.MAX_ANGULAR_VELOCITY;
 
   useEffect(() => {
     if (speedBoostActive && process.env.NODE_ENV === 'development') {

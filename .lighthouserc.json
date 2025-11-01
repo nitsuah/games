@@ -6,7 +6,8 @@
     "assert": {
       "preset": "lighthouse:recommended",
       "assertions": {
-        "unused-javascript": ["error", {"maxLength": 3}]
+        "unused-javascript": ["error", {"maxLength": 3}],
+        "total-byte-weight": ["warn", {"maxNumericValue": 5242880}]
       }
     }
   }

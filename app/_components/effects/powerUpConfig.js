@@ -6,12 +6,21 @@ import { WEAPON_TYPES } from '../../lib/asteroid/_comp/config';
  * @param {string} color - Flash color
  * @param {number[]} opacities - Array of opacity values (0-255)
  * @param {number[]} delays - Array of delay values in ms
+ * @returns {Function} Cleanup function to clear all timeouts
  */
 function createPulseEffect(showFlash, color, opacities, delays) {
+  const timeoutIds = [];
+  
   opacities.forEach((opacity, index) => {
     const delay = delays[index];
-    setTimeout(() => showFlash(color, opacity), delay);
+    const id = setTimeout(() => showFlash(color, opacity), delay);
+    timeoutIds.push(id);
   });
+  
+  // Return cleanup function
+  return () => {
+    timeoutIds.forEach(id => clearTimeout(id));
+  };
 }
 
 export const POWER_UPS = [
@@ -53,7 +62,7 @@ export const POWER_UPS = [
       
       // Phase 8: More impactful visual feedback - strong pulsing green flash
       if (collected) {
-        createPulseEffect(showFlash, 'green', [250, 100, 200, 80, 150, 50, 0], [0, 100, 200, 300, 400, 500, 650]);
+        return createPulseEffect(showFlash, 'green', [250, 100, 200, 80, 150, 50, 0], [0, 100, 200, 300, 400, 500, 650]);
       }
     },
   },
@@ -63,10 +72,12 @@ export const POWER_UPS = [
     effect: ({ setSpeedBoostActive, showFlash }) => {
       setSpeedBoostActive(true);
       showFlash('orange', 100);
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setSpeedBoostActive(false);
         showFlash('orange', 0);
       }, 10000);
+      
+      return () => clearTimeout(timeoutId);
     },
   },
   {
@@ -85,10 +96,12 @@ export const POWER_UPS = [
     effect: ({ setInvincibilityActive, showFlash }) => {
       setInvincibilityActive(true);
       showFlash('yellow', 100);
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setInvincibilityActive(false);
         showFlash('yellow', 0);
       }, 10000);
+      
+      return () => clearTimeout(timeoutId);
     },
   },
   {
@@ -98,11 +111,13 @@ export const POWER_UPS = [
       console.log('🔫 RAPID FIRE ACTIVATED!');
       setRapidFireActive(true);
       showFlash('red', 100);
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         console.log('🔫 Rapid fire ended');
         setRapidFireActive(false);
         showFlash('red', 0);
       }, 10000);
+      
+      return () => clearTimeout(timeoutId);
     },
   },
   {
@@ -119,7 +134,7 @@ export const POWER_UPS = [
           speed: target.speed * 0.5,
         }))
       );
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setSlowMotionActive(false);
         showFlash('purple', 0);
         // Restore to original speed, not speed*2 (which breaks if target was split during slow-mo)
@@ -131,6 +146,8 @@ export const POWER_UPS = [
           }))
         );
       }, 10000);
+      
+      return () => clearTimeout(timeoutId);
     },
   },
 ];
