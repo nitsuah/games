@@ -8,15 +8,57 @@ Phase 8 focuses on polishing the asteroid game to make it feel "tight" and respo
 
 ## 🎯 Primary Goals
 
-1. **Collision Physics & Feedback** - Make collisions between player and targets feel impactful
-2. **Inertia Reactivity** - Targets and player should react to collisions with physics-based movement
-3. **Visual/Audio Polish** - Enhance feedback for all player actions
-4. **Control Tightness** - Ensure controls feel precise and responsive
-5. **Balance & Pacing** - Fine-tune difficulty progression and weapon balance
+1. **Player Movement & Inertia** - Implement drift-based movement ("tokyo drift feel") with advanced controls
+2. **Collision Physics & Feedback** - Make collisions between player and targets feel impactful
+3. **Inertia Reactivity** - Targets and player should react to collisions with physics-based movement
+4. **Visual/Audio Polish** - Enhance feedback for all player actions
+5. **UI/UX Improvements** - Better menus, browser back warning, visual feedback
+6. **Balance & Pacing** - Fine-tune difficulty progression and weapon balance
 
 ---
 
-## 🔥 High Priority: Collision System
+## � HIGHEST PRIORITY: Player Movement (QA Feedback)
+
+### Current State
+- Instant stop when keys released
+- WASD movement only
+- No drift/inertia feel
+- Missing diagonal and roll/yaw controls
+
+### Required Improvements (from QA)
+
+**1. Inertia-Based Movement ("Tokyo Drift Feel")**
+```javascript
+// Replace instant stop with momentum
+const DRIFT_DAMPING = 0.92; // Higher = more drift
+const ACCELERATION = 0.5;
+const MAX_SPEED = 0.3;
+
+velocity.x = velocity.x * DRIFT_DAMPING + (inputX * ACCELERATION);
+velocity.y = velocity.y * DRIFT_DAMPING + (inputY * ACCELERATION);
+
+// Clamp velocity
+const speed = Math.sqrt(velocity.x**2 + velocity.y**2);
+if (speed > MAX_SPEED) {
+  velocity.x = (velocity.x / speed) * MAX_SPEED;
+  velocity.y = (velocity.y / speed) * MAX_SPEED;
+}
+
+position.x += velocity.x * deltaTime;
+position.y += velocity.y * deltaTime;
+```
+
+**2. Additional Control Keys**
+- **Q/E** - Diagonal movement (Q = up-left, E = up-right)
+- **Z/C** - Roll camera (Z = roll left, C = roll right)
+- **X** - Yaw camera (toggle or hold?)
+- **`/~** - Center/reset camera and stop movement
+
+**Implementation Priority:** WEEK 1, SPRINT 1
+
+---
+
+## �🔥 High Priority: Collision System
 
 ### Current State
 - Targets split when hit
@@ -308,11 +350,14 @@ Phase 8 focuses on polishing the asteroid game to make it feel "tight" and respo
 5. Spatial audio positioning
 
 ### Sprint 5: UI/UX Polish (Week 3)
-1. Dynamic crosshair system
-2. HUD animations and feedback
-3. Damage numbers and score popups
-4. Settings menu (sensitivity, accessibility)
-5. Pause menu improvements
+1. **Pause menu redesign** - More visually appealing, match game HUD theme
+2. **Game over menu redesign** - Improve visual design and layout
+3. **Browser back warning** - Prevent accidental navigation losing progress
+4. **Health power-up visual feedback** - Green flash effect (more impactful than current)
+5. **Wave countdown display** - Fix countdown visibility during transitions
+6. Settings menu (sensitivity, accessibility)
+7. Dynamic crosshair system
+8. Damage numbers and score popups
 
 ### Sprint 6: Balance & Testing (Week 3)
 1. Playtest all changes
@@ -415,6 +460,4 @@ Phase 8 focuses on polishing the asteroid game to make it feel "tight" and respo
 **Target Completion:** 3-4 weeks
 **Focus:** Making the game feel amazing to play, not just functional
 
----
-
-*"Juice it or lose it!"* - Game feel is everything. Every action should feel impactful and rewarding.
+--
