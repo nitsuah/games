@@ -7,29 +7,29 @@
 
 ### Core Gameplay
 
-- [ ] **Player Movement** - Ship should drive with inertia (tokyo drift feel), it should NOT stop instantly (which it currently does). also add Q,E for diagonal movement, Z,C for rolling and X for yaw? `/~` should bring the user back to center → **ADDED TO PHASE 8 PLAN**
+- [x] **Player Movement** - Ship now has tokyo drift feel with DRAG_COEFFICIENT=0.96! Advanced controls added: Q/E diagonal, Z/C roll, X yaw, ~/` reset → **PHASE 8 COMPLETE ✅**
 - [x] **Shooting** - All weapons fire correctly, rapid fire works for all weapon types → **FIXED: Rapid fire now works for ALL weapons**
 - [ ] **Score Tracking** - Need to test in-game. Score tracking logic looks correct, may have been user error or pause menu display issue
-- [ ] **Power-ups** - All power-ups collectable and functional
-  - [ ] health - works but no visual feedback when collected, should be a "green" affect like time slow but likely more visually impactful/strong
+- [x] **Power-ups** - All power-ups collectable and functional
+  - [x] health - Strong pulsing green flash effect added (250→100→200→80→150→50→0 over 650ms) → **PHASE 8 COMPLETE ✅**
   - [ ] shield - works well good effect (may be impacting the display of explosive weapon?)
   - [ ] invincibility - works well good effect, good aura
   - [x] rapid fire - **FIXED: Now works for ALL weapons. Laser 50ms, Spread 150ms, Explosive 80ms fire rates**
-  - [ ] slow motion - perfect. no notes at the moment, objects might have a slight bug where they then no longer move after time slow ends? or their inertia is just gone.
+  - [x] slow motion - Time slow inertia bug FIXED! Targets now preserve originalSpeed for proper restoration → **PHASE 8 COMPLETE ✅**
   - [ ] speed boost - works well, now we can tune down the player speed and how much this boosts a bit.
   - [x] Music off does not mute game music → **FIXED: Music toggle now properly pauses/resumes bgm**
   - [x] confirm restart button - does restart wave but doesnt respawn enemies → **FIXED: Now spawns 10 targets**
   - [x] Confirm quit button doesnt send back to home → **FIXED: Now navigates to /**
-  - [ ] Browser back warning - is there a way we can prevent users from accidentally hitting "back" on their browser and losing their progress? maybe a popup warning? → **ADDED TO PHASE 8**
+  - [x] Browser back warning - beforeunload event added to warn users before leaving page → **PHASE 8 COMPLETE ✅**
   - [x] FPS counter overlap → **FIXED: FPS top-left, Score/Combo moved to top-right below Wave**
   - [x] make the ammo bar color blue instead of green → **FIXED: Blue (#3366ff) when >20%, red when low**
-  - [ ] between waves countdown - it might be behind the pause menu? add countdown back in → **NEED TO INVESTIGATE**
+  - [x] between waves countdown - z-index increased from 1000→1100 to render above pause menu → **PHASE 8 COMPLETE ✅**
 
 ### UI
 
 - [x] Pause menu sound/music toggles → **FIXED: Music toggle now works properly**
-- [ ] Pause menu visual design - needs to be more visually appealing and match current game hud/ui → **ADDED TO PHASE 8**
-- [ ] game over menu sucks → **ADDED TO PHASE 8**
+- [ ] Pause menu visual design - needs to be more visually appealing and match current game hud/ui → **IN PROGRESS - Phase 8**
+- [x] game over menu - Complete arcade overhaul with stats grid, records, animations! → **PHASE 8 COMPLETE ✅**
 
 ### Weapons
 

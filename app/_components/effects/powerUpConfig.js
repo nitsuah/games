@@ -37,11 +37,17 @@ export const POWER_UPS = [
         });
       }
       
-      // Only flash if we actually collected it - with longer duration for visual feedback
+      // Phase 8: More impactful visual feedback - strong pulsing green flash
       if (collected) {
-        showFlash('green', 150);
-        // Fade out the flash
-        setTimeout(() => showFlash('green', 0), 150);
+        // Initial strong flash
+        showFlash('green', 250);
+        // Pulse effect: fade -> flash -> fade
+        setTimeout(() => showFlash('green', 100), 100);
+        setTimeout(() => showFlash('green', 200), 200);
+        setTimeout(() => showFlash('green', 80), 300);
+        setTimeout(() => showFlash('green', 150), 400);
+        setTimeout(() => showFlash('green', 50), 500);
+        setTimeout(() => showFlash('green', 0), 650);
       }
     },
   },
@@ -99,19 +105,23 @@ export const POWER_UPS = [
     effect: ({ setSlowMotionActive, setTargets, showFlash }) => {
       setSlowMotionActive(true);
       showFlash('purple', 100);
+      // Phase 8 FIX: Store original speed to restore properly after time slow
       setTargets((prevTargets) =>
         prevTargets.map((target) => ({
           ...target,
+          originalSpeed: target.originalSpeed ?? target.speed, // Preserve original if already set
           speed: target.speed * 0.5,
         }))
       );
       setTimeout(() => {
         setSlowMotionActive(false);
         showFlash('purple', 0);
+        // Restore to original speed, not speed*2 (which breaks if target was split during slow-mo)
         setTargets((prevTargets) =>
           prevTargets.map((target) => ({
             ...target,
-            speed: target.speed * 2,
+            speed: target.originalSpeed ?? target.speed * 2, // Fallback to *2 if originalSpeed missing
+            originalSpeed: undefined, // Clear the tracking field
           }))
         );
       }, 10000);

@@ -588,6 +588,7 @@ const Game = ({ onHit, onMiss }) => {
           bestAccuracy={bestAccuracy}
           highScore={highScore}
           restartGame={restartGame}
+          wave={currentWave}
         />
       )}
       {showWaveTransition && !gameOver && (

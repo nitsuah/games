@@ -17,6 +17,7 @@ const Player = ({
   const meshRef = useRef();
   const { camera } = useThree();
   const velocityRef = useRef(new THREE.Vector3());
+  const angularVelocityRef = useRef({ roll: 0, yaw: 0 }); // For camera rotation
   const keysRef = useRef({
     forward: false,
     backward: false,
@@ -24,15 +25,25 @@ const Player = ({
     right: false,
     up: false,
     down: false,
+    // New advanced controls
+    diagUpLeft: false,    // Q
+    diagUpRight: false,   // E
+    rollLeft: false,      // Z
+    rollRight: false,     // C
+    yaw: false,           // X
   });
   const { setThrusterVolume: _setThrusterVolume } = useSound();
   const [shieldActive, setShieldActive] = useState(true);
 
-  // Physics constants for space-like movement with more drift/inertia
-  const BASE_ACCELERATION = speedBoostActive ? 80.0 : 15.0; // Acceleration force
-  const MAX_VELOCITY = speedBoostActive ? 2.5 : 0.5; // Maximum velocity
-  const DRAG_COEFFICIENT = 0.85; // Lower = more drift/inertia, 0.85 = tokyo drift!
+  // Physics constants for space-like movement with MORE drift/inertia (Phase 8)
+  const BASE_ACCELERATION = speedBoostActive ? 60.0 : 12.0; // Reduced for smoother acceleration
+  const MAX_VELOCITY = speedBoostActive ? 2.8 : 0.65; // Slightly increased for better flow
+  const DRAG_COEFFICIENT = 0.96; // Increased from 0.85 to 0.96 for MUCH more drift ("tokyo drift feel")
   const VELOCITY_THRESHOLD = 0.001; // Stop completely when very slow
+  const ANGULAR_DRAG = 0.92; // Camera rotation drag
+  const ROLL_ACCELERATION = 0.8; // Roll speed
+  const YAW_ACCELERATION = 0.6; // Yaw speed
+  const MAX_ANGULAR_VELOCITY = 1.5; // Max rotation speed
 
   useEffect(() => {
     if (speedBoostActive && process.env.NODE_ENV === 'development') {
@@ -64,6 +75,29 @@ const Player = ({
         case 'ShiftLeft':
           keysRef.current.down = true;
           break;
+        // Phase 8: Advanced controls
+        case 'KeyQ':
+          keysRef.current.diagUpLeft = true;
+          break;
+        case 'KeyE':
+          keysRef.current.diagUpRight = true;
+          break;
+        case 'KeyZ':
+          keysRef.current.rollLeft = true;
+          break;
+        case 'KeyC':
+          keysRef.current.rollRight = true;
+          break;
+        case 'KeyX':
+          keysRef.current.yaw = true;
+          break;
+        case 'Backquote': // ` or ~
+          // Center/reset: stop all movement and rotation
+          velocityRef.current.set(0, 0, 0);
+          angularVelocityRef.current = { roll: 0, yaw: 0 };
+          camera.rotation.set(0, 0, 0);
+          camera.rotation.order = 'YXZ';
+          break;
       }
     };
 
@@ -87,6 +121,22 @@ const Player = ({
         case 'ShiftLeft':
           keysRef.current.down = false;
           break;
+        // Phase 8: Advanced controls
+        case 'KeyQ':
+          keysRef.current.diagUpLeft = false;
+          break;
+        case 'KeyE':
+          keysRef.current.diagUpRight = false;
+          break;
+        case 'KeyZ':
+          keysRef.current.rollLeft = false;
+          break;
+        case 'KeyC':
+          keysRef.current.rollRight = false;
+          break;
+        case 'KeyX':
+          keysRef.current.yaw = false;
+          break;
       }
     };
 
@@ -103,17 +153,27 @@ const Player = ({
     if (isGameOver || isPaused || showWaveTransition) return;
     if (!meshRef.current) return;
 
+    // === MOVEMENT PHYSICS (Phase 8: Improved Tokyo Drift) ===
     const direction = new THREE.Vector3();
     const forwardVector = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
     const rightVector = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
     const upVector = new THREE.Vector3(0, 1, 0);
 
+    // Standard WASD + Space/Shift movement
     if (keysRef.current.forward) direction.add(forwardVector);
     if (keysRef.current.backward) direction.add(forwardVector.negate());
     if (keysRef.current.left) direction.add(rightVector.negate());
     if (keysRef.current.right) direction.add(rightVector);
     if (keysRef.current.up) direction.add(upVector);
     if (keysRef.current.down) direction.add(upVector.negate());
+
+    // Phase 8: Diagonal movement (Q = up-left, E = up-right)
+    if (keysRef.current.diagUpLeft) {
+      direction.add(forwardVector.clone().add(rightVector.clone().negate()).add(upVector));
+    }
+    if (keysRef.current.diagUpRight) {
+      direction.add(forwardVector.clone().add(rightVector).add(upVector));
+    }
 
     if (direction.length() > 0) {
       // Apply acceleration force (not direct velocity) for space physics
@@ -126,8 +186,7 @@ const Player = ({
       }
     }
     
-    // Always apply drag/friction (atmospheric drag in space)
-    // This creates the "floaty" feel - ship gradually slows down when no input
+    // Phase 8: More drag for better drift feel (0.96 vs 0.85)
     velocityRef.current.multiplyScalar(DRAG_COEFFICIENT);
     
     // Stop completely when velocity is negligible to prevent infinite drift
@@ -138,9 +197,41 @@ const Player = ({
     // Apply velocity to camera position
     camera.position.add(velocityRef.current);
 
+    // === CAMERA ROTATION PHYSICS (Phase 8: Roll/Yaw) ===
+    // Roll (Z/C keys)
+    if (keysRef.current.rollLeft) {
+      angularVelocityRef.current.roll += ROLL_ACCELERATION * delta;
+    }
+    if (keysRef.current.rollRight) {
+      angularVelocityRef.current.roll -= ROLL_ACCELERATION * delta;
+    }
+
+    // Yaw (X key - oscillate left/right)
+    if (keysRef.current.yaw) {
+      angularVelocityRef.current.yaw = Math.sin(state.clock.elapsedTime * 2) * YAW_ACCELERATION;
+    } else {
+      angularVelocityRef.current.yaw *= ANGULAR_DRAG; // Decay when not active
+    }
+
+    // Apply angular drag
+    angularVelocityRef.current.roll *= ANGULAR_DRAG;
+
+    // Clamp angular velocity
+    angularVelocityRef.current.roll = Math.max(-MAX_ANGULAR_VELOCITY, Math.min(MAX_ANGULAR_VELOCITY, angularVelocityRef.current.roll));
+    angularVelocityRef.current.yaw = Math.max(-MAX_ANGULAR_VELOCITY, Math.min(MAX_ANGULAR_VELOCITY, angularVelocityRef.current.yaw));
+
+    // Apply rotation to camera
+    camera.rotation.z += angularVelocityRef.current.roll;
+    camera.rotation.y += angularVelocityRef.current.yaw;
+
+    // Stop rotation when negligible
+    if (Math.abs(angularVelocityRef.current.roll) < 0.001) angularVelocityRef.current.roll = 0;
+    if (Math.abs(angularVelocityRef.current.yaw) < 0.001) angularVelocityRef.current.yaw = 0;
+
     const offset = new THREE.Vector3(0, -1, 0);
     meshRef.current.position.copy(camera.position).add(offset);
 
+    // === COLLISION PHYSICS (Phase 8: Bounce and momentum transfer) ===
     targets.forEach((target) => {
       const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
       const playerRadius = 3;
@@ -148,6 +239,29 @@ const Player = ({
       const distance = camera.position.distanceTo(targetPosition);
 
       if (distance < playerRadius + targetRadius && !target.isHit) {
+        // Phase 8: Apply physics-based collision response
+        const collisionNormal = new THREE.Vector3()
+          .subVectors(targetPosition, camera.position)
+          .normalize();
+        
+        // Calculate relative velocity
+        const relativeVelocity = velocityRef.current.length();
+        
+        // Apply impulse to player (bounce back)
+        const playerMass = 10; // Heavy player
+        const targetMass = target.size; // Mass based on size
+        const restitution = 0.6; // Bounciness factor
+        
+        const impulseStrength = (1 + restitution) * relativeVelocity * (targetMass / (playerMass + targetMass));
+        const playerImpulse = collisionNormal.clone().multiplyScalar(-impulseStrength * 0.3); // Reduced for player
+        
+        velocityRef.current.add(playerImpulse);
+        
+        // Apply impulse to target (handled in Target component via setTargets)
+        // This would require refactoring to pass target velocities, so we'll skip for now
+        // TODO: Implement target velocity state for full physics simulation
+        
+        // Handle damage/shield
         if (shieldActive) {
           setShieldActive(false);
           if (setShowBlueFlash) setShowBlueFlash(false);

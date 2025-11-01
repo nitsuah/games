@@ -34,7 +34,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1100; /* Phase 8: Higher than pause menu (1000) to ensure countdown is visible */
   animation: fadeIn var(--ui-transition-medium) ease-in;
 }
 

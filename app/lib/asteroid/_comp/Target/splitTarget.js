@@ -13,6 +13,11 @@ export function splitTarget(target, nowFn = Date.now) {
       : newSize > 1
       ? '#00ffff'
       : '#ffff00';
+  
+  // Phase 8: Preserve originalSpeed during slow motion to fix inertia bug
+  // If originalSpeed exists, double it (like speed). Otherwise undefined.
+  const newOriginalSpeed = target.originalSpeed ? target.originalSpeed * 2 : undefined;
+  
   return [
     {
       id: `${target.id}-1`,
@@ -24,6 +29,7 @@ export function splitTarget(target, nowFn = Date.now) {
       speed: newSpeed,
       color: newColor,
       spawnTime,
+      originalSpeed: newOriginalSpeed,
     },
     {
       id: `${target.id}-2`,
@@ -35,6 +41,7 @@ export function splitTarget(target, nowFn = Date.now) {
       speed: newSpeed,
       color: newColor,
       spawnTime,
+      originalSpeed: newOriginalSpeed,
     },
   ];
 }

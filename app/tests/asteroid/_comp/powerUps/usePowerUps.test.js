@@ -64,7 +64,8 @@ describe('usePowerUps Hook', () => {
     });
 
     expect(mockSetHealth).toHaveBeenCalled();
-    expect(mockShowFlash).toHaveBeenCalledWith('green', 150);
+    // Phase 8: Updated to 250 for stronger initial flash (pulsing effect)
+    expect(mockShowFlash).toHaveBeenCalledWith('green', 250);
   });
 
   test('shield power-up should activate shield', () => {

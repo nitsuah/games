@@ -50,6 +50,21 @@ const AsteroidContent = () => {
     });
   }, [soundEnabled]);
 
+  // Phase 8: Browser back navigation warning to prevent accidental progress loss
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ''; // Chrome requires returnValue to be set
+      return ''; // Some browsers display a custom message
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const handleHit = () => {
     playSound('hit');
   };
