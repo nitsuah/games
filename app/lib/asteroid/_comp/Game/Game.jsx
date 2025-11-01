@@ -600,23 +600,31 @@ const Game = ({ onHit, onMiss }) => {
         <PauseMenu 
           onResume={() => setPaused(false)}
           onRestart={() => {
-            // Reset all game state to initial values
-            setScore(0);
-            setHits(0);
-            setMisses(0);
-            setCombo(0);
-            setComboMultiplier(1);
-            setHealth(INITIAL_HEALTH);
-            setCurrentWave(1);
-            setShowWaveTransition(false);
-            setTargets(generateInitialTargets(1));
-            setWeapon('spread');
-            setAmmo({ ...INITIAL_AMMO });
-            setCooldowns({ spread: 0, laser: 0, explosive: 0 });
+            // Reset all game state using shared restart logic
+            restartGameFn({
+              setScore,
+              setHits,
+              setMisses,
+              setGameOver,
+              setHealth,
+              setWeapon,
+              setAmmo,
+              setCooldowns,
+              setTargets,
+              setShieldActive,
+              setRapidFireActive,
+              setSlowMotionActive,
+              setInvincibilityActive,
+              setSpeedBoostActive,
+              setCombo,
+              setComboMultiplier,
+              comboTimerRef,
+              setCurrentWave,
+              setShowWaveTransition,
+            });
             setShowLaser([]);
             setFlashQueue([]);
             setPaused(false);
-            setGameOver(false);
             setIsNewHighScore(false);
             // Restart background music
             pauseSound('bgm');

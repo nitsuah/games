@@ -1,4 +1,5 @@
-import { generateInitialTargets, getTargetCountForWave } from './generateTargets';
+import { generateInitialTargets } from './generateTargets';
+import { INITIAL_AMMO, INITIAL_HEALTH } from '../config';
 
 export const restartGame = ({
   setScore,
@@ -25,10 +26,10 @@ export const restartGame = ({
   setHits(0);
   setMisses(0);
   setGameOver(false);
-  setHealth(100);
+  setHealth(INITIAL_HEALTH);
   setWeapon('spread');
-  setAmmo({ spread: 30, laser: 10, explosive: 10 });
-  setCooldowns({ spread: 0.3, laser: 0, explosive: 1 });
+  setAmmo({ ...INITIAL_AMMO });
+  setCooldowns({ spread: 0, laser: 0, explosive: 0 });
 
   // Reset all power-up states
   setShieldActive(false);
@@ -53,6 +54,5 @@ export const restartGame = ({
   }
 
   // Generate initial targets for wave 1
-  const targetCount = getTargetCountForWave(1);
-  setTargets(generateInitialTargets(targetCount, 1));
+  setTargets(generateInitialTargets(1));
 };
