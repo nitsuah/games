@@ -3,7 +3,7 @@
 **Branch**: `phase-7`  
 **Last Updated**: October 29, 2025
 
-## Quick Test Checklist
+## QA Validation Checklist
 
 ### Core Gameplay
 
