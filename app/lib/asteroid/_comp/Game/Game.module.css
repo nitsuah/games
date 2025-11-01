@@ -1,0 +1,80 @@
+.gameContainer {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Use opacity animation on a pseudo-element to keep animation composited
+     (avoid animating background-color which triggers layout/paint). */
+  .flashRed {
+    position: relative;
+  }
+
+  .flashRed::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Use a centered radial-gradient flash so HUD/UI near edges isn't covered.
+       The gradient is compositor-friendly (opacity) and fades to transparent. */
+    background: radial-gradient(circle at 50% 50%, rgba(255,0,0,0.45) 0%, rgba(255,0,0,0.20) 30%, rgba(255,0,0,0) 60%);
+    pointer-events: none;
+    animation: flashOpacity 0.35s ease-in-out;
+    will-change: opacity, transform;
+  }
+
+  @keyframes flashOpacity {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.01); }
+  }
+  
+  .gameOverOverlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: 1px;
+    text-align: center;
+    color: white;
+  }
+  
+  .restartButton {
+    /* use a high-contrast white button with dark text to guarantee readability */
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+    /* Use transform for hover feedback to keep animations compositor-friendly */
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .restartButton:hover {
+    background: #f3f3f3;
+  }
+  
+  .restartButton:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  }
+  
+  .statsDisplay {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: left;
+    min-width: 200px;
+    text-shadow: 0 0 8px rgba(0,0,0,0.9);
+  }

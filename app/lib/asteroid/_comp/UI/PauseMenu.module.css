@@ -1,0 +1,188 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--ui-bg-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn var(--ui-transition-fast) ease-in;
+}
+
+.menu {
+  background: var(--ui-bg-medium);
+  border: 3px solid var(--ui-border-accent);
+  border-radius: var(--ui-radius-xl);
+  padding: 40px 50px;
+  min-width: 500px;
+  box-shadow: var(--ui-shadow-lg);
+}
+
+.title {
+  font-size: var(--ui-text-4xl);
+  font-weight: bold;
+  color: var(--ui-primary);
+  text-align: center;
+  margin: 0 0 var(--ui-space-xl) 0;
+  text-shadow: 0 0 20px var(--ui-primary-glow);
+  letter-spacing: 8px;
+}
+
+.scoreDisplay {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--ui-space-md) 25px;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid var(--ui-border-accent);
+  border-radius: var(--ui-radius-md);
+  margin-bottom: var(--ui-space-xl);
+}
+
+.scoreLabel {
+  font-size: var(--ui-text-lg);
+  color: var(--ui-text-secondary);
+}
+
+.scoreValue {
+  font-size: var(--ui-text-2xl);
+  font-weight: bold;
+  color: var(--ui-primary);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-md);
+  margin: var(--ui-space-xl) 0;
+}
+
+.button {
+  width: 100%;
+  padding: var(--ui-space-lg) var(--ui-space-xl);
+  font-size: var(--ui-text-lg);
+  font-weight: bold;
+  color: var(--ui-text-primary);
+  background: linear-gradient(135deg, var(--ui-secondary), var(--ui-primary));
+  border: 2px solid var(--ui-border-accent);
+  border-radius: var(--ui-radius-lg);
+  cursor: pointer;
+  transition: all var(--ui-transition-medium);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ui-shadow-md);
+  background: linear-gradient(135deg, #00aaff, var(--ui-primary));
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+.quitButton {
+  background: linear-gradient(135deg, var(--ui-danger), #ff8888);
+  border-color: var(--ui-border-danger);
+  flex-direction: column;
+  gap: var(--ui-space-xs);
+}
+
+.quitButton:hover {
+  background: linear-gradient(135deg, #ff6666, #ffaaaa);
+  box-shadow: 0 8px 20px rgba(255, 68, 68, 0.4);
+}
+
+.warningButton {
+  background: linear-gradient(135deg, var(--ui-warning), #ff9900) !important;
+  border-color: var(--ui-warning) !important;
+  animation: pulse 1s infinite;
+}
+
+.warningButton:hover {
+  background: linear-gradient(135deg, #ff8800, #ffaa00) !important;
+  box-shadow: 0 8px 20px rgba(255, 102, 0, 0.6) !important;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 102, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 102, 0, 0.8);
+  }
+}
+
+.hint {
+  font-size: var(--ui-text-sm);
+  padding: 4px var(--ui-space-sm);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--ui-radius-md);
+  font-family: var(--ui-font-mono);
+}
+
+.hintSmall {
+  font-size: var(--ui-text-xs);
+  font-weight: normal;
+  color: #ffaaaa;
+  font-style: italic;
+}
+
+.toggleGroup {
+  display: flex;
+  gap: var(--ui-space-sm);
+}
+
+.toggleButton {
+  flex: 1;
+  padding: var(--ui-space-md) var(--ui-space-lg);
+  font-size: var(--ui-text-md);
+  font-weight: bold;
+  color: #888888;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid #444444;
+  border-radius: var(--ui-radius-md);
+  cursor: pointer;
+  transition: all var(--ui-transition-medium);
+}
+
+.toggleButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #666666;
+}
+
+.toggleButton.active {
+  color: var(--ui-primary);
+  background: rgba(0, 255, 255, 0.15);
+  border-color: var(--ui-border-accent);
+}
+
+.help {
+  text-align: center;
+  font-size: var(--ui-text-md);
+  color: var(--ui-text-secondary);
+  margin: var(--ui-space-lg) 0 0 0;
+}
+
+.help kbd {
+  padding: 4px var(--ui-space-sm);
+  background: var(--ui-bg-glass);
+  border: 1px solid #666666;
+  border-radius: var(--ui-radius-sm);
+  font-family: var(--ui-font-mono);
+  color: var(--ui-primary);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

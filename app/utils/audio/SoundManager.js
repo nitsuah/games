@@ -5,6 +5,11 @@ class SoundManager {
     this.thrusterSound = null;
     this.isInitialized = false;
     this.audioCtx = null;
+    this.soundEnabled = true; // Default to enabled
+  }
+
+  setSoundEnabled(enabled) {
+    this.soundEnabled = enabled;
   }
 
   initialize() {
@@ -51,6 +56,7 @@ class SoundManager {
   // Play a simple explosion-like one-shot. 'size' biases the sound: larger -> deeper, longer decay.
   // Accepts optional pan parameter (-1 left .. 1 right) for spatialization.
   playExplosion(size = 1, pan = 0) {
+    if (!this.soundEnabled) return; // Don't play if sound disabled
     if (typeof window === 'undefined') return;
     if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 

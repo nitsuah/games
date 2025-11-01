@@ -1,0 +1,105 @@
+.waveCounter {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px 18px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  min-width: 160px;
+}
+
+.waveNumber {
+  font-size: 18px;
+  font-weight: bold;
+  color: #00ffff;
+  text-shadow: 0 0 8px rgba(0,255,255,0.9);
+}
+
+.highestWave {
+  font-size: 12px;
+  color: #ffaa00;
+  margin-top: 4px;
+  text-shadow: 0 0 6px rgba(255,170,0,0.7);
+}
+
+.waveTransition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--ui-bg-overlay);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn var(--ui-transition-medium) ease-in;
+}
+
+.waveTransitionContent {
+  text-align: center;
+  color: var(--ui-text-primary);
+  animation: slideUp var(--ui-transition-slow) ease-out;
+}
+
+.waveTitle {
+  font-size: 72px;
+  font-weight: bold;
+  color: var(--ui-primary);
+  text-shadow: 0 0 20px var(--ui-primary), 0 0 40px var(--ui-primary);
+  margin: 0;
+  font-family: var(--ui-font-mono);
+}
+
+.waveSubtitle {
+  font-size: var(--ui-text-xl);
+  color: #ffaa00;
+  margin-top: var(--ui-space-lg);
+  font-family: var(--ui-font-mono);
+}
+
+.countdown {
+  font-size: 120px;
+  font-weight: bold;
+  color: var(--ui-success);
+  text-shadow: 0 0 30px var(--ui-success), 0 0 60px var(--ui-success);
+  margin-top: var(--ui-space-lg);
+  font-family: var(--ui-font-mono);
+  animation: countdownPulse 0.666s ease-in-out;
+}
+
+@keyframes countdownPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

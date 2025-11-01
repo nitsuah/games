@@ -22,6 +22,7 @@ const customJestConfig = {
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
   testPathIgnorePatterns: ['/node_modules/', '/.next/', '/e2e/'],
   collectCoverageFrom: [
+    'lib/**/*.{js,jsx}',
     'pages/**/*.{js,jsx}',
     '_components/**/*.{js,jsx}',
     'utils/**/*.{js,jsx}',
@@ -30,13 +31,16 @@ const customJestConfig = {
     '!**/.next/**',
     '!**/coverage/**',
     '!**/jest.config.js',
+    '!**/next.config.js',
+    '!**/_document.js',
+    '!**/pages/_app.js',
   ],
   coverageThreshold: {
     global: {
-      branches: 50,
-      functions: 50,
-      lines: 50,
-      statements: 50,
+      branches: 75,
+      functions: 75,
+      lines: 75,
+      statements: 75,
     },
   },
 };

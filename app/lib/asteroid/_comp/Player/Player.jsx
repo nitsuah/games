@@ -11,6 +11,7 @@ const Player = ({
   _invincibilityActive,
   isGameOver,
   isPaused,
+  showWaveTransition,
   setShowBlueFlash,
 }) => {
   const meshRef = useRef();
@@ -27,15 +28,17 @@ const Player = ({
   const { setThrusterVolume: _setThrusterVolume } = useSound();
   const [shieldActive, setShieldActive] = useState(true);
 
-  const BASE_SPEED = 5;
-  const SPEED_MULTIPLIER = speedBoostActive ? 100.0 : 1; // 100x boost - very noticeable speed increase
-  const MOVEMENT_SPEED = BASE_SPEED * SPEED_MULTIPLIER;
+  // Physics constants for space-like movement with more drift/inertia
+  const BASE_ACCELERATION = speedBoostActive ? 80.0 : 15.0; // Acceleration force
+  const MAX_VELOCITY = speedBoostActive ? 2.5 : 0.5; // Maximum velocity
+  const DRAG_COEFFICIENT = 0.85; // Lower = more drift/inertia, 0.85 = tokyo drift!
+  const VELOCITY_THRESHOLD = 0.001; // Stop completely when very slow
 
   useEffect(() => {
-    if (speedBoostActive) {
-      console.log('🚀 SPEED BOOST ACTIVE - Speed multiplier:', SPEED_MULTIPLIER);
+    if (speedBoostActive && process.env.NODE_ENV === 'development') {
+      console.log('🚀 SPEED BOOST ACTIVE - Acceleration:', BASE_ACCELERATION, 'Max Velocity:', MAX_VELOCITY);
     }
-  }, [speedBoostActive, SPEED_MULTIPLIER]);
+  }, [speedBoostActive, BASE_ACCELERATION, MAX_VELOCITY]);
 
   useEffect(() => {
     camera.position.set(0, 1, -25); // Moved player back 25 units from spawn points
@@ -97,7 +100,7 @@ const Player = ({
   }, [camera]);
 
   useFrame((state, delta) => {
-    if (isGameOver || isPaused) return;
+    if (isGameOver || isPaused || showWaveTransition) return;
     if (!meshRef.current) return;
 
     const direction = new THREE.Vector3();
@@ -113,25 +116,26 @@ const Player = ({
     if (keysRef.current.down) direction.add(upVector.negate());
 
     if (direction.length() > 0) {
-      // Apply acceleration when keys are pressed
-      direction.normalize().multiplyScalar(MOVEMENT_SPEED * delta);
-      velocityRef.current.add(direction);
+      // Apply acceleration force (not direct velocity) for space physics
+      const acceleration = direction.normalize().multiplyScalar(BASE_ACCELERATION * delta);
+      velocityRef.current.add(acceleration);
       
-      // Clamp max velocity
-      const maxVelocity = MOVEMENT_SPEED * 0.1;
-      if (velocityRef.current.length() > maxVelocity) {
-        velocityRef.current.setLength(maxVelocity);
-      }
-    } else {
-      // Apply stronger damping for more noticeable drift/inertia (space physics)
-      velocityRef.current.multiplyScalar(0.85); // 85% of velocity each frame = more drift before stopping
-      
-      // Stop completely when very slow
-      if (velocityRef.current.length() < 0.001) {
-        velocityRef.current.set(0, 0, 0);
+      // Clamp to maximum velocity
+      if (velocityRef.current.length() > MAX_VELOCITY) {
+        velocityRef.current.setLength(MAX_VELOCITY);
       }
     }
+    
+    // Always apply drag/friction (atmospheric drag in space)
+    // This creates the "floaty" feel - ship gradually slows down when no input
+    velocityRef.current.multiplyScalar(DRAG_COEFFICIENT);
+    
+    // Stop completely when velocity is negligible to prevent infinite drift
+    if (velocityRef.current.length() < VELOCITY_THRESHOLD) {
+      velocityRef.current.set(0, 0, 0);
+    }
 
+    // Apply velocity to camera position
     camera.position.add(velocityRef.current);
 
     const offset = new THREE.Vector3(0, -1, 0);

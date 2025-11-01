@@ -12,6 +12,7 @@ const ShootingSystem = ({
   onMiss,
   isGameOver,
   isPaused,
+  showWaveTransition,
   weapon,
   ammo,
   setAmmo,
@@ -29,7 +30,7 @@ const ShootingSystem = ({
   const autoFireIntervalRef = useRef(null);
 
   const handleShoot = () => {
-    if (isGameOver || isPaused) return;
+    if (isGameOver || isPaused || showWaveTransition) return;
     if (cooldowns[weapon] > 0) return;
     if (ammo[weapon] <= 0) {
       playSound('empty');
@@ -117,22 +118,30 @@ const ShootingSystem = ({
     const handleMouseDown = () => {
       mouseDownRef.current = true;
       
-      // Shotgun: fire burst of 3 shots
-      if (weapon === 'spread') {
-        handleShoot();
-        setTimeout(() => mouseDownRef.current && handleShoot(), 100);
-        setTimeout(() => mouseDownRef.current && handleShoot(), 200);
-      } else {
-        handleShoot(); // Fire immediately on click
-      }
+      // Fire immediately on click for all weapons
+      handleShoot();
       
-      // Laser: continuous fire while mouse is held (always, not just with rapid fire)
-      // Other weapons: continuous fire only with rapid fire active
-      if (weapon === 'laser' || rapidFireActive) {
+      // Full-auto continuous fire behavior:
+      // - Laser: ALWAYS continuous (like holding a beam)
+      // - With rapid fire active: all weapons fire continuously
+      // - Explosive with rapid fire: continuous fast fire
+      // - Spread with rapid fire: continuous bursts
+      const shouldAutoFire = weapon === 'laser' || rapidFireActive;
+      
+      if (shouldAutoFire) {
         if (autoFireIntervalRef.current) {
           clearInterval(autoFireIntervalRef.current);
         }
-        const fireRate = weapon === 'laser' ? 100 : 50; // Laser: 10 rounds/sec, rapid fire: 20 rounds/sec
+        
+        // Fire rates: 
+        // - Laser: ultra-fast (50ms = continuous beam feel)
+        // - Spread with rapid fire: burst fire (150ms)
+        // - Explosive with rapid fire: fast (80ms)
+        let fireRate = 50; // Default laser rate
+        if (rapidFireActive) {
+          fireRate = weapon === 'spread' ? 150 : (weapon === 'explosive' ? 80 : 50);
+        }
+        
         autoFireIntervalRef.current = setInterval(() => {
           if (mouseDownRef.current) {
             handleShoot();
@@ -159,7 +168,7 @@ const ShootingSystem = ({
         clearInterval(autoFireIntervalRef.current);
       }
     };
-  }, [handleShoot, rapidFireActive, weapon]);
+  }, [handleShoot, rapidFireActive, weapon, ammo]);
 
   return (
     <>

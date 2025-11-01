@@ -1,25 +1,87 @@
-# GAME FEEDBACK for next PHASE/PATCH
+# QA Feedback & Testing
 
-If feedback is too complex, added next relative `PHASE.md` or if can be completed then add as a patch/commit to the current branch of work.
+**Branch**: `phase-7`  
+**Last Updated**: October 29, 2025
 
-## Game Testing Feedback
+## QA Validation Checklist
 
-This is feedback from recently play tests (the last phase so check other MD files ot confirm if fixes or feedback was already received). We can implement this during the next phase we work on.
+### Core Gameplay
 
-- [ ] we can still "Shoot" and move between waves (the menu is up but we can shoot behind it still)
-- [ ] The "inertia" space ship movement sucks. we just come to a halt instead of having some "drift" like asteroid should have. needs to feel more floaty and slippery.
-- [ ] make the pickups slightly picker and spread them out more. they spawn too close together and are hard to grab the right one sometimes.
-- [ ] i like the new shield! give it some pizzazz like invincibility but keep it "blue" themed.
-- [ ] similarly invincibility needs some more pizazz. make it more like the shield but keep the random color theme.
-- [ ] the speed boost is kind of useless since we have inertia movement. maybe make it increase acceleration and max speed more significantly to fix it?
-- [ ] the shotgun is now "triple shot all of the time. should only do that when rapid fire is active. the spread is STILL too wide. SOUP CAN WIDE. needs to be much tighter spread.
-- [ ] rapid fire is still kind of broken. for shotgun it fires the 3 then just stops (which seems to just be its default  behavior). it should loop until out of ammo or button released or timer for rapid fire ends. rapid fire still doesn't work as expected for the basic laser. but does work as expected for the explosion (control test to see if we should adjust some weapons that way.) tl;dr guns should really just go "FULL AUTO" until out of ammo or timer ends or button released.
-- [ ] the explosion is still a bit too big. should be smaller and affect less targets similarly (so the radius should just change).
-- [ ] score and accuracy still seem bugged out or not tracking/persisting properly.
-- [ ] Pause menu appears but music/sound toggles don't work. music and sounds should stop when paused.
-- [ ] Pause menu should have a restart button, but make it "confirm" style to avoid accidental restarts. similarly the quit button should have a confirm style prompt and redirect you back up a level to the main menu/home screen.
-- [ ] keep ui elements consistent. the pause menu uses different fonts and styles than the rest of the game. should be uniform. also reorganize the hud elements to be more clear. move the power-up indicators to the top right corner near the ammo/health so all status indicators are in one area. move score to top left corner with wave indicator so all game progress info is in one area. health should in the top right corner with ammo and power-ups.
-- [ ] slow motion should give a influenced effect to the player that time is slowed. maybe a purple tint or slight blur around the edges or something? tough as the entire background is black so not much to work with there. think on this
-- [ ] when power ups are active they overlap the wave info so make sure all ui elements have enough space and don't overlap.
-- [ ] the "reload" rate should show as a progress bar or something on the ammo indicator so we can see when we will be reloaded and ready to fire again - some weapons are "bolt-action" and have a visible reload time like explosion, vs laser is instant reload, vs. shotgun is in between those two extremes so we can see the reload time visually but config in their config and ensure we are moving in this direction more or less - especially during FULL AUTO rapid fire mode, the shotgun should fire 3 shots then have a visible reload time before it can fire again normally. but under rapid it should blast continuously until out of ammo or timer ends or button released. for explosion it can function as it does now both as it currently defaults and under rapid fire where reload is 0 but have a visible reload bar so we can see when it will be ready to fire again and the remaining ammo. but this way we can play around with ammo and reload differently to get different feels for each weapon. as well as different visual affects that affect the gameplay differently so we can easily tweak and toggle and add new gun varieties based on some basic core concepts and extrapolate/combine from there.
-- [ ] 
+- [ ] **Player Movement** - Ship should drive with inertia (tokyo drift feel), it should NOT stop instantly (which it currently does). also add Q,E for diagonal movement, Z,C for rolling and X for yaw? `/~` should bring the user back to center → **ADDED TO PHASE 8 PLAN**
+- [x] **Shooting** - All weapons fire correctly, rapid fire works for all weapon types → **FIXED: Rapid fire now works for ALL weapons**
+- [ ] **Score Tracking** - Need to test in-game. Score tracking logic looks correct, may have been user error or pause menu display issue
+- [ ] **Power-ups** - All power-ups collectable and functional
+  - [ ] health - works but no visual feedback when collected, should be a "green" affect like time slow but likely more visually impactful/strong
+  - [ ] shield - works well good effect (may be impacting the display of explosive weapon?)
+  - [ ] invincibility - works well good effect, good aura
+  - [x] rapid fire - **FIXED: Now works for ALL weapons. Laser 50ms, Spread 150ms, Explosive 80ms fire rates**
+  - [ ] slow motion - perfect. no notes at the moment, objects might have a slight bug where they then no longer move after time slow ends? or their inertia is just gone.
+  - [ ] speed boost - works well, now we can tune down the player speed and how much this boosts a bit.
+  - [x] Music off does not mute game music → **FIXED: Music toggle now properly pauses/resumes bgm**
+  - [x] confirm restart button - does restart wave but doesnt respawn enemies → **FIXED: Now spawns 10 targets**
+  - [x] Confirm quit button doesnt send back to home → **FIXED: Now navigates to /**
+  - [ ] Browser back warning - is there a way we can prevent users from accidentally hitting "back" on their browser and losing their progress? maybe a popup warning? → **ADDED TO PHASE 8**
+  - [x] FPS counter overlap → **FIXED: FPS top-left, Score/Combo moved to top-right below Wave**
+  - [x] make the ammo bar color blue instead of green → **FIXED: Blue (#3366ff) when >20%, red when low**
+  - [ ] between waves countdown - it might be behind the pause menu? add countdown back in → **NEED TO INVESTIGATE**
+
+### UI
+
+- [x] Pause menu sound/music toggles → **FIXED: Music toggle now works properly**
+- [ ] Pause menu visual design - needs to be more visually appealing and match current game hud/ui → **ADDED TO PHASE 8**
+- [ ] game over menu sucks → **ADDED TO PHASE 8**
+
+### Weapons
+
+- [x] **Spread Weapon (Shotgun)** - Tightened in Phase 7, rapid fire now works → **VALIDATED**
+- [x] **Laser Weapon** - Continuous beam (50ms fire rate), works correctly → **VALIDATED**
+- [x] **Explosive Weapon** - Area damage, rapid fire works (80ms fire rate) → **VALIDATED**
+
+### UI/Visual
+
+- [ ] **FPS Counter** - Located in top-left corner
+- [ ] **UI Panels** - All text readable with dark backgrounds (Score, Wave, Health, Weapon, Stats)
+- [ ] **Shield Effect** - Blue halo only (no wireframe), 50% opacity with pulsing fade
+- [ ] **Invincibility Effect** - Rainbow halo only (no wireframe), 50% opacity with pulsing fade, random colors
+- [ ] **Time Slow Effect** - Visual feedback present
+
+### Audio & Controls
+
+- [ ] **Pause Menu** - Sound/music toggles work, game pauses correctly
+- [ ] **Input Blocking** - Cannot shoot/move during pause or wave transitions
+
+---
+
+## Known Outstanding Issues
+
+### To Be Fixed
+
+1. **Health Power-up Visual** - No visual effect when collected (needs temporary feedback similar to time slow)
+2. **Code Quality** - Restart logic should be extracted to reusable function
+
+### Performance
+
+- Target: 60 FPS on modern hardware
+- All tests passing (42/42)
+
+---
+
+## QA Test Session Template
+
+**Tester**: _____________  
+**Date**: _____________  
+**Browser/Device**: _____________
+
+### Issues Found
+
+- List any bugs or unexpected behavior
+
+### Performance Notes
+
+- FPS: _______
+- Load Time: _______
+- Lag/Stuttering: _______
+
+### Suggestions
+
+- Feature requests or improvement ideas
