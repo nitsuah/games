@@ -55,17 +55,23 @@ describe('usePowerUps Hook', () => {
   });
 
   test('health power-up should restore 25 health when below max', () => {
+    jest.useFakeTimers();
     const { result } = renderHook(() =>
       usePowerUps(mockSetHealth, mockSetTargets, mockShowFlash, mockSetAmmo)
     );
 
     act(() => {
       result.current.handlePowerUpCollect('health');
+      // Run timers to execute createPulseEffect setTimeout calls
+      jest.runAllTimers();
     });
 
     expect(mockSetHealth).toHaveBeenCalled();
-    // Phase 8: Updated to 250 for stronger initial flash (pulsing effect)
-    expect(mockShowFlash).toHaveBeenCalledWith('green', 250);
+    // Phase 8: Pulse effect now uses createPulseEffect helper with 7 flash calls
+    expect(mockShowFlash).toHaveBeenCalledWith('green', 250); // Initial strong flash
+    expect(mockShowFlash).toHaveBeenCalledTimes(7); // 7 pulse stages
+    
+    jest.useRealTimers();
   });
 
   test('shield power-up should activate shield', () => {

@@ -1,5 +1,19 @@
 import { WEAPON_TYPES } from '../../lib/asteroid/_comp/config';
 
+/**
+ * Creates a pulse animation effect using multiple flash calls
+ * @param {Function} showFlash - Flash function from game context
+ * @param {string} color - Flash color
+ * @param {number[]} opacities - Array of opacity values (0-255)
+ * @param {number[]} delays - Array of delay values in ms
+ */
+function createPulseEffect(showFlash, color, opacities, delays) {
+  opacities.forEach((opacity, index) => {
+    const delay = delays[index];
+    setTimeout(() => showFlash(color, opacity), delay);
+  });
+}
+
 export const POWER_UPS = [
   {
     type: 'health',
@@ -39,15 +53,7 @@ export const POWER_UPS = [
       
       // Phase 8: More impactful visual feedback - strong pulsing green flash
       if (collected) {
-        // Initial strong flash
-        showFlash('green', 250);
-        // Pulse effect: fade -> flash -> fade
-        setTimeout(() => showFlash('green', 100), 100);
-        setTimeout(() => showFlash('green', 200), 200);
-        setTimeout(() => showFlash('green', 80), 300);
-        setTimeout(() => showFlash('green', 150), 400);
-        setTimeout(() => showFlash('green', 50), 500);
-        setTimeout(() => showFlash('green', 0), 650);
+        createPulseEffect(showFlash, 'green', [250, 100, 200, 80, 150, 50, 0], [0, 100, 200, 300, 400, 500, 650]);
       }
     },
   },

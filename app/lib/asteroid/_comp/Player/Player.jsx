@@ -169,10 +169,16 @@ const Player = ({
 
     // Phase 8: Diagonal movement (Q = up-left, E = up-right)
     if (keysRef.current.diagUpLeft) {
-      direction.add(forwardVector.clone().add(rightVector.clone().negate()).add(upVector));
+      const diagUpLeft = forwardVector.clone()
+        .add(rightVector.clone().negate())
+        .add(upVector);
+      direction.add(diagUpLeft);
     }
     if (keysRef.current.diagUpRight) {
-      direction.add(forwardVector.clone().add(rightVector).add(upVector));
+      const diagUpRight = forwardVector.clone()
+        .add(rightVector)
+        .add(upVector);
+      direction.add(diagUpRight);
     }
 
     if (direction.length() > 0) {
