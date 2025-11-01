@@ -7,7 +7,7 @@
 
 ### Core Gameplay
 
-- [ ] **Player Movement** - Ship drifts with inertia (tokyo drift feel), doesn't stop instantly
+- [ ] **Player Movement** - Ship drifts with inertia (tokyo drift feel), it should NOT stop instantly
 - [ ] **Shooting** - All weapons fire correctly, rapid fire works for all weapon types
 - [ ] **Score Tracking** - Score persists between waves, doesn't reset to 0
 - [ ] **Power-ups** - All power-ups visible and functional (health, shield, invincibility, rapid fire, slow motion, speed boost)
