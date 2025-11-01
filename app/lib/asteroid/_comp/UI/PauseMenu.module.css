@@ -1,188 +1,403 @@
+/* Phase 8: Arcade-style Pause Menu */
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--ui-bg-overlay);
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn var(--ui-transition-fast) ease-in;
+  animation: fadeIn 0.2s ease-in;
 }
 
 .menu {
-  background: var(--ui-bg-medium);
-  border: 3px solid var(--ui-border-accent);
-  border-radius: var(--ui-radius-xl);
-  padding: 40px 50px;
-  min-width: 500px;
-  box-shadow: var(--ui-shadow-lg);
+  background: linear-gradient(135deg, rgba(10, 0, 30, 0.98), rgba(0, 20, 40, 0.98));
+  border: 4px solid var(--ui-primary);
+  border-radius: 20px;
+  padding: 40px 50px 35px;
+  min-width: 550px;
+  max-width: 600px;
+  box-shadow: 
+    0 0 60px rgba(0, 255, 255, 0.5),
+    inset 0 0 80px rgba(0, 255, 255, 0.08);
+  animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+/* Header with scanline effect */
+.header {
+  position: relative;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .title {
-  font-size: var(--ui-text-4xl);
-  font-weight: bold;
+  font-size: 56px;
+  font-weight: 900;
   color: var(--ui-primary);
-  text-align: center;
-  margin: 0 0 var(--ui-space-xl) 0;
-  text-shadow: 0 0 20px var(--ui-primary-glow);
-  letter-spacing: 8px;
+  text-shadow: 
+    0 0 20px var(--ui-primary),
+    0 0 40px var(--ui-primary),
+    0 4px 0 rgba(0, 0, 0, 0.8);
+  margin: 0;
+  letter-spacing: 12px;
+  font-family: 'Courier New', monospace;
+  animation: glow 2s ease-in-out infinite alternate;
 }
 
+.scanline {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ui-primary), transparent);
+  margin-top: 15px;
+  animation: scanlineMove 3s linear infinite;
+}
+
+/* Score display */
 .scoreDisplay {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--ui-space-md) 25px;
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid var(--ui-border-accent);
-  border-radius: var(--ui-radius-md);
-  margin-bottom: var(--ui-space-xl);
+  margin-bottom: 30px;
+}
+
+.scoreCard {
+  background: rgba(0, 255, 255, 0.08);
+  border: 2px solid var(--ui-border-accent);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.scoreCard:hover {
+  background: rgba(0, 255, 255, 0.12);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
 }
 
 .scoreLabel {
-  font-size: var(--ui-text-lg);
+  font-size: 14px;
   color: var(--ui-text-secondary);
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  font-family: 'Courier New', monospace;
 }
 
 .scoreValue {
-  font-size: var(--ui-text-2xl);
+  font-size: 42px;
   font-weight: bold;
   color: var(--ui-primary);
+  text-shadow: 0 0 15px var(--ui-primary);
+  font-family: 'Courier New', monospace;
+  animation: scoreGlow 2s ease-in-out infinite;
 }
 
+/* Buttons section */
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: var(--ui-space-md);
-  margin: var(--ui-space-xl) 0;
+  gap: 15px;
 }
 
 .button {
   width: 100%;
-  padding: var(--ui-space-lg) var(--ui-space-xl);
-  font-size: var(--ui-text-lg);
+  padding: 18px 25px;
+  font-size: 18px;
   font-weight: bold;
-  color: var(--ui-text-primary);
-  background: linear-gradient(135deg, var(--ui-secondary), var(--ui-primary));
-  border: 2px solid var(--ui-border-accent);
-  border-radius: var(--ui-radius-lg);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all var(--ui-transition-medium);
+  transition: all 0.3s;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 15px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
 }
 
-.button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--ui-shadow-md);
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.button:hover::before {
+  left: 100%;
+}
+
+.buttonIcon {
+  font-size: 28px;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.buttonText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.buttonHint {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+
+/* Resume button - cyan glow */
+.resumeButton {
+  background: linear-gradient(135deg, var(--ui-secondary), var(--ui-primary));
+  color: white;
+  border: 3px solid var(--ui-border-accent);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.resumeButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(0, 255, 255, 0.6);
   background: linear-gradient(135deg, #00aaff, var(--ui-primary));
 }
 
-.button:active {
-  transform: translateY(0);
+/* Restart button - green */
+.restartButton {
+  background: linear-gradient(135deg, rgba(0, 200, 100, 0.3), rgba(0, 150, 80, 0.5));
+  color: #00ff88;
+  border: 3px solid #00aa66;
 }
 
+.restartButton:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, rgba(0, 220, 120, 0.5), rgba(0, 180, 100, 0.7));
+  box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+}
+
+/* Quit button - red */
 .quitButton {
-  background: linear-gradient(135deg, var(--ui-danger), #ff8888);
-  border-color: var(--ui-border-danger);
-  flex-direction: column;
-  gap: var(--ui-space-xs);
+  background: linear-gradient(135deg, rgba(200, 0, 0, 0.3), rgba(150, 0, 0, 0.5));
+  color: #ff6666;
+  border: 3px solid #aa0000;
 }
 
 .quitButton:hover {
-  background: linear-gradient(135deg, #ff6666, #ffaaaa);
-  box-shadow: 0 8px 20px rgba(255, 68, 68, 0.4);
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, rgba(220, 0, 0, 0.5), rgba(180, 0, 0, 0.7));
+  box-shadow: 0 8px 25px rgba(255, 68, 68, 0.4);
 }
 
-.warningButton {
-  background: linear-gradient(135deg, var(--ui-warning), #ff9900) !important;
-  border-color: var(--ui-warning) !important;
-  animation: pulse 1s infinite;
+/* Audio controls section */
+.audioSection {
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 10px 0;
 }
 
-.warningButton:hover {
-  background: linear-gradient(135deg, #ff8800, #ffaa00) !important;
-  box-shadow: 0 8px 20px rgba(255, 102, 0, 0.6) !important;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(255, 102, 0, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(255, 102, 0, 0.8);
-  }
-}
-
-.hint {
-  font-size: var(--ui-text-sm);
-  padding: 4px var(--ui-space-sm);
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: var(--ui-radius-md);
-  font-family: var(--ui-font-mono);
-}
-
-.hintSmall {
-  font-size: var(--ui-text-xs);
-  font-weight: normal;
-  color: #ffaaaa;
-  font-style: italic;
+.sectionLabel {
+  font-size: 12px;
+  color: var(--ui-text-secondary);
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-family: 'Courier New', monospace;
 }
 
 .toggleGroup {
-  display: flex;
-  gap: var(--ui-space-sm);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 }
 
 .toggleButton {
-  flex: 1;
-  padding: var(--ui-space-md) var(--ui-space-lg);
-  font-size: var(--ui-text-md);
+  padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.05);
+  border: 3px solid #333333;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Courier New', monospace;
+}
+
+.toggleIcon {
+  font-size: 32px;
+  filter: grayscale(100%);
+  transition: filter 0.3s;
+}
+
+.toggleButton.active .toggleIcon {
+  filter: grayscale(0%);
+}
+
+.toggleLabel {
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: #666666;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.toggleStatus {
+  font-size: 12px;
   font-weight: bold;
   color: #888888;
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid #444444;
-  border-radius: var(--ui-radius-md);
-  cursor: pointer;
-  transition: all var(--ui-transition-medium);
 }
 
 .toggleButton:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: #666666;
+  border-color: #555555;
+  transform: translateY(-2px);
 }
 
 .toggleButton.active {
-  color: var(--ui-primary);
   background: rgba(0, 255, 255, 0.15);
   border-color: var(--ui-border-accent);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
 }
 
-.help {
-  text-align: center;
-  font-size: var(--ui-text-md);
-  color: var(--ui-text-secondary);
-  margin: var(--ui-space-lg) 0 0 0;
-}
-
-.help kbd {
-  padding: 4px var(--ui-space-sm);
-  background: var(--ui-bg-glass);
-  border: 1px solid #666666;
-  border-radius: var(--ui-radius-sm);
-  font-family: var(--ui-font-mono);
+.toggleButton.active .toggleLabel {
   color: var(--ui-primary);
 }
 
+.toggleButton.active .toggleStatus {
+  color: var(--ui-primary);
+}
+
+/* Confirm box for restart/quit */
+.confirmBox {
+  background: rgba(255, 102, 0, 0.1);
+  border: 3px solid var(--ui-warning);
+  border-radius: 12px;
+  padding: 20px;
+  animation: shake 0.5s;
+}
+
+.confirmTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--ui-warning);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+  animation: pulse 1.5s infinite;
+}
+
+.confirmText {
+  font-size: 14px;
+  color: #ffaaaa;
+  text-align: center;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.confirmButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.confirmYes,
+.confirmNo {
+  padding: 15px !important;
+  font-size: 16px !important;
+  justify-content: center;
+}
+
+.confirmYes {
+  background: linear-gradient(135deg, #ff6600, #ff9900) !important;
+  border-color: var(--ui-warning) !important;
+  color: white !important;
+}
+
+.confirmYes:hover {
+  box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6) !important;
+}
+
+.confirmNo {
+  background: rgba(100, 100, 100, 0.5) !important;
+  border-color: #666666 !important;
+  color: white !important;
+}
+
+.confirmNo:hover {
+  background: rgba(120, 120, 120, 0.7) !important;
+}
+
+/* Footer help text */
+.footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--ui-text-secondary);
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'Courier New', monospace;
+}
+
+.footer kbd {
+  padding: 4px 10px;
+  background: rgba(0, 255, 255, 0.15);
+  border: 2px solid var(--ui-border-accent);
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  color: var(--ui-primary);
+  font-size: 12px;
+  margin: 0 3px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Animations */
 @keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
   from {
+    transform: translateY(-50px);
     opacity: 0;
   }
   to {
+    transform: translateY(0);
     opacity: 1;
   }
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 20px var(--ui-primary), 0 0 40px var(--ui-primary); }
+  to { text-shadow: 0 0 30px var(--ui-primary), 0 0 60px var(--ui-primary); }
+}
+
+@keyframes scanlineMove {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes scoreGlow {
+  0%, 100% { text-shadow: 0 0 15px var(--ui-primary); }
+  50% { text-shadow: 0 0 25px var(--ui-primary), 0 0 35px var(--ui-primary); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }

@@ -90,6 +90,7 @@ app/
 ```
 
 ### Test Files Created (17 total)
+
 1. `handleHealthDepletion.test.js` - 12 tests
 2. `handleKeyDown.test.js` - 10 tests
 3. `handleMiss.test.js` - 8 tests
@@ -109,6 +110,7 @@ app/
 ## Tech Debt & Improvements Discovered
 
 ### 🔴 Critical Issues
+
 1. **weaponHandler.js - Shotgun hit detection**
    - **Location:** `lib/asteroid/_comp/Weapons/weaponHandler.js`
    - **Issue:** TODO comment states "Shotgun hit detection is too generous - hitting everything"
@@ -117,6 +119,7 @@ app/
    - **Status:** NOT FIXED - requires THREE.js testing environment
 
 ### 🟡 Testing Improvements
+
 2. **Spawn time consistency**
    - **Fixed:** Changed test mocks from `Date.now() - 1000` (milliseconds) to `performance.now() / 1000 - 5` (seconds)
    - **Reason:** MIN_ALIVE_TIME validation expects seconds
@@ -149,6 +152,7 @@ app/
 ## Edge Cases Covered
 
 ### Health & Damage
+
 - ✅ Shield absorption (stackable, 3 hits per power-up)
 - ✅ Invincibility window
 - ✅ Health flooring at 0 (no negative health)
@@ -156,6 +160,7 @@ app/
 - ✅ Pointer lock release on game over
 
 ### Combo System
+
 - ✅ Combo increment on successive hits
 - ✅ Combo reset on miss
 - ✅ Combo multiplier progression (1x → 1.5x → 2x → 3x → 5x)
@@ -163,6 +168,7 @@ app/
 - ✅ Combo decay after timeout
 
 ### Target Mechanics
+
 - ✅ MIN_ALIVE_TIME enforcement (2 seconds)
 - ✅ Size halving on split
 - ✅ Speed doubling on split
@@ -171,6 +177,7 @@ app/
 - ✅ Score value by size
 
 ### Score & Accuracy
+
 - ✅ High score persistence
 - ✅ Best accuracy persistence
 - ✅ Accuracy calculation (hits / total shots)
@@ -179,6 +186,7 @@ app/
 - ✅ Edge case: 100% accuracy
 
 ### Input Handling
+
 - ✅ Weapon switching (1/2/3 keys)
 - ✅ Pause toggle (Escape)
 - ✅ Ammo replenish (R key)
@@ -190,6 +198,7 @@ app/
 ## Recommendations
 
 ### Short-term
+
 1. ✅ **DONE:** Fix jest.config.js to track lib/** code
 2. ✅ **DONE:** Test all pure utility functions
 3. ✅ **DONE:** Test game logic handlers
@@ -197,6 +206,7 @@ app/
 5. ❌ **TODO:** Fix shotgun hit detection in weaponHandler.js
 
 ### Long-term
+
 1. **Consider visual regression testing** for 3D scenes
    - Tools: Percy, Chromatic, or custom screenshot comparison
    - Would catch rendering issues without heavy mocking
@@ -219,6 +229,7 @@ app/
 ## Coverage by Category
 
 ### Excellent Coverage (75-100%)
+
 - ✅ Game state management
 - ✅ Score calculation
 - ✅ Input handling
@@ -226,11 +237,13 @@ app/
 - ✅ Target generation logic
 
 ### Moderate Coverage (25-75%)
+
 - 🟡 Combo system edge cases
 - 🟡 Power-up configurations
 - 🟡 Game over flow
 
 ### Low Coverage (0-25%)
+
 - 🔴 R3F components (intentional)
 - 🔴 THREE.js weapon handlers (intentional)
 - 🔴 Web Audio API (intentional)
@@ -285,6 +298,7 @@ module.exports = {
 ## Running Tests
 
 ### Unit Tests
+
 ```bash
 # Run all tests
 npm test
@@ -300,6 +314,7 @@ npm test -- handleTargetHit.test.js
 ```
 
 ### E2E Tests
+
 ```bash
 # Run Playwright tests
 npx playwright test
