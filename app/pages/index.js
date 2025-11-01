@@ -139,17 +139,18 @@ const GameCard = styled(Link)`
   font-size: 28px;
   font-weight: bold;
   letter-spacing: 4px;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
   overflow: hidden;
   font-family: 'Courier New', monospace;
   text-transform: uppercase;
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  will-change: transform;
 
   &::before {
     content: '';
     position: absolute;
     top: 0;
-    left: -100%;
+    left: 0;
     width: 100%;
     height: 100%;
     background: linear-gradient(
@@ -158,7 +159,8 @@ const GameCard = styled(Link)`
       rgba(0, 255, 255, 0.3),
       transparent
     );
-    transition: left 0.5s ease;
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
   }
 
   &:hover {
@@ -171,7 +173,7 @@ const GameCard = styled(Link)`
     border-color: #00ffff;
 
     &::before {
-      left: 100%;
+      transform: translateX(100%);
     }
   }
 
@@ -215,10 +217,11 @@ const MuteButton = styled.button`
   cursor: pointer;
   z-index: 1000;
   box-shadow: 0 0 20px ${props => props.$muted ? 'rgba(136, 136, 136, 0.3)' : 'rgba(255, 255, 0, 0.6)'};
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  will-change: transform;
 
   &:hover {
     transform: scale(1.1);
