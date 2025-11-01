@@ -24,6 +24,7 @@ const PlayerLogic = forwardRef(function PlayerLogic({ onPositionChange }, ref) {
 
   return (
     <mesh ref={meshRef}>
+      {/* Using lowercase primitives is correct for react-three-fiber */}
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color="blue" />
     </mesh>

@@ -7,8 +7,8 @@ test.describe('Home Page', () => {
     // Check title
     await expect(page).toHaveTitle(/Games/i);
     
-    // Check main heading
-    const heading = page.getByRole('heading', { name: /Game Selector/i });
+    // Check main arcade heading
+    const heading = page.getByRole('heading', { name: /ARCADE/i });
     await expect(heading).toBeVisible();
     
     // Check game links exist

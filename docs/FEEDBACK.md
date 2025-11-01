@@ -7,11 +7,16 @@
 
 ## Recent Fixes ✅
 
-### Arcade Homepage Complete (Nov 1, 2025)
-- ✅ **Full arcade redesign** - CRT screen effects, neon cyan glows, scanlines, arcade fonts
-- ✅ **Game cards** - Hover animations, sweep effects, lift on hover
-- ✅ **Visual polish** - Flicker animation, retro monospace fonts, "INSERT COIN" footer
+### Arcade Cabinet Homepage v2 (Nov 1, 2025)
+
+- ✅ **Full 3D arcade cabinet design** - Pink marquee top, orange control panel, CRT screen
+- ✅ **Realistic arcade elements** - Joystick, 4 colored buttons (pulsing), coin slot (25¢)
+- ✅ **Background music system** - arcade.mp3 loops with volume control (30% volume)
+- ✅ **Mute button** - Top-left corner, yellow glow when active, toggles music
+- ✅ **Game cards** - Hover animations, sweep effects, lift on hover in cyan
+- ✅ **Visual polish** - Flicker animations, scanlines, "ARCADE" marquee text in yellow
 - 🐛 **Explosive weapon matrixWorld error** - Fixed null check in weaponHandler.js (raycaster filtering)
+- 🐛 **CI test fixes** - Updated E2E test to expect "ARCADE" heading instead of "Game Selector"
 
 ---
 
