@@ -37,9 +37,11 @@ export const POWER_UPS = [
         });
       }
       
-      // Only flash if we actually collected it
+      // Only flash if we actually collected it - with longer duration for visual feedback
       if (collected) {
-        showFlash('green');
+        showFlash('green', 150);
+        // Fade out the flash
+        setTimeout(() => showFlash('green', 0), 150);
       }
     },
   },
@@ -94,8 +96,9 @@ export const POWER_UPS = [
   {
     type: 'slowMotion',
     duration: 10000,
-    effect: ({ setSlowMotionActive, setTargets }) => {
+    effect: ({ setSlowMotionActive, setTargets, showFlash }) => {
       setSlowMotionActive(true);
+      showFlash('purple', 100);
       setTargets((prevTargets) =>
         prevTargets.map((target) => ({
           ...target,
@@ -104,6 +107,7 @@ export const POWER_UPS = [
       );
       setTimeout(() => {
         setSlowMotionActive(false);
+        showFlash('purple', 0);
         setTargets((prevTargets) =>
           prevTargets.map((target) => ({
             ...target,
