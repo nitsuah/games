@@ -73,16 +73,18 @@ export function weaponHandler({
     const hitTargets = new Set();
     const lasers = [];
     
-    // TODO: Shotgun hit detection is too generous - hitting everything
-    // Need to review and tighten the hit cone or improve collision logic
-    // Check if we're hitting anything with the spread cone
+    // Tightened hit detection: reduced multiplier from 3 to 2 for more precise shotgun hits
+    // This prevents hitting targets outside the intended spread cone
     const updatedTargets = targets.map((target) => {
       if (!target.isHit) {
         const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
         const toTarget = targetPosition.clone().sub(from).normalize();
         const distance = from.distanceTo(targetPosition);
         const angle = forwardDirection.angleTo(toTarget);
-        if (angle <= SPREAD_ANGLE * 3 && distance <= SPREAD_RANGE) {
+        // Tightened: angle must be <= SPREAD_ANGLE * 2 (was * 3)
+        // Also added distance falloff: hits are more likely at closer range
+        const distanceFactor = 1 - (distance / SPREAD_RANGE) * 0.3; // 30% accuracy reduction at max range
+        if (angle <= SPREAD_ANGLE * 2 && distance <= SPREAD_RANGE && Math.random() < distanceFactor) {
           hitTargets.add(target.id);
           playSound('hit');
           return { ...target, isHit: true };

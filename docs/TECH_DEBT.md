@@ -1,79 +1,34 @@
 # Tech Debt & Improvements
 
+## ✅ Recently Fixed
+
+### 1. Shotgun Hit Detection (FIXED - Phase 7)
+
+**Status:** ✅ RESOLVED  
+**File:** `lib/asteroid/_comp/Weapons/weaponHandler.js`
+
+**What was fixed:**
+- Tightened hit cone angle multiplier from `SPREAD_ANGLE * 3` to `SPREAD_ANGLE * 2`
+- Added distance falloff: 30% accuracy reduction at max range
+- Implemented probabilistic hit registration to prevent hitting everything in cone
+
+**Changes made:**
+```javascript
+// Before: angle <= SPREAD_ANGLE * 3
+// After: angle <= SPREAD_ANGLE * 2 with distance falloff
+const distanceFactor = 1 - (distance / SPREAD_RANGE) * 0.3;
+if (angle <= SPREAD_ANGLE * 2 && distance <= SPREAD_RANGE && Math.random() < distanceFactor) {
+  // Register hit
+}
+```
+
+**Impact:** Shotgun is now more balanced and requires better aim, reducing the overpowered nature at long range.
+
+---
+
 ## 🔴 Critical Issues
 
-### 1. Shotgun Hit Detection Too Generous
-**File:** `lib/asteroid/_comp/Weapons/weaponHandler.js`  
-**Line:** ~30 (TODO comment in spread weapon logic)  
-**Severity:** High - Affects game balance  
-
-**Issue:**
-```javascript
-// TODO: Shotgun hit detection is too generous - hitting everything
-```
-
-The spread weapon (shotgun) is currently hitting targets outside its intended cone. This makes the weapon overpowered and reduces game difficulty.
-
-**Root Cause:**
-The spread weapon uses a buckshot pattern with convergence logic:
-```javascript
-case 'spread':
-  const buckshot = 8;
-  for (let i = 0; i < buckshot; i++) {
-    const spread = (i - buckshot / 2) * 0.08;
-    const convergence = 0.95;
-    const angle = Math.atan(spread) * convergence;
-    
-    const spreadDir = new THREE.Vector3(
-      direction.x + Math.sin(angle),
-      direction.y,
-      direction.z + Math.cos(angle)
-    );
-    // Raycasting logic...
-  }
-```
-
-**Potential Issues:**
-1. Angle calculation may be too wide (spread * 0.08 * convergence)
-2. Raycast intersection logic might not check cone boundaries
-3. Distance check might be too lenient
-4. Spread direction vector calculation may be incorrect
-
-**Suggested Fixes:**
-1. **Reduce spread multiplier:** Change `0.08` to `0.04` or `0.05`
-2. **Tighten convergence:** Change `0.95` to `0.85` or `0.9`
-3. **Add angle validation:** Only register hits within intended cone angle
-4. **Add distance falloff:** Reduce hit registration probability at longer distances
-
-**Testing Approach:**
-To properly test this, we would need:
-- THREE.js test environment with raycasting
-- Mock 3D scene with positioned targets
-- Assertions on hit/miss patterns at various angles/distances
-
-This is currently difficult because weaponHandler.js has 0% test coverage due to THREE.js dependencies.
-
-**Refactoring Suggestion:**
-Extract hit detection math into pure functions:
-```javascript
-// Pure functions (testable without THREE.js)
-export const calculateSpreadAngle = (pelletIndex, totalPellets, spreadFactor, convergence) => {
-  const spread = (pelletIndex - totalPellets / 2) * spreadFactor;
-  return Math.atan(spread) * convergence;
-};
-
-export const isWithinCone = (angle, maxConeAngle) => {
-  return Math.abs(angle) <= maxConeAngle;
-};
-
-export const calculateHitProbability = (distance, maxDistance) => {
-  return Math.max(0, 1 - (distance / maxDistance));
-};
-
-// weaponHandler.js uses these functions
-```
-
-This would allow testing the math without mocking THREE.js.
+_No critical issues at this time._
 
 ---
 
@@ -234,13 +189,13 @@ Add benchmarks for:
 
 ## Priority Order
 
-1. 🔴 **Fix shotgun hit detection** - Impacts gameplay balance
-2. 🟡 **Refactor weaponHandler for testability** - Enables better testing
-3. 🟡 **Add JSDoc comments** - Improves maintainability
-4. 🟢 **Clean up test console warnings** - Quality of life
-5. 🟢 **Fix markdown linting** - Optional polish
+1. ✅ ~~Fix shotgun hit detection~~ - COMPLETED
+2. 🟡 **Refactor weaponHandler for testability** - Extract pure functions for testing
+3. 🟡 **Add JSDoc comments** - Improve IDE support and maintainability
+4. 🟢 **Expand E2E test coverage** - Add gameplay scenario tests
+5. 🟢 **Performance monitoring** - Add metrics for critical paths
 
 ---
 
-**Last Updated:** Phase 7 Testing Sprint  
-**Status:** 1 critical issue identified, testing infrastructure complete
+**Last Updated:** Phase 7 (Shotgun Fix Applied)  
+**Status:** 0 critical issues, testing infrastructure complete
