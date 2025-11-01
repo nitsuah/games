@@ -1,4 +1,4 @@
-# Phase 9: Visual Polish & Advanced Features
+# Phase 9: Visual Polish & Architecture for Scale
 
 **Status**: Planning  
 **Previous Phase**: [Phase 8 Complete](./PHASE_8_COMPLETE.md) ✅
@@ -7,12 +7,135 @@
 
 ## 🎯 Primary Goals
 
-1. **Target-Target Collision Physics** - Full inter-target collision system
-2. **Weapon Visual Effects** - Muzzle flashes, shell casings, impact effects
-3. **Target Visual Feedback** - Spawn, hit, split, and destruction animations
-4. **Audio Polish** - Spatial sound, layered impacts, dynamic music
-5. **Balance & Tuning** - Speed boost adjustment, weapon balance
-6. **Performance Optimization** - Object pooling, culling, LOD
+1. **Code Architecture for Reusability** - Extract shared systems for multi-game support
+2. **Target-Target Collision Physics** - Full inter-target collision system
+3. **Weapon Visual Effects** - Muzzle flashes, shell casings, impact effects
+4. **Target Visual Feedback** - Spawn, hit, split, and destruction animations
+5. **Audio Polish** - Spatial sound, layered impacts, dynamic music
+6. **Balance & Tuning** - Speed boost adjustment, weapon balance
+7. **Performance Optimization** - Object pooling, culling, LOD
+
+---
+
+## 🏗️ Architecture for Scale (NEW HIGH PRIORITY)
+
+### Goal
+Build a reusable game framework to support multiple arcade games without code duplication.
+
+### Shared Systems to Extract
+
+**1. Audio System (`lib/shared/audio/`)**
+- `AudioManager.js` - Centralized audio loading, volume control, mute state
+- `SoundEffect.js` - Play one-shot sounds with variations
+- `MusicPlayer.js` - Background music with loop, fade, crossfade
+- Already have: `useSound.js`, `SoundManager.js` (refactor these)
+
+**2. Input System (`lib/shared/input/`)**
+- `KeyboardManager.js` - Key binding, key state tracking
+- `MouseManager.js` - Mouse position, click handling, pointer lock
+- `GamepadManager.js` - Controller support (future)
+- Pattern: Event-driven with callbacks, not game-specific
+
+**3. Scoring System (`lib/shared/scoring/`)**
+- `ScoreManager.js` - Score calculation, multipliers, combos
+- `HighScoreManager.js` - localStorage persistence, leaderboards
+- `StatsTracker.js` - Accuracy, time played, achievements
+- Already have: `saveGameStats.js`, `loadSavedScores.js` (consolidate)
+
+**4. UI Components (`lib/shared/ui/`)**
+- `ArcadeButton.jsx` - Reusable arcade-styled button
+- `ArcadeMenu.jsx` - Base menu with arcade aesthetic
+- `ArcadeHeader.jsx` - Title with scanlines and flicker
+- `ArcadeCard.jsx` - Game selection card
+- Extract from: GameOverOverlay, PauseMenu, HomePage
+
+**5. Game State Management (`lib/shared/state/`)**
+- `GameLoop.js` - Standardized game loop with pause/resume
+- `SceneManager.js` - Scene transitions, loading screens
+- `PowerUpManager.js` - Generic power-up system
+- Pattern: State machine for game states (menu/playing/paused/gameover)
+
+**6. Physics & Collision (`lib/shared/physics/`)**
+- `CollisionDetection.js` - Sphere-sphere, box-box, raycasting
+- `PhysicsBody.js` - Velocity, acceleration, drag
+- `SpatialGrid.js` - Spatial partitioning for optimization
+- Extract from: Player collision, target collision
+
+### Game-Specific Structure
+
+```
+lib/
+  ├── shared/           # Reusable across all games
+  │   ├── audio/
+  │   ├── input/
+  │   ├── scoring/
+  │   ├── ui/
+  │   ├── state/
+  │   └── physics/
+  ├── asteroid/         # Asteroid-specific (6DOF space shooter)
+  │   └── _comp/
+  ├── fps/              # FPS-specific (terrain-based 3D)
+  │   └── _comps/
+  ├── platformer/       # 2D platformer (NEW)
+  │   └── _comp/
+  └── breakout/         # 2D breakout (NEW)
+      └── _comp/
+```
+
+### Benefits
+- Add new games in 1 day by reusing 70%+ of code
+- Consistent arcade aesthetic across all games
+- Centralized bug fixes benefit all games
+- Portfolio shows architectural thinking
+
+---
+
+## 🎮 New Games Roadmap (Phase 10+)
+
+### Quick Wins (1 Day Each)
+
+**1. Breakout/Arkanoid** 🧱
+- **Reuse**: Arcade menus, audio system, scoring, power-ups
+- **New**: 2D paddle physics, brick patterns, ball bounce
+- **Complexity**: Low - Pure 2D, simple physics
+- **Portfolio Value**: Shows 2D game dev, physics variety
+
+**2. Space Invaders** 👾
+- **Reuse**: Wave system, shooting mechanics, enemy management
+- **New**: Formation movement, shields, enemy patterns
+- **Complexity**: Medium - 2D with pattern AI
+- **Portfolio Value**: Classic arcade, procedural patterns
+
+**3. Flappy Bird Clone** 🐦
+- **Reuse**: Audio, scoring, high scores, arcade UI
+- **New**: Simple 2D physics, procedural obstacles, endless runner
+- **Complexity**: Low - Minimal mechanics
+- **Portfolio Value**: Mobile-ready, infinite gameplay
+
+**4. Target Practice Gallery** 🎯
+- **Reuse**: Asteroid shooting mechanics, targets, weapons
+- **New**: Static 3D scene, time pressure, accuracy focus
+- **Complexity**: Low - Reuse 80% from Asteroid
+- **Portfolio Value**: Shows code reuse, quick iteration
+
+**5. Pong 3D** 🏓
+- **Reuse**: Physics, scoring, power-ups, arcade UI
+- **New**: Simple AI opponent, 3D perspective
+- **Complexity**: Low - Classic mechanics
+- **Portfolio Value**: AI implementation, networked potential
+
+### Game Variety Strategy
+- ✅ **6DOF Space Shooter** - Asteroid (COMPLETE)
+- 🔄 **Terrain-Based 3D FPS** - In progress
+- 📋 **2D Platformer** - Next (prove 2D architecture)
+- 📋 **2D Arcade Classic** - Breakout or Space Invaders
+- 📋 **Endless Runner** - Flappy Bird or Temple Run style
+
+### Target Portfolio
+- **3-5 Playable Games** - Show variety and depth
+- **1 Deep Game** - Asteroid with full polish
+- **2-3 Quick Games** - Built in 1 day each using framework
+- **Consistent Aesthetic** - All games feel like one arcade
 
 ---
 
