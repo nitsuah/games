@@ -53,6 +53,6 @@ export const restartGame = ({
     setShowWaveTransition(false);
   }
 
-  // Generate initial targets for wave 1
-  setTargets(generateInitialTargets(1));
+  // Generate initial targets for wave 1 (10 targets)
+  setTargets(generateInitialTargets(10, 1));
 };

@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
+import { useAudio } from '@/contexts/AudioContext';
 import styles from './Game.module.css';
 import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
 import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
@@ -43,6 +44,7 @@ const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
 );
 
 const Game = ({ onHit, onMiss }) => {
+  const { musicEnabled } = useAudio();
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
@@ -268,10 +270,12 @@ const Game = ({ onHit, onMiss }) => {
 
   // Score is now updated incrementally in handleTargetHit, no need for recalculation effect
 
-  // Play background music on mount
+  // Play background music on mount and control based on musicEnabled
   useEffect(() => {
-    if (!gameOver) {
-      playSound('bgm').catch((err) => console.error('Failed to play bgm:', err)); // Catch errors to avoid unhandled rejections
+    if (!gameOver && musicEnabled) {
+      playSound('bgm').catch((err) => console.error('Failed to play bgm:', err));
+    } else if (!musicEnabled) {
+      pauseSound('bgm');
     }
 
     return () => {
@@ -279,7 +283,7 @@ const Game = ({ onHit, onMiss }) => {
         pauseSound('bgm'); // Pause background music when the game ends
       }
     };
-  }, [playSound, pauseSound, gameOver]);
+  }, [playSound, pauseSound, gameOver, musicEnabled]);
 
   // Handle player state
   useEffect(() => {
@@ -534,26 +538,24 @@ const Game = ({ onHit, onMiss }) => {
         speedBoostActive={speedBoostActive}
         trailQuality={trailQuality}
       />
-      {/* Top left - FPS counter */}
       {/* HUD Layout - Organized in 4 corners */}
       
-      {/* TOP LEFT - FPS & Score/Combo */}
-      <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>
+      {/* TOP LEFT - FPS */}
+      <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 500 }}>
         <FPSCounter />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      </div>
+      
+      {/* TOP RIGHT - Wave, Score & Combo */}
+      <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
+        <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
           <ScoreDisplay score={score} />
           <ComboDisplay combo={combo} multiplier={comboMultiplier} />
         </div>
       </div>
       
-      {/* TOP RIGHT - Wave & Health */}
-      <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
-        <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
-        <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
-      </div>
-      
-      {/* RIGHT SIDE - Power-ups (below health) */}
-      <div style={{ position: 'fixed', top: '140px', right: 16, zIndex: 500 }}>
+      {/* RIGHT SIDE - Power-ups */}
+      <div style={{ position: 'fixed', top: '200px', right: 16, zIndex: 500 }}>
         <PowerUpIndicator
           shieldActive={shieldActive}
           rapidFireActive={rapidFireActive}
@@ -563,8 +565,9 @@ const Game = ({ onHit, onMiss }) => {
         />
       </div>
       
-      {/* BOTTOM RIGHT - Weapon & Ammo */}
+      {/* BOTTOM RIGHT - Health, Weapon & Ammo */}
       <div style={{ position: 'fixed', bottom: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+        <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
         <AmmoIndicator weapon={weapon} ammo={ammo} />
         <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
       </div>
@@ -631,11 +634,12 @@ const Game = ({ onHit, onMiss }) => {
             playSound('bgm');
           }}
           onQuit={() => {
-            // Quit to main menu with current score (treat as game over)
-            setGameOver(true);
+            // Quit to main menu
             pauseSound('bgm');
-            playSound('gameOver');
             document.exitPointerLock();
+            if (typeof window !== 'undefined') {
+              window.location.href = '/';
+            }
           }}
           score={score}
         />

@@ -123,17 +123,24 @@ const ShootingSystem = ({
       
       // Full-auto continuous fire behavior:
       // - Laser: ALWAYS continuous (like holding a beam)
-      // - Explosive with rapid fire: continuous
-      // - Spread with rapid fire: continuous but with 3-shot bursts
-      const shouldAutoFire = weapon === 'laser' || (rapidFireActive && (weapon === 'explosive' || weapon === 'spread'));
+      // - With rapid fire active: all weapons fire continuously
+      // - Explosive with rapid fire: continuous fast fire
+      // - Spread with rapid fire: continuous bursts
+      const shouldAutoFire = weapon === 'laser' || rapidFireActive;
       
       if (shouldAutoFire) {
         if (autoFireIntervalRef.current) {
           clearInterval(autoFireIntervalRef.current);
         }
         
-        // Fire rates: Laser ultra-fast (continuous beam feel), Spread slower bursts, Explosive fast
-        const fireRate = weapon === 'laser' ? 50 : (weapon === 'spread' ? 300 : 80);
+        // Fire rates: 
+        // - Laser: ultra-fast (50ms = continuous beam feel)
+        // - Spread with rapid fire: burst fire (150ms)
+        // - Explosive with rapid fire: fast (80ms)
+        let fireRate = 50; // Default laser rate
+        if (rapidFireActive) {
+          fireRate = weapon === 'spread' ? 150 : (weapon === 'explosive' ? 80 : 50);
+        }
         
         autoFireIntervalRef.current = setInterval(() => {
           if (mouseDownRef.current) {

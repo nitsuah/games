@@ -6,9 +6,8 @@ const AmmoIndicator = ({ weapon = 'spread', ammo = {}, maxAmmo = { spread: 30, l
   const percentage = maxForWeapon > 0 ? (currentAmmo / maxForWeapon) * 100 : 0;
 
   const getAmmoColor = () => {
-    if (percentage > 50) return '#00ff00';
-    if (percentage > 20) return '#ffaa00';
-    return '#ff0000';
+    if (percentage > 20) return '#3366ff'; // Blue theme
+    return '#ff0000'; // Red when low
   };
 
   const isLow = percentage <= 20;

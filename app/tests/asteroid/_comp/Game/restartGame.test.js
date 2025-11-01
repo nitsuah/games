@@ -3,7 +3,7 @@ import { INITIAL_AMMO, INITIAL_HEALTH } from '../../../../lib/asteroid/_comp/con
 
 // Mock the generateTargets module
 jest.mock('../../../../lib/asteroid/_comp/Game/generateTargets', () => ({
-  generateInitialTargets: jest.fn((wave) => [
+  generateInitialTargets: jest.fn((count, wave) => [
     { id: 1, wave, position: [0, 0, 0] },
     { id: 2, wave, position: [5, 5, 5] },
   ]),
