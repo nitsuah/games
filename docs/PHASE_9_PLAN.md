@@ -9,11 +9,12 @@
 
 1. **Code Architecture for Reusability** - Extract shared systems for multi-game support
 2. **Target-Target Collision Physics** - Full inter-target collision system
-3. **Weapon Visual Effects** - Muzzle flashes, shell casings, impact effects
-4. **Target Visual Feedback** - Spawn, hit, split, and destruction animations
-5. **Audio Polish** - Spatial sound, layered impacts, dynamic music
-6. **Balance & Tuning** - Speed boost adjustment, weapon balance
-7. **Performance Optimization** - Object pooling, culling, LOD
+3. **Connect camera and player object during rotation** - new inputs dont re-align the body of the character/ship (purple rectangle) to match the new rotation of the player camera. so the camera rotates but the player body stays at old rotation.
+4. **Weapon Visual Effects** - Muzzle flashes, shell casings, impact effects
+5. **Target Visual Feedback** - Spawn, hit, split, and destruction animations
+6. **Audio Polish** - Spatial sound, layered impacts, dynamic music
+7. **Balance & Tuning** - Speed boost adjustment, weapon balance
+8. **Performance Optimization** - Object pooling, culling, LOD
 
 ---
 

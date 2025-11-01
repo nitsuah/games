@@ -38,11 +38,11 @@
 .title {
   font-size: 56px;
   font-weight: 900;
-  color: var(--ui-primary);
+  color: #ffffff;
   text-shadow: 
-    0 0 20px var(--ui-primary),
-    0 0 40px var(--ui-primary),
-    0 4px 0 rgba(0, 0, 0, 0.8);
+    0 0 30px var(--ui-primary),
+    0 0 50px var(--ui-primary),
+    0 4px 8px rgba(0, 0, 0, 1);
   margin: 0;
   letter-spacing: 12px;
   font-family: 'Courier New', monospace;
@@ -77,17 +77,21 @@
 
 .scoreLabel {
   font-size: 14px;
-  color: var(--ui-text-secondary);
+  color: #ffffff;
   letter-spacing: 3px;
   margin-bottom: 8px;
   font-family: 'Courier New', monospace;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .scoreValue {
   font-size: 42px;
   font-weight: bold;
-  color: var(--ui-primary);
-  text-shadow: 0 0 15px var(--ui-primary);
+  color: #ffffff;
+  text-shadow: 
+    0 0 20px var(--ui-primary),
+    0 0 40px var(--ui-primary),
+    0 3px 6px rgba(0, 0, 0, 1);
   font-family: 'Courier New', monospace;
   animation: scoreGlow 2s ease-in-out infinite;
 }
@@ -203,11 +207,12 @@
 
 .sectionLabel {
   font-size: 12px;
-  color: var(--ui-text-secondary);
+  color: #ffffff;
   letter-spacing: 2px;
   margin-bottom: 15px;
   text-align: center;
   font-family: 'Courier New', monospace;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .toggleGroup {

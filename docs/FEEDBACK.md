@@ -1,22 +1,26 @@
 # QA Feedback & Testing
 
-**Branch**: `phase-9`  
+**Branch**: `phase-8`  
 **Last Updated**: November 1, 2025
 
 ---
 
-## Recent Fixes ✅
+## 📋 Deferred to Phase 9
 
-### Arcade Cabinet Homepage v2 (Nov 1, 2025)
+### Visual Polish
 
-- ✅ **Full 3D arcade cabinet design** - Pink marquee top, orange control panel, CRT screen
-- ✅ **Realistic arcade elements** - Joystick, 4 colored buttons (pulsing), coin slot (25¢)
-- ✅ **Background music system** - arcade.mp3 loops with volume control (30% volume)
-- ✅ **Mute button** - Top-left corner, yellow glow when active, toggles music
-- ✅ **Game cards** - Hover animations, sweep effects, lift on hover in cyan
-- ✅ **Visual polish** - Flicker animations, scanlines, "ARCADE" marquee text in yellow
-- 🐛 **Explosive weapon matrixWorld error** - Fixed null check in weaponHandler.js (raycaster filtering)
-- 🐛 **CI test fixes** - Updated E2E test to expect "ARCADE" heading instead of "Game Selector"
+- [ ] **CRT Effect Improvements** - Enhance scanlines (thinner), add subtle jitter/distortion for authentic retro feel
+- [ ] **Coin Insert Animation** - Add coin drop animation + sound effect when clicking "INSERT COIN"
+
+### Gameplay Feel
+
+- [ ] **Player Inertia** - Current drift is improved but needs fine-tuning for "tokyo drift feel"
+- [ ] **Health Power-Up Visual** - Green flash effect exists but may need to be more prominent
+- [ ] **Score/Accuracy Display** - Needs manual verification that values update correctly during gameplay
+
+### Technical Investigation
+
+- [ ] **White Border Bug** - Occasional white lines on viewport edges (may be dev-only issue)
 
 ---
 

@@ -33,13 +33,16 @@ const PageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   background: linear-gradient(135deg, #0a0015 0%, #1a0030 50%, #0a0015 100%);
   color: white;
   font-family: 'Courier New', monospace;
   margin: 0;
+  padding: 20px;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 
   /* CRT screen effect */
   &::before {
@@ -63,16 +66,19 @@ const PageContainer = styled.div`
 
 const ArcadeFrame = styled.div`
   background: linear-gradient(135deg, rgba(20, 0, 40, 0.95), rgba(10, 0, 30, 0.95));
-  padding: 60px 80px;
+  padding: 40px 60px 60px;
   border-radius: 20px;
   border: 4px solid #00ffff;
   box-shadow: 
     0 0 40px rgba(0, 255, 255, 0.6),
     inset 0 0 60px rgba(0, 255, 255, 0.1);
   position: relative;
-  z-index: 2;
+  z-index: 5;
   animation: ${slideIn} 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform, opacity;
+  width: 600px;
+  max-width: 90vw;
+  box-sizing: border-box;
 `;
 
 const Scanline = styled.div`
@@ -95,51 +101,58 @@ const Scanline = styled.div`
 
 const Header = styled.div`
   position: relative;
-  margin-bottom: 50px;
+  margin-bottom: 35px;
   text-align: center;
 `;
 
-const Title = styled.h1`
-  font-size: 72px;
+const Title = styled.h2`
+  font-size: 52px;
   font-weight: 900;
   color: #00ffff;
   text-shadow: 
     0 0 20px #00ffff,
     0 0 40px #00ffff,
     0 4px 0 rgba(0, 0, 0, 0.8);
-  margin: 0 0 10px 0;
-  letter-spacing: 12px;
+  margin: 0 0 8px 0;
+  letter-spacing: 10px;
   font-family: 'Courier New', monospace;
   animation: ${flicker} 3s infinite alternate;
   text-transform: uppercase;
   will-change: opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 `;
 
-const Subtitle = styled.div`
-  font-size: 18px;
+const Subtitle = styled.h3`
+  font-size: 16px;
   color: #888;
   letter-spacing: 4px;
   text-transform: uppercase;
-  margin-top: 10px;
+  margin-top: 8px;
+  font-weight: normal;
 `;
 
 const GameList = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 20px;
-  width: 400px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
 `;
 
 const GameCard = styled(Link)`
   position: relative;
-  padding: 25px 40px;
+  padding: 20px 35px;
   background: linear-gradient(135deg, rgba(0, 50, 80, 0.4), rgba(0, 30, 60, 0.4));
   color: #00ffff;
   text-decoration: none;
   border-radius: 12px;
   border: 2px solid #00ffff;
   text-align: center;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
   letter-spacing: 4px;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
@@ -148,6 +161,13 @@ const GameCard = styled(Link)`
   text-transform: uppercase;
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
   will-change: transform;
+  flex: 1;
+  min-width: 180px;
+  max-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 
   &::before {
     content: '';
@@ -193,17 +213,27 @@ const GameCard = styled(Link)`
 `;
 
 const GameIcon = styled.span`
-  display: inline-block;
-  margin-right: 15px;
-  font-size: 32px;
+  display: block;
+  font-size: 36px;
+  margin: 0;
 `;
 
-const Footer = styled.div`
-  margin-top: 40px;
-  text-align: center;
-  color: #666;
+const InsertCoinText = styled.div`
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #00ffff;
   font-size: 14px;
-  letter-spacing: 2px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 3px;
+  text-shadow: 
+    0 0 10px #00ffff,
+    0 0 20px #00ffff;
+  animation: ${flicker} 1.5s infinite alternate;
+  will-change: opacity;
+  z-index: 6;
 `;
 
 const MuteButton = styled.button`
@@ -238,19 +268,20 @@ const MuteButton = styled.button`
 
 const ArcadeCabinet = styled.div`
   position: relative;
-  width: 600px;
-  padding-bottom: 120px;
-  padding-top: 100px;
+  max-width: 90vw;
+  padding-bottom: 100px;
+  padding-top: 80px;
 
-  /* Cabinet top marquee */
+  /* Cabinet top marquee - matches screen width */
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 500px;
-    height: 100px;
+    width: 600px;
+    max-width: 90vw;
+    height: 80px;
     background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #ff1493 100%);
     border-radius: 50% 50% 0 0 / 100% 100% 0 0;
     border: 6px solid #ff69b4;
@@ -258,36 +289,42 @@ const ArcadeCabinet = styled.div`
     box-shadow: 
       0 -5px 40px rgba(255, 20, 147, 0.9),
       inset 0 15px 40px rgba(255, 105, 180, 0.4);
-    z-index: 3;
+    z-index: 10;
   }
 
-  /* Control panel below screen */
+  /* Control panel below screen - matches screen width */
   &::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 580px;
-    height: 140px;
+    width: 600px;
+    max-width: 90vw;
+    height: 120px;
     background: linear-gradient(180deg, #ff8c00 0%, #ffa500 50%, #ff8c00 100%);
     border: 6px solid #ffaa00;
     border-radius: 0 0 30px 30px;
     box-shadow: 
       0 15px 50px rgba(255, 140, 0, 0.8),
       inset 0 -25px 50px rgba(255, 165, 0, 0.4);
-    z-index: 1;
+    z-index: 10;
   }
 `;
 
 const ButtonDecoration = styled.div`
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
+  align-items: center;
   gap: 25px;
-  z-index: 2;
+  
+  @media (max-width: 768px) {
+    gap: 15px;
+    
+    span:first-child,
+    span:last-child {
+      display: none;
+    }
+  }
 
   /* Fake arcade buttons */
   span {
@@ -330,13 +367,17 @@ const ButtonDecoration = styled.div`
 const Joystick = styled.div`
   position: absolute;
   bottom: 60px;
-  left: 100px;
+  left: 80px;
   width: 30px;
   height: 30px;
   background: radial-gradient(circle at 30% 30%, #333, #000);
   border-radius: 50%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
-  z-index: 2;
+  z-index: 15;
+  
+  @media (max-width: 768px) {
+    left: 40px;
+  }
 
   &::before {
     content: '';
@@ -367,48 +408,72 @@ const Joystick = styled.div`
   }
 `;
 
-const CoinSlot = styled.div`
+const ControlsContainer = styled.div`
   position: absolute;
-  bottom: 100px;
-  right: 80px;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  z-index: 15;
+  width: 600px;
+  max-width: 90vw;
+  padding: 0 40px;
+  box-sizing: border-box;
+  
+  @media (max-width: 768px) {
+    gap: 20px;
+    padding: 0 20px;
+  }
+`;
+
+const CoinSlot = styled.div`
   width: 70px;
   height: 12px;
   background: #000;
   border: 3px solid #444;
   border-radius: 6px;
   box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.9);
-  z-index: 2;
+  position: relative;
+  
+  @media (min-width: 769px) {
+    margin-left: auto;
+  }
 
-  &::before {
+  &::after {
     content: '25¢';
     position: absolute;
-    top: -30px;
+    bottom: -25px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 14px;
-    color: #000;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
     font-weight: bold;
     font-family: 'Courier New', monospace;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   }
 `;
 
-const MarqueeText = styled.div`
+const MarqueeText = styled.h1`
   position: absolute;
-  top: 35px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   color: #ffff00;
-  font-size: 32px;
+  font-size: 56px;
   font-weight: 900;
   font-family: 'Courier New', monospace;
   text-shadow: 
-    0 0 15px #ffff00,
-    0 0 30px #ffff00;
-  letter-spacing: 8px;
-  z-index: 4;
+    0 0 20px #ffff00,
+    0 0 40px #ffff00;
+  letter-spacing: 14px;
+  z-index: 15;
   animation: ${flicker} 2s infinite alternate;
   will-change: opacity;
+  margin: 0;
+  white-space: nowrap;
 `;
 
 const HomePage = () => {
@@ -464,18 +529,24 @@ const HomePage = () => {
       <ArcadeCabinet>
         <MarqueeText>ARCADE</MarqueeText>
         <Joystick />
-        <ButtonDecoration>
-          <span />
-          <span />
-          <span />
-          <span />
-        </ButtonDecoration>
-        <CoinSlot />
+        <ControlsContainer>
+          <ButtonDecoration>
+            <span />
+            <span />
+            <span />
+            <span />
+          </ButtonDecoration>
+          <CoinSlot />
+        </ControlsContainer>
 
         <ArcadeFrame>
           <Scanline />
           <Header>
-            <Title>🕹️ ARCADE 🕹️</Title>
+            <Title>
+              <span>🕹️</span>
+              <span>ARCADE</span>
+              <span>🕹️</span>
+            </Title>
             <Subtitle>Select Your Game</Subtitle>
           </Header>
           <GameList>
@@ -488,9 +559,7 @@ const HomePage = () => {
               FPS
             </GameCard>
           </GameList>
-          <Footer>
-            INSERT COIN TO CONTINUE
-          </Footer>
+          <InsertCoinText>INSERT COIN TO CONTINUE</InsertCoinText>
         </ArcadeFrame>
       </ArcadeCabinet>
     </PageContainer>
