@@ -1,11 +1,11 @@
 # QA Feedback & Testing
 
-**Branch**: `phase-8`  
-**Last Updated**: November 1, 2025
+**Branch**: `phase-9`  
+**Last Updated**: November 2, 2025
 
 ---
 
-## 📋 Deferred to Phase 9
+## 📋 Deferred to Phase 10
 
 ### Visual Polish
 
@@ -21,29 +21,20 @@
 ### Technical Investigation
 
 - [ ] **White Border Bug** - Occasional white lines on viewport edges (may be dev-only issue)
-
----
-
-## Outstanding Issues for Phase 9
-
-### Power-Ups
-
 - [ ] **Shield Visual Bug** - May be impacting the display of explosive weapon (needs investigation)
-- [ ] **Speed Boost Tuning** - Works well, but could reduce base player speed and boost multiplier for better balance
 
-### Score Tracking
-
-- [ ] **In-Game Testing** - Logic looks correct, may have been user error or pause menu display issue (needs manual validation)
-
-### UI/Visual (Validation Needed)
+### UI/Visual (Manual QA Needed)
 
 - [ ] **FPS Counter** - Located in top-left corner (validate positioning)
 - [ ] **UI Panels** - Confirm all text readable with dark backgrounds (Score, Wave, Health, Weapon, Stats)
 - [ ] **Shield Effect** - Verify blue halo (no wireframe), 50% opacity with pulsing fade
 - [ ] **Invincibility Effect** - Verify rainbow halo (no wireframe), 50% opacity with pulsing fade, random colors
 - [ ] **Time Slow Effect** - Confirm visual feedback present
+- [ ] **Score/Accuracy Display** - Verify values update correctly during gameplay
+- [ ] **Muzzle Flash Effects** - Confirm weapon-specific colors appear correctly
+- [ ] **Impact Effects** - Verify sparks and shockwaves render properly
 
-### Audio & Controls (Validation Needed)
+### Audio & Controls (Manual QA Needed)
 
 - [ ] **Pause Menu** - Verify sound/music toggles work, game pauses correctly
 - [ ] **Input Blocking** - Confirm cannot shoot/move during pause or wave transitions
@@ -53,7 +44,7 @@
 ## Performance Targets
 
 - Target: 60 FPS on modern hardware (300 FPS on high-end systems)
-- All tests passing: 169/169 ✅
+- All tests passing: 218/218 ✅
 
 ---
 
