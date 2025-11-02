@@ -35,7 +35,7 @@ export function checkSphereCollision(posA, radiusA, posB, radiusB) {
  * @param {THREE.Vector3} posB - Position of object B
  * @param {THREE.Vector3} velB - Velocity of object B
  * @param {number} massB - Mass of object B
- * @param {number} restitution - Coefficient of restitution (0 = perfectly inelastic, 1 = perfectly elastic)
+ * @param {number} [restitution=0.8] - Coefficient of restitution (0 = perfectly inelastic, 1 = perfectly elastic, default = 0.8)
  * @returns {{velA: THREE.Vector3, velB: THREE.Vector3}} New velocities for both objects
  */
 export function calculateElasticCollision(posA, velA, massA, posB, velB, massB, restitution = 0.8) {

@@ -91,7 +91,7 @@ lib/
 
 ### Benefits
 
-- Add new games in 1 hour by reusing 70%+ of code
+- Add new games in 1-2 days by reusing 70%+ of code (including testing & polish)
 - Consistent arcade aesthetic across all games
 - Centralized bug fixes benefit all games
 - Portfolio shows architectural thinking
@@ -100,7 +100,7 @@ lib/
 
 ## 🎮 New Games Roadmap (Phase 10+)
 
-### Quick Wins (1 hour Each)
+### Quick Wins (1-2 Days Each)
 
 **1. Breakout/Arkanoid** 🧱
 
@@ -149,7 +149,7 @@ lib/
 
 - **3-5 Playable Games** - Show variety and depth
 - **1 Deep Game** - Asteroid with full polish
-- **2-3 Quick Games** - Built in 1 hour each using framework
+- **2-3 Quick Games** - Built in 1-2 days each using framework
 - **Consistent Aesthetic** - All games feel like one arcade
 
 ---

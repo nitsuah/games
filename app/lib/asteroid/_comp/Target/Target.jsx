@@ -51,9 +51,14 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     
     // Stop movement when game is over or paused
     if (isGameOver || isPaused || !meshRef.current || isHit) return;
+  });
+
+  useFrame((state, delta) => {
+    if (isGameOver || isPaused || !meshRef.current || isHit) return;
     
-    // Phase 9: Apply velocity directly (no speed multiplier needed)
-    meshRef.current.position.add(velocityRef.current);
+    // Phase 9: Apply velocity with delta time for frame rate independence
+    const scaledVelocity = velocityRef.current.clone().multiplyScalar(delta * 60);
+    meshRef.current.position.add(scaledVelocity);
     const { x, y, z } = meshRef.current.position;
     
     // Update target state with new position and velocity

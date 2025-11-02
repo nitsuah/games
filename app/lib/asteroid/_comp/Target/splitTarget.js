@@ -1,3 +1,12 @@
+/**
+ * Configuration for target splitting behavior
+ */
+const SPLIT_CONFIG = {
+  VELOCITY_MULTIPLIER: 2,   // How much faster split targets move
+  SPREAD_FACTOR: 0.3,       // Random velocity spread for divergence
+  BASE_DIVERGENCE: 0.02,    // Base velocity added for separation
+};
+
 export function splitTarget(target, nowFn = Date.now) {
   const newSize = target.size * 0.5;
   const newMass = newSize; // Phase 9: Mass based on size
@@ -15,8 +24,8 @@ export function splitTarget(target, nowFn = Date.now) {
       : '#ffff00';
   
   // Phase 9: Double velocity magnitude and add random spread
-  const velocityMultiplier = 2;
-  const spreadFactor = 0.3; // Random spread to make split targets diverge
+  const velocityMultiplier = SPLIT_CONFIG.VELOCITY_MULTIPLIER;
+  const spreadFactor = SPLIT_CONFIG.SPREAD_FACTOR;
   
   const baseVx = (target.vx || 0) * velocityMultiplier;
   const baseVy = (target.vy || 0) * velocityMultiplier;
@@ -32,7 +41,7 @@ export function splitTarget(target, nowFn = Date.now) {
       size: newSize,
       mass: newMass,
       // Add rightward velocity component + spread
-      vx: baseVx + (0.02 + Math.random() * spreadFactor),
+      vx: baseVx + (SPLIT_CONFIG.BASE_DIVERGENCE + Math.random() * spreadFactor),
       vy: baseVy + (Math.random() - 0.5) * spreadFactor,
       vz: baseVz + (Math.random() - 0.5) * spreadFactor,
       color: newColor,
@@ -47,7 +56,7 @@ export function splitTarget(target, nowFn = Date.now) {
       size: newSize,
       mass: newMass,
       // Add leftward velocity component + spread
-      vx: baseVx - (0.02 + Math.random() * spreadFactor),
+      vx: baseVx - (SPLIT_CONFIG.BASE_DIVERGENCE + Math.random() * spreadFactor),
       vy: baseVy + (Math.random() - 0.5) * spreadFactor,
       vz: baseVz + (Math.random() - 0.5) * spreadFactor,
       color: newColor,
