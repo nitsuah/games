@@ -134,6 +134,186 @@ class SoundManager {
     osc.stop(now + 1.0);
     rumbleOsc.stop(now + 1.0);
   }
+
+  // Play power-up collection sound - bright, ascending tone
+  playPowerUpCollect() {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+      const duration = 0.3;
+
+      // Create an ascending tone with harmonics
+      const osc1 = ctx.createOscillator();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(400, now);
+      osc1.frequency.exponentialRampToValueAtTime(800, now + duration);
+
+      const osc2 = ctx.createOscillator();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(600, now);
+      osc2.frequency.exponentialRampToValueAtTime(1200, now + duration);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + duration);
+      osc2.stop(now + duration);
+    } catch (error) {
+      // Silently fail in test environment
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play power-up collect sound:', error.message);
+      }
+    }
+  }
+
+  // Play power-up activation sound - energizing whoosh
+  playPowerUpActivate(type = 'default') {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+    const now = ctx.currentTime;
+    const duration = 0.5;
+
+    // Different frequencies for different power-up types
+    const freqMap = {
+      rapidFire: 600,
+      shield: 300,
+      health: 400,
+      slowMotion: 200,
+      damageBoost: 700,
+      default: 500,
+    };
+    const baseFreq = freqMap[type] || freqMap.default;
+
+    // Sweeping filter for whoosh effect
+    const noise = ctx.createBufferSource();
+    const bufferSize = ctx.sampleRate * duration;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    noise.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(baseFreq, now);
+    filter.frequency.exponentialRampToValueAtTime(baseFreq * 3, now + duration);
+    filter.Q.setValueAtTime(10, now);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.01, now);
+    gain.gain.exponentialRampToValueAtTime(0.4, now + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    noise.start(now);
+    noise.stop(now + duration);
+    } catch (error) {
+      // Silently fail in test environment
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play power-up activate sound:', error.message);
+      }
+    }
+  }
+
+  // Play power-up deactivation sound - descending tone
+  playPowerUpDeactivate() {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+      const duration = 0.2;
+
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(200, now + duration);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration);
+    } catch (error) {
+      // Silently fail in test environment
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play power-up deactivate sound:', error.message);
+      }
+    }
+  }
+
+  // Play hit impact sound - short punch with pitch variation
+  playHitImpact(intensity = 1, pitch = 1) {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+    const now = ctx.currentTime;
+    const duration = 0.15;
+
+    // Quick noise burst
+    const noise = ctx.createBufferSource();
+    const bufferSize = ctx.sampleRate * duration;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      const decay = 1 - (i / bufferSize);
+      data[i] = (Math.random() * 2 - 1) * decay;
+    }
+    noise.buffer = buffer;
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.setValueAtTime(300 * pitch, now);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.3 * intensity, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+
+    noise.start(now);
+    noise.stop(now + duration);
+    } catch (error) {
+      // Silently fail in test environment
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play hit impact sound:', error.message);
+      }
+    }
+  }
 }
 
 // Create a singleton instance
