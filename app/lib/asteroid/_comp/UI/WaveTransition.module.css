@@ -10,6 +10,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  /* Reduced from 0.3s to 0.2s for snappier wave transition feel */
   animation: fadeIn 0.2s ease-in;
 }
 

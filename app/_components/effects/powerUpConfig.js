@@ -15,7 +15,7 @@ const HEALTH_PULSE_DELAYS = [0, 100, 200, 300, 400, 500, 650];
 function createPulseEffect(showFlash, color, opacities, delays) {
   // Validate array lengths match
   if (opacities.length !== delays.length) {
-    console.warn('createPulseEffect: opacities and delays arrays must have the same length');
+    console.warn(`createPulseEffect: array length mismatch - opacities: ${opacities.length}, delays: ${delays.length}`);
     return () => {}; // Return no-op cleanup
   }
   
@@ -149,11 +149,16 @@ export const POWER_UPS = [
         showFlash('purple', 0);
         // Restore to original speed, not speed*2 (which breaks if target was split during slow-mo)
         setTargets((prevTargets) =>
-          prevTargets.map((target) => ({
-            ...target,
-            speed: target.originalSpeed ?? target.speed * 2, // Fallback to *2 if originalSpeed missing
-            originalSpeed: undefined, // Clear the tracking field
-          }))
+          prevTargets.map((target) => {
+            if (!target.originalSpeed) {
+              console.warn('Slow-motion: originalSpeed missing for target, using fallback (*2)', target);
+            }
+            return {
+              ...target,
+              speed: target.originalSpeed ?? target.speed * 2, // Fallback to *2 if originalSpeed missing
+              originalSpeed: undefined, // Clear the tracking field
+            };
+          })
         );
       }, 10000);
       

@@ -141,7 +141,8 @@ export function weaponHandler({
     const maxRange = 100;
     const raycaster = new THREE.Raycaster(from, forwardDirection);
     
-    // Filter out objects with null matrixWorld to prevent runtime errors
+    // Filter out objects with null matrixWorld to prevent runtime errors.
+    // This can happen if objects are added or removed during rendering, or if they haven't been fully initialized in the scene graph.
     const validObjects = scene.children.filter(obj => obj.matrixWorld !== null);
     const intersects = raycaster.intersectObjects(validObjects, true);
     

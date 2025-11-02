@@ -39,14 +39,16 @@ const PageContainer = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   background: linear-gradient(135deg, #0a0015 0%, #1a0030 50%, #0a0015 100%);
   color: white;
   font-family: 'Courier New', monospace;
   margin: 0;
   padding: 20px;
   position: relative;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   box-sizing: border-box;
 
   /* CRT screen effect */
@@ -518,6 +520,8 @@ const HomePage = () => {
 
   useEffect(() => {
     // Create audio element with error handling
+    // Note: Audio file path is hardcoded. File existence is verified during build.
+    // If file is missing, error handler logs gracefully without breaking user experience.
     try {
       audioRef.current = new Audio('/sounds/arcade.mp3');
       audioRef.current.loop = true;
@@ -544,8 +548,7 @@ const HomePage = () => {
       if (muted) {
         audioRef.current.play().catch(e => {
           console.error(
-            `Audio playback failed: ${e?.name ? e.name + ': ' : ''}${e?.message ?? e}. This may be due to browser autoplay restrictions, unsupported audio format, or lack of user interaction.`,
-            e
+            `Audio playback failed: ${e?.name ? e.name + ': ' : ''}${e?.message ?? e}. This may be due to browser autoplay restrictions, unsupported audio format, or lack of user interaction.`
           );
         });
       } else {
