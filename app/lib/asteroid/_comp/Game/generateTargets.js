@@ -49,11 +49,18 @@ export const generateInitialTargets = (count = 10, wave = 1) => {
     const speedVariation = 0.8 + Math.random() * 0.4;
     const finalSpeed = baseSpeed * speedVariation;
     
-    // Phase 9: Generate random velocity vector instead of scalar speed
-    // Create velocity with magnitude = finalSpeed in a random direction
-    const vx = (Math.random() - 0.5) * 0.02 * finalSpeed;
-    const vy = (Math.random() - 0.5) * 0.02 * finalSpeed;
-    const vz = (Math.random() - 0.5) * 0.02 * finalSpeed;
+    // Phase 9: Generate random velocity vector with specific magnitude
+    // Create random direction vector
+    const dirX = (Math.random() - 0.5) * 2;
+    const dirY = (Math.random() - 0.5) * 2;
+    const dirZ = (Math.random() - 0.5) * 2;
+    
+    // Normalize and scale to finalSpeed magnitude
+    const magnitude = Math.sqrt(dirX ** 2 + dirY ** 2 + dirZ ** 2);
+    const normalizedSpeed = finalSpeed * 0.02; // Scale factor for game units
+    const vx = (dirX / magnitude) * normalizedSpeed;
+    const vy = (dirY / magnitude) * normalizedSpeed;
+    const vz = (dirZ / magnitude) * normalizedSpeed;
     
     return {
       id: index + 1,
