@@ -34,6 +34,12 @@ export const WEAPON_CONFIG = {
   },
 };
 
+// Fire rate constants (in milliseconds)
+export const FIRE_RATES = {
+  LASER_CONTINUOUS: 50,      // Ultra-fast for continuous beam feel
+  RAPID_FIRE_POWER_UP: 300,  // 0.3 seconds for rapid fire power-up
+};
+
 export const WEAPON_TYPES = [
   { key: 'spread', name: 'Spread Shot', maxAmmo: 10, cooldown: 0.3 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
