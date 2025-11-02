@@ -664,6 +664,7 @@ const HomePage = () => {
   const games = [
     { title: 'Asteroid', icon: '🎯', description: 'Blast asteroids in space', route: '/asteroid' },
     { title: 'FPS', icon: '🎮', description: 'First-person shooter action', route: '/fps' },
+    { title: 'Breakout', icon: '🧱', description: 'Classic brick breaking action', route: '/breakout' },
   ];
 
   useEffect(() => {
