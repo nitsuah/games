@@ -4,7 +4,10 @@ const WaveTransition = ({ wave = 1, score = 0, highScore = 0, isNewHighScore = f
   return (
     <div className={styles.overlay}>
       <div className={styles.container}>
-        <h1 className={styles.title}>WAVE {wave} COMPLETE!</h1>
+        <div className={styles.header}>
+          <h1 className={styles.title}>WAVE {wave} COMPLETE!</h1>
+          <div className={styles.scanline}></div>
+        </div>
         
         <div className={styles.stats}>
           <div className={styles.statRow}>

@@ -1,5 +1,38 @@
 import { WEAPON_TYPES } from '../../lib/asteroid/_comp/config';
 
+// Pulse animation patterns for power-up visual feedback
+const HEALTH_PULSE_OPACITIES = [250, 100, 200, 80, 150, 50, 0];
+const HEALTH_PULSE_DELAYS = [0, 100, 200, 300, 400, 500, 650];
+
+/**
+ * Creates a pulse animation effect using multiple flash calls
+ * @param {Function} showFlash - Flash function from game context
+ * @param {string} color - Flash color
+ * @param {number[]} opacities - Array of opacity values (0-255)
+ * @param {number[]} delays - Array of delay values in ms (must match opacities length)
+ * @returns {Function} Cleanup function to clear all timeouts
+ */
+function createPulseEffect(showFlash, color, opacities, delays) {
+  // Validate array lengths match
+  if (opacities.length !== delays.length) {
+    console.warn(`createPulseEffect: array length mismatch - opacities: ${opacities.length}, delays: ${delays.length}`);
+    return () => {}; // Return no-op cleanup
+  }
+  
+  const timeoutIds = [];
+  
+  opacities.forEach((opacity, index) => {
+    const delay = delays[index];
+    const id = setTimeout(() => showFlash(color, opacity), delay);
+    timeoutIds.push(id);
+  });
+  
+  // Return cleanup function
+  return () => {
+    timeoutIds.forEach(id => clearTimeout(id));
+  };
+}
+
 export const POWER_UPS = [
   {
     type: 'health',
@@ -37,11 +70,9 @@ export const POWER_UPS = [
         });
       }
       
-      // Only flash if we actually collected it - with longer duration for visual feedback
+      // Phase 8: More impactful visual feedback - strong pulsing green flash
       if (collected) {
-        showFlash('green', 150);
-        // Fade out the flash
-        setTimeout(() => showFlash('green', 0), 150);
+        return createPulseEffect(showFlash, 'green', HEALTH_PULSE_OPACITIES, HEALTH_PULSE_DELAYS);
       }
     },
   },
@@ -51,10 +82,12 @@ export const POWER_UPS = [
     effect: ({ setSpeedBoostActive, showFlash }) => {
       setSpeedBoostActive(true);
       showFlash('orange', 100);
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setSpeedBoostActive(false);
         showFlash('orange', 0);
       }, 10000);
+      
+      return () => clearTimeout(timeoutId);
     },
   },
   {
@@ -73,10 +106,12 @@ export const POWER_UPS = [
     effect: ({ setInvincibilityActive, showFlash }) => {
       setInvincibilityActive(true);
       showFlash('yellow', 100);
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setInvincibilityActive(false);
         showFlash('yellow', 0);
       }, 10000);
+      
+      return () => clearTimeout(timeoutId);
     },
   },
   {
@@ -86,11 +121,13 @@ export const POWER_UPS = [
       console.log('🔫 RAPID FIRE ACTIVATED!');
       setRapidFireActive(true);
       showFlash('red', 100);
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         console.log('🔫 Rapid fire ended');
         setRapidFireActive(false);
         showFlash('red', 0);
       }, 10000);
+      
+      return () => clearTimeout(timeoutId);
     },
   },
   {
@@ -99,22 +136,33 @@ export const POWER_UPS = [
     effect: ({ setSlowMotionActive, setTargets, showFlash }) => {
       setSlowMotionActive(true);
       showFlash('purple', 100);
+      // Phase 8 FIX: Store original speed to restore properly after time slow
       setTargets((prevTargets) =>
         prevTargets.map((target) => ({
           ...target,
+          originalSpeed: target.originalSpeed ?? target.speed, // Preserve original if already set
           speed: target.speed * 0.5,
         }))
       );
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setSlowMotionActive(false);
         showFlash('purple', 0);
+        // Restore to original speed, not speed*2 (which breaks if target was split during slow-mo)
         setTargets((prevTargets) =>
-          prevTargets.map((target) => ({
-            ...target,
-            speed: target.speed * 2,
-          }))
+          prevTargets.map((target) => {
+            if (!target.originalSpeed) {
+              console.warn('Slow-motion: originalSpeed missing for target, using fallback (*2)', target);
+            }
+            return {
+              ...target,
+              speed: target.originalSpeed ?? target.speed * 2, // Fallback to *2 if originalSpeed missing
+              originalSpeed: undefined, // Clear the tracking field
+            };
+          })
         );
       }, 10000);
+      
+      return () => clearTimeout(timeoutId);
     },
   },
 ];

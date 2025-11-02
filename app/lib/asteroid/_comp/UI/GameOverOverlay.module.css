@@ -1,47 +1,238 @@
-.gameOverOverlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--ui-bg-medium);
-  color: var(--ui-text-primary);
-  padding: var(--ui-space-xl) 50px;
-  border-radius: var(--ui-radius-xl);
-  border: 3px solid var(--ui-border-accent);
-  text-align: center;
+/* Phase 8: Arcade-style Game Over overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--ui-bg-overlay);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 1000;
-  box-shadow: var(--ui-shadow-lg);
-  min-width: 400px;
+  animation: fadeIn 0.3s ease-in;
 }
 
-.gameOverOverlay h2 {
-  font-size: var(--ui-text-4xl);
-  color: var(--ui-danger);
-  margin: 0 0 var(--ui-space-lg) 0;
-  text-shadow: 0 0 20px var(--ui-danger);
-}
-
-.gameOverOverlay p {
-  font-size: var(--ui-text-lg);
-  margin: var(--ui-space-sm) 0;
+.gameOverOverlay {
+  background: linear-gradient(135deg, rgba(10, 0, 30, 0.98), rgba(0, 20, 40, 0.98));
   color: var(--ui-text-primary);
+  padding: 40px 60px 50px;
+  border-radius: 20px;
+  border: 4px solid var(--ui-danger);
+  box-shadow: 
+    0 0 60px rgba(255, 68, 68, 0.5),
+    inset 0 0 80px rgba(255, 68, 68, 0.08);
+  text-align: center;
+  min-width: 600px;
+  max-width: 700px;
+  animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Header with arcade aesthetic */
+.header {
+  position: relative;
+  margin-bottom: 35px;
+  text-align: center;
+}
+
+.title {
+  font-size: 56px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 
+    0 0 30px var(--ui-danger),
+    0 0 50px var(--ui-danger),
+    0 4px 8px rgba(0, 0, 0, 1);
+  margin: 0;
+  letter-spacing: 12px;
+  font-family: 'Courier New', monospace;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.scanline {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ui-danger), transparent);
+  margin-top: 15px;
+  animation: scanlineMove 3s linear infinite;
+}
+
+/* Stats grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.statCard {
+  background: rgba(0, 255, 255, 0.05);
+  border: 2px solid var(--ui-border-accent);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.statCard:hover {
+  background: rgba(0, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 255, 255, 0.3);
+}
+
+.statLabel {
+  font-size: 14px;
+  color: #ffffff;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.statValue {
+  font-size: 36px;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 
+    0 0 20px var(--ui-primary),
+    0 0 40px var(--ui-primary),
+    0 3px 6px rgba(0, 0, 0, 1);
+  font-family: 'Courier New', monospace;
+}
+
+.statValue.highlight {
+  color: #ffaa00;
+  text-shadow: 0 0 15px #ffaa00;
+  animation: pulse 1s infinite;
+}
+
+.badge {
+  font-size: 12px;
+  color: #ffaa00;
+  margin-top: 8px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  animation: bounce 0.8s ease-in-out infinite;
+}
+
+/* Records section */
+.records {
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.recordItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 16px;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.recordItem:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.recordValue {
+  color: #ffffff;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 15px var(--ui-primary);
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.restartButton,
+.quitButton {
+  flex: 1;
+  max-width: 250px;
+  padding: 18px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s, border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
 }
 
 .restartButton {
-  margin-top: var(--ui-space-lg);
-  padding: var(--ui-space-lg) var(--ui-space-xl);
   background: linear-gradient(135deg, var(--ui-secondary), var(--ui-primary));
-  color: var(--ui-text-primary);
-  border: 2px solid var(--ui-border-accent);
-  border-radius: var(--ui-radius-lg);
-  cursor: pointer;
-  font-size: var(--ui-text-lg);
-  font-weight: bold;
-  transition: all var(--ui-transition-medium);
+  color: white;
+  border: 3px solid var(--ui-border-accent);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
 }
 
 .restartButton:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--ui-shadow-md);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 255, 255, 0.6);
   background: linear-gradient(135deg, #00aaff, var(--ui-primary));
+}
+
+.quitButton {
+  background: linear-gradient(135deg, rgba(100, 100, 100, 0.3), rgba(60, 60, 60, 0.5));
+  color: var(--ui-text-primary);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.quitButton:hover {
+  transform: translateY(-4px);
+  background: linear-gradient(135deg, rgba(120, 120, 120, 0.5), rgba(80, 80, 80, 0.7));
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+.buttonIcon {
+  font-size: 24px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 20px var(--ui-danger), 0 0 40px var(--ui-danger); }
+  to { text-shadow: 0 0 30px var(--ui-danger), 0 0 60px var(--ui-danger); }
+}
+
+@keyframes scanlineMove {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }

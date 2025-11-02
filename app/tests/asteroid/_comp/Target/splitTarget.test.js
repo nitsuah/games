@@ -263,4 +263,45 @@ describe('splitTarget - Target Splitting Logic', () => {
     expect(result[0].id).toBe('special-target-123-1');
     expect(result[1].id).toBe('special-target-123-2');
   });
+
+  // Phase 8: Time slow inertia bug fix tests
+  test('should preserve originalSpeed when splitting during slow motion', () => {
+    const target = {
+      id: 'target-1',
+      x: 0,
+      y: 0,
+      z: 0,
+      size: 6,
+      speed: 1, // Current slowed speed
+      originalSpeed: 2, // Original speed before slow motion
+    };
+
+    const result = splitTarget(target);
+
+    // Split targets should preserve originalSpeed for restoration after slow-mo
+    expect(result[0].originalSpeed).toBe(4); // 2 * 2 (doubled like speed)
+    expect(result[1].originalSpeed).toBe(4);
+    expect(result[0].speed).toBe(2); // Current speed is doubled
+    expect(result[1].speed).toBe(2);
+  });
+
+  test('should not set originalSpeed when not in slow motion', () => {
+    const target = {
+      id: 'target-1',
+      x: 0,
+      y: 0,
+      z: 0,
+      size: 6,
+      speed: 2,
+      // No originalSpeed field
+    };
+
+    const result = splitTarget(target);
+
+    // Should not have originalSpeed when not in slow motion
+    expect(result[0].originalSpeed).toBeUndefined();
+    expect(result[1].originalSpeed).toBeUndefined();
+    expect(result[0].speed).toBe(4);
+    expect(result[1].speed).toBe(4);
+  });
 });

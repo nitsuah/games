@@ -1,28 +1,7 @@
 # Tech Debt & Improvements
 
-## ✅ Recently Fixed
-
-### 1. Shotgun Hit Detection (FIXED - Phase 7)
-
-**Status:** ✅ RESOLVED  
-**File:** `lib/asteroid/_comp/Weapons/weaponHandler.js`
-
-**What was fixed:**
-- Tightened hit cone angle multiplier from `SPREAD_ANGLE * 3` to `SPREAD_ANGLE * 2`
-- Added distance falloff: 30% accuracy reduction at max range
-- Implemented probabilistic hit registration to prevent hitting everything in cone
-
-**Changes made:**
-```javascript
-// Before: angle <= SPREAD_ANGLE * 3
-// After: angle <= SPREAD_ANGLE * 2 with distance falloff
-const distanceFactor = 1 - (distance / SPREAD_RANGE) * 0.3;
-if (angle <= SPREAD_ANGLE * 2 && distance <= SPREAD_RANGE && Math.random() < distanceFactor) {
-  // Register hit
-}
-```
-
-**Impact:** Shotgun is now more balanced and requires better aim, reducing the overpowered nature at long range.
+**Last Updated**: November 1, 2025 (Phase 9)  
+**Status**: 0 critical issues
 
 ---
 
@@ -34,7 +13,8 @@ _No critical issues at this time._
 
 ## 🟡 Medium Priority
 
-### 2. Power-Up Config Testability
+### 1. Power-Up Config Testability
+
 **File:** `_components/effects/powerUpConfig.js`  
 **Severity:** Medium - Code quality  
 
@@ -43,6 +23,7 @@ Complex side effects with setTimeout logic make testing difficult. Each power-up
 
 **Suggested Refactoring:**
 Extract duration management and state updates into separate functions:
+
 ```javascript
 // Before: Mixed concerns
 effect: ({ setSpeedBoostActive, showFlash }) => {
@@ -61,141 +42,106 @@ effect: (context) => {
 }
 ```
 
-### 3. Test Mock Consistency
-**Status:** ✅ FIXED  
-**Files:** `handleTargetHit.test.js`, `loadSavedScores.test.js`  
+**Priority:** Medium - Would improve testability but current tests work
 
-Fixed issues:
-- Spawn time consistency (milliseconds vs seconds)
-- Mock setup in beforeEach blocks
-- localStorage mocking pattern with Object.defineProperty
+---
+
+### 2. Target Velocity State Refactoring
+
+**Files:** `lib/asteroid/_comp/Target/`, `lib/asteroid/_comp/Game/Game.jsx`  
+**Severity:** Medium - Architecture  
+**Phase 9 Blocker:** Required for target-target collision physics
+
+**Issue:**
+Targets currently only have `speed` (scalar) and `direction` (Vector3) properties. To implement full collision physics between targets, we need proper velocity state.
+
+**Proposed Changes:**
+
+```javascript
+// Current target state
+{
+  speed: 0.02,           // Scalar
+  direction: Vector3,    // Direction only
+}
+
+// Needed for Phase 9
+{
+  velocity: Vector3,     // Full velocity vector (speed + direction combined)
+  mass: size,           // For collision calculations
+  angularVelocity: 0,   // For rotation effects
+}
+```
+
+**Impact:**
+- Enables target-target collision physics
+- Allows proper momentum transfer
+- Required for Phase 9 Sprint 1
+
+**Priority:** High - Blocks Phase 9 collision work
 
 ---
 
 ## 🟢 Low Priority
 
-### 4. R3F Component Casing Warnings
-**Files:** LaserBeam.test.jsx, PlayerLogicInternalRef.test.jsx  
+### 3. R3F Component Casing Warnings
+
+**Files:** `LaserBeam.test.jsx`, `PlayerLogicInternalRef.test.jsx`  
 **Severity:** Low - Console noise  
 
-Test console shows warnings:
-```
-<spriteMaterial /> is using incorrect casing
-<boxGeometry /> is using incorrect casing
-<meshStandardMaterial /> is using incorrect casing
-```
+Test console shows warnings about incorrect casing for R3F primitives. Current approach: suppress in `jest.setup.js` (acceptable for R3F testing).
 
-**Options:**
-1. Suppress warnings in jest.setup.js (current approach)
-2. Mock R3F components properly (not recommended - see TESTING_COVERAGE_REPORT.md)
-3. Ignore - these are expected when testing R3F without proper mocking
+### 4. Markdown Linting
 
-### 5. Markdown Linting
-**File:** `docs/TESTING_COVERAGE_REPORT.md`  
+**Files:** Various docs  
 **Severity:** Low - Formatting  
 
-Minor markdown linting issues:
-- MD022: Missing blank lines around headings
-- MD032: Missing blank lines around lists
-- MD040: Missing language tags on code fences
-
-These don't affect functionality but could be cleaned up for consistency.
+Minor markdown linting issues (MD022, MD032, MD040). Don't affect functionality.
 
 ---
 
-## 📊 Code Quality Observations
+## 📊 Code Quality Standards
 
-### Good Practices Found ✅
+### Current Good Practices ✅
 
-1. **Consistent Error Handling**
-   - Try-catch blocks with console.warn in development mode
-   - Graceful degradation for localStorage failures
-   - Pointer lock release error handling
+1. **Error Handling** - Try-catch with console.warn, graceful degradation
+2. **SSR Safety** - All browser APIs wrapped in typeof checks
+3. **Constants** - Centralized in config files
+4. **State Management** - Proper use of updater functions and refs
+5. **Testing** - 169/169 tests passing, 17.31% coverage (realistic for R3F)
 
-2. **SSR Safety**
-   - All browser API usage wrapped in typeof checks
-   - `typeof window !== 'undefined'` before localStorage
-   - `typeof document !== 'undefined'` before pointer lock
+### Improvement Opportunities 💡
 
-3. **Constants Organization**
-   - Centralized config in `lib/asteroid/_comp/config.js`
-   - Named exports for easy testing
-   - Clear documentation of timing constants (MIN_ALIVE_TIME, etc.)
-
-4. **State Management**
-   - Consistent use of updater functions for setters
-   - Proper ref usage for combo timers
-   - No direct state mutations
-
-### Potential Improvements 💡
-
-1. **JSDoc Comments**
-   - Add JSDoc to exported functions for better IDE support
-   - Document parameter types and return values
-   - Especially useful for game logic functions
-
-2. **TypeScript Migration**
-   - Consider gradual migration to TypeScript
-   - Would catch type errors at compile time
-   - Particularly valuable for complex game state
-
-3. **Test Utilities**
-   - Create shared test helpers for common mocks
-   - Centralize localStorage mock setup
-   - Shared factory functions for test data
-
-4. **Performance Monitoring**
-   - Add performance.mark/measure for critical paths
-   - Track frame rates during power-up effects
-   - Monitor target generation performance on high waves
+1. **JSDoc Comments** - Add type documentation for better IDE support
+2. **TypeScript Migration** - Consider gradual migration for type safety
+3. **Test Utilities** - Shared helpers for common mocks
+4. **Performance Monitoring** - Add metrics for critical game loop paths
 
 ---
 
-## 🚀 Future Enhancements
+## 🚀 Phase 9 Considerations
 
-### Visual Regression Testing
-Tools like Percy or Chromatic could catch 3D rendering issues without heavy mocking. This would complement unit tests by verifying actual visual output.
+### Immediate Needs
+- **Target velocity refactoring** (Sprint 1 blocker)
+- **Object pooling** for particles/effects (performance)
+- **Spatial partitioning** for collision detection (optimization)
 
-### Expand E2E Coverage
-Current Playwright tests (8 tests) cover basic navigation. Could add:
-- Full game playthrough scenarios
-- Power-up collection and effects
-- Weapon switching and ammo management
-- Game over and restart flows
-
-### Performance Profiling
-Add benchmarks for:
-- Target generation at high wave counts
-- Raycasting performance with many targets
-- Power-up effect overhead
-- Combo system calculations
-
----
-
-## 📝 Documentation Needs
-
-### API Documentation
-- Document all exported game logic functions
-- Create architecture diagram showing data flow
-- Document state management patterns
-
-### Game Design Documentation
-- Weapon balance specifications
-- Power-up effect durations and values
-- Wave progression formulas
-- Scoring and combo system rules
+### Nice to Have
+- Visual regression testing (Percy/Chromatic)
+- Expanded E2E coverage (gameplay scenarios)
+- Performance benchmarks (target generation, raycasting)
+- API documentation (game logic functions)
 
 ---
 
 ## Priority Order
 
-1. ✅ ~~Fix shotgun hit detection~~ - COMPLETED
-2. 🟡 **Refactor weaponHandler for testability** - Extract pure functions for testing
-3. 🟡 **Add JSDoc comments** - Improve IDE support and maintainability
-4. 🟢 **Expand E2E test coverage** - Add gameplay scenario tests
-5. 🟢 **Performance monitoring** - Add metrics for critical paths
+1. 🔥 **Target velocity state refactoring** - Required for Phase 9 Sprint 1
+2. 🟡 **Power-up config testability** - Improve code quality
+3. 🟡 **JSDoc comments** - Better developer experience
+4. 🟢 **E2E test expansion** - More comprehensive testing
+5. 🟢 **Performance monitoring** - Optimize bottlenecks
 
 ---
 
-**Last Updated:** Phase 7 (Shotgun Fix Applied)  
-**Status:** 0 critical issues, testing infrastructure complete
+**Phase 8 Completion**: All critical tech debt resolved ✅  
+**Next Focus**: Architectural changes for Phase 9 collision system
