@@ -13,6 +13,7 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
   // Phase 9: Use velocity prop instead of random speed
   const velocityRef = useRef(new THREE.Vector3(velocity.x, velocity.y, velocity.z));
   const [bounds] = useState(() => ({ min: new THREE.Vector3(-50, -50, -50), max: new THREE.Vector3(50, 50, 50) }));
+  const lastUpdatePosRef = useRef(new THREE.Vector3(...position));
 
   useEffect(() => {
     if (refCallback) {
@@ -61,15 +62,6 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     meshRef.current.position.add(scaledVelocity);
     const { x, y, z } = meshRef.current.position;
     
-    // Update target state with new position and velocity
-    if (typeof setTargets === 'function') {
-      setTargets((prevTargets) => prevTargets.map((target) => 
-        target.id === targetId 
-          ? { ...target, x, y, z, vx: velocityRef.current.x, vy: velocityRef.current.y, vz: velocityRef.current.z } 
-          : target
-      ));
-    }
-
     // Bounce off bounds (Phase 9: velocity reflection)
     if (meshRef.current.position.x < bounds.min.x || meshRef.current.position.x > bounds.max.x) {
       velocityRef.current.x *= -1;
@@ -79,6 +71,18 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     }
     if (meshRef.current.position.z < bounds.min.z || meshRef.current.position.z > bounds.max.z) {
       velocityRef.current.z *= -1;
+    }
+
+    // Only update state when position has changed significantly (> 0.5 units)
+    // This reduces state updates from 60fps to ~5-10fps per target
+    const distanceMoved = meshRef.current.position.distanceTo(lastUpdatePosRef.current);
+    if (distanceMoved > 0.5 && typeof setTargets === 'function') {
+      lastUpdatePosRef.current.copy(meshRef.current.position);
+      setTargets((prevTargets) => prevTargets.map((target) => 
+        target.id === targetId 
+          ? { ...target, x, y, z, vx: velocityRef.current.x, vy: velocityRef.current.y, vz: velocityRef.current.z } 
+          : target
+      ));
     }
   });
 

@@ -11,19 +11,19 @@ test.describe('Home Page', () => {
     const heading = page.getByRole('heading', { name: /ARCADE/i });
     await expect(heading).toBeVisible();
     
-    // Check game links exist
-    const asteroidLink = page.getByRole('link', { name: /Asteroid/i });
-    const fpsLink = page.getByRole('link', { name: /FPS/i });
+    // Check game buttons exist (using ArcadeCard components which render as buttons)
+    const asteroidButton = page.getByRole('button', { name: /Asteroid/i });
+    const fpsButton = page.getByRole('button', { name: /FPS/i });
     
-    await expect(asteroidLink).toBeVisible();
-    await expect(fpsLink).toBeVisible();
+    await expect(asteroidButton).toBeVisible();
+    await expect(fpsButton).toBeVisible();
   });
 
   test('should navigate to Asteroid game', async ({ page }) => {
     await page.goto('/');
     
-    // Click Asteroid link
-    await page.getByRole('link', { name: /Asteroid/i }).click();
+    // Click Asteroid button
+    await page.getByRole('button', { name: /Asteroid/i }).click();
     
     // Wait for navigation
     await page.waitForURL(/\/asteroid/);
@@ -35,8 +35,8 @@ test.describe('Home Page', () => {
   test('should navigate to FPS game', async ({ page }) => {
     await page.goto('/');
     
-    // Click FPS link
-    await page.getByRole('link', { name: /FPS/i }).click();
+    // Click FPS button
+    await page.getByRole('button', { name: /FPS/i }).click();
     
     // Wait for navigation
     await page.waitForURL(/\/fps/);

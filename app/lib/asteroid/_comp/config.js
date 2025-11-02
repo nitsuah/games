@@ -12,15 +12,15 @@ export const DEFAULT_TARGET_COLOR = '#00ff00';
 export const WEAPON_CONFIG = {
   // Tighter spread - no longer "soup can wide"
   // Default: single shot. Triple shot only with rapid fire active
-  spread: { angle: 0.15, count: 12, range: 80 }, // Reduced max range from 160 to 80 for faster trail fade
+  spread: { angle: 0.15, count: 12, range: 80 }, // Faster trail fade with lower max range
   laser: { color: 'cyan', range: 400 },
-  explosive: { radius: 30, color: 'orange' }, // Reduced from 50 to 30 for smaller explosion
+  explosive: { radius: 30, color: 'orange' }, // Smaller explosion radius
 };
 
 export const WEAPON_TYPES = [
   { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
-  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Increased to 10, longer cooldown
+  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Longer cooldown for balance
 ];
 
 export const POWER_UP_COLORS = {
@@ -41,7 +41,7 @@ export const EXPLOSION_DURATION = 120; // ms, for explosion visual timing
 export const INITIAL_AMMO = {
   spread: 30,
   laser: 10,
-  explosive: 10, // Match the maxAmmo
+  explosive: 10,
 };
 
 export const INITIAL_HEALTH = 100;
@@ -56,10 +56,10 @@ export const SCORE_VALUES = {
 // Phase 9: Tuned down base speed and boost multiplier per QA feedback
 export const PLAYER_PHYSICS = {
   // Movement physics
-  BASE_ACCELERATION: 10.0, // Base acceleration (reduced from 12.0)
-  SPEED_BOOST_ACCELERATION: 45.0, // Acceleration during speed boost (reduced from 60.0)
-  MAX_VELOCITY: 0.55, // Normal max velocity (reduced from 0.65)
-  SPEED_BOOST_MAX_VELOCITY: 2.2, // Max velocity during speed boost (reduced from 2.8)
+  BASE_ACCELERATION: 10.0, // Base acceleration
+  SPEED_BOOST_ACCELERATION: 45.0, // Acceleration during speed boost
+  MAX_VELOCITY: 0.55, // Normal max velocity
+  SPEED_BOOST_MAX_VELOCITY: 2.2, // Max velocity during speed boost
   DRAG_COEFFICIENT: 0.96, // High value for "tokyo drift feel"
   VELOCITY_THRESHOLD: 0.001, // Stop completely when very slow
   
