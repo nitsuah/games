@@ -58,4 +58,4 @@ effect: (context) => {
   - Minify any large assets (images/sounds) for faster load times
   - Optimize asset loading with lazy loading or preloading strategies
   - Implement caching strategies for frequently used data or assets
-  - Identify code that may not be used or things we can remove (comments, dead code, unused assets, etc) but be predudent to understand what it is first and how it might be used or referenced before removing it.
+  - Identify code that may not be used or things we can remove (comments, dead code, unused assets, etc) but be prudent to understand what it is first and how it might be used or referenced before removing it.
