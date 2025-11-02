@@ -3,6 +3,10 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import HitParticles from '@/_components/effects/HitParticles';
 
+// Performance optimization: Only update state when target moves significantly
+const MIN_UPDATE_DISTANCE = 0.5; // units moved before triggering state update
+const MIN_UPDATE_DISTANCE_SQ = MIN_UPDATE_DISTANCE * MIN_UPDATE_DISTANCE; // 0.25 for distanceToSquared check
+
 const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00', setTargets, refCallback, velocity = { x: 0, y: 0, z: 0 }, isGameOver = false, isPaused = false }) => {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
@@ -77,11 +81,11 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
       velocityRef.current.z *= -1;
     }
 
-    // Only update state when position has changed significantly (> 0.5 units)
+    // Only update state when position has changed significantly
     // This reduces state updates from 60fps to ~5-10fps per target
     // Use distanceToSquared for better performance (avoids sqrt calculation)
     const distanceMovedSq = meshRef.current.position.distanceToSquared(lastUpdatePosRef.current);
-    if (distanceMovedSq > 0.25 && typeof setTargets === 'function') {
+    if (distanceMovedSq > MIN_UPDATE_DISTANCE_SQ && typeof setTargets === 'function') {
       lastUpdatePosRef.current.copy(meshRef.current.position);
       setTargets((prevTargets) => prevTargets.map((target) => 
         target.id === targetId 

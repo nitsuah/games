@@ -1,5 +1,22 @@
 import styles from './ArcadeCard.module.css';
 
+/**
+ * Get CSS class name for display mode
+ * @param {string} mode - Display mode: 'carousel', 'grid', or 'list'
+ * @returns {string} CSS class name for the mode
+ */
+function getDisplayModeClass(mode) {
+  switch (mode) {
+    case 'grid':
+      return styles.gridMode;
+    case 'list':
+      return styles.listMode;
+    case 'carousel':
+    default:
+      return '';
+  }
+}
+
 export default function ArcadeCard({ 
   title, 
   icon, 
@@ -9,7 +26,7 @@ export default function ArcadeCard({
   badge = null,
   displayMode = 'carousel'
 }) {
-  const modeClass = displayMode === 'grid' ? styles.gridMode : displayMode === 'list' ? styles.listMode : '';
+  const modeClass = getDisplayModeClass(displayMode);
   
   return (
     <button className={`${styles.card} ${className} ${modeClass}`} onClick={onClick}>

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { WEAPON_CONFIG } from '../config';
 
 // Generic weapon handler
 export function weaponHandler({
@@ -146,7 +147,7 @@ export function weaponHandler({
 
   if (type === 'explosive') {
     // Explosive logic
-    const { explosionRadius = 15 } = weaponParams; // Cut in half from 30 to 15
+    const { explosionRadius = WEAPON_CONFIG.explosive.radius } = weaponParams;
     const maxRange = 100;
     const raycaster = new THREE.Raycaster(from, forwardDirection);
     
@@ -191,7 +192,11 @@ export function weaponHandler({
 
   if (type === 'aa') {
     // AA (Anti-Aircraft) weapon: dual cannons with alternating fire and smaller explosions
-    const { explosionRadius = 15, cannonOffset = 1.5, shotCounter = 0 } = weaponParams;
+    const { 
+      explosionRadius = WEAPON_CONFIG.aa.radius, 
+      cannonOffset = WEAPON_CONFIG.aa.cannonOffset, 
+      shotCounter = 0 
+    } = weaponParams;
     const maxRange = 100;
     
     // Calculate left/right cannon position (alternates each shot)

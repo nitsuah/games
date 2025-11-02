@@ -14,11 +14,11 @@
 import styles from './ArcadeButton.module.css';
 
 export const VARIANTS = {
-  PRIMARY: 'primary',    // Cyan glow (resume, confirm)
-  DANGER: 'danger',      // Red glow (quit, delete)
-  WARNING: 'warning',    // Orange glow (restart, reset)
-  SUCCESS: 'success',    // Green glow (start, play)
-  SECONDARY: 'secondary', // Gray (cancel, back)
+  PRIMARY: 'primary',    // Cyan glow. Use for primary actions: resume, confirm, proceed, save.
+  DANGER: 'danger',      // Red glow. Use for destructive actions: quit, delete, remove, stop.
+  WARNING: 'warning',    // Orange glow. Use for cautionary actions: restart, reset, warn, alert.
+  SUCCESS: 'success',    // Green glow. Use for positive actions: start, play, complete, success.
+  SECONDARY: 'secondary', // Gray. Use for secondary/neutral actions: cancel, back, dismiss, neutral.
 };
 
 /**

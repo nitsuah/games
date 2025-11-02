@@ -14,9 +14,24 @@ export const WEAPON_CONFIG = {
   // Default: single shot. Triple shot only with rapid fire active
   spread: { angle: 0.15, count: 12, range: 80 }, // Faster trail fade with lower max range
   laser: { color: 'cyan', range: 400 },
-  explosive: { radius: 30, color: 'orange' }, // Smaller explosion radius
-  aa: { radius: 15, color: '#00ff00', speed: 1.8, damage: 0.5 }, // Phase 9: AA cannon - smaller, faster
-  plasma: { radius: 40, color: '#ff00ff', chargeTime: 1500, damage: 2.0, speed: 0.8 }, // Phase 9: Charge shot - high damage, slow
+  explosive: { 
+    radius: 15, // Reduced from 30 for better balance
+    color: 'orange',
+  },
+  aa: { 
+    radius: 15, // Explosion radius for dual cannons
+    cannonOffset: 1.5, // Distance from center for left/right cannons
+    color: '#00ff00', 
+    speed: 1.8, 
+    damage: 0.5,
+  },
+  plasma: { 
+    radius: 40, 
+    color: '#ff00ff', 
+    chargeTime: 1500, 
+    damage: 2.0, 
+    speed: 0.8,
+  },
 };
 
 export const WEAPON_TYPES = [
@@ -42,12 +57,13 @@ export const PLAYER_SPHERE_RADIUS = 2.0; // for collision detection
 
 export const EXPLOSION_DURATION = 120; // ms, for explosion visual timing
 
+// Initial ammo values derived from WEAPON_TYPES for single source of truth
 export const INITIAL_AMMO = {
-  spread: 10,
-  laser: 10,
-  explosive: 10,
-  aa: 20,
-  plasma: 5,
+  spread: WEAPON_TYPES.find(w => w.key === 'spread').maxAmmo,
+  laser: WEAPON_TYPES.find(w => w.key === 'laser').maxAmmo,
+  explosive: WEAPON_TYPES.find(w => w.key === 'explosive').maxAmmo,
+  aa: WEAPON_TYPES.find(w => w.key === 'aa').maxAmmo,
+  plasma: WEAPON_TYPES.find(w => w.key === 'plasma').maxAmmo,
 };
 
 export const INITIAL_HEALTH = 100;
