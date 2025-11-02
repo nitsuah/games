@@ -145,3 +145,84 @@
     transform: translateX(5px);
   }
 }
+
+/* Grid mode - compact icon view */
+.gridMode {
+  padding: 20px;
+  min-width: 120px;
+  max-width: 150px;
+}
+
+.gridMode .iconWrapper {
+  width: 70px;
+  height: 70px;
+}
+
+.gridMode .icon {
+  font-size: 40px;
+}
+
+.gridMode .title {
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin: 8px 0 0 0;
+}
+
+.gridMode .playPrompt {
+  font-size: 12px;
+  margin-top: 5px;
+  gap: 5px;
+}
+
+/* List mode - horizontal layout */
+.listMode {
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px 30px;
+  gap: 20px;
+  width: 100%;
+  text-align: left;
+}
+
+.listMode .iconWrapper {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.listMode .icon {
+  font-size: 35px;
+}
+
+.listMode .title {
+  font-size: 24px;
+  letter-spacing: 2px;
+  margin: 0;
+  text-align: left;
+  align-self: center;
+}
+
+.listMode .description {
+  text-align: left;
+  flex-grow: 1;
+  align-self: center;
+  margin: 0;
+}
+
+.listMode .playPrompt {
+  margin: 0;
+  align-self: center;
+  flex-shrink: 0;
+}
+
+/* Hide PLAY prompt in grid mode */
+.gridMode .playPrompt {
+  display: none;
+}
+
+/* Hide PLAY prompt in list mode on small screens */
+@media (max-width: 768px) {
+  .listMode .playPrompt {
+    display: none;
+  }
+}

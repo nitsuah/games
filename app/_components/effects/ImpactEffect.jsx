@@ -15,14 +15,14 @@ const ImpactEffect = ({ position, damage = 1, type = 'hit', onComplete }) => {
   const sparkGroupRef = useRef();
   const shockwaveRef = useRef();
   const startTime = useRef(Date.now());
-  const duration = type === 'explosion' ? 400 : 250; // ms
+  const duration = type === 'explosion' ? 500 : 350; // ms - increased duration for better visibility
   
-  // Scale effects based on damage dealt
-  const scale = useMemo(() => Math.min(Math.max(damage / 10, 0.5), 3), [damage]);
+  // Scale effects based on damage dealt - increased multiplier
+  const scale = useMemo(() => Math.min(Math.max(damage / 8, 0.8), 4), [damage]);
   
-  // Spark configuration
+  // Spark configuration - increased particle count and speed
   const sparkConfig = useMemo(() => {
-    const count = type === 'explosion' ? 20 : 12;
+    const count = type === 'explosion' ? 30 : 20;
     const positions = new Float32Array(count * 3);
     const velocities = [];
     
@@ -30,7 +30,7 @@ const ImpactEffect = ({ position, damage = 1, type = 'hit', onComplete }) => {
       // Random direction for sparks
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
-      const speed = (0.5 + Math.random() * 1.5) * scale;
+      const speed = (0.8 + Math.random() * 2.0) * scale;
       
       velocities.push({
         x: Math.sin(phi) * Math.cos(theta) * speed,
@@ -69,16 +69,16 @@ const ImpactEffect = ({ position, damage = 1, type = 'hit', onComplete }) => {
       
       sparkGroupRef.current.geometry.attributes.position.needsUpdate = true;
       
-      // Fade out sparks
-      sparkGroupRef.current.material.opacity = (1 - progress) * 0.9;
-      sparkGroupRef.current.material.size = 0.15 * scale * (1 - progress * 0.5);
+      // Fade out sparks - enhanced visibility
+      sparkGroupRef.current.material.opacity = (1 - progress) * 1.0;
+      sparkGroupRef.current.material.size = 0.25 * scale * (1 - progress * 0.4);
     }
 
-    // Animate shockwave (for explosion type)
+    // Animate shockwave (for explosion type) - more prominent
     if (type === 'explosion' && shockwaveRef.current) {
-      const waveScale = 0.5 + progress * 4;
+      const waveScale = 0.5 + progress * 5;
       shockwaveRef.current.scale.set(waveScale * scale, waveScale * scale, waveScale * scale);
-      shockwaveRef.current.material.opacity = (1 - progress) * 0.4;
+      shockwaveRef.current.material.opacity = (1 - progress) * 0.6;
     }
   });
 
@@ -96,41 +96,61 @@ const ImpactEffect = ({ position, damage = 1, type = 'hit', onComplete }) => {
         </bufferGeometry>
         <pointsMaterial
           color={type === 'explosion' ? 0xff6600 : 0xffff00}
-          size={0.15 * scale}
+          size={0.25 * scale}
           transparent
-          opacity={0.9}
+          opacity={1.0}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           sizeAttenuation={true}
         />
       </points>
 
-      {/* Central flash */}
+      {/* Central flash - larger and brighter */}
       <mesh>
-        <sphereGeometry args={[0.2 * scale, 8, 8]} />
+        <sphereGeometry args={[0.4 * scale, 8, 8]} />
         <meshBasicMaterial
           color={type === 'explosion' ? 0xff4400 : 0xffffff}
           transparent
-          opacity={(1 - (Date.now() - startTime.current) / duration) * 0.8}
+          opacity={(1 - (Date.now() - startTime.current) / duration) * 1.0}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
       </mesh>
 
-      {/* Shockwave ring (only for explosions) */}
+      {/* Outer glow */}
+      <mesh>
+        <sphereGeometry args={[0.6 * scale, 8, 8]} />
+        <meshBasicMaterial
+          color={type === 'explosion' ? 0xff8800 : 0xffff00}
+          transparent
+          opacity={(1 - (Date.now() - startTime.current) / duration) * 0.5}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Shockwave ring (only for explosions) - thicker and brighter */}
       {type === 'explosion' && (
         <mesh ref={shockwaveRef} rotation={[Math.PI / 2, 0, 0]}>
-          <ringGeometry args={[0.4 * scale, 0.5 * scale, 32]} />
+          <ringGeometry args={[0.3 * scale, 0.6 * scale, 32]} />
           <meshBasicMaterial
             color={0xff8800}
             transparent
-            opacity={0.4}
+            opacity={0.6}
             blending={THREE.AdditiveBlending}
             depthWrite={false}
             side={THREE.DoubleSide}
           />
         </mesh>
       )}
+      
+      {/* Point light for scene illumination */}
+      <pointLight
+        color={type === 'explosion' ? '#ff4400' : '#ffff00'}
+        intensity={3 * scale}
+        distance={10 * scale}
+        decay={2}
+      />
     </group>
   );
 };

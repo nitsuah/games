@@ -25,8 +25,9 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     if (isHit) {
       hitTimeRef.current = Date.now();
       setFlash(true);
-      setTimeout(() => setFlash(false), 80);
-      setTimeout(() => setOpacity(0.2), 120);
+      // Longer flash duration for better visibility
+      setTimeout(() => setFlash(false), 150);
+      setTimeout(() => setOpacity(0.2), 250);
     }
   }, [isHit]);
 
@@ -39,15 +40,15 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
       setScale(spawnProgress);
     }
     
-    // Hit animation: pulse scale and fade out
+    // Hit animation: more dramatic pulse scale and fade out
     if (isHit && hitTimeRef.current) {
       const hitElapsed = Date.now() - hitTimeRef.current;
-      const hitProgress = Math.min(hitElapsed / 200, 1);
-      // Pulse: grow then shrink
-      const pulseScale = 1 + Math.sin(hitProgress * Math.PI) * 0.3;
+      const hitProgress = Math.min(hitElapsed / 300, 1);
+      // More dramatic pulse: grow larger then shrink
+      const pulseScale = 1 + Math.sin(hitProgress * Math.PI) * 0.6;
       setScale(pulseScale);
-      // Fade out
-      setOpacity(Math.max(0.2, 1 - hitProgress * 0.8));
+      // Slower fade out for better visibility
+      setOpacity(Math.max(0.2, 1 - hitProgress * 0.7));
     }
     
     // Stop movement when game is over or paused
@@ -109,9 +110,18 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
         roughness={0.2} 
         transparent 
         opacity={opacity}
-        emissive={flash ? '#ffff00' : '#000000'}
-        emissiveIntensity={flash ? 2 : 0}
+        emissive={flash ? '#ffff00' : isHit ? '#ffaa00' : '#000000'}
+        emissiveIntensity={flash ? 3.5 : isHit ? 1.5 : 0}
       />
+      {/* Add point light on hit for extra glow */}
+      {flash && (
+        <pointLight
+          color="#ffff00"
+          intensity={5}
+          distance={size * 3}
+          decay={2}
+        />
+      )}
     </mesh>
   );
 };

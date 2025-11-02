@@ -6,16 +6,19 @@ export default function ArcadeCard({
   description, 
   onClick, 
   className = '',
-  badge = null 
+  badge = null,
+  displayMode = 'carousel'
 }) {
+  const modeClass = displayMode === 'grid' ? styles.gridMode : displayMode === 'list' ? styles.listMode : '';
+  
   return (
-    <button className={`${styles.card} ${className}`} onClick={onClick}>
+    <button className={`${styles.card} ${className} ${modeClass}`} onClick={onClick}>
       {badge && <div className={styles.badge}>{badge}</div>}
       <div className={styles.iconWrapper}>
         <span className={styles.icon}>{icon}</span>
       </div>
       <h3 className={styles.title}>{title}</h3>
-      <p className={styles.description}>{description}</p>
+      {displayMode !== 'grid' && <p className={styles.description}>{description}</p>}
       <div className={styles.playPrompt}>
         <span className={styles.arrow}>▶</span>
         <span>PLAY</span>

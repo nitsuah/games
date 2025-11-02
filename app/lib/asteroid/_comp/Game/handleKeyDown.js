@@ -12,6 +12,7 @@ export const handleKeyDown = (e, setWeapon, setAmmo, setPaused) => {
   if (e.code === 'Digit2') setWeapon('laser');
   if (e.code === 'Digit3') setWeapon('explosive');
   if (e.code === 'Digit4') setWeapon('aa');
+  if (e.code === 'Digit5') setWeapon('plasma');
   if (e.code === 'KeyR') {
     // Replenish all ammo to max
     setAmmo({
@@ -19,6 +20,7 @@ export const handleKeyDown = (e, setWeapon, setAmmo, setPaused) => {
       laser: WEAPON_TYPES.find((w) => w.key === 'laser').maxAmmo,
       explosive: WEAPON_TYPES.find((w) => w.key === 'explosive').maxAmmo,
       aa: WEAPON_TYPES.find((w) => w.key === 'aa').maxAmmo,
+      plasma: WEAPON_TYPES.find((w) => w.key === 'plasma').maxAmmo,
     });
   }
 };

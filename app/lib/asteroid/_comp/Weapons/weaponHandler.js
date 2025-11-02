@@ -239,4 +239,48 @@ export function weaponHandler({
     }
     return;
   }
+
+  if (type === 'plasma') {
+    // Plasma weapon: large slow-moving energy ball with high damage and large explosion
+    const { explosionRadius = 40 } = weaponParams;
+    const maxRange = 120;
+    
+    const raycaster = new THREE.Raycaster(from, forwardDirection);
+    const validObjects = scene.children.filter(obj => obj.matrixWorld !== null);
+    const intersects = raycaster.intersectObjects(validObjects, true);
+    
+    const impactPoint =
+      intersects[0]?.point || from.clone().add(forwardDirection.multiplyScalar(maxRange));
+    
+    if (setShowLaser) {
+      setShowLaser([{ from, to: impactPoint, speed: 0.5, color: '#ff00ff' }]);
+      setTimeout(() => setShowLaser(null), 600);
+    }
+    
+    if (triggerExplosion) triggerExplosion(impactPoint, explosionRadius);
+
+    const explosionSphere = new THREE.Sphere(impactPoint, explosionRadius);
+    const hitTargets = new Set();
+    const updatedTargets = targets.map((target) => {
+      if (!target.isHit) {
+        const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
+        if (explosionSphere.containsPoint(targetPosition)) {
+          hitTargets.add(target.id);
+          playSound('hit');
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 4);
+          }
+          return { ...target, isHit: true };
+        }
+      }
+      return target;
+    });
+    setTargets(updatedTargets);
+
+    if (hitTargets.size === 0) {
+      playSound('miss');
+      if (onMiss) onMiss();
+    }
+    return;
+  }
 }

@@ -157,6 +157,21 @@ const ShootingSystem = ({
                 }
               },
             }
+          : weapon === 'plasma'
+          ? {
+              explosionRadius: WEAPON_CONFIG.plasma.radius,
+              triggerExplosion: (position, radius = WEAPON_CONFIG.plasma.radius) => {
+                setExplosions((prev) => [
+                  ...prev,
+                  { id: generateEffectId('explosion'), position, explosionRadius: radius },
+                ]);
+                try {
+                  soundManager.playExplosion(Math.max(0.8, radius / 50));
+                } catch {
+                  /* ignore */
+                }
+              },
+            }
           : {},
       triggerExplosion: (position, radius) => {
         const explosionRadius = radius || WEAPON_CONFIG.explosive.radius;

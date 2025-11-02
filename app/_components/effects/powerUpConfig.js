@@ -100,6 +100,7 @@ export const POWER_UPS = [
               laser: WEAPON_TYPES.find((w) => w.key === 'laser').maxAmmo,
               explosive: WEAPON_TYPES.find((w) => w.key === 'explosive').maxAmmo,
               aa: WEAPON_TYPES.find((w) => w.key === 'aa').maxAmmo,
+              plasma: WEAPON_TYPES.find((w) => w.key === 'plasma').maxAmmo,
             };
           }
           return prev;
