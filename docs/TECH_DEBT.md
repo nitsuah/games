@@ -5,12 +5,6 @@
 
 ---
 
-## 🔴 Critical Issues
-
-_No critical issues at this time._
-
----
-
 ## 🟡 Medium Priority
 
 ### 1. Power-Up Config Testability
@@ -53,6 +47,7 @@ effect: (context) => {
 **Resolution Date:** November 2, 2025
 
 **Changes Made:**
+
 - Converted all targets from `speed` (scalar) to `vx, vy, vz` (velocity components)
 - Added `mass` property (equals target size)
 - Updated Target.jsx to use velocity vectors
@@ -61,6 +56,7 @@ effect: (context) => {
 - All 32 related tests updated and passing
 
 **Result:**
+
 - Foundation for target-target collision physics complete
 - Elastic collision system implemented in `lib/shared/physics/CollisionDetection.js`
 - Momentum transfer calculations working correctly
@@ -108,16 +104,19 @@ Minor markdown linting issues (MD022, MD032, MD040). Don't affect functionality.
 ## 🚀 Phase 10 Considerations
 
 ### Performance Optimization
+
 - **Object pooling** for particles/effects - Reduce garbage collection overhead
 - **Spatial partitioning** for target-target collision - O(n) instead of O(n²)
 - **LOD system** - Reduce particle count at distance
 
 ### Code Quality
+
 - **JSDoc comments** - Better IDE autocomplete and documentation
 - **Power-up config testability** - Extract timeout logic for easier testing
 - **TypeScript migration** - Consider gradual migration for type safety
 
 ### Testing & Validation
+
 - Visual regression testing (Percy/Chromatic)
 - Expanded E2E coverage (gameplay scenarios, power-ups, weapons)
 - Performance benchmarks (target generation, raycasting, collision detection)

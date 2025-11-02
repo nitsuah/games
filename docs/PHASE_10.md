@@ -1,7 +1,7 @@
-# Phase 9: Visual Polish & Architecture for Scale
+# Phase 10: New Games Development
 
 **Status**: Planning  
-**Previous Phase**: [Phase 8 Complete](./PHASE_8_COMPLETE.md) ✅
+**Previous Phase**: [Phase 9 Complete](./PHASE_9_COMPLETE.md) ✅
 
 ---
 
@@ -26,24 +26,28 @@ Build a reusable game framework to support multiple arcade games without code du
 ### Shared Systems to Extract
 
 **1. Audio System (`lib/shared/audio/`)**
+
 - `AudioManager.js` - Centralized audio loading, volume control, mute state
 - `SoundEffect.js` - Play one-shot sounds with variations
 - `MusicPlayer.js` - Background music with loop, fade, crossfade
 - Already have: `useSound.js`, `SoundManager.js` (refactor these)
 
 **2. Input System (`lib/shared/input/`)**
+
 - `KeyboardManager.js` - Key binding, key state tracking
 - `MouseManager.js` - Mouse position, click handling, pointer lock
 - `GamepadManager.js` - Controller support (future)
 - Pattern: Event-driven with callbacks, not game-specific
 
 **3. Scoring System (`lib/shared/scoring/`)**
+
 - `ScoreManager.js` - Score calculation, multipliers, combos
 - `HighScoreManager.js` - localStorage persistence, leaderboards
 - `StatsTracker.js` - Accuracy, time played, achievements
 - Already have: `saveGameStats.js`, `loadSavedScores.js` (consolidate)
 
 **4. UI Components (`lib/shared/ui/`)**
+
 - `ArcadeButton.jsx` - Reusable arcade-styled button
 - `ArcadeMenu.jsx` - Base menu with arcade aesthetic
 - `ArcadeHeader.jsx` - Title with scanlines and flicker
@@ -51,12 +55,14 @@ Build a reusable game framework to support multiple arcade games without code du
 - Extract from: GameOverOverlay, PauseMenu, HomePage
 
 **5. Game State Management (`lib/shared/state/`)**
+
 - `GameLoop.js` - Standardized game loop with pause/resume
 - `SceneManager.js` - Scene transitions, loading screens
 - `PowerUpManager.js` - Generic power-up system
 - Pattern: State machine for game states (menu/playing/paused/gameover)
 
 **6. Physics & Collision (`lib/shared/physics/`)**
+
 - `CollisionDetection.js` - Sphere-sphere, box-box, raycasting
 - `PhysicsBody.js` - Velocity, acceleration, drag
 - `SpatialGrid.js` - Spatial partitioning for optimization
@@ -64,7 +70,7 @@ Build a reusable game framework to support multiple arcade games without code du
 
 ### Game-Specific Structure
 
-```
+```bash
 lib/
   ├── shared/           # Reusable across all games
   │   ├── audio/
@@ -84,7 +90,8 @@ lib/
 ```
 
 ### Benefits
-- Add new games in 1 day by reusing 70%+ of code
+
+- Add new games in 1 hour by reusing 70%+ of code
 - Consistent arcade aesthetic across all games
 - Centralized bug fixes benefit all games
 - Portfolio shows architectural thinking
@@ -93,49 +100,56 @@ lib/
 
 ## 🎮 New Games Roadmap (Phase 10+)
 
-### Quick Wins (1 Day Each)
+### Quick Wins (1 hour Each)
 
 **1. Breakout/Arkanoid** 🧱
+
 - **Reuse**: Arcade menus, audio system, scoring, power-ups
 - **New**: 2D paddle physics, brick patterns, ball bounce
 - **Complexity**: Low - Pure 2D, simple physics
 - **Portfolio Value**: Shows 2D game dev, physics variety
 
 **2. Space Invaders** 👾
+
 - **Reuse**: Wave system, shooting mechanics, enemy management
 - **New**: Formation movement, shields, enemy patterns
 - **Complexity**: Medium - 2D with pattern AI
 - **Portfolio Value**: Classic arcade, procedural patterns
 
 **3. Flappy Bird Clone** 🐦
+
 - **Reuse**: Audio, scoring, high scores, arcade UI
 - **New**: Simple 2D physics, procedural obstacles, endless runner
 - **Complexity**: Low - Minimal mechanics
 - **Portfolio Value**: Mobile-ready, infinite gameplay
 
-**4. Target Practice Gallery** 🎯
+**4. Target Practice Gallery** 🎯 (exists)
+
 - **Reuse**: Asteroid shooting mechanics, targets, weapons
 - **New**: Static 3D scene, time pressure, accuracy focus
 - **Complexity**: Low - Reuse 80% from Asteroid
 - **Portfolio Value**: Shows code reuse, quick iteration
 
 **5. Pong 3D** 🏓
+
 - **Reuse**: Physics, scoring, power-ups, arcade UI
 - **New**: Simple AI opponent, 3D perspective
 - **Complexity**: Low - Classic mechanics
 - **Portfolio Value**: AI implementation, networked potential
 
 ### Game Variety Strategy
-- ✅ **6DOF Space Shooter** - Asteroid (COMPLETE)
-- 🔄 **Terrain-Based 3D FPS** - In progress
+
+- ✅ **6DOF Space Shooter** - Asteroid (COMPLETE - asteroid)
+- 🔄 **Terrain-Based 3D FPS** - In progress (fps)
 - 📋 **2D Platformer** - Next (prove 2D architecture)
 - 📋 **2D Arcade Classic** - Breakout or Space Invaders
 - 📋 **Endless Runner** - Flappy Bird or Temple Run style
 
 ### Target Portfolio
+
 - **3-5 Playable Games** - Show variety and depth
 - **1 Deep Game** - Asteroid with full polish
-- **2-3 Quick Games** - Built in 1 day each using framework
+- **2-3 Quick Games** - Built in 1 hour each using framework
 - **Consistent Aesthetic** - All games feel like one arcade
 
 ---
@@ -147,6 +161,7 @@ lib/
 **Current State**: Only player-target collision implemented (Phase 8)
 
 **Implementation Plan**:
+
 - Refactor targets to have velocity state (currently only speed/direction)
 - Implement sphere-sphere collision detection
 - Apply elastic collision physics between targets
@@ -154,11 +169,13 @@ lib/
 - Add spatial partitioning for efficient collision checks
 
 **Benefits**:
+
 - More dynamic target movement
 - Creates interesting evasion patterns
 - Adds visual interest to the arena
 
 **Technical Requirements**:
+
 - Add `velocity: Vector3` to target state
 - Implement `checkTargetCollision(target1, target2)` function
 - Use fixed timestep physics updates
@@ -171,11 +188,13 @@ lib/
 **QA Feedback**: "works well, now we can tune down the player speed and how much this boosts a bit."
 
 **Current Values**:
+
 - `BASE_ACCELERATION`: 12.0
 - `MAX_VELOCITY`: 0.65
 - Speed boost multiplier: TBD (needs investigation)
 
 **Proposed Changes**:
+
 - Reduce base player speed slightly
 - Reduce speed boost multiplier for better balance
 - Test and iterate based on feel
@@ -185,6 +204,7 @@ lib/
 ### 3. Weapon Visual Effects
 
 #### Laser
+
 - ✅ Already has beam visualization
 - **Add**: Charge-up glow effect
 - **Add**: Muzzle flash at origin point
@@ -192,6 +212,7 @@ lib/
 - **Enhance**: Beam thickness based on distance (thicker at source)
 
 #### Spread/Shotgun
+
 - ✅ Has buckshot visualization
 - **Add**: Smoke puff at firing point
 - **Add**: Tracer lines fade gradually (currently instant)
@@ -199,6 +220,7 @@ lib/
 - **Add**: Shell casing particles
 
 #### Explosive
+
 - ✅ Has explosion effect
 - **Add**: Shockwave ring expanding from impact
 - **Add**: Screen flash for close explosions
@@ -210,23 +232,27 @@ lib/
 ### 4. Target Visual Feedback
 
 **On Spawn**:
+
 - Fade in with scale animation (small → full size)
 - Particle ring/burst effect
 - Distinct color per size tier (already implemented)
 
 **When Hit**:
+
 - Flash white briefly
 - Emit particles matching target color
 - Slight scale pulse (hit → shrink → normal)
 - Damage number popup (optional, arcade-style)
 
 **When Splitting**:
+
 - Dramatic particle burst at split point
 - Child targets spawn with outward velocity
 - Brief trail effect as they separate
 - Sound effect (higher pitch for smaller targets)
 
 **When Destroyed**:
+
 - Explosion particle effect
 - Fragments scatter outward
 - Score popup animation
@@ -237,17 +263,20 @@ lib/
 ## 🎵 Audio Polish
 
 ### Weapon Sounds
+
 - **Laser**: Sci-fi beam sound with charge-up whine
 - **Shotgun**: Punchy blast with shell casing clink
 - **Explosive**: Deep boom with echo/reverb
 
 ### Impact Sounds
+
 - Layered sounds: metal clang + explosion + debris scatter
 - Pitch varies with target size (larger = deeper)
 - Stereo panning based on impact direction
 - Distance attenuation for far impacts
 
 ### Ambient/Music
+
 - **Current**: Background music (bgm)
 - **Add**: Dynamic music layers that increase with wave progression
 - **Add**: Low health tension music/heartbeat
@@ -255,6 +284,7 @@ lib/
 - **Add**: Combo sound effects (escalating with multiplier)
 
 ### Power-Up Sounds
+
 - Distinct collection sound per power-up type
 - Activation whoosh/energy sound
 - Ambient hum while active (e.g., shield force field)
@@ -265,18 +295,21 @@ lib/
 ## 🎨 UI Polish
 
 ### Crosshair
+
 - Dynamic reticle that expands/contracts with movement
 - Hit confirmation (crosshair pulses/changes color on hit)
 - Different crosshair per weapon type
 - Lead indicator for fast-moving targets (advanced feature)
 
 ### HUD Elements
+
 - Health bar: pulse/shake when taking damage
 - Ammo counter: flash when depleted, glow when full
 - Combo multiplier: grow animation, trailing particles
 - Wave indicator: dramatic transition animation
 
 ### Screen Effects
+
 - Vignette increases when low health
 - Color grading shifts (red tint) when critical
 - Motion blur on rapid movement (subtle)
@@ -287,12 +320,14 @@ lib/
 ## 🎮 Control & Feel Improvements
 
 ### Mouse Sensitivity
+
 - Add sensitivity slider in settings
 - Separate X/Y sensitivity options
 - Mouse smoothing toggle
 - Invert Y-axis option
 
 ### Keyboard Controls
+
 - ✅ WASD movement (already implemented)
 - ✅ Number keys for weapon switching (already implemented)
 - **Add**: Mouse wheel for weapon cycling
@@ -300,6 +335,7 @@ lib/
 - **Add**: Reload animation/sound when pressing R
 
 ### Accessibility
+
 - **Add**: Colorblind modes (modify target colors)
 - **Add**: Reduce motion option (disable screen shake, particles)
 - **Add**: High contrast mode
@@ -313,11 +349,13 @@ lib/
 ### Weapon Balance
 
 **Laser**:
+
 - Good for precision at long range
 - Consider: Slight damage falloff at extreme distance?
 - Consider: Overheat mechanic instead of ammo?
 
 **Explosive**:
+
 - Good for groups/area denial
 - Splash radius feels appropriate (15 units)
 - Consider: Slight self-damage if too close?
@@ -325,6 +363,7 @@ lib/
 ### Difficulty Progression
 
 **Wave Scaling**:
+
 - **Current**: Targets increase each wave
 - **Enhance**: Introduce new mechanics per wave:
   - Wave 3: Targets start changing direction mid-flight
@@ -333,6 +372,7 @@ lib/
   - Wave 10: Boss target (extra large, splits into many pieces)
 
 **Power-Up Timing**:
+
 - Drop rates should increase on harder waves
 - Specific power-ups spawn based on player performance:
   - Low health → health power-up more likely
@@ -340,6 +380,7 @@ lib/
   - High combo → damage multiplier power-up
 
 **Score Balancing**:
+
 - Current multiplier progression: 1x → 1.5x → 2x → 3x → 5x
 - Consider: Time-based combo decay (forces aggressive play)
 - Consider: Bonus points for risky plays (close-range shotgun kills)
@@ -350,18 +391,21 @@ lib/
 ## 🔧 Technical Improvements
 
 ### Performance Optimization
+
 - Object pooling for particles/projectiles
 - LOD (Level of Detail) for distant targets
 - Culling for off-screen objects
 - Reduce particle count on low-end hardware
 
 ### Physics System
+
 - Implement proper collision detection library (or simple sphere-sphere)
 - Spatial partitioning for efficient collision checks
 - Fixed timestep physics updates (decouple from render FPS)
 - Interpolation/extrapolation for smooth movement
 
 ### State Management
+
 - Clean up player state management
 - Separate physics state from render state
 - Better organization of game loop logic
@@ -371,6 +415,7 @@ lib/
 ## 📋 Implementation Priority
 
 ### Sprint 1: Collision Physics & Balance (Week 1)
+
 1. Refactor targets to have velocity state
 2. Implement target-target collision detection
 3. Add impulse-based collision response
@@ -378,6 +423,7 @@ lib/
 5. Speed boost tuning
 
 ### Sprint 2: Weapon Visual Effects (Week 1)
+
 1. Muzzle flashes for all weapons
 2. Enhanced impact effects (sparks, particles, flashes)
 3. Weapon-specific tracer effects
@@ -385,6 +431,7 @@ lib/
 5. Explosion enhancements
 
 ### Sprint 3: Target Visual Feedback (Week 2)
+
 1. Spawn animations (fade in, scale up)
 2. Hit feedback (flash, scale pulse, particles)
 3. Split animations (particle burst, trails)
@@ -392,6 +439,7 @@ lib/
 5. Score popups and combo displays
 
 ### Sprint 4: Audio Polish (Week 2)
+
 1. Layer and mix weapon sounds
 2. Add impact sound variations
 3. Implement power-up sound effects
@@ -399,6 +447,7 @@ lib/
 5. Spatial audio positioning
 
 ### Sprint 5: UI/UX Polish (Week 3)
+
 1. Dynamic crosshair system
 2. HUD animations (health pulse, ammo flash, combo grow)
 3. Screen effects (vignette, color grading)
@@ -406,6 +455,7 @@ lib/
 5. Damage numbers and score popups
 
 ### Sprint 6: Optimization & Testing (Week 3)
+
 1. Object pooling implementation
 2. Spatial partitioning for collisions
 3. LOD system for targets
@@ -417,6 +467,7 @@ lib/
 ## 💡 Bonus Ideas (Phase 10?)
 
 ### Advanced Features
+
 - **Slow-motion on perfect kills** (all targets hit in combo)
 - **Kill cam replay** for impressive shots
 - **Challenge modes** (time attack, accuracy challenge, no-damage run)
@@ -425,6 +476,7 @@ lib/
 - **Replay system** (save/share gameplay)
 
 ### Weapon Variants
+
 - **Laser**: Continuous beam (hold to fire, overheats)
 - **Shotgun**: Slug mode (single powerful shot)
 - **Explosive**: Sticky grenades (delayed explosion)
@@ -432,6 +484,7 @@ lib/
 - **New**: Cluster bomb (splits into bomblets)
 
 ### Target Variants
+
 - **Shielded targets** (require multiple hits)
 - **Phasing targets** (teleport periodically)
 - **Splitting targets** (pre-emptively split when damaged)
@@ -443,6 +496,7 @@ lib/
 ## 🧪 Testing Checklist
 
 ### Gameplay Feel
+
 - [ ] Target-target collisions feel natural
 - [ ] Weapons have satisfying visual feedback
 - [ ] Target destruction is rewarding
@@ -450,6 +504,7 @@ lib/
 - [ ] Speed boost feels balanced
 
 ### Technical
+
 - [ ] Stable 60 FPS with all effects
 - [ ] No collision detection bugs/edge cases
 - [ ] Proper cleanup of particles/effects
@@ -457,12 +512,14 @@ lib/
 - [ ] Consistent physics across different frame rates
 
 ### Accessibility
+
 - [ ] Colorblind modes work correctly
 - [ ] Reduced motion mode disables appropriate effects
 - [ ] High contrast mode readable
 - [ ] Audio cues complement visual feedback
 
 ### Polish
+
 - [ ] Every weapon feels unique and impactful
 - [ ] Target destruction is satisfying
 - [ ] Audio/visual feedback is cohesive
@@ -474,6 +531,7 @@ lib/
 ## 📊 Success Metrics
 
 ### Quantitative
+
 - Player retention (% who complete wave 5+)
 - Average playtime per session
 - Highest wave reached (median)
@@ -481,6 +539,7 @@ lib/
 - Power-up collection rate
 
 ### Qualitative
+
 - "Do weapons feel impactful?"
 - "Are target destructions satisfying?"
 - "Does audio enhance the experience?"
@@ -489,7 +548,7 @@ lib/
 
 ---
 
-## 🚀 Phase 9 Deliverables
+## 🚀 Phase 10 Deliverables
 
 1. **Full collision physics** with target-target interactions
 2. **Enhanced weapon effects** for all weapon types
