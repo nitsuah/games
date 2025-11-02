@@ -1,0 +1,71 @@
+/* ArcadeHeader - Shared arcade-styled header with scanline */
+
+.header {
+  width: 100%;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  color: var(--ui-primary, #00ffff);
+  text-transform: uppercase;
+  letter-spacing: 6px;
+  margin: 0 0 10px 0;
+  text-shadow: 
+    0 0 10px var(--ui-primary, #00ffff),
+    0 0 20px var(--ui-primary, #00ffff),
+    0 0 30px var(--ui-primary, #00ffff);
+  font-family: 'Courier New', monospace;
+  animation: titlePulse 2s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+  0%, 100% {
+    text-shadow: 
+      0 0 10px var(--ui-primary, #00ffff),
+      0 0 20px var(--ui-primary, #00ffff),
+      0 0 30px var(--ui-primary, #00ffff);
+  }
+  50% {
+    text-shadow: 
+      0 0 15px var(--ui-primary, #00ffff),
+      0 0 25px var(--ui-primary, #00ffff),
+      0 0 40px var(--ui-primary, #00ffff);
+  }
+}
+
+.subtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 15px 0;
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+.scanline {
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--ui-primary, #00ffff) 50%, 
+    transparent 100%
+  );
+  box-shadow: 0 0 10px var(--ui-primary, #00ffff);
+  animation: scanlineMove 2s linear infinite;
+}
+
+@keyframes scanlineMove {
+  0% {
+    opacity: 0.5;
+    transform: scaleX(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scaleX(0.8);
+  }
+}

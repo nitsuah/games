@@ -1,5 +1,7 @@
 import styles from './GameOverOverlay.module.css';
 import { useRouter } from 'next/router';
+import ArcadeMenu from '@/lib/shared/ui/ArcadeMenu';
+import ArcadeButton, { VARIANTS } from '@/lib/shared/ui/ArcadeButton';
 
 const GameOverOverlay = ({
   score = 0,
@@ -19,13 +21,7 @@ const GameOverOverlay = ({
   const finalAccuracy = hits + misses > 0 ? ((hits / (hits + misses)) * 100).toFixed(1) : '0.0';
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.gameOverOverlay}>
-        {/* Phase 8: Arcade-style header */}
-        <div className={styles.header}>
-          <h1 className={styles.title}>GAME OVER</h1>
-          <div className={styles.scanline}></div>
-        </div>
+    <ArcadeMenu title="GAME OVER">
 
         {/* Phase 8: Stats grid */}
         <div className={styles.statsGrid}>
@@ -78,17 +74,14 @@ const GameOverOverlay = ({
 
         {/* Phase 8: Arcade-style buttons */}
         <div className={styles.buttons}>
-          <button className={styles.restartButton} onClick={restartGame}>
-            <span className={styles.buttonIcon}>🔄</span>
-            <span>PLAY AGAIN</span>
-          </button>
-          <button className={styles.quitButton} onClick={() => router.push('/')}>
-            <span className={styles.buttonIcon}>🏠</span>
-            <span>MAIN MENU</span>
-          </button>
+          <ArcadeButton variant={VARIANTS.WARNING} icon="🔄" onClick={restartGame}>
+            PLAY AGAIN
+          </ArcadeButton>
+          <ArcadeButton variant={VARIANTS.DANGER} icon="🏠" onClick={() => router.push('/')}>
+            MAIN MENU
+          </ArcadeButton>
         </div>
-      </div>
-    </div>
+    </ArcadeMenu>
   );
 };
 

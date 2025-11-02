@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styled, { keyframes } from 'styled-components';
+import ArcadeCard from '@/lib/shared/ui/ArcadeCard';
 
 const flicker = keyframes`
   0%, 100% { opacity: 1; }
@@ -164,81 +165,6 @@ const GameList = styled.div`
   justify-content: center;
   flex-wrap: wrap;
   max-width: 800px;
-`;
-
-const GameCard = styled(Link)`
-  position: relative;
-  padding: 20px 35px;
-  background: linear-gradient(135deg, rgba(0, 50, 80, 0.4), rgba(0, 30, 60, 0.4));
-  color: #00ffff;
-  text-decoration: none;
-  border-radius: 12px;
-  border: 2px solid #00ffff;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  letter-spacing: 4px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
-  overflow: hidden;
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-  will-change: transform;
-  flex: 1;
-  min-width: 180px;
-  max-width: 240px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(0, 255, 255, 0.3),
-      transparent
-    );
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
-  }
-
-  &:hover {
-    background: linear-gradient(135deg, rgba(0, 80, 120, 0.6), rgba(0, 50, 90, 0.6));
-    transform: translateY(-5px);
-    box-shadow: 
-      0 0 30px rgba(0, 255, 255, 0.8),
-      0 0 60px rgba(0, 255, 255, 0.4),
-      inset 0 0 30px rgba(0, 255, 255, 0.2);
-    border-color: #00ffff;
-
-    &::before {
-      transform: translateX(100%);
-    }
-  }
-
-  &:active {
-    transform: translateY(-2px);
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: 
-      0 0 40px rgba(0, 255, 255, 1),
-      0 0 80px rgba(0, 255, 255, 0.5);
-  }
-`;
-
-const GameIcon = styled.span`
-  display: block;
-  font-size: 36px;
-  margin: 0;
 `;
 
 const InsertCoinText = styled.div`
@@ -515,6 +441,7 @@ const MarqueeText = styled.h1`
 `;
 
 const HomePage = () => {
+  const router = useRouter();
   const [muted, setMuted] = useState(true);
   const audioRef = useRef(null);
 
@@ -588,14 +515,18 @@ const HomePage = () => {
             <Subtitle>Select Your Game</Subtitle>
           </Header>
           <GameList>
-            <GameCard href="/asteroid">
-              <GameIcon>🎯</GameIcon>
-              Asteroid
-            </GameCard>
-            <GameCard href="/fps">
-              <GameIcon>🎮</GameIcon>
-              FPS
-            </GameCard>
+            <ArcadeCard 
+              title="Asteroid"
+              icon="🎯"
+              description="Blast asteroids in space"
+              onClick={() => router.push('/asteroid')}
+            />
+            <ArcadeCard 
+              title="FPS"
+              icon="🎮"
+              description="First-person shooter action"
+              onClick={() => router.push('/fps')}
+            />
           </GameList>
           <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>
         </ArcadeFrame>

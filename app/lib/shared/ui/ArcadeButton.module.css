@@ -1,0 +1,136 @@
+/* ArcadeButton - Shared arcade-styled button component */
+
+.button {
+  width: 100%;
+  padding: 18px 25px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s, border-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+
+.button:hover::before {
+  transform: translateX(100%);
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-3px);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon {
+  font-size: 28px;
+  filter: drop-shadow(0 0 8px currentColor);
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.text {
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.hint {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+
+/* Variant: Primary (Cyan) */
+.variant-primary {
+  background: linear-gradient(135deg, var(--ui-secondary, #0088aa), var(--ui-primary, #00ffff));
+  color: white;
+  border-color: var(--ui-border-accent, #00ffff);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.variant-primary:hover:not(:disabled) {
+  box-shadow: 0 8px 30px rgba(0, 255, 255, 0.6);
+  background: linear-gradient(135deg, #00aaff, var(--ui-primary, #00ffff));
+}
+
+/* Variant: Danger (Red) */
+.variant-danger {
+  background: linear-gradient(135deg, rgba(200, 0, 0, 0.3), rgba(150, 0, 0, 0.5));
+  color: #ff6666;
+  border-color: #aa0000;
+  box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+}
+
+.variant-danger:hover:not(:disabled) {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, rgba(220, 0, 0, 0.5), rgba(180, 0, 0, 0.7));
+  box-shadow: 0 8px 25px rgba(255, 68, 68, 0.4);
+}
+
+/* Variant: Warning (Orange) */
+.variant-warning {
+  background: linear-gradient(135deg, rgba(255, 102, 0, 0.3), rgba(200, 80, 0, 0.5));
+  color: #ff9944;
+  border-color: #ff6600;
+  box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
+}
+
+.variant-warning:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255, 120, 0, 0.5), rgba(220, 90, 0, 0.7));
+  box-shadow: 0 8px 25px rgba(255, 102, 0, 0.5);
+}
+
+/* Variant: Success (Green) */
+.variant-success {
+  background: linear-gradient(135deg, rgba(0, 200, 100, 0.3), rgba(0, 150, 80, 0.5));
+  color: #00ff88;
+  border-color: #00aa66;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+.variant-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(0, 220, 120, 0.5), rgba(0, 180, 100, 0.7));
+  box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+}
+
+/* Variant: Secondary (Gray) */
+.variant-secondary {
+  background: rgba(100, 100, 100, 0.5);
+  color: white;
+  border-color: #666666;
+  box-shadow: 0 0 15px rgba(128, 128, 128, 0.2);
+}
+
+.variant-secondary:hover:not(:disabled) {
+  background: rgba(120, 120, 120, 0.7);
+  box-shadow: 0 8px 20px rgba(128, 128, 128, 0.3);
+}
