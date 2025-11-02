@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
 import Paddle from './components/Paddle';
 import Ball from './components/Ball';
 import Brick from './components/Brick';
@@ -285,14 +286,5 @@ export default function BreakoutGame({ onExit }) {
         )}
       </Html>
     </>
-  );
-}
-
-// HTML component for UI overlay
-function Html({ children }) {
-  return (
-    <group>
-      {children}
-    </group>
   );
 }

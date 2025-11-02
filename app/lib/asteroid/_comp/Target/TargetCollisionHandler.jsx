@@ -1,7 +1,7 @@
 /**
  * Target Collision Handler
  * 
- * Phase 10: Handles target-target physics collisions with elastic bounce.
+ * Phase 9: Handles target-target physics collisions with elastic bounce.
  * Targets now bounce off each other realistically instead of splitting.
  * Uses spatial partitioning for performance with many targets.
  */

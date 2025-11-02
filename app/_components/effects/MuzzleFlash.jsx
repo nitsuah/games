@@ -13,8 +13,8 @@ import * as THREE from 'three';
 const MuzzleFlash = ({ position, weaponType = 'laser', onComplete }) => {
   const meshRef = useRef();
   const particlesRef = useRef();
-  const startTime = useRef(Date.now());
-  const duration = weaponType === 'laser' ? 100 : weaponType === 'spread' ? 150 : 200; // ms
+  const startTime = useRef(null);
+  const duration = weaponType === 'laser' ? 0.1 : weaponType === 'spread' ? 0.15 : 0.2; // seconds
   
   // Weapon-specific colors and configurations
   const config = useMemo(() => {
@@ -89,8 +89,13 @@ const MuzzleFlash = ({ position, weaponType = 'laser', onComplete }) => {
     return positions;
   }, [config.particleCount, config.spread]);
 
-  useFrame(() => {
-    const elapsed = Date.now() - startTime.current;
+  useFrame((state) => {
+    // Initialize start time on first frame using clock
+    if (startTime.current === null) {
+      startTime.current = state.clock.getElapsedTime();
+    }
+    
+    const elapsed = state.clock.getElapsedTime() - startTime.current;
     const progress = Math.min(elapsed / duration, 1);
 
     if (progress >= 1) {

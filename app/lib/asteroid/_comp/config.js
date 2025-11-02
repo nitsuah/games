@@ -15,16 +15,16 @@ export const WEAPON_CONFIG = {
   spread: { angle: 0.15, count: 12, range: 80 }, // Faster trail fade with lower max range
   laser: { color: 'cyan', range: 400 },
   explosive: { radius: 30, color: 'orange' }, // Smaller explosion radius
-  aa: { radius: 15, color: '#00ff00', speed: 1.8, damage: 0.5 }, // Phase 10: AA cannon - smaller, faster
-  plasma: { radius: 40, color: '#ff00ff', chargeTime: 1500, damage: 2.0, speed: 0.8 }, // Phase 10: Charge shot - high damage, slow
+  aa: { radius: 15, color: '#00ff00', speed: 1.8, damage: 0.5 }, // Phase 9: AA cannon - smaller, faster
+  plasma: { radius: 40, color: '#ff00ff', chargeTime: 1500, damage: 2.0, speed: 0.8 }, // Phase 9: Charge shot - high damage, slow
 };
 
 export const WEAPON_TYPES = [
   { key: 'spread', name: 'Spread Shot', maxAmmo: 10, cooldown: 0.3 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
   { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Longer cooldown for balance
-  { key: 'aa', name: 'AA Cannon', maxAmmo: 20, cooldown: 0.25 }, // Phase 10: Fast firing dual cannon
-  { key: 'plasma', name: 'Plasma Cannon', maxAmmo: 5, cooldown: 2.0 }, // Phase 10: Powerful charge shot
+  { key: 'aa', name: 'AA Cannon', maxAmmo: 20, cooldown: 0.25 }, // Phase 9: Fast firing dual cannon
+  { key: 'plasma', name: 'Plasma Cannon', maxAmmo: 5, cooldown: 2.0 }, // Phase 9: Powerful charge shot
 ];
 
 export const POWER_UP_COLORS = {
@@ -60,7 +60,7 @@ export const SCORE_VALUES = {
 
 // Phase 8: Player physics constants for space-like movement with drift/inertia
 // Phase 9: Tuned down base speed and boost multiplier per QA feedback
-// Phase 10: Further tuning - reduced base speed and boost multiplier for better balance
+// Further tuning - reduced base speed and boost multiplier for better balance
 export const PLAYER_PHYSICS = {
   // Movement physics
   BASE_ACCELERATION: 8.0, // Base acceleration (reduced from 10.0)

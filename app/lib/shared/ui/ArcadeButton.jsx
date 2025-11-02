@@ -62,6 +62,4 @@ const ArcadeButton = ({
   );
 };
 
-ArcadeButton.VARIANTS = VARIANTS;
-
 export default ArcadeButton;
