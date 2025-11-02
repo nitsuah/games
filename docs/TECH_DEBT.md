@@ -33,9 +33,8 @@ effect: (context) => {
 
 **Priority:** High (Phase 10)
 
-- **Object pooling** for particles/effects - Reduce GC overhead
-- **Spatial partitioning** for target-target collision - O(n) → O(n log n)
-- **LOD system** - Reduce particle count at distance
+- [ ] **Object pooling** for particles/effects - Reduce GC overhead
+- [ ] **LOD system** - Reduce particle count at distance
 
 ### 3. Code Quality Improvements
 
@@ -45,15 +44,18 @@ effect: (context) => {
 - **TypeScript migration** - Consider gradual adoption for type safety
 - **Performance monitoring** - Add metrics for game loop bottlenecks
 
----
+### Cleanup and Refactoring
 
-## Resolved Items
-
-### Target Velocity State Refactoring ✅
-
-**Resolved**: Phase 9 (November 2, 2025)
-
-- Converted from `speed` (scalar) to `vx, vy, vz` (velocity vectors)
-- Added `mass` property for collision physics
-- 32 tests updated and passing
-- Enabled collision detection foundation
+- Go through every single file and folder with a fine tooth comb. identify the areas of improvement such as:
+  - Identify high line of code files for potential splitting
+  - Remove any css from jsx files and place in separate standard css files
+  - Modularize shared UI components or commonly used functions or utilities
+  - Improve test coverage for critical game logic functions
+  - Standardize coding style with ESLint/Prettier configurations
+  - Review and update dependencies to latest stable versions
+  - Validate our CI checks for code quality and test coverage
+  - Document architecture decisions in `docs/ARCHITECTURE.md`
+  - Minify any large assets (images/sounds) for faster load times
+  - Optimize asset loading with lazy loading or preloading strategies
+  - Implement caching strategies for frequently used data or assets
+  - Identify code that may not be used or things we can remove (comments, dead code, unused assets, etc) but be predudent to understand what it is first and how it might be used or referenced before removing it.
