@@ -71,7 +71,7 @@ const PageContainer = styled.div`
 
 const ArcadeFrame = styled.div`
   background: linear-gradient(135deg, rgba(20, 0, 40, 0.95), rgba(10, 0, 30, 0.95));
-  padding: 30px 60px 80px;
+  padding: 35px 60px 90px;
   border-radius: 20px;
   border: 4px solid #00ffff;
   box-shadow: 
@@ -84,11 +84,11 @@ const ArcadeFrame = styled.div`
   width: 600px;
   max-width: 90vw;
   box-sizing: border-box;
-  min-height: 500px;
+  min-height: 550px;
   
   @media (max-width: 768px) {
-    padding: 25px 40px 70px;
-    min-height: 450px;
+    padding: 30px 40px 75px;
+    min-height: 480px;
   }
 `;
 
@@ -299,14 +299,14 @@ const ArcadeCabinet = styled.div`
   position: relative;
   max-width: 90vw;
   padding-bottom: 100px;
-  padding-top: 90px;
+  padding-top: 110px;
   margin: 20px 0;
 
   /* Cabinet top marquee - matches screen width */
   &::before {
     content: '';
     position: absolute;
-    top: 0;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
     width: 600px;
@@ -494,7 +494,7 @@ const CoinSlot = styled.div`
 
 const MarqueeText = styled.h1`
   position: absolute;
-  top: 20px;
+  top: 35px;
   left: 50%;
   transform: translateX(-50%);
   color: #ffff00;
