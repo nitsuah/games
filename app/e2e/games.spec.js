@@ -30,11 +30,16 @@ test.describe('Asteroid Game', () => {
 
   test('should cycle trail quality with T key', async ({ page }) => {
     await page.goto('/asteroid');
-    await page.waitForSelector('canvas', { timeout: 10000 });
     
-    // Click canvas to focus the game
-    const canvas = page.locator('canvas');
-    await canvas.click();
+    // Wait for canvas and ensure page is fully loaded with all event listeners
+    await page.waitForSelector('canvas', { timeout: 15000 });
+    await page.waitForLoadState('networkidle');
+    
+    // Additional wait to ensure React components and event listeners are fully mounted
+    await page.waitForTimeout(500);
+    
+    // Click on the page body to ensure focus (not just canvas)
+    await page.click('body');
     
     // Get initial trail quality from localStorage
     const initialQuality = await page.evaluate(() => {
@@ -42,10 +47,10 @@ test.describe('Asteroid Game', () => {
     });
     
     // Press 'T' key to cycle trail quality
-    await page.keyboard.press('t');
+    await page.keyboard.press('KeyT');
     
-    // Wait a bit for localStorage to update
-    await page.waitForTimeout(100);
+    // Wait for localStorage to update and React state to sync
+    await page.waitForTimeout(300);
     
     // Verify localStorage was updated
     const newQuality = await page.evaluate(() => {
@@ -62,8 +67,8 @@ test.describe('Asteroid Game', () => {
     expect(newQuality).toBe(expectedCycle[initialQuality]);
     
     // Press 'T' again to verify full cycle
-    await page.keyboard.press('t');
-    await page.waitForTimeout(100);
+    await page.keyboard.press('KeyT');
+    await page.waitForTimeout(300);
     
     const thirdQuality = await page.evaluate(() => {
       return localStorage.getItem('trailQuality');
