@@ -27,8 +27,6 @@ export function checkSphereCollision(posA, radiusA, posB, radiusB) {
  * Calculate collision response between two objects
  * 
  * Uses conservation of momentum and energy to calculate post-collision velocities.
- * By default, simulates slightly inelastic collisions (restitution = 0.8) with some energy loss,
- * which is typical in real-world physics and provides natural-feeling game physics.
  * 
  * @param {THREE.Vector3} posA - Position of object A
  * @param {THREE.Vector3} velA - Velocity of object A
@@ -36,10 +34,7 @@ export function checkSphereCollision(posA, radiusA, posB, radiusB) {
  * @param {THREE.Vector3} posB - Position of object B
  * @param {THREE.Vector3} velB - Velocity of object B
  * @param {number} massB - Mass of object B
- * @param {number} [restitution=0.8] - Coefficient of restitution (0 = perfectly inelastic, 1 = perfectly elastic).
- *   The recommended default is 0.8, which simulates slightly inelastic collisions as typically 
- *   observed in real-world and game physics, providing natural-feeling interactions with some energy loss.
- *   Use restitution = 1.0 only for idealized, perfectly elastic collisions (no energy loss).
+ * @param {number} [restitution=0.8] - Coefficient of restitution (0-1: energy loss, 1: perfectly elastic)
  * @returns {{velA: THREE.Vector3, velB: THREE.Vector3}} New velocities for both objects
  */
 export function calculateElasticCollision(posA, velA, massA, posB, velB, massB, restitution = 0.8) {

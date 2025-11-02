@@ -12,6 +12,7 @@ function getDisplayModeClass(mode) {
     case 'list':
       return styles.listMode;
     case 'carousel':
+      return '';
     default:
       return '';
   }

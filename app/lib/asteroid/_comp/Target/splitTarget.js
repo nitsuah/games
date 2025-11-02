@@ -36,12 +36,9 @@ export function splitTarget(target, nowFn = Date.now) {
       : '#ffff00';
   
   // Phase 9: Double velocity magnitude and add random spread
-  const velocityMultiplier = SPLIT_CONFIG.VELOCITY_MULTIPLIER;
-  const spreadFactor = SPLIT_CONFIG.SPREAD_FACTOR;
-  
-  const baseVx = (target.vx || 0) * velocityMultiplier;
-  const baseVy = (target.vy || 0) * velocityMultiplier;
-  const baseVz = (target.vz || 0) * velocityMultiplier;
+  const baseVx = (target.vx || 0) * SPLIT_CONFIG.VELOCITY_MULTIPLIER;
+  const baseVy = (target.vy || 0) * SPLIT_CONFIG.VELOCITY_MULTIPLIER;
+  const baseVz = (target.vz || 0) * SPLIT_CONFIG.VELOCITY_MULTIPLIER;
   
   return [
     {
@@ -53,9 +50,9 @@ export function splitTarget(target, nowFn = Date.now) {
       size: newSize,
       mass: newMass,
       // Add rightward velocity component + spread
-      vx: baseVx + (SPLIT_CONFIG.BASE_DIVERGENCE + Math.random() * spreadFactor),
-      vy: baseVy + (Math.random() - 0.5) * spreadFactor,
-      vz: baseVz + (Math.random() - 0.5) * spreadFactor,
+      vx: baseVx + (SPLIT_CONFIG.BASE_DIVERGENCE + Math.random() * SPLIT_CONFIG.SPREAD_FACTOR),
+      vy: baseVy + (Math.random() - 0.5) * SPLIT_CONFIG.SPREAD_FACTOR,
+      vz: baseVz + (Math.random() - 0.5) * SPLIT_CONFIG.SPREAD_FACTOR,
       color: newColor,
       spawnTime,
     },
@@ -68,9 +65,9 @@ export function splitTarget(target, nowFn = Date.now) {
       size: newSize,
       mass: newMass,
       // Add leftward velocity component + spread
-      vx: baseVx - (SPLIT_CONFIG.BASE_DIVERGENCE + Math.random() * spreadFactor),
-      vy: baseVy + (Math.random() - 0.5) * spreadFactor,
-      vz: baseVz + (Math.random() - 0.5) * spreadFactor,
+      vx: baseVx - (SPLIT_CONFIG.BASE_DIVERGENCE + Math.random() * SPLIT_CONFIG.SPREAD_FACTOR),
+      vy: baseVy + (Math.random() - 0.5) * SPLIT_CONFIG.SPREAD_FACTOR,
+      vz: baseVz + (Math.random() - 0.5) * SPLIT_CONFIG.SPREAD_FACTOR,
       color: newColor,
       spawnTime,
     },
