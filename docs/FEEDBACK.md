@@ -5,65 +5,43 @@
 
 ---
 
-## 📋 Deferred to Phase 10
+## 📋 Manual QA Checklist
 
-### Visual Polish
+### Phase 9 Visual Effects (Need Validation)
 
-- [ ] **CRT Effect Improvements** - Enhance scanlines (thinner), add subtle jitter/distortion for authentic retro feel
-- [ ] **Coin Insert Animation** - Add coin drop animation + sound effect when clicking "INSERT COIN"
+- [ ] **Muzzle Flash Effects** - Weapon-specific colors (laser=cyan, spread=orange, explosive=red)
+- [ ] **Impact Effects** - Sparks and shockwave rings render properly
+- [ ] **Target Spawn** - Fade-in + scale animation (0→1 over 300ms)
+- [ ] **Target Hit** - White flash, yellow glow, pulse animation
+- [ ] **Shield Effect** - Blue halo, 50% opacity, pulsing fade
+- [ ] **Invincibility Effect** - Rainbow halo, 50% opacity, random colors
 
-### Gameplay Feel
+### Known Issues
 
-- [ ] **Player Inertia** - Current drift is improved but needs fine-tuning for "tokyo drift feel"
-- [ ] **Health Power-Up Visual** - Green flash effect exists but may need to be more prominent
-- [ ] **Score/Accuracy Display** - Needs manual verification that values update correctly during gameplay
+- [ ] **Shield Visual Bug** - May impact explosive weapon display (needs investigation)
+- [ ] **White Border Bug** - Occasional white lines on viewport edges
 
-### Technical Investigation
+### Controls & Audio
 
-- [ ] **White Border Bug** - Occasional white lines on viewport edges (may be dev-only issue)
-- [ ] **Shield Visual Bug** - May be impacting the display of explosive weapon (needs investigation)
-
-### UI/Visual (Manual QA Needed)
-
-- [ ] **FPS Counter** - Located in top-left corner (validate positioning)
-- [ ] **UI Panels** - Confirm all text readable with dark backgrounds (Score, Wave, Health, Weapon, Stats)
-- [ ] **Shield Effect** - Verify blue halo (no wireframe), 50% opacity with pulsing fade
-- [ ] **Invincibility Effect** - Verify rainbow halo (no wireframe), 50% opacity with pulsing fade, random colors
-- [ ] **Time Slow Effect** - Confirm visual feedback present
-- [ ] **Score/Accuracy Display** - Verify values update correctly during gameplay
-- [ ] **Muzzle Flash Effects** - Confirm weapon-specific colors appear correctly
-- [ ] **Impact Effects** - Verify sparks and shockwaves render properly
-
-### Audio & Controls (Manual QA Needed)
-
-- [ ] **Pause Menu** - Verify sound/music toggles work, game pauses correctly
-- [ ] **Input Blocking** - Confirm cannot shoot/move during pause or wave transitions
+- [ ] **Pause Menu** - Sound/music toggles work correctly
+- [ ] **Input Blocking** - Cannot shoot/move during pause/wave transitions
 
 ---
 
 ## Performance Targets
 
-- Target: 60 FPS on modern hardware (300 FPS on high-end systems)
-- All tests passing: 218/218 ✅
+- **Target**: 60 FPS (modern hardware), 300 FPS (high-end)
+- **Tests**: 218/218 passing ✅
 
 ---
 
-## QA Test Session Template
+## Test Session Notes
 
-**Tester**: _____________  
-**Date**: _____________  
-**Browser/Device**: _____________
+**Date**: _____________
 
 ### Issues Found
+- 
 
-- List any bugs or unexpected behavior
-
-### Performance Notes
-
+### Performance
 - FPS: _______
-- Load Time: _______
-- Lag/Stuttering: _______
-
-### Suggestions
-
-- Feature requests or improvement ideas
+- Notable lag/stuttering: _______

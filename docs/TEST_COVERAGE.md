@@ -129,46 +129,6 @@ app/
 
 ---
 
-## Tech Debt & Improvements Discovered
-
-### 🔴 Critical Issues
-
-1. **weaponHandler.js - Shotgun hit detection**
-   - **Location:** `lib/asteroid/_comp/Weapons/weaponHandler.js`
-   - **Issue:** TODO comment states "Shotgun hit detection is too generous - hitting everything"
-   - **Impact:** Spread weapon may be hitting targets outside intended cone
-   - **Suggested Fix:** Review and tighten spread weapon hit cone angle calculation or collision logic
-   - **Status:** NOT FIXED - requires THREE.js testing environment
-
-### 🟡 Testing Improvements
-
-2. **Spawn time consistency**
-   - **Fixed:** Changed test mocks from `Date.now() - 1000` (milliseconds) to `performance.now() / 1000 - 5` (seconds)
-   - **Reason:** MIN_ALIVE_TIME validation expects seconds
-   - **Files affected:** `handleTargetHit.test.js`
-
-3. **Mock setup consistency**
-   - **Fixed:** Added `mockSetScore` to `beforeEach` in `handleTargetHit.test.js`
-   - **Reason:** Some tests were failing due to missing mock in scope
-
-4. **localStorage mocking pattern**
-   - **Fixed:** Used `Object.defineProperty` for window.localStorage mock
-   - **Reason:** More reliable than direct assignment
-   - **Files affected:** `loadSavedScores.test.js`, `handleGameOver.test.js`
-
-### 🟢 Code Quality Observations
-5. **Consistent error handling**
-   - Most game handlers use try-catch with console.warn in development
-   - Good practice for debugging without crashing production
-
-6. **localStorage safety**
-   - All localStorage operations wrapped in typeof checks
-   - Proper SSR compatibility
-
-7. **Combo system complexity**
-   - Complex timeout management with refs
-   - Well-tested in `handleTargetHit.test.js` (16 tests)
-
 ---
 
 ## Edge Cases Covered
@@ -214,37 +174,6 @@ app/
 - ✅ Ammo replenish (R key)
 - ✅ Unmapped key handling (no-op)
 - ✅ Pointer lock state management
-
----
-
-## Recommendations
-
-### Short-term
-
-1. ✅ **DONE:** Fix jest.config.js to track lib/** code
-2. ✅ **DONE:** Test all pure utility functions
-3. ✅ **DONE:** Test game logic handlers
-4. ✅ **DONE:** Accept 17-31% as realistic for R3F game
-5. ❌ **TODO:** Fix shotgun hit detection in weaponHandler.js
-
-### Long-term
-
-1. **Consider visual regression testing** for 3D scenes
-   - Tools: Percy, Chromatic, or custom screenshot comparison
-   - Would catch rendering issues without heavy mocking
-
-2. **Expand Playwright E2E tests**
-   - Currently 8 tests covering basic navigation and rendering
-   - Could add gameplay scenarios (shooting targets, power-ups, game over)
-
-3. **Document power-up effects**
-   - powerUpConfig.js has complex side effects
-   - Consider extracting testable pure functions
-
-4. **Refactor weaponHandler for testability**
-   - Extract raycasting logic from THREE.js dependencies
-   - Make distance/angle calculations pure functions
-   - Would allow testing hit detection math without mocking THREE
 
 ---
 
@@ -313,66 +242,25 @@ module.exports = {
 };
 ```
 
-**Note:** Coverage thresholds set to 75% are aspirational for a traditional app but unrealistic for a 3D game built with React Three Fiber. Current 17.31% represents comprehensive testing of all testable pure logic.
-
 ---
 
-## Running Tests
+## Summary
 
-### Unit Tests
+**218 tests** covering game logic, state management, shared systems, and UI components  
+**~20% overall coverage** representing 100% of testable pure functions  
+**16 files** with 100% coverage (11 game logic + 5 shared systems)  
 
-```bash
-# Run all tests
-npm test
+**Strategic approach**: Test pure logic thoroughly, rely on E2E tests for 3D rendering validation.
 
-# Run with coverage
-npm test -- --coverage
+### What We Test
+✅ Pure utility functions  
+✅ Game logic handlers  
+✅ Shared UI components  
+✅ Physics systems  
+✅ State management  
 
-# Watch mode
-npm test -- --watch
-
-# Run specific file
-npm test -- handleTargetHit.test.js
-```
-
-### E2E Tests
-
-```bash
-# Run Playwright tests
-npx playwright test
-
-# Run with UI
-npx playwright test --ui
-
-# Run specific spec
-npx playwright test e2e/games.spec.js
-```
-
----
-
-## Conclusion
-
-We've achieved **comprehensive testing coverage** for all testable code in this React Three Fiber game project:
-
-- **218 tests** covering game logic, state management, shared systems, and UI components
-- **~20% overall coverage** representing 100% of testable pure functions
-- **16 files** with 100% coverage (11 game logic + 5 shared systems)
-- **Strategic decision** to rely on Playwright E2E tests for 3D rendering validation
-- **Phase 9 additions**: 51 new tests for shared architecture and collision physics
-
-This testing approach balances **realistic coverage goals** with **pragmatic engineering**, avoiding the pitfall of heavy mocking that provides false confidence while consuming excessive development time.
-
-**What We Test:**
-✅ Pure utility functions (100% coverage)  
-✅ Game logic handlers (hit detection, scoring, combos)  
-✅ Shared UI components (buttons, menus, cards)  
-✅ Physics systems (collision detection, elastic collisions)  
-✅ State management (localStorage, score tracking)  
-
-**What We Don't Test:**
-❌ R3F visual components (MuzzleFlash, ImpactEffect, Target rendering)  
-❌ THREE.js integration (weaponHandler raycasting)  
-❌ Web Audio API (generateThrusterSound)  
-❌ Canvas rendering (covered by E2E tests)  
-
-**Status:** Testing infrastructure complete and production-ready ✅
+### What We Don't Test
+❌ R3F visual components  
+❌ THREE.js integration  
+❌ Web Audio API  
+❌ Canvas rendering
