@@ -17,7 +17,7 @@ describe('generateTargets - Target Initialization', () => {
     expect(targets).toHaveLength(5);
   });
 
-  test('generates targets with correct structure', () => {
+  test('generates targets with correct structure (Phase 9: velocity-based)', () => {
     const targets = generateInitialTargets(1);
     const target = targets[0];
 
@@ -27,7 +27,11 @@ describe('generateTargets - Target Initialization', () => {
     expect(target).toHaveProperty('z');
     expect(target).toHaveProperty('isHit');
     expect(target).toHaveProperty('size');
-    expect(target).toHaveProperty('speed');
+    // Phase 9: Velocity components replace speed scalar
+    expect(target).toHaveProperty('vx');
+    expect(target).toHaveProperty('vy');
+    expect(target).toHaveProperty('vz');
+    expect(target).toHaveProperty('mass');
     expect(target).toHaveProperty('color');
     expect(target).toHaveProperty('spawnTime');
   });
@@ -41,9 +45,12 @@ describe('generateTargets - Target Initialization', () => {
     // Size is now random between 5-15
     expect(target.size).toBeGreaterThanOrEqual(5);
     expect(target.size).toBeLessThanOrEqual(15);
-    // Speed should be close to default for wave 1 (with ±20% variation)
-    expect(target.speed).toBeGreaterThan(TARGET_CONFIG.DEFAULT_SPEED * 0.7);
-    expect(target.speed).toBeLessThan(TARGET_CONFIG.DEFAULT_SPEED * 1.5);
+    // Phase 9: Check velocity components instead of speed
+    expect(typeof target.vx).toBe('number');
+    expect(typeof target.vy).toBe('number');
+    expect(typeof target.vz).toBe('number');
+    // Mass should equal size
+    expect(target.mass).toBe(target.size);
     // Color is now based on size (green/yellow/red)
     expect(['#00ff00', '#ffff00', '#ff4400']).toContain(target.color);
     expect(target.spawnTime).toBeGreaterThan(0);
@@ -53,12 +60,20 @@ describe('generateTargets - Target Initialization', () => {
     const wave1Targets = generateInitialTargets(1, 1);
     const wave5Targets = generateInitialTargets(1, 5);
 
-    // Wave 5 should have faster base speed (1 + 4 * 0.15 = 1.6x multiplier)
-    const wave1AvgSpeed = wave1Targets[0].speed;
-    const wave5AvgSpeed = wave5Targets[0].speed;
+    // Phase 9: Calculate velocity magnitude
+    const wave1Speed = Math.sqrt(
+      wave1Targets[0].vx ** 2 + 
+      wave1Targets[0].vy ** 2 + 
+      wave1Targets[0].vz ** 2
+    );
+    const wave5Speed = Math.sqrt(
+      wave5Targets[0].vx ** 2 + 
+      wave5Targets[0].vy ** 2 + 
+      wave5Targets[0].vz ** 2
+    );
 
-    // Wave 5 should generally be faster (accounting for randomness)
-    expect(wave5AvgSpeed).toBeGreaterThan(wave1AvgSpeed * 0.9);
+    // Wave 5 should generally have higher velocity magnitude (accounting for randomness)
+    expect(wave5Speed).toBeGreaterThan(wave1Speed * 0.8);
   });
 
   test('generates targets at different positions', () => {

@@ -53,12 +53,13 @@ export const SCORE_VALUES = {
 };
 
 // Phase 8: Player physics constants for space-like movement with drift/inertia
+// Phase 9: Tuned down base speed and boost multiplier per QA feedback
 export const PLAYER_PHYSICS = {
   // Movement physics
-  BASE_ACCELERATION: 12.0, // Base acceleration for normal movement
-  SPEED_BOOST_ACCELERATION: 60.0, // Acceleration during speed boost
-  MAX_VELOCITY: 0.65, // Normal max velocity
-  SPEED_BOOST_MAX_VELOCITY: 2.8, // Max velocity during speed boost
+  BASE_ACCELERATION: 10.0, // Base acceleration (reduced from 12.0)
+  SPEED_BOOST_ACCELERATION: 45.0, // Acceleration during speed boost (reduced from 60.0)
+  MAX_VELOCITY: 0.55, // Normal max velocity (reduced from 0.65)
+  SPEED_BOOST_MAX_VELOCITY: 2.2, // Max velocity during speed boost (reduced from 2.8)
   DRAG_COEFFICIENT: 0.96, // High value for "tokyo drift feel"
   VELOCITY_THRESHOLD: 0.001, // Stop completely when very slow
   

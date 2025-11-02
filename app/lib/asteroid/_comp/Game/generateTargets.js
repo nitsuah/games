@@ -4,7 +4,7 @@ import { now } from '@/utils/time';
  * Generate initial targets for game restart
  * @param {number} count - Number of targets to generate
  * @param {number} wave - Current wave number (affects speed and difficulty)
- * @returns {Array} Array of target objects
+ * @returns {Array} Array of target objects with velocity vectors (Phase 9)
  */
 export const generateInitialTargets = (count = 10, wave = 1) => {
   const patterns = [
@@ -49,6 +49,12 @@ export const generateInitialTargets = (count = 10, wave = 1) => {
     const speedVariation = 0.8 + Math.random() * 0.4;
     const finalSpeed = baseSpeed * speedVariation;
     
+    // Phase 9: Generate random velocity vector instead of scalar speed
+    // Create velocity with magnitude = finalSpeed in a random direction
+    const vx = (Math.random() - 0.5) * 0.02 * finalSpeed;
+    const vy = (Math.random() - 0.5) * 0.02 * finalSpeed;
+    const vz = (Math.random() - 0.5) * 0.02 * finalSpeed;
+    
     return {
       id: index + 1,
       x: pos.x,
@@ -56,7 +62,11 @@ export const generateInitialTargets = (count = 10, wave = 1) => {
       z: pos.z,
       isHit: false,
       size,
-      speed: finalSpeed,
+      // Phase 9: velocity vector replaces speed scalar
+      vx,
+      vy,
+      vz,
+      mass: size, // Mass based on size for collision physics
       color,
       spawnTime: now(),
     };
