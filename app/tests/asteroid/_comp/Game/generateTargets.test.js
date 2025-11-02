@@ -1,4 +1,4 @@
-import { generateInitialTargets, TARGET_CONFIG, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
+import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
 
 describe('generateTargets - Target Initialization', () => {
   beforeEach(() => {

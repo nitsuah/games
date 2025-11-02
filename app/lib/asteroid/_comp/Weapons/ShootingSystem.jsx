@@ -33,6 +33,7 @@ const ShootingSystem = ({
   const [impactEffects, setImpactEffects] = useState([]);
   const mouseDownRef = useRef(false);
   const autoFireIntervalRef = useRef(null);
+  const effectIdCounterRef = useRef(0);
 
   const handleShoot = () => {
     if (isGameOver || isPaused || showWaveTransition) return;
@@ -52,17 +53,19 @@ const ShootingSystem = ({
       : forwardDirection.clone().multiplyScalar(2.5).add(new THREE.Vector3(0, -0.3, 0));
     const flashPosition = camera.position.clone().add(weaponOffset);
     
+    effectIdCounterRef.current += 1;
     setMuzzleFlashes((prev) => [
       ...prev,
-      { id: Date.now() + Math.random(), position: flashPosition, weaponType: weapon },
+      { id: `muzzle-${Date.now()}-${effectIdCounterRef.current}`, position: flashPosition, weaponType: weapon },
     ]);
 
     // Callback to create impact effects when targets are hit
     const triggerImpact = (targetPosition, damage = 10) => {
+      effectIdCounterRef.current += 1;
       setImpactEffects((prev) => [
         ...prev,
         { 
-          id: Date.now() + Math.random(), 
+          id: `impact-${Date.now()}-${effectIdCounterRef.current}`, 
           position: new THREE.Vector3(targetPosition.x, targetPosition.y, targetPosition.z),
           damage,
           type: 'hit',
@@ -93,9 +96,10 @@ const ShootingSystem = ({
                   explosionRadius: WEAPON_CONFIG.explosive.radius,
                   triggerExplosion: (position) => {
                     const radius = WEAPON_CONFIG.explosive.radius;
+                    effectIdCounterRef.current += 1;
                     setExplosions((prev) => [
                       ...prev,
-                      { id: Date.now(), position, explosionRadius: radius },
+                      { id: `explosion-${Date.now()}-${effectIdCounterRef.current}`, position, explosionRadius: radius },
                     ]);
                     // Map explosion size to nearby target sizes for more characterful sound
                     try {
@@ -122,9 +126,10 @@ const ShootingSystem = ({
           : {},
       triggerExplosion: (position) => {
         const radius = WEAPON_CONFIG.explosive.radius;
+        effectIdCounterRef.current += 1;
         setExplosions((prev) => [
           ...prev,
-          { id: Date.now(), position, explosionRadius: radius },
+          { id: `explosion-${Date.now()}-${effectIdCounterRef.current}`, position, explosionRadius: radius },
         ]);
         try {
           soundManager.playExplosion(Math.max(0.5, radius / 50));
