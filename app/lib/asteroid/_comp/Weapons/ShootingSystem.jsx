@@ -34,6 +34,7 @@ const ShootingSystem = ({
   const mouseDownRef = useRef(false);
   const autoFireIntervalRef = useRef(null);
   const effectIdCounterRef = useRef(0);
+  const aaShotCounterRef = useRef(0); // Track alternating shots for AA weapon
 
   // Helper function to generate unique effect IDs
   const generateEffectId = (prefix) => {
@@ -52,11 +53,25 @@ const ShootingSystem = ({
     // Create muzzle flash at weapon position
     const forwardDirection = new THREE.Vector3();
     camera.getWorldDirection(forwardDirection);
-    const weaponOffset = weapon === 'spread' 
-      ? forwardDirection.clone().multiplyScalar(2).add(new THREE.Vector3(0, -0.5, 0))
-      : weapon === 'laser'
-      ? forwardDirection.clone().multiplyScalar(1.5).add(new THREE.Vector3(0, -1.2, 0))
-      : forwardDirection.clone().multiplyScalar(2.5).add(new THREE.Vector3(0, -0.3, 0));
+    let weaponOffset;
+    
+    if (weapon === 'spread') {
+      weaponOffset = forwardDirection.clone().multiplyScalar(2).add(new THREE.Vector3(0, -0.5, 0));
+    } else if (weapon === 'laser') {
+      weaponOffset = forwardDirection.clone().multiplyScalar(1.5).add(new THREE.Vector3(0, -1.2, 0));
+    } else if (weapon === 'aa') {
+      // AA weapon has dual cannons that alternate - calculate left/right position
+      const right = new THREE.Vector3();
+      right.crossVectors(forwardDirection, camera.up).normalize();
+      const isLeftCannon = aaShotCounterRef.current % 2 === 0;
+      const cannonSide = isLeftCannon ? -1 : 1;
+      weaponOffset = forwardDirection.clone().multiplyScalar(2.5)
+        .add(new THREE.Vector3(0, -0.3, 0))
+        .add(right.multiplyScalar(1.5 * cannonSide));
+    } else {
+      weaponOffset = forwardDirection.clone().multiplyScalar(2.5).add(new THREE.Vector3(0, -0.3, 0));
+    }
+    
     const flashPosition = camera.position.clone().add(weaponOffset);
     
     setMuzzleFlashes((prev) => [
@@ -126,20 +141,41 @@ const ShootingSystem = ({
                     }
                   },
                 }
+          : weapon === 'aa'
+          ? {
+              explosionRadius: WEAPON_CONFIG.aa.radius,
+              shotCounter: aaShotCounterRef.current,
+              triggerExplosion: (position, radius = WEAPON_CONFIG.aa.radius) => {
+                setExplosions((prev) => [
+                  ...prev,
+                  { id: generateEffectId('explosion'), position, explosionRadius: radius },
+                ]);
+                try {
+                  soundManager.playExplosion(Math.max(0.5, radius / 50));
+                } catch {
+                  /* ignore */
+                }
+              },
+            }
           : {},
-      triggerExplosion: (position) => {
-        const radius = WEAPON_CONFIG.explosive.radius;
+      triggerExplosion: (position, radius) => {
+        const explosionRadius = radius || WEAPON_CONFIG.explosive.radius;
         setExplosions((prev) => [
           ...prev,
-          { id: generateEffectId('explosion'), position, explosionRadius: radius },
+          { id: generateEffectId('explosion'), position, explosionRadius },
         ]);
         try {
-          soundManager.playExplosion(Math.max(0.5, radius / 50));
+          soundManager.playExplosion(Math.max(0.5, explosionRadius / 50));
         } catch {
           /* ignore */
         }
       },
     });
+
+    // Increment AA shot counter for alternating cannons
+    if (weapon === 'aa') {
+      aaShotCounterRef.current += 1;
+    }
 
     const weaponCooldown = WEAPON_TYPES.find((w) => w.key === weapon).cooldown;
     // Explosive: 0 cooldown with rapid fire for fastest firing mode

@@ -188,4 +188,55 @@ export function weaponHandler({
     }
     return;
   }
+
+  if (type === 'aa') {
+    // AA (Anti-Aircraft) weapon: dual cannons with alternating fire and smaller explosions
+    const { explosionRadius = 15, cannonOffset = 1.5, shotCounter = 0 } = weaponParams;
+    const maxRange = 100;
+    
+    // Calculate left/right cannon position (alternates each shot)
+    const right = new THREE.Vector3();
+    right.crossVectors(forwardDirection, camera.up).normalize();
+    const isLeftCannon = shotCounter % 2 === 0;
+    const cannonSide = isLeftCannon ? -1 : 1;
+    const cannonPosition = from.clone().add(right.multiplyScalar(cannonOffset * cannonSide));
+    
+    const raycaster = new THREE.Raycaster(cannonPosition, forwardDirection);
+    const validObjects = scene.children.filter(obj => obj.matrixWorld !== null);
+    const intersects = raycaster.intersectObjects(validObjects, true);
+    
+    const impactPoint =
+      intersects[0]?.point || cannonPosition.clone().add(forwardDirection.multiplyScalar(maxRange));
+    
+    if (setShowLaser) {
+      setShowLaser([{ from: cannonPosition, to: impactPoint, speed: 1.8 }]);
+      setTimeout(() => setShowLaser(null), 300);
+    }
+    
+    if (triggerExplosion) triggerExplosion(impactPoint, explosionRadius);
+
+    const explosionSphere = new THREE.Sphere(impactPoint, explosionRadius);
+    const hitTargets = new Set();
+    const updatedTargets = targets.map((target) => {
+      if (!target.isHit) {
+        const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
+        if (explosionSphere.containsPoint(targetPosition)) {
+          hitTargets.add(target.id);
+          playSound('hit');
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 2);
+          }
+          return { ...target, isHit: true };
+        }
+      }
+      return target;
+    });
+    setTargets(updatedTargets);
+
+    if (hitTargets.size === 0) {
+      playSound('miss');
+      if (onMiss) onMiss();
+    }
+    return;
+  }
 }

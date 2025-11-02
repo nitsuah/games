@@ -15,12 +15,14 @@ export const WEAPON_CONFIG = {
   spread: { angle: 0.15, count: 12, range: 80 }, // Faster trail fade with lower max range
   laser: { color: 'cyan', range: 400 },
   explosive: { radius: 30, color: 'orange' }, // Smaller explosion radius
+  aa: { radius: 15, color: '#00ff00', speed: 1.8, damage: 0.5 }, // Phase 10: AA cannon - smaller, faster
 };
 
 export const WEAPON_TYPES = [
   { key: 'spread', name: 'Spread Shot', maxAmmo: 10, cooldown: 0.3 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
   { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Longer cooldown for balance
+  { key: 'aa', name: 'AA Cannon', maxAmmo: 20, cooldown: 0.25 }, // Phase 10: Fast firing dual cannon
 ];
 
 export const POWER_UP_COLORS = {
@@ -42,6 +44,7 @@ export const INITIAL_AMMO = {
   spread: 10,
   laser: 10,
   explosive: 10,
+  aa: 20,
 };
 
 export const INITIAL_HEALTH = 100;

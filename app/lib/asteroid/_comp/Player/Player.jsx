@@ -239,8 +239,11 @@ const Player = ({
     if (Math.abs(angularVelocityRef.current.roll) < 0.001) angularVelocityRef.current.roll = 0;
     if (Math.abs(angularVelocityRef.current.yaw) < 0.001) angularVelocityRef.current.yaw = 0;
 
+    // Phase 10: Sync player mesh position and rotation with camera
     const offset = new THREE.Vector3(0, -1, 0);
     meshRef.current.position.copy(camera.position).add(offset);
+    // Copy camera rotation to player body so it matches camera orientation
+    meshRef.current.rotation.copy(camera.rotation);
 
     // === COLLISION PHYSICS (Phase 8: Bounce and momentum transfer) ===
     targets.forEach((target) => {

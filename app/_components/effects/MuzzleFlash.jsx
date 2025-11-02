@@ -7,7 +7,7 @@ import * as THREE from 'three';
  * 
  * @param {Object} props
  * @param {THREE.Vector3} props.position - Flash position in 3D space
- * @param {string} props.weaponType - 'laser', 'spread', or 'explosive'
+ * @param {string} props.weaponType - 'laser', 'spread', 'explosive', or 'aa'
  * @param {Function} props.onComplete - Callback when flash completes
  */
 const MuzzleFlash = ({ position, weaponType = 'laser', onComplete }) => {
@@ -45,6 +45,15 @@ const MuzzleFlash = ({ position, weaponType = 'laser', onComplete }) => {
           size: 0.5,
           particleCount: 16,
           spread: 0.3,
+        };
+      case 'aa':
+        return {
+          color: new THREE.Color(0x00ff00), // Green
+          glowColor: new THREE.Color(0x88ff00),
+          intensity: 2.5,
+          size: 0.35,
+          particleCount: 10,
+          spread: 0.25,
         };
       default:
         return {
