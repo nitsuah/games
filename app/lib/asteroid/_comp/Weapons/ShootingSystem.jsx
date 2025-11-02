@@ -1,8 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 import { useSound } from '@/utils/audio/useSound';
 import CooldownManager from '@/lib/asteroid/_comp/Weapons/CooldownManager';
 import Explosion from '@/_components/effects/Explosion';
+import MuzzleFlash from '@/_components/effects/MuzzleFlash';
+import ImpactEffect from '@/_components/effects/ImpactEffect';
 import { WEAPON_CONFIG, WEAPON_TYPES } from '@/lib/asteroid/_comp/config';
 import { weaponHandler } from '@/lib/asteroid/_comp/Weapons/weaponHandler';
 import soundManager from '@/utils/audio/SoundManager';
@@ -26,6 +29,8 @@ const ShootingSystem = ({
   const { camera, scene } = useThree();
   const { playSound } = useSound();
   const [explosions, setExplosions] = useState([]);
+  const [muzzleFlashes, setMuzzleFlashes] = useState([]);
+  const [impactEffects, setImpactEffects] = useState([]);
   const mouseDownRef = useRef(false);
   const autoFireIntervalRef = useRef(null);
 
@@ -37,6 +42,34 @@ const ShootingSystem = ({
       return;
     }
 
+    // Create muzzle flash at weapon position
+    const forwardDirection = new THREE.Vector3();
+    camera.getWorldDirection(forwardDirection);
+    const weaponOffset = weapon === 'spread' 
+      ? forwardDirection.clone().multiplyScalar(2).add(new THREE.Vector3(0, -0.5, 0))
+      : weapon === 'laser'
+      ? forwardDirection.clone().multiplyScalar(1.5).add(new THREE.Vector3(0, -1.2, 0))
+      : forwardDirection.clone().multiplyScalar(2.5).add(new THREE.Vector3(0, -0.3, 0));
+    const flashPosition = camera.position.clone().add(weaponOffset);
+    
+    setMuzzleFlashes((prev) => [
+      ...prev,
+      { id: Date.now() + Math.random(), position: flashPosition, weaponType: weapon },
+    ]);
+
+    // Callback to create impact effects when targets are hit
+    const triggerImpact = (targetPosition, damage = 10) => {
+      setImpactEffects((prev) => [
+        ...prev,
+        { 
+          id: Date.now() + Math.random(), 
+          position: new THREE.Vector3(targetPosition.x, targetPosition.y, targetPosition.z),
+          damage,
+          type: 'hit',
+        },
+      ]);
+    };
+
     weaponHandler({
       type: weapon,
       camera,
@@ -47,6 +80,7 @@ const ShootingSystem = ({
       playSound,
       onHit,
       onMiss,
+      triggerImpact,
       weaponParams:
         weapon === 'spread'
           ? {
@@ -179,6 +213,23 @@ const ShootingSystem = ({
           position={explosion.position}
           explosionRadius={explosion.explosionRadius}
           onComplete={() => setExplosions((prev) => prev.filter((e) => e.id !== explosion.id))}
+        />
+      ))}
+      {muzzleFlashes.map((flash) => (
+        <MuzzleFlash
+          key={flash.id}
+          position={flash.position}
+          weaponType={flash.weaponType}
+          onComplete={() => setMuzzleFlashes((prev) => prev.filter((f) => f.id !== flash.id))}
+        />
+      ))}
+      {impactEffects.map((effect) => (
+        <ImpactEffect
+          key={effect.id}
+          position={effect.position}
+          damage={effect.damage}
+          type={effect.type}
+          onComplete={() => setImpactEffects((prev) => prev.filter((e) => e.id !== effect.id))}
         />
       ))}
     </>

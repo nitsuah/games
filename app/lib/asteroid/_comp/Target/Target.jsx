@@ -6,7 +6,10 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
   const [flash, setFlash] = useState(false);
-  const [opacity, setOpacity] = useState(1);
+  const [opacity, setOpacity] = useState(0); // Start invisible for spawn animation
+  const [scale, setScale] = useState(0); // Start small for spawn animation
+  const spawnTimeRef = useRef(Date.now());
+  const hitTimeRef = useRef(null);
   // Phase 9: Use velocity prop instead of random speed
   const velocityRef = useRef(new THREE.Vector3(velocity.x, velocity.y, velocity.z));
   const [bounds] = useState(() => ({ min: new THREE.Vector3(-50, -50, -50), max: new THREE.Vector3(50, 50, 50) }));
@@ -19,16 +22,33 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
 
   useEffect(() => {
     if (isHit) {
+      hitTimeRef.current = Date.now();
       setFlash(true);
-      setOpacity(1);
       setTimeout(() => setFlash(false), 80);
       setTimeout(() => setOpacity(0.2), 120);
-    } else {
-      setOpacity(1);
     }
   }, [isHit]);
 
   useFrame(() => {
+    // Spawn animation: fade in and scale up over 300ms
+    if (!isHit) {
+      const elapsed = Date.now() - spawnTimeRef.current;
+      const spawnProgress = Math.min(elapsed / 300, 1);
+      setOpacity(spawnProgress);
+      setScale(spawnProgress);
+    }
+    
+    // Hit animation: pulse scale and fade out
+    if (isHit && hitTimeRef.current) {
+      const hitElapsed = Date.now() - hitTimeRef.current;
+      const hitProgress = Math.min(hitElapsed / 200, 1);
+      // Pulse: grow then shrink
+      const pulseScale = 1 + Math.sin(hitProgress * Math.PI) * 0.3;
+      setScale(pulseScale);
+      // Fade out
+      setOpacity(Math.max(0.2, 1 - hitProgress * 0.8));
+    }
+    
     // Stop movement when game is over or paused
     if (isGameOver || isPaused || !meshRef.current || isHit) return;
     
@@ -68,13 +88,21 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     <mesh
       ref={meshRef}
       position={position}
-      scale={[size, size, size]}
+      scale={[size * scale, size * scale, size * scale]}
       onClick={handleClick}
       onPointerOver={(event) => { event.stopPropagation(); setHovered(true); }}
       onPointerOut={(event) => { event.stopPropagation(); setHovered(false); }}
     >
       <octahedronGeometry args={[1, 0]} />
-      <meshStandardMaterial color={isHit ? (flash ? '#ffffff' : '#808080') : hovered ? '#ffaa00' : color} metalness={0.5} roughness={0.2} transparent opacity={opacity} />
+      <meshStandardMaterial 
+        color={isHit ? (flash ? '#ffffff' : '#808080') : hovered ? '#ffaa00' : color} 
+        metalness={0.5} 
+        roughness={0.2} 
+        transparent 
+        opacity={opacity}
+        emissive={flash ? '#ffff00' : '#000000'}
+        emissiveIntensity={flash ? 2 : 0}
+      />
     </mesh>
   );
 };

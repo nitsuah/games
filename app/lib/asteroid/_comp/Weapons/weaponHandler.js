@@ -13,6 +13,7 @@ export function weaponHandler({
   onMiss,
   weaponParams = {},
   triggerExplosion,
+  triggerImpact,
 }) {
   const forwardDirection = new THREE.Vector3();
   camera.getWorldDirection(forwardDirection);
@@ -42,6 +43,10 @@ export function weaponHandler({
         if (isIntersected) {
           hitTargets.add(target.id);
           playSound('hit');
+          // Trigger impact effect at target position
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 2);
+          }
           return { ...target, isHit: true };
         }
       }
@@ -87,6 +92,10 @@ export function weaponHandler({
         if (angle <= SPREAD_ANGLE * 2 && distance <= SPREAD_RANGE && Math.random() < distanceFactor) {
           hitTargets.add(target.id);
           playSound('hit');
+          // Trigger impact effect at target position
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 2);
+          }
           return { ...target, isHit: true };
         }
       }
@@ -162,6 +171,10 @@ export function weaponHandler({
         if (explosionSphere.containsPoint(targetPosition)) {
           hitTargets.add(target.id);
           playSound('hit');
+          // Trigger impact effect at each target position
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 3);
+          }
           return { ...target, isHit: true };
         }
       }
