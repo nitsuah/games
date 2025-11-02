@@ -48,25 +48,14 @@ export function processTargetCollisions(targets, setTargets, meshRefs) {
   
   // Insert all targets into spatial grid
   activeTargets.forEach((target) => {
-    grid.insert(target.position, target);
+    grid.add(target);
   });
   
   // Detect and resolve collisions
   const collisions = [];
   activeTargets.forEach((targetA) => {
     // Get nearby targets from spatial grid (much faster than checking all)
-    const nearby = grid.query(
-      new THREE.Vector3(
-        targetA.position.x - targetA.radius * 2,
-        targetA.position.y - targetA.radius * 2,
-        targetA.position.z - targetA.radius * 2
-      ),
-      new THREE.Vector3(
-        targetA.position.x + targetA.radius * 2,
-        targetA.position.y + targetA.radius * 2,
-        targetA.position.z + targetA.radius * 2
-      )
-    );
+    const nearby = grid.getNearby(targetA.position, targetA.radius * 2);
     
     nearby.forEach((targetB) => {
       // Skip self-collision and already processed pairs

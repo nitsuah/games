@@ -149,8 +149,9 @@
 /* Grid mode - compact icon view */
 .gridMode {
   padding: 20px;
-  min-width: 120px;
-  max-width: 150px;
+  min-width: 140px;
+  flex: 1 1 140px;
+  max-width: 200px;
 }
 
 .gridMode .iconWrapper {
@@ -162,10 +163,24 @@
   font-size: 40px;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin: 8px 0 0 0;
+}
+
+.playIcon {
+  font-size: 14px;
+  color: var(--ui-primary, #00ffff);
+  animation: arrowBounce 1.5s ease-in-out infinite;
+}
+
 .gridMode .title {
   font-size: 18px;
   letter-spacing: 2px;
-  margin: 8px 0 0 0;
+  margin: 0;
 }
 
 .gridMode .playPrompt {
@@ -178,6 +193,7 @@
 .listMode {
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   padding: 20px 30px;
   gap: 20px;
   width: 100%;
@@ -199,20 +215,19 @@
   letter-spacing: 2px;
   margin: 0;
   text-align: left;
-  align-self: center;
+  flex-grow: 1;
 }
 
 .listMode .description {
   text-align: left;
-  flex-grow: 1;
-  align-self: center;
+  flex-grow: 2;
   margin: 0;
 }
 
 .listMode .playPrompt {
   margin: 0;
-  align-self: center;
   flex-shrink: 0;
+  font-size: 24px;
 }
 
 /* Hide PLAY prompt in grid mode */

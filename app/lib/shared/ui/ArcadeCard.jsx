@@ -17,12 +17,21 @@ export default function ArcadeCard({
       <div className={styles.iconWrapper}>
         <span className={styles.icon}>{icon}</span>
       </div>
-      <h3 className={styles.title}>{title}</h3>
+      {displayMode === 'grid' ? (
+        <div className={styles.titleRow}>
+          <span className={styles.playIcon}>▶</span>
+          <h3 className={styles.title}>{title}</h3>
+        </div>
+      ) : (
+        <h3 className={styles.title}>{title}</h3>
+      )}
       {displayMode !== 'grid' && <p className={styles.description}>{description}</p>}
-      <div className={styles.playPrompt}>
-        <span className={styles.arrow}>▶</span>
-        <span>PLAY</span>
-      </div>
+      {displayMode !== 'grid' && (
+        <div className={styles.playPrompt}>
+          <span className={styles.arrow}>▶</span>
+          {displayMode !== 'list' && <span>PLAY</span>}
+        </div>
+      )}
     </button>
   );
 }

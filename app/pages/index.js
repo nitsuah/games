@@ -48,6 +48,7 @@ const PageContainer = styled.div`
   margin: 0;
   padding: 0;
   position: relative;
+  /* Intentional: overflow hidden maintains arcade cabinet fixed viewport design */
   overflow: hidden;
   box-sizing: border-box;
 
@@ -163,7 +164,7 @@ const Subtitle = styled.h3`
 const GameList = styled.div`
   display: flex;
   flex-direction: ${props => props.$mode === 'list' ? 'column' : 'row'};
-  gap: ${props => props.$mode === 'grid' ? '15px' : '20px'};
+  gap: ${props => props.$mode === 'grid' ? '20px' : '20px'};
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
@@ -180,13 +181,46 @@ const GameList = styled.div`
   
   ${props => props.$mode === 'grid' && `
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    max-width: 400px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    max-width: 90%;
+    gap: 25px;
+    justify-items: center;
+    
+    @media (min-width: 768px) {
+      max-width: 600px;
+    }
+    
+    @media (min-width: 1024px) {
+      max-width: 800px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
   `}
   
   ${props => props.$mode === 'list' && `
     align-items: stretch;
-    max-width: 500px;
+    max-width: 550px;
+    overflow-y: auto;
+    max-height: 450px;
+    padding-right: 10px;
+    
+    /* Custom scrollbar styling */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 255, 255, 0.4);
+      border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 255, 255, 0.6);
+    }
   `}
 `;
 
@@ -194,24 +228,26 @@ const CarouselArrow = styled.button`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  ${props => props.$direction === 'left' ? 'left: -50px;' : 'right: -50px;'}
+  ${props => props.$direction === 'left' ? 'left: -60px;' : 'right: -60px;'}
   background: rgba(0, 255, 255, 0.2);
   border: 2px solid #00ffff;
   border-radius: 50%;
   color: #00ffff;
-  font-size: 24px;
-  width: 40px;
-  height: 40px;
+  font-size: 28px;
+  width: 50px;
+  height: 50px;
   cursor: pointer;
   z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
   
   &:hover {
     background: rgba(0, 255, 255, 0.4);
     transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
   }
   
   &:active {
@@ -223,6 +259,10 @@ const CarouselArrow = styled.button`
     width: 35px;
     height: 35px;
     font-size: 20px;
+  }
+  
+  @media (min-width: 1200px) {
+    ${props => props.$direction === 'left' ? 'left: -80px;' : 'right: -80px;'}
   }
 `;
 
@@ -529,27 +569,88 @@ const CoinSlot = styled.div`
   }
 `;
 
+const neonFlicker = keyframes`
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    text-shadow: 
+      0 0 4px #fff,
+      0 0 11px #fff,
+      0 0 19px #fff,
+      0 0 40px #ffff00,
+      0 0 80px #ffff00,
+      0 0 90px #ffff00,
+      0 0 100px #ffff00,
+      0 0 150px #ffff00;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+  }
+`;
+
 const MarqueeText = styled.h1`
   position: absolute;
-  top: 30px;
+  top: 15px;
   left: 50%;
   transform: translateX(-50%);
   color: #ffff00;
-  font-size: 56px;
+  font-size: 58px;
   font-weight: 900;
   font-family: 'Courier New', monospace;
   text-shadow: 
-    0 0 20px #ffff00,
-    0 0 40px #ffff00;
-  letter-spacing: 14px;
+    0 0 4px #fff,
+    0 0 11px #fff,
+    0 0 19px #fff,
+    0 0 40px #ffff00,
+    0 0 80px #ffff00,
+    0 0 90px #ffff00,
+    0 0 100px #ffff00,
+    0 0 150px #ffff00;
+  letter-spacing: 16px;
   z-index: 15;
-  animation: ${flicker} 2s infinite alternate;
-  will-change: opacity;
+  animation: ${neonFlicker} 5s linear infinite;
+  will-change: text-shadow;
   margin: 0;
   white-space: nowrap;
   
+  /* Add decorative elements */
+  &::before,
+  &::after {
+    content: '★';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 32px;
+    color: #ff1493;
+    text-shadow: 
+      0 0 10px #ff1493,
+      0 0 20px #ff1493,
+      0 0 30px #ff1493;
+    animation: ${pulse} 2s ease-in-out infinite;
+  }
+  
+  &::before {
+    left: -50px;
+  }
+  
+  &::after {
+    right: -50px;
+  }
+  
   @media (max-width: 768px) {
     font-size: 48px;
+    letter-spacing: 12px;
+    
+    &::before,
+    &::after {
+      font-size: 24px;
+    }
+    
+    &::before {
+      left: -35px;
+    }
+    
+    &::after {
+      right: -35px;
+    }
   }
 `;
 
@@ -589,6 +690,45 @@ const HomePage = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Only handle arrow keys, not other keys
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        return;
+      }
+
+      // Prevent default scrolling behavior
+      e.preventDefault();
+
+      if (displayMode === 'carousel') {
+        // In carousel mode, left/right arrows navigate games
+        if (e.key === 'ArrowLeft') {
+          prevGame();
+        } else if (e.key === 'ArrowRight') {
+          nextGame();
+        }
+      } else if (displayMode === 'grid' || displayMode === 'list') {
+        // In grid/list mode, up/down arrows navigate games
+        if (e.key === 'ArrowUp') {
+          setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
+        } else if (e.key === 'ArrowDown') {
+          setCurrentGameIndex((prev) => (prev + 1) % games.length);
+        }
+        // Also support left/right in grid mode
+        if (displayMode === 'grid' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+          if (e.key === 'ArrowLeft') {
+            setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
+          } else {
+            setCurrentGameIndex((prev) => (prev + 1) % games.length);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [displayMode, games.length]);
 
   const toggleMute = () => {
     if (audioRef.current) {

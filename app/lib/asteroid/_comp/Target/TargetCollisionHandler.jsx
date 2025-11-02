@@ -59,7 +59,7 @@ const TargetCollisionHandler = ({ targets, setTargets }) => {
     
     // Insert all targets into spatial grid
     activeTargets.forEach(target => {
-      grid.insert(target.position, target);
+      grid.add(target);
     });
     
     // Detect collisions
@@ -69,18 +69,7 @@ const TargetCollisionHandler = ({ targets, setTargets }) => {
     activeTargets.forEach(targetA => {
       // Get nearby targets from spatial grid
       const searchRadius = targetA.radius * 2;
-      const nearby = grid.query(
-        new THREE.Vector3(
-          targetA.position.x - searchRadius,
-          targetA.position.y - searchRadius,
-          targetA.position.z - searchRadius
-        ),
-        new THREE.Vector3(
-          targetA.position.x + searchRadius,
-          targetA.position.y + searchRadius,
-          targetA.position.z + searchRadius
-        )
-      );
+      const nearby = grid.getNearby(targetA.position, searchRadius);
       
       nearby.forEach(targetB => {
         // Skip self-collision and already processed pairs
