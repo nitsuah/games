@@ -79,8 +79,9 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
 
     // Only update state when position has changed significantly (> 0.5 units)
     // This reduces state updates from 60fps to ~5-10fps per target
-    const distanceMoved = meshRef.current.position.distanceTo(lastUpdatePosRef.current);
-    if (distanceMoved > 0.5 && typeof setTargets === 'function') {
+    // Use distanceToSquared for better performance (avoids sqrt calculation)
+    const distanceMovedSq = meshRef.current.position.distanceToSquared(lastUpdatePosRef.current);
+    if (distanceMovedSq > 0.25 && typeof setTargets === 'function') {
       lastUpdatePosRef.current.copy(meshRef.current.position);
       setTargets((prevTargets) => prevTargets.map((target) => 
         target.id === targetId 

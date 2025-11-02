@@ -24,10 +24,11 @@ export function checkSphereCollision(posA, radiusA, posB, radiusB) {
 }
 
 /**
- * Calculate elastic collision response between two objects
+ * Calculate collision response between two objects
  * 
  * Uses conservation of momentum and energy to calculate post-collision velocities.
- * Assumes elastic collision (no energy loss).
+ * By default, simulates slightly inelastic collisions (restitution = 0.8) with some energy loss,
+ * which is typical in real-world physics and provides natural-feeling game physics.
  * 
  * @param {THREE.Vector3} posA - Position of object A
  * @param {THREE.Vector3} velA - Velocity of object A

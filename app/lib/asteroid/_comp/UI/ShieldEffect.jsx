@@ -2,6 +2,9 @@ import { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
+// Visual constants
+const SHIELD_TILT_ANGLE = 0.4; // Tilts shield ring forward to avoid blocking center view
+
 // ShieldEffect: wireframe sphere that fades in/out and pulses when active.
 const ShieldEffect = ({ shieldActive }) => {
   const shieldRef = useRef();
@@ -75,7 +78,7 @@ const ShieldEffect = ({ shieldActive }) => {
       </mesh>
       
       {/* Main horizontal blue halo ring - tilted forward to avoid blocking center view */}
-      <mesh rotation={[Math.PI / 2 - 0.4, 0, 0]}>
+      <mesh rotation={[Math.PI / 2 - SHIELD_TILT_ANGLE, 0, 0]}>
         <torusGeometry args={[2.4, 0.12, 12, 64]} />
         <meshStandardMaterial
           ref={materialRef}

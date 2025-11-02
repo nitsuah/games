@@ -11,6 +11,12 @@ import { WEAPON_CONFIG, WEAPON_TYPES } from '@/lib/asteroid/_comp/config';
 import { weaponHandler } from '@/lib/asteroid/_comp/Weapons/weaponHandler';
 import soundManager from '@/utils/audio/SoundManager';
 
+// Fire rate constants (in milliseconds)
+const FIRE_RATES = {
+  LASER_CONTINUOUS: 50,      // Ultra-fast for continuous beam feel
+  RAPID_FIRE_POWER_UP: 300,  // 0.3 seconds for rapid fire power-up
+};
+
 const ShootingSystem = ({
   onHit,
   onMiss,
@@ -248,11 +254,11 @@ const ShootingSystem = ({
         }
         
         // Fire rates: 
-        // - Laser: ultra-fast (50ms = continuous beam feel)
-        // - Rapid fire: 300ms (0.3s) for all weapons
-        let fireRate = 50; // Default laser rate
+        // - Laser: ultra-fast for continuous beam feel
+        // - Rapid fire: slower rate for all weapons
+        let fireRate = FIRE_RATES.LASER_CONTINUOUS;
         if (rapidFireActive) {
-          fireRate = 300; // 0.3 seconds for rapid fire power-up
+          fireRate = FIRE_RATES.RAPID_FIRE_POWER_UP;
         }
         
         autoFireIntervalRef.current = setInterval(() => {
