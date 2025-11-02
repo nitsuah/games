@@ -28,12 +28,17 @@ const pulse = keyframes`
   50% { opacity: 1; }
 `;
 
+const blink = keyframes`
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+`;
+
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   background: linear-gradient(135deg, #0a0015 0%, #1a0030 50%, #0a0015 100%);
   color: white;
@@ -41,7 +46,7 @@ const PageContainer = styled.div`
   margin: 0;
   padding: 20px;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
   box-sizing: border-box;
 
   /* CRT screen effect */
@@ -66,7 +71,7 @@ const PageContainer = styled.div`
 
 const ArcadeFrame = styled.div`
   background: linear-gradient(135deg, rgba(20, 0, 40, 0.95), rgba(10, 0, 30, 0.95));
-  padding: 40px 60px 60px;
+  padding: 30px 60px 80px;
   border-radius: 20px;
   border: 4px solid #00ffff;
   box-shadow: 
@@ -79,6 +84,12 @@ const ArcadeFrame = styled.div`
   width: 600px;
   max-width: 90vw;
   box-sizing: border-box;
+  min-height: 500px;
+  
+  @media (max-width: 768px) {
+    padding: 25px 40px 70px;
+    min-height: 450px;
+  }
 `;
 
 const Scanline = styled.div`
@@ -106,7 +117,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 52px;
+  font-size: 42px;
   font-weight: 900;
   color: #00ffff;
   text-shadow: 
@@ -114,7 +125,7 @@ const Title = styled.h2`
     0 0 40px #00ffff,
     0 4px 0 rgba(0, 0, 0, 0.8);
   margin: 0 0 8px 0;
-  letter-spacing: 10px;
+  letter-spacing: 8px;
   font-family: 'Courier New', monospace;
   animation: ${flicker} 3s infinite alternate;
   text-transform: uppercase;
@@ -122,7 +133,17 @@ const Title = styled.h2`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 15px;
+  
+  @media (max-width: 768px) {
+    font-size: 36px;
+    gap: 10px;
+    letter-spacing: 6px;
+    
+    span:first-child {
+      display: none;
+    }
+  }
 `;
 
 const Subtitle = styled.h3`
@@ -220,20 +241,28 @@ const GameIcon = styled.span`
 
 const InsertCoinText = styled.div`
   position: absolute;
-  bottom: 10px;
+  bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
   color: #00ffff;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: bold;
   font-family: 'Courier New', monospace;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   text-shadow: 
-    0 0 10px #00ffff,
-    0 0 20px #00ffff;
-  animation: ${flicker} 1.5s infinite alternate;
+    0 0 15px #00ffff,
+    0 0 30px #00ffff,
+    0 0 45px #00ffff;
+  animation: ${blink} 1s step-start infinite;
   will-change: opacity;
   z-index: 6;
+  white-space: nowrap;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    letter-spacing: 1px;
+    bottom: 20px;
+  }
 `;
 
 const MuteButton = styled.button`
@@ -270,7 +299,8 @@ const ArcadeCabinet = styled.div`
   position: relative;
   max-width: 90vw;
   padding-bottom: 100px;
-  padding-top: 80px;
+  padding-top: 90px;
+  margin: 20px 0;
 
   /* Cabinet top marquee - matches screen width */
   &::before {
@@ -367,7 +397,7 @@ const ButtonDecoration = styled.div`
 const Joystick = styled.div`
   position: absolute;
   bottom: 60px;
-  left: 80px;
+  left: 60px;
   width: 30px;
   height: 30px;
   background: radial-gradient(circle at 30% 30%, #333, #000);
@@ -376,7 +406,7 @@ const Joystick = styled.div`
   z-index: 15;
   
   @media (max-width: 768px) {
-    left: 40px;
+    left: 30px;
   }
 
   &::before {
@@ -416,16 +446,17 @@ const ControlsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 25px;
+  gap: 30px;
   z-index: 15;
   width: 600px;
   max-width: 90vw;
-  padding: 0 40px;
+  padding: 0 20px;
   box-sizing: border-box;
   
   @media (max-width: 768px) {
-    gap: 20px;
-    padding: 0 20px;
+    gap: 15px;
+    padding: 0 30px;
+    justify-content: center;
   }
 `;
 
@@ -436,10 +467,14 @@ const CoinSlot = styled.div`
   border: 3px solid #444;
   border-radius: 6px;
   box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.9);
-  position: relative;
+  position: absolute;
+  bottom: 60px;
+  right: 60px;
+  z-index: 15;
   
-  @media (min-width: 769px) {
-    margin-left: auto;
+  @media (max-width: 768px) {
+    right: 30px;
+    bottom: 60px;
   }
 
   &::after {
@@ -453,6 +488,7 @@ const CoinSlot = styled.div`
     font-weight: bold;
     font-family: 'Courier New', monospace;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
   }
 `;
 
@@ -508,8 +544,7 @@ const HomePage = () => {
       if (muted) {
         audioRef.current.play().catch(e => {
           console.error(
-            `Audio playback failed: ${e && e.name ? e.name + ': ' : ''}${e && e.message ? e.message : e}. ` +
-            'This may be due to browser autoplay restrictions, unsupported audio format, or lack of user interaction.',
+            `Audio playback failed: ${e?.name ? e.name + ': ' : ''}${e?.message ?? e}. This may be due to browser autoplay restrictions, unsupported audio format, or lack of user interaction.`,
             e
           );
         });
@@ -529,6 +564,7 @@ const HomePage = () => {
       <ArcadeCabinet>
         <MarqueeText>ARCADE</MarqueeText>
         <Joystick />
+        <CoinSlot />
         <ControlsContainer>
           <ButtonDecoration>
             <span />
@@ -536,7 +572,6 @@ const HomePage = () => {
             <span />
             <span />
           </ButtonDecoration>
-          <CoinSlot />
         </ControlsContainer>
 
         <ArcadeFrame>
@@ -544,7 +579,7 @@ const HomePage = () => {
           <Header>
             <Title>
               <span>🕹️</span>
-              <span>ARCADE</span>
+              <span>PLAY</span>
               <span>🕹️</span>
             </Title>
             <Subtitle>Select Your Game</Subtitle>
@@ -559,7 +594,7 @@ const HomePage = () => {
               FPS
             </GameCard>
           </GameList>
-          <InsertCoinText>INSERT COIN TO CONTINUE</InsertCoinText>
+          <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>
         </ArcadeFrame>
       </ArcadeCabinet>
     </PageContainer>

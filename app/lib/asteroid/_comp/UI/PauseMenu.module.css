@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: var(--ui-bg-overlay);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -288,6 +288,9 @@
   border-radius: 12px;
   padding: 20px;
   animation: shake 0.5s;
+  position: relative;
+  z-index: 1001;
+  pointer-events: auto;
 }
 
 .confirmTitle {

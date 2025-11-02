@@ -1,14 +1,24 @@
 import { WEAPON_TYPES } from '../../lib/asteroid/_comp/config';
 
+// Pulse animation patterns for power-up visual feedback
+const HEALTH_PULSE_OPACITIES = [250, 100, 200, 80, 150, 50, 0];
+const HEALTH_PULSE_DELAYS = [0, 100, 200, 300, 400, 500, 650];
+
 /**
  * Creates a pulse animation effect using multiple flash calls
  * @param {Function} showFlash - Flash function from game context
  * @param {string} color - Flash color
  * @param {number[]} opacities - Array of opacity values (0-255)
- * @param {number[]} delays - Array of delay values in ms
+ * @param {number[]} delays - Array of delay values in ms (must match opacities length)
  * @returns {Function} Cleanup function to clear all timeouts
  */
 function createPulseEffect(showFlash, color, opacities, delays) {
+  // Validate array lengths match
+  if (opacities.length !== delays.length) {
+    console.warn('createPulseEffect: opacities and delays arrays must have the same length');
+    return () => {}; // Return no-op cleanup
+  }
+  
   const timeoutIds = [];
   
   opacities.forEach((opacity, index) => {
@@ -62,7 +72,7 @@ export const POWER_UPS = [
       
       // Phase 8: More impactful visual feedback - strong pulsing green flash
       if (collected) {
-        return createPulseEffect(showFlash, 'green', [250, 100, 200, 80, 150, 50, 0], [0, 100, 200, 300, 400, 500, 650]);
+        return createPulseEffect(showFlash, 'green', HEALTH_PULSE_OPACITIES, HEALTH_PULSE_DELAYS);
       }
     },
   },

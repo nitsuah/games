@@ -101,7 +101,7 @@ const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
           )}
 
           {showRestartConfirm && (
-            <div className={styles.confirmBox}>
+            <div className={styles.confirmBox} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
               <div className={styles.confirmTitle}>⚠️ CONFIRM RESTART?</div>
               <div className={styles.confirmButtons}>
                 <button className={`${styles.button} ${styles.confirmYes}`} onClick={handleRestartClick}>
@@ -129,7 +129,7 @@ const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
           )}
 
           {showQuitConfirm && (
-            <div className={styles.confirmBox}>
+            <div className={styles.confirmBox} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
               <div className={styles.confirmTitle}>⚠️ CONFIRM QUIT?</div>
               <div className={styles.confirmText}>Progress will be lost!</div>
               <div className={styles.confirmButtons}>

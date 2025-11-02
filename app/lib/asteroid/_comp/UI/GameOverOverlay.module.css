@@ -5,7 +5,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.95);
+  background: var(--ui-bg-overlay);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,14 +15,14 @@
 }
 
 .gameOverOverlay {
-  background: linear-gradient(135deg, rgba(20, 0, 40, 0.98), rgba(10, 0, 30, 0.98));
+  background: linear-gradient(135deg, rgba(10, 0, 30, 0.98), rgba(0, 20, 40, 0.98));
   color: var(--ui-text-primary);
   padding: 40px 60px 50px;
   border-radius: 20px;
   border: 4px solid var(--ui-danger);
   box-shadow: 
-    0 0 40px rgba(255, 68, 68, 0.6),
-    inset 0 0 60px rgba(255, 68, 68, 0.1);
+    0 0 60px rgba(255, 68, 68, 0.5),
+    inset 0 0 80px rgba(255, 68, 68, 0.08);
   text-align: center;
   min-width: 600px;
   max-width: 700px;
@@ -31,27 +32,28 @@
 /* Header with arcade aesthetic */
 .header {
   position: relative;
-  margin-bottom: 40px;
+  margin-bottom: 35px;
+  text-align: center;
 }
 
 .title {
-  font-size: 64px;
+  font-size: 56px;
   font-weight: 900;
-  color: var(--ui-danger);
+  color: #ffffff;
   text-shadow: 
-    0 0 20px var(--ui-danger),
-    0 0 40px var(--ui-danger),
-    0 4px 0 rgba(0, 0, 0, 0.8);
+    0 0 30px var(--ui-danger),
+    0 0 50px var(--ui-danger),
+    0 4px 8px rgba(0, 0, 0, 1);
   margin: 0;
-  letter-spacing: 8px;
+  letter-spacing: 12px;
   font-family: 'Courier New', monospace;
-  animation: flicker 2s infinite alternate;
+  animation: glow 2s ease-in-out infinite alternate;
 }
 
 .scanline {
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--ui-danger), transparent);
-  margin-top: 20px;
+  margin-top: 15px;
   animation: scanlineMove 3s linear infinite;
 }
 
@@ -80,17 +82,21 @@
 
 .statLabel {
   font-size: 14px;
-  color: var(--ui-text-secondary);
-  letter-spacing: 2px;
+  color: #ffffff;
+  letter-spacing: 3px;
   margin-bottom: 8px;
   font-family: 'Courier New', monospace;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .statValue {
   font-size: 36px;
   font-weight: bold;
-  color: var(--ui-primary);
-  text-shadow: 0 0 10px var(--ui-primary);
+  color: #ffffff;
+  text-shadow: 
+    0 0 20px var(--ui-primary),
+    0 0 40px var(--ui-primary),
+    0 3px 6px rgba(0, 0, 0, 1);
   font-family: 'Courier New', monospace;
 }
 
@@ -111,9 +117,9 @@
 
 /* Records section */
 .records {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
   padding: 20px;
   margin-bottom: 30px;
 }
@@ -124,7 +130,8 @@
   align-items: center;
   padding: 8px 0;
   font-size: 16px;
-  color: var(--ui-text-secondary);
+  color: #ffffff;
+  letter-spacing: 1px;
 }
 
 .recordItem:not(:last-child) {
@@ -132,9 +139,10 @@
 }
 
 .recordValue {
-  color: var(--ui-primary);
+  color: #ffffff;
   font-weight: bold;
   font-family: 'Courier New', monospace;
+  text-shadow: 0 0 15px var(--ui-primary);
 }
 
 /* Buttons */
@@ -209,9 +217,9 @@
   }
 }
 
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.95; }
+@keyframes glow {
+  from { text-shadow: 0 0 20px var(--ui-danger), 0 0 40px var(--ui-danger); }
+  to { text-shadow: 0 0 30px var(--ui-danger), 0 0 60px var(--ui-danger); }
 }
 
 @keyframes scanlineMove {
