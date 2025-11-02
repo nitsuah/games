@@ -18,7 +18,7 @@ export const WEAPON_CONFIG = {
 };
 
 export const WEAPON_TYPES = [
-  { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
+  { key: 'spread', name: 'Spread Shot', maxAmmo: 10, cooldown: 0.3 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
   { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Longer cooldown for balance
 ];
@@ -39,7 +39,7 @@ export const PLAYER_SPHERE_RADIUS = 2.0; // for collision detection
 export const EXPLOSION_DURATION = 120; // ms, for explosion visual timing
 
 export const INITIAL_AMMO = {
-  spread: 30,
+  spread: 10,
   laser: 10,
   explosive: 10,
 };

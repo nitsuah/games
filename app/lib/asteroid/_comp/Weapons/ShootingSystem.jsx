@@ -176,11 +176,10 @@ const ShootingSystem = ({
         
         // Fire rates: 
         // - Laser: ultra-fast (50ms = continuous beam feel)
-        // - Spread with rapid fire: burst fire (150ms)
-        // - Explosive with rapid fire: fast (80ms)
+        // - Rapid fire: 300ms (0.3s) for all weapons
         let fireRate = 50; // Default laser rate
         if (rapidFireActive) {
-          fireRate = weapon === 'spread' ? 150 : (weapon === 'explosive' ? 80 : 50);
+          fireRate = 300; // 0.3 seconds for rapid fire power-up
         }
         
         autoFireIntervalRef.current = setInterval(() => {

@@ -21,6 +21,7 @@
 ## 🏗️ Architecture for Scale (NEW HIGH PRIORITY)
 
 ### Goal
+
 Build a reusable game framework to support multiple arcade games without code duplication.
 
 ### Shared Systems to Extract

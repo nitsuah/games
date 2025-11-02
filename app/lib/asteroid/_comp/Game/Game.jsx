@@ -222,21 +222,6 @@ const Game = ({ onHit, onMiss }) => {
     handlePowerUpCollect,
   } = usePowerUps(setHealth, setTargets, showFlash, setAmmo);
 
-  // Apply slow motion effect
-  useEffect(() => {
-    if (slowMotionActive) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Slow Motion is active. Target speeds are reduced.');
-      }
-      setTargets((prevTargets) =>
-        prevTargets.map((target) => ({
-          ...target,
-          speed: target.speed * 0.1, // Reduce target speed by 90%
-        }))
-      );
-    }
-  }, [slowMotionActive]);
-
   // Weapon switch, ammo, & reload handler
   useEffect(() => {
     const handleKeyDown = (e) => handleKeyDownFn(e, setWeapon, setAmmo, setPaused);

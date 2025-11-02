@@ -62,19 +62,20 @@ const ShieldEffect = ({ shieldActive }) => {
   // Create a blue-themed halo effect using rings at different angles
   return (
     <group ref={shieldRef} frustumCulled={false}>
-      {/* Outer glowing blue aura */}
+      {/* Outer glowing blue aura - reduced opacity to see explosions better */}
       <mesh>
         <sphereGeometry args={[3.2, 32, 32]} />
         <meshBasicMaterial
           color="#0099ff"
           transparent
-          opacity={0.06 * fadeRef.current * pulsingOpacity}
+          opacity={0.03 * fadeRef.current * pulsingOpacity}
           side={THREE.DoubleSide}
+          depthWrite={false}
         />
       </mesh>
       
-      {/* Main horizontal blue halo ring */}
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
+      {/* Main horizontal blue halo ring - tilted forward to avoid blocking center view */}
+      <mesh rotation={[Math.PI / 2 - 0.4, 0, 0]}>
         <torusGeometry args={[2.4, 0.12, 12, 64]} />
         <meshStandardMaterial
           ref={materialRef}
@@ -84,6 +85,7 @@ const ShieldEffect = ({ shieldActive }) => {
           emissive="#00ffff"
           emissiveIntensity={0.6 * pulsingOpacity}
           side={THREE.DoubleSide}
+          depthWrite={false}
         />
       </mesh>
       
@@ -97,6 +99,7 @@ const ShieldEffect = ({ shieldActive }) => {
           emissive="#00ddff"
           emissiveIntensity={0.5 * pulsingOpacity}
           side={THREE.DoubleSide}
+          depthWrite={false}
         />
       </mesh>
       
@@ -110,6 +113,7 @@ const ShieldEffect = ({ shieldActive }) => {
           emissive="#00aaff"
           emissiveIntensity={0.4 * pulsingOpacity}
           side={THREE.DoubleSide}
+          depthWrite={false}
         />
       </mesh>
       

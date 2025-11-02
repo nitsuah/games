@@ -7,19 +7,14 @@
 
 ## 📋 Manual QA Checklist
 
-### Phase 9 Visual Effects (Need Validation)
+### Phase 9 Visual Effects Feedback - FIXED!
 
-- [ ] **Muzzle Flash Effects** - Weapon-specific colors (laser=cyan, spread=orange, explosive=red)
-- [ ] **Impact Effects** - Sparks and shockwave rings render properly
-- [ ] **Target Spawn** - Fade-in + scale animation (0→1 over 300ms)
-- [ ] **Target Hit** - White flash, yellow glow, pulse animation
-- [ ] **Shield Effect** - Blue halo, 50% opacity, pulsing fade
-- [ ] **Invincibility Effect** - Rainbow halo, 50% opacity, random colors
+Home
+- [ ] new gun idea (4) - "AA" - smaller version of explosion (50% of size) but faster speed and less damage. also give it "dual" cannons and a different color. have the shots "alternate" between left and right side of ship when firing. **DEFERRED to Phase 10**
+- [ ] **Impact Effects** - Sparks and shockwave rings render properly - im not sure if this is working correctly? i see some sparks on certain weapons? is this expected when objects collide? if so im not seeing it occur.
+- [ ] **Target Hit** - White flash, yellow glow, pulse animation - could be emphasized more? or last longer? or bigger effect?
 
 ### Known Issues
-
-- [ ] **Shield Visual Bug** - May impact explosive weapon display (needs investigation)
-- [ ] **White Border Bug** - Occasional white lines on viewport edges
 
 ### Controls & Audio
 

@@ -226,9 +226,11 @@ const MuteButton = styled.button`
 const ArcadeCabinet = styled.div`
   position: relative;
   max-width: 90vw;
-  padding-bottom: 100px;
-  padding-top: 110px;
-  margin: 20px 0;
+  padding-bottom: 75px;
+  padding-top: 60px;
+  margin: 10px 0;
+  transform: scale(0.75);
+  transform-origin: top center;
 
   /* Cabinet top marquee - matches screen width */
   &::before {
@@ -422,7 +424,7 @@ const CoinSlot = styled.div`
 
 const MarqueeText = styled.h1`
   position: absolute;
-  top: 35px;
+  top: 40px;
   left: 50%;
   transform: translateX(-50%);
   color: #ffff00;
