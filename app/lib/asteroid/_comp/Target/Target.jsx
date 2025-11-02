@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import HitParticles from '@/_components/effects/HitParticles';
 
 const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00', setTargets, refCallback, velocity = { x: 0, y: 0, z: 0 }, isGameOver = false, isPaused = false }) => {
   const meshRef = useRef();
@@ -8,6 +9,7 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
   const [flash, setFlash] = useState(false);
   const [opacity, setOpacity] = useState(0); // Start invisible for spawn animation
   const [scale, setScale] = useState(0); // Start small for spawn animation
+  const [showParticles, setShowParticles] = useState(false);
   const spawnTimeRef = useRef(Date.now());
   const hitTimeRef = useRef(null);
   // Phase 9: Use velocity prop instead of random speed
@@ -25,6 +27,7 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
     if (isHit) {
       hitTimeRef.current = Date.now();
       setFlash(true);
+      setShowParticles(true); // Trigger particle burst
       // Longer flash duration for better visibility
       setTimeout(() => setFlash(false), 150);
       setTimeout(() => setOpacity(0.2), 250);
@@ -120,6 +123,15 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
           intensity={5}
           distance={size * 3}
           decay={2}
+        />
+      )}
+      {/* Particle burst on hit */}
+      {showParticles && (
+        <HitParticles
+          position={meshRef.current?.position || position}
+          color={color}
+          size={size}
+          onComplete={() => setShowParticles(false)}
         />
       )}
     </mesh>
