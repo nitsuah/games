@@ -26,25 +26,25 @@ Build a reusable game framework to support multiple arcade games without code du
 
 ### Shared Systems to Extract
 
-**1. Audio System (`lib/shared/audio/`)**
+**1. Audio System (`lib/shared/audio/`)** ✅
 
-- `AudioManager.js` - Centralized audio loading, volume control, mute state
-- `SoundEffect.js` - Play one-shot sounds with variations
-- `MusicPlayer.js` - Background music with loop, fade, crossfade
+- ✅ `AudioManager.js` - Centralized audio loading, volume control, mute state
+- ✅ `SoundEffect.js` - Play one-shot sounds with variations
+- `MusicPlayer.js` - Background music with loop, fade, crossfade (future)
 - Already have: `useSound.js`, `SoundManager.js` (refactor these)
 
-**2. Input System (`lib/shared/input/`)**
+**2. Input System (`lib/shared/input/`)** ✅
 
-- `KeyboardManager.js` - Key binding, key state tracking
-- `MouseManager.js` - Mouse position, click handling, pointer lock
+- ✅ `KeyboardManager.js` - Key binding, key state tracking
+- ✅ `MouseManager.js` - Mouse position, click handling, pointer lock
 - `GamepadManager.js` - Controller support (future)
 - Pattern: Event-driven with callbacks, not game-specific
 
-**3. Scoring System (`lib/shared/scoring/`)**
+**3. Scoring System (`lib/shared/scoring/`)** ✅
 
-- `ScoreManager.js` - Score calculation, multipliers, combos
-- `HighScoreManager.js` - localStorage persistence, leaderboards
-- `StatsTracker.js` - Accuracy, time played, achievements
+- ✅ `ScoreManager.js` - Score calculation, multipliers, combos
+- ✅ `HighScoreManager.js` - localStorage persistence, leaderboards
+- ✅ `StatsTracker.js` - Accuracy, time played, achievements
 - Already have: `saveGameStats.js`, `loadSavedScores.js` (consolidate)
 
 **4. UI Components (`lib/shared/ui/`)**
@@ -415,21 +415,22 @@ lib/
 
 ## 📋 Implementation Priority
 
-### Sprint 1: Collision Physics & Balance (Week 1)
+### Sprint 1: Collision Physics & Balance (Week 1) ✅ COMPLETE
 
-1. Refactor targets to have velocity state
-2. Implement target-target collision detection
-3. Add impulse-based collision response
-4. Test and tune collision feel
-5. Speed boost tuning
+1. ✅ Shared audio system extraction (AudioManager, SoundEffect)
+2. ✅ Shared input system extraction (KeyboardManager, MouseManager)
+3. ✅ Shared scoring system extraction (ScoreManager, HighScoreManager, StatsTracker)
+4. ✅ Target-target collision physics (verified already implemented in Phase 9)
+5. ✅ Speed boost tuning (reduced player speeds for better balance)
 
-### Sprint 2: Weapon Visual Effects (Week 1)
+### Sprint 2: Weapon Visual Effects (Week 1) 🔄 IN PROGRESS
 
-1. Muzzle flashes for all weapons
-2. Enhanced impact effects (sparks, particles, flashes)
-3. Weapon-specific tracer effects
-4. Shell casings and debris
-5. Explosion enhancements
+1. ✅ Shell casings for spread weapon (physical ejection with bounce)
+2. ✅ Enhanced explosion effects (multi-layer with fire, shockwave, debris)
+3. ⏳ Target visual feedback (spawn/hit/split/destroy animations)
+4. ⏳ Audio polish (layer weapon sounds, impact variations, power-up sounds)
+5. Muzzle flashes for all weapons (already exists)
+6. Enhanced impact effects (sparks, particles, flashes) (already exists)
 
 ### Sprint 3: Target Visual Feedback (Week 2)
 
