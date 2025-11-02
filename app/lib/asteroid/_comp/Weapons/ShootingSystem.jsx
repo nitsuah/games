@@ -6,6 +6,7 @@ import CooldownManager from '@/lib/asteroid/_comp/Weapons/CooldownManager';
 import Explosion from '@/_components/effects/Explosion';
 import MuzzleFlash from '@/_components/effects/MuzzleFlash';
 import ImpactEffect from '@/_components/effects/ImpactEffect';
+import ShellCasing from '@/_components/effects/ShellCasing';
 import { WEAPON_CONFIG, WEAPON_TYPES } from '@/lib/asteroid/_comp/config';
 import { weaponHandler } from '@/lib/asteroid/_comp/Weapons/weaponHandler';
 import soundManager from '@/utils/audio/SoundManager';
@@ -31,6 +32,7 @@ const ShootingSystem = ({
   const [explosions, setExplosions] = useState([]);
   const [muzzleFlashes, setMuzzleFlashes] = useState([]);
   const [impactEffects, setImpactEffects] = useState([]);
+  const [shellCasings, setShellCasings] = useState([]);
   const mouseDownRef = useRef(false);
   const autoFireIntervalRef = useRef(null);
   const effectIdCounterRef = useRef(0);
@@ -78,6 +80,26 @@ const ShootingSystem = ({
       ...prev,
       { id: generateEffectId('muzzle'), position: flashPosition, weaponType: weapon },
     ]);
+
+    // Spawn shell casings for spread weapon (shotgun)
+    if (weapon === 'spread') {
+      const casingCount = WEAPON_CONFIG.spread.count; // Match pellet count
+      for (let i = 0; i < casingCount; i++) {
+        setShellCasings((prev) => [
+          ...prev,
+          { 
+            id: generateEffectId('casing'), 
+            position: flashPosition.clone(),
+            // Add slight randomness to ejection direction
+            ejectionVector: new THREE.Vector3(
+              1 + (Math.random() - 0.5) * 0.2,
+              (Math.random() - 0.5) * 0.3,
+              (Math.random() - 0.5) * 0.2
+            ),
+          },
+        ]);
+      }
+    }
 
     // Callback to create impact effects when targets are hit
     const triggerImpact = (targetPosition, damage = 10) => {
@@ -287,6 +309,14 @@ const ShootingSystem = ({
           damage={effect.damage}
           type={effect.type}
           onComplete={() => setImpactEffects((prev) => prev.filter((e) => e.id !== effect.id))}
+        />
+      ))}
+      {shellCasings.map((casing) => (
+        <ShellCasing
+          key={casing.id}
+          position={casing.position}
+          ejectionVector={casing.ejectionVector}
+          onComplete={() => setShellCasings((prev) => prev.filter((c) => c.id !== casing.id))}
         />
       ))}
     </>
