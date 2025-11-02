@@ -9,3 +9,4 @@ TODO.md
 .venv/
 env/
 coverage/
+app/test-output.txt
