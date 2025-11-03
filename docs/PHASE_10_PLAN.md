@@ -1,585 +1,583 @@
-# Phase 10: New Games Development
+# Phase 10: Build 4 New Arcade Games# Phase 10: Build 4 New Arcade Games
 
-**Status**: Planning  
-**Previous Phase**: [Phase 9 Complete](./PHASE_9_COMPLETE.md) ✅
 
----
 
-## 🎯 Primary Goals
+**Status**: 🚀 IN PROGRESS  **Status**: 🚀 IN PROGRESS  
 
-1. **Code Architecture for Reusability** - Extract shared systems for multi-game support
-2. **Target-Target Collision Physics** - Full inter-target collision system
-3. **Connect camera and player object during rotation** - new inputs dont re-align the body of the character/ship (purple rectangle) to match the new rotation of the player camera. so the camera rotates but the player body stays at old rotation.
-4. **Weapon Visual Effects** - Muzzle flashes, shell casings, impact effects
-5. **Target Visual Feedback** - Spawn, hit, split, and destruction animations
-6. **Audio Polish** - Spatial sound, layered impacts, dynamic music
-7. **Balance & Tuning** - Speed boost adjustment, weapon balance
-8. **Performance Optimization** - Object pooling, culling, LOD
+**Foundation**: Asteroid game complete with reusable framework ✅**Foundation**: Asteroid game complete with reusable framework ✅
 
----
 
-## 🏗️ Architecture for Scale (NEW HIGH PRIORITY)
 
-### Goal
+------
 
-Build a reusable game framework to support multiple arcade games without code duplication.
 
-### Shared Systems to Extract
 
-**1. Audio System (`lib/shared/audio/`)** ✅
+## 🎯 Mission## 🎯 Mission
 
-- ✅ `AudioManager.js` - Centralized audio loading, volume control, mute state
-- ✅ `SoundEffect.js` - Play one-shot sounds with variations
-- `MusicPlayer.js` - Background music with loop, fade, crossfade (future)
-- Already have: `useSound.js`, `SoundManager.js` (refactor these)
 
-**2. Input System (`lib/shared/input/`)** ✅
 
-- ✅ `KeyboardManager.js` - Key binding, key state tracking
-- ✅ `MouseManager.js` - Mouse position, click handling, pointer lock
-- `GamepadManager.js` - Controller support (future)
-- Pattern: Event-driven with callbacks, not game-specific
+Build 4 new arcade games using the framework from Asteroid. Show rapid iteration and code reuse.**Build 4 new arcade games** using the framework we built during Asteroid development. Demonstrate rapid iteration and code reuse across different game genres.
 
-**3. Scoring System (`lib/shared/scoring/`)** ✅
 
-- ✅ `ScoreManager.js` - Score calculation, multipliers, combos
-- ✅ `HighScoreManager.js` - localStorage persistence, leaderboards
-- ✅ `StatsTracker.js` - Accuracy, time played, achievements
-- Already have: `saveGameStats.js`, `loadSavedScores.js` (consolidate)
 
-**4. UI Components (`lib/shared/ui/`)**
+### Games to Build### Games to Build
 
-- `ArcadeButton.jsx` - Reusable arcade-styled button
-- `ArcadeMenu.jsx` - Base menu with arcade aesthetic
-- `ArcadeHeader.jsx` - Title with scanlines and flicker
-- `ArcadeCard.jsx` - Game selection card
-- Extract from: GameOverOverlay, PauseMenu, HomePage
 
-**5. Game State Management (`lib/shared/state/`)**
 
-- `GameLoop.js` - Standardized game loop with pause/resume
-- `SceneManager.js` - Scene transitions, loading screens
-- `PowerUpManager.js` - Generic power-up system
-- Pattern: State machine for game states (menu/playing/paused/gameover)
+1. 🧱 **Breakout** - 2D brick-breaking (1-2 days)1. 🧱 **Breakout** - 2D brick-breaking (Est: 1-2 days)
 
-**6. Physics & Collision (`lib/shared/physics/`)**
+2. 👾 **Space Invaders** - 2D formation shooter (1-2 days)  2. 👾 **Space Invaders** - 2D formation shooter (Est: 1-2 days)  
 
-- `CollisionDetection.js` - Sphere-sphere, box-box, raycasting
-- `PhysicsBody.js` - Velocity, acceleration, drag
-- `SpatialGrid.js` - Spatial partitioning for optimization
-- Extract from: Player collision, target collision
+3. 🐦 **Flappy Bird** - Endless runner (1 day)3. 🐦 **Flappy Bird** - Endless runner (Est: 1 day)
 
-### Game-Specific Structure
+4. 🏓 **Pong 3D** - AI opponent (1 day)4. 🏓 **Pong 3D** - AI opponent (Est: 1 day)
 
-```bash
-lib/
-  ├── shared/           # Reusable across all games
-  │   ├── audio/
-  │   ├── input/
-  │   ├── scoring/
-  │   ├── ui/
-  │   ├── state/
-  │   └── physics/
-  ├── asteroid/         # Asteroid-specific (6DOF space shooter)
-  │   └── _comp/
-  ├── fps/              # FPS-specific (terrain-based 3D)
-  │   └── _comps/
-  ├── platformer/       # 2D platformer (NEW)
-  │   └── _comp/
-  └── breakout/         # 2D breakout (NEW)
-      └── _comp/
+
+
+**Target**: 5-6 playable games (Asteroid + FPS + 4 new)**Target**: 5-6 playable games total (Asteroid + FPS + 4 new games)
+
+
+
+------
+
+
+
+## 🧱 Sprint 1: Breakout (Days 1-2)## 🏗️ What We Already Have (Framework ✅)
+
+
+
+### Core Mechanics### Reusable Systems (70%+ Code Reuse)
+
+- Paddle: Arrow keys/mouse to move horizontally
+
+- Ball: Physics with bounce angle based on paddle position**Audio** ✅
+
+- Bricks: 8×10 grid, color-coded, multi-hit variants- `SoundManager.js` - Procedural sound generation, master gain
+
+- Power-ups: Multi-ball, expand paddle, slow ball, laser paddle- `DynamicMusicSystem.js` - 4-layer music with wave progression
+
+- Volume controls, mute, spatial audio
+
+### Implementation
+
+**Day 1**: Paddle, ball, brick rendering, basic physics  **Input** ✅  
+
+**Day 2**: Collision, power-ups, audio, scoring, high scores- `KeyboardManager.js` - Key binding, state tracking
+
+- `MouseManager.js` - Mouse handling, pointer lock
+
+### Files- Easy to adapt for arrow keys, WASD, spacebar
+
 ```
 
-### Benefits
+app/pages/breakout.jsx**Scoring** ✅
 
-- Add new games in 1-2 days by reusing 70%+ of code (including testing & polish)
-- Consistent arcade aesthetic across all games
-- Centralized bug fixes benefit all games
-- Portfolio shows architectural thinking
+app/lib/breakout/- `ScoreManager.js` - Score calculation, combos
 
----
+  BreakoutGame.jsx- `HighScoreManager.js` - localStorage leaderboards
 
-## 🎮 New Games Roadmap (Phase 10+)
+  components/- `StatsTracker.js` - Accuracy, playtime
 
-### Quick Wins (1-2 Days Each)
+    Paddle.js
 
-**1. Breakout/Arkanoid** 🧱
+    Ball.js**UI/UX** ✅
 
-- **Reuse**: Arcade menus, audio system, scoring, power-ups
-- **New**: 2D paddle physics, brick patterns, ball bounce
-- **Complexity**: Low - Pure 2D, simple physics
-- **Portfolio Value**: Shows 2D game dev, physics variety
+    BrickGrid.js- `ArcadeCard.jsx` - Game selection (already on homepage)
 
-**2. Space Invaders** 👾
+    PowerUpDrop.js- Arcade aesthetic: scanlines, neon glow, CRT effects
 
-- **Reuse**: Wave system, shooting mechanics, enemy management
-- **New**: Formation movement, shields, enemy patterns
-- **Complexity**: Medium - 2D with pattern AI
-- **Portfolio Value**: Classic arcade, procedural patterns
+```- Settings menu pattern (mouse, audio, accessibility)
 
-**3. Flappy Bird Clone** 🐦
-
-- **Reuse**: Audio, scoring, high scores, arcade UI
-- **New**: Simple 2D physics, procedural obstacles, endless runner
-- **Complexity**: Low - Minimal mechanics
-- **Portfolio Value**: Mobile-ready, infinite gameplay
-
-**4. Target Practice Gallery** 🎯 (exists)
-
-- **Reuse**: Asteroid shooting mechanics, targets, weapons
-- **New**: Static 3D scene, time pressure, accuracy focus
-- **Complexity**: Low - Reuse 80% from Asteroid
-- **Portfolio Value**: Shows code reuse, quick iteration
-
-**5. Pong 3D** 🏓
-
-- **Reuse**: Physics, scoring, power-ups, arcade UI
-- **New**: Simple AI opponent, 3D perspective
-- **Complexity**: Low - Classic mechanics
-- **Portfolio Value**: AI implementation, networked potential
-
-### Game Variety Strategy
-
-- ✅ **6DOF Space Shooter** - Asteroid (COMPLETE - asteroid)
-- 🔄 **Terrain-Based 3D FPS** - In progress (fps)
-- 📋 **2D Platformer** - Next (prove 2D architecture)
-- 📋 **2D Arcade Classic** - Breakout or Space Invaders
-- 📋 **Endless Runner** - Flappy Bird or Temple Run style
-
-### Target Portfolio
-
-- **3-5 Playable Games** - Show variety and depth
-- **1 Deep Game** - Asteroid with full polish
-- **2-3 Quick Games** - Built in 1-2 days each using framework
-- **Consistent Aesthetic** - All games feel like one arcade
+- Game over/pause overlays
 
 ---
 
-## 🔥 High Priority
+### What Each Game Needs (30% New Code)
 
-### 1. Target-Target Collision Physics
+## 👾 Sprint 2: Space Invaders (Days 3-4)
 
-**Current State**: Only player-target collision implemented (Phase 8)
+- Game-specific mechanics (paddle, ball, formations)
 
-**Implementation Plan**:
+### Core Mechanics- Rendering (2D canvas or 3D Three.js)
 
-- Refactor targets to have velocity state (currently only speed/direction)
-- Implement sphere-sphere collision detection
-- Apply elastic collision physics between targets
-- Prevent overlapping/stacking
-- Add spatial partitioning for efficient collision checks
+- Player: Move left/right, shoot laser (one at a time)- Win/loss conditions
 
-**Benefits**:
+- Enemies: 5×11 formation, move together, shoot back- Level/wave progression logic
 
-- More dynamic target movement
-- Creates interesting evasion patterns
-- Adds visual interest to the arena
+- Shields: 4 destructible barriers
 
-**Technical Requirements**:
+- UFO: Bonus enemy flies across top---
 
-- Add `velocity: Vector3` to target state
-- Implement `checkTargetCollision(target1, target2)` function
-- Use fixed timestep physics updates
-- Interpolation for smooth movement
+
+
+### Implementation## 🧱 Game 1: Breakout
+
+**Day 3**: Player, enemy formation, movement, shooting  
+
+**Day 4**: Enemy fire, shields, UFO, waves, audio**Genre**: 2D Brick-Breaking  
+
+**Complexity**: Low  
+
+### Files**Estimated Time**: 1-2 days
+
+```
+
+app/pages/space-invaders.jsx### Core Mechanics
+
+app/lib/space-invaders/
+
+  SpaceInvadersGame.jsx**Paddle**
+
+  components/- Arrow keys / Mouse to move horizontally
+
+    PlayerShip.js- Screen-width constrained
+
+    EnemyFormation.js- Collision detection with ball
+
+    Shield.js
+
+    UFO.js**Ball**
+
+```- Physics: velocity, bounce angle based on paddle hit position
+
+- Speed increases slightly each bounce
+
+---- Death condition: falls below paddle
+
+
+
+## 🐦 Sprint 3: Flappy Bird (Day 5)**Bricks**
+
+- 8 rows × 10 columns grid
+
+### Core Mechanics- Color-coded by row (different point values)
+
+- Bird: Spacebar to flap, gravity pulls down- Some bricks require multiple hits
+
+- Pipes: Procedural generation, random gaps- Power-ups drop from destroyed bricks
+
+- Scoring: +1 per pipe passed
+
+- Difficulty modes: Easy/Normal/Hard gap sizes### Power-Ups (Reuse from Asteroid)
+
+
+
+### Implementation- **Multi-ball**: Spawn 2 additional balls
+
+Single day: Bird physics, pipe generation, scrolling, collision, audio- **Expand Paddle**: Paddle width × 1.5 for 10 seconds
+
+- **Slow Ball**: Ball speed × 0.6 for 8 seconds
+
+### Files- **Laser Paddle**: Shoot bricks directly (5 shots)
+
+```
+
+app/pages/flappy.jsx### Implementation Plan
+
+app/lib/flappy/
+
+  FlappyGame.jsx**Day 1**:
+
+  components/1. Create `app/pages/breakout.jsx` and `app/lib/breakout/BreakoutGame.jsx`
+
+    Bird.js2. 2D Canvas setup (800×600)
+
+    PipeManager.js3. Paddle movement (keyboard + mouse)
+
+    Background.js4. Ball physics (velocity, bounce, wall collision)
+
+```5. Basic brick grid rendering
+
+
+
+---**Day 2**:
+
+6. Paddle-ball collision with angle calculation
+
+## 🏓 Sprint 4: Pong 3D (Day 6)7. Brick-ball collision and brick destruction
+
+8. Power-up drops and collection
+
+### Core Mechanics9. Score integration with `ScoreManager`
+
+- Player paddle: Mouse Y-axis or arrow keys10. Audio: paddle hit, brick break, power-up sounds
+
+- AI paddle: Tracks ball with reaction delay11. Game over/win conditions
+
+- Ball: 3D physics with spin mechanics12. High score leaderboard
+
+- First to 11 wins
+
+### Files to Create
+
+### Implementation
+
+Single day: 3D scene, paddles, AI logic, ball physics, scoring, audio```
+
+app/lib/breakout/
+
+### Files  BreakoutGame.jsx       - Main game component
+
+```  BreakoutCanvas.jsx     - 2D rendering
+
+app/pages/pong.jsx  components/
+
+app/lib/pong/    Paddle.js            - Paddle physics/rendering
+
+  PongGame.jsx    Ball.js              - Ball physics/rendering
+
+  components/    BrickGrid.js         - Brick layout and collision
+
+    PlayerPaddle.jsx    PowerUpDrop.js       - Power-up spawning/collection
+
+    AIPaddle.js```
+
+    Ball.jsx
+
+    Table.jsx### Reused Components
+
+```
+
+- `ScoreManager`, `HighScoreManager` from `lib/shared/scoring/`
+
+---- `SoundManager` for bounce/break sounds
+
+- `KeyboardManager` for arrow keys
+
+## 🎨 Sprint 5: Integration (Day 7)- Pause menu, game over overlay patterns
+
+
+
+- [ ] Update homepage with all 4 game cards---
+
+- [ ] E2E tests for new games
+
+- [ ] Cross-game UI consistency## 👾 Game 2: Space Invaders
+
+- [ ] Performance check
+
+- [ ] Documentation**Genre**: 2D Formation Shooter  
+
+**Complexity**: Medium  
+
+---**Estimated Time**: 1-2 days
+
+
+
+## 🏗️ Framework Reuse (70%+ Code)### Core Mechanics
+
+
+
+**Audio** ✅**Player**
+
+- SoundManager.js - Procedural sounds- Arrow keys to move left/right (bottom of screen)
+
+- DynamicMusicSystem.js - Layered music- Spacebar to shoot laser (one shot on screen at a time)
+
+- Volume controls- 3 lives
+
+
+
+**Input** ✅  **Enemies**
+
+- KeyboardManager.js- 5 rows × 11 columns formation
+
+- MouseManager.js- Move left/right together, drop down at edges
+
+- Speed increases as enemies are destroyed
+
+**Scoring** ✅- Enemies shoot back randomly
+
+- ScoreManager.js
+
+- HighScoreManager.js**Shields**
+
+- StatsTracker.js- 4 destructible barriers between player and enemies
+
+- Erosion system: each hit removes pixels
+
+**UI** ✅- Protect player from enemy fire
+
+- ArcadeCard.jsx
+
+- Arcade aesthetic### Wave Progression
+
+- Settings patterns
+
+- **Wave 1**: Basic formation, slow movement
+
+---- **Wave 2**: Faster movement, more frequent shots
+
+- **Wave 3**: UFO bonus enemy appears (flies across top)
+
+## 🚀 Deliverables- **Wave 4+**: Smaller formations, higher speed
+
+
+
+By end of Phase 10:### Implementation Plan
+
+
+
+1. ✅ Asteroid (6DOF shooter) - COMPLETE**Day 1**:
+
+2. 🔄 FPS (3D terrain) - IN PROGRESS1. Create `app/pages/space-invaders.jsx`
+
+3. 🧱 Breakout - TO BUILD2. Player ship movement and shooting
+
+4. 👾 Space Invaders - TO BUILD3. Enemy formation grid
+
+5. 🐦 Flappy Bird - TO BUILD4. Formation movement logic (left/right sweep, drop down)
+
+6. 🏓 Pong 3D - TO BUILD5. Collision detection (player bullets vs enemies)
+
+
+
+**6 unique games** showing 2D, 3D, different genres, rapid development.**Day 2**:
+
+6. Enemy shooting system (random intervals)
+7. Shield erosion system
+8. UFO bonus enemy
+9. Wave progression and speed scaling
+10. Audio: laser, explosion, UFO sounds
+11. Lives system and game over
+12. High scores
+
+### Files to Create
+
+```
+app/lib/space-invaders/
+  SpaceInvadersGame.jsx  - Main game
+  SpaceInvadersCanvas.jsx - 2D rendering
+  components/
+    PlayerShip.js         - Player movement/shooting
+    EnemyFormation.js     - Grid management
+    Enemy.js              - Individual enemy logic
+    Shield.js             - Destructible barrier
+    UFO.js                - Bonus enemy
+```
 
 ---
 
-### 2. Speed Boost Tuning
+## 🐦 Game 3: Flappy Bird
 
-**QA Feedback**: "works well, now we can tune down the player speed and how much this boosts a bit."
+**Genre**: Endless Runner  
+**Complexity**: Low  
+**Estimated Time**: 1 day
 
-**Current Values**:
+### Core Mechanics
 
-- `BASE_ACCELERATION`: 12.0
-- `MAX_VELOCITY`: 0.65
-- Speed boost multiplier: TBD (needs investigation)
+**Bird**
+- Constant forward movement
+- Spacebar/Click to flap (upward velocity)
+- Gravity pulls down continuously
+- Rotation based on velocity (nose up when flapping, down when falling)
 
-**Proposed Changes**:
+**Pipes**
+- Procedural generation (spawn off-screen right)
+- Random gap position (min/max height constraints)
+- Scroll left at constant speed
+- Collision detection (bird hits pipe or ground = death)
 
-- Reduce base player speed slightly
-- Reduce speed boost multiplier for better balance
-- Test and iterate based on feel
+**Scoring**
+- +1 point for each pipe successfully passed
+- High score persistence
+- Optional: Medals (bronze/silver/gold) based on score thresholds
 
----
+### Implementation Plan
 
----
+**Single Day**:
+1. Create `app/pages/flappy.jsx`
+2. Bird physics: flap velocity, gravity, rotation
+3. Pipe generation system (random gaps)
+4. Scrolling background (parallax clouds/ground)
+5. Collision detection (bird vs pipes/ground)
+6. Score display and high score
+7. Audio: flap, score, hit, death sounds
+8. Game over screen with restart button
 
-### 4. Target Visual Feedback
+### Files to Create
 
-**On Spawn**:
-
-- Fade in with scale animation (small → full size)
-- Particle ring/burst effect
-- Distinct color per size tier (already implemented)
-
-**When Hit**:
-
-- Flash white briefly
-- Emit particles matching target color
-- Slight scale pulse (hit → shrink → normal)
-- Damage number popup (optional, arcade-style)
-
-**When Splitting**:
-
-- Dramatic particle burst at split point
-- Child targets spawn with outward velocity
-- Brief trail effect as they separate
-- Sound effect (higher pitch for smaller targets)
-
-**When Destroyed**:
-
-- Explosion particle effect
-- Fragments scatter outward
-- Score popup animation
-- Combo multiplier display if active
-
----
-
-## 🎵 Audio Polish
-
-### Weapon Sounds
-
-- **Laser**: Sci-fi beam sound with charge-up whine
-- **Shotgun**: Punchy blast with shell casing clink
-- **Explosive**: Deep boom with echo/reverb
-
-### Impact Sounds
-
-- Layered sounds: metal clang + explosion + debris scatter
-- Pitch varies with target size (larger = deeper)
-- Stereo panning based on impact direction
-- Distance attenuation for far impacts
-
-### Ambient/Music
-
-- **Current**: Background music (bgm)
-- **Add**: Dynamic music layers that increase with wave progression
-- **Add**: Low health tension music/heartbeat
-- **Add**: Victory sting at wave completion
-- **Add**: Combo sound effects (escalating with multiplier)
-
-### Power-Up Sounds
-
-- Distinct collection sound per power-up type
-- Activation whoosh/energy sound
-- Ambient hum while active (e.g., shield force field)
-- Deactivation sound when power-up expires
-
----
-
-## 🎨 UI Polish
-
-### Crosshair
-
-- Dynamic reticle that expands/contracts with movement
-- Hit confirmation (crosshair pulses/changes color on hit)
-- Different crosshair per weapon type
-- Lead indicator for fast-moving targets (advanced feature)
-
-### HUD Elements
-
-- Health bar: pulse/shake when taking damage
-- Ammo counter: flash when depleted, glow when full
-- Combo multiplier: grow animation, trailing particles
-- Wave indicator: dramatic transition animation
-
-### Screen Effects
-
-- Vignette increases when low health
-- Color grading shifts (red tint) when critical
-- Motion blur on rapid movement (subtle)
-- Chromatic aberration on damage (very subtle)
-
----
-
-## 🎮 Control & Feel Improvements
-
-### Mouse Sensitivity
-
-- Add sensitivity slider in settings
-- Separate X/Y sensitivity options
-- Mouse smoothing toggle
-- Invert Y-axis option
-
-### Keyboard Controls
-
-- ✅ WASD movement (already implemented)
-- ✅ Number keys for weapon switching (already implemented)
-- **Add**: Mouse wheel for weapon cycling
-- **Add**: Quick-switch (last weapon)
-- **Add**: Reload animation/sound when pressing R
-
-### Accessibility
-
-- **Add**: Colorblind modes (modify target colors)
-- **Add**: Reduce motion option (disable screen shake, particles)
-- **Add**: High contrast mode
-- **Add**: Larger UI elements option
-- **Add**: Audio cues for visual events
-
----
-
-## ⚖️ Balance & Pacing
-
-### Weapon Balance
-
-**Laser**:
-
-- Good for precision at long range
-- Consider: Slight damage falloff at extreme distance?
-- Consider: Overheat mechanic instead of ammo?
-
-**Explosive**:
-
-- Good for groups/area denial
-- Splash radius feels appropriate (15 units)
-- Consider: Slight self-damage if too close?
+```
+app/lib/flappy/
+  FlappyGame.jsx        - Main game
+  FlappyCanvas.jsx      - 2D rendering
+  components/
+    Bird.js             - Physics and rendering
+    PipeManager.js      - Pipe generation/scrolling
+    Background.js       - Parallax scrolling
+```
 
 ### Difficulty Progression
 
-**Wave Scaling**:
-
-- **Current**: Targets increase each wave
-- **Enhance**: Introduce new mechanics per wave:
-  - Wave 3: Targets start changing direction mid-flight
-  - Wave 5: Fast-moving "runner" targets
-  - Wave 7: Tanky targets that require multiple hits
-  - Wave 10: Boss target (extra large, splits into many pieces)
-
-**Power-Up Timing**:
-
-- Drop rates should increase on harder waves
-- Specific power-ups spawn based on player performance:
-  - Low health → health power-up more likely
-  - Low ammo → ammo/rapid-fire more likely
-  - High combo → damage multiplier power-up
-
-**Score Balancing**:
-
-- Current multiplier progression: 1x → 1.5x → 2x → 3x → 5x
-- Consider: Time-based combo decay (forces aggressive play)
-- Consider: Bonus points for risky plays (close-range shotgun kills)
-- Consider: Wave clear bonus based on accuracy
+- **Easy Mode**: Larger pipe gaps
+- **Normal Mode**: Standard gaps
+- **Hard Mode**: Smaller gaps, faster scroll speed
 
 ---
 
-## 🔧 Technical Improvements
+## 🏓 Game 4: Pong 3D
 
-### Performance Optimization
+**Genre**: Sports/Arcade  
+**Complexity**: Low  
+**Estimated Time**: 1 day
 
-- Object pooling for particles/projectiles
-- LOD (Level of Detail) for distant targets
-- Culling for off-screen objects
-- Reduce particle count on low-end hardware
+### Core Mechanics
 
-### Physics System
+**Player Paddle** (Right side)
+- Mouse Y-axis or Arrow Up/Down
+- Constrained to table bounds
 
-- Implement proper collision detection library (or simple sphere-sphere)
-- Spatial partitioning for efficient collision checks
-- Fixed timestep physics updates (decouple from render FPS)
-- Interpolation/extrapolation for smooth movement
+**AI Paddle** (Left side)
+- Tracks ball Y position with slight lag
+- Difficulty: reaction time delay (easy=slow, hard=fast)
+- Small random offset for imperfect prediction
 
-### State Management
+**Ball**
+- 3D physics: velocity in X/Y/Z
+- Paddle collision: reflect X velocity, add spin based on paddle movement
+- Top/bottom wall bounce
+- Score point when ball passes paddle
 
-- Clean up player state management
-- Separate physics state from render state
-- Better organization of game loop logic
+**3D Presentation**
+- Isometric/perspective camera view
+- Glowing neon paddles and ball
+- Table with grid lines
+- Score display above table
 
----
+### Implementation Plan
 
-## 📋 Implementation Priority
+**Single Day**:
+1. Create `app/pages/pong.jsx`
+2. Three.js scene setup (table, paddles, ball)
+3. Player paddle control (mouse Y-axis)
+4. AI paddle logic (track ball with delay)
+5. Ball physics (velocity, bouncing)
+6. Paddle collision with spin mechanics
+7. Scoring system (first to 11 wins)
+8. Audio: paddle hit, wall bounce, score sounds
+9. AI difficulty selector (Easy/Medium/Hard)
 
-### Sprint 1: Collision Physics & Balance (Week 1) ✅ COMPLETE
+### Files to Create
 
-1. ✅ Shared audio system extraction (AudioManager, SoundEffect)
-2. ✅ Shared input system extraction (KeyboardManager, MouseManager)
-3. ✅ Shared scoring system extraction (ScoreManager, HighScoreManager, StatsTracker)
-4. ✅ Target-target collision physics (verified already implemented in Phase 9)
-5. ✅ Speed boost tuning (reduced player speeds for better balance)
+```
+app/lib/pong/
+  PongGame.jsx          - Main game
+  PongScene.jsx         - Three.js 3D rendering
+  components/
+    PlayerPaddle.jsx    - Player control
+    AIPaddle.js         - AI logic
+    Ball.jsx            - Ball physics
+    Table.jsx           - 3D table model
+```
 
-### Sprint 2: Visual & Audio Effects ✅ COMPLETE
+### AI Difficulty Levels
 
-1. ✅ Shell casings for spread weapon (physical ejection with bounce)
-2. ✅ Enhanced explosion effects (multi-layer with fire, shockwave, debris)
-3. ✅ Target spawn animations (fade in, scale up over 300ms)
-4. ✅ Target hit feedback (flash, HitParticles, scale pulse)
-5. ✅ Target split animations (SplitParticles component with 20 particles, radial burst)
-6. ✅ Weapon sounds with variation (playLaserShoot, playShotgunShoot, playCannonShoot)
-7. ✅ Hit impact sounds with pitch/intensity based on target size
-8. ✅ Explosion sounds with spatial pan and size variation
-9. ✅ Muzzle flashes for all weapons (already existed)
-10. ✅ Impact effects (already existed)
-
-### Sprint 3: UI/UX Polish & Controls ✅ COMPLETE
-
-1. ✅ **Camera-Player Rotation Sync** - Fixed using quaternion copy for accurate 3D rotation
-2. ✅ Score popups integration - Wired ScorePopup to display at target hit positions with multiplier
-3. ✅ Combo display enhancements - Added grow animation (scale 1.3x) when combo increases
-4. ✅ **Dynamic crosshair system** - Weapon-specific colors, velocity-based scaling, hit pulse animation
-5. ✅ **HUD animations** - Health bar pulse on damage (0.5s), ammo flash on fire (0.2s)
-
-### Sprint 4: Screen Effects & Feedback ✅ COMPLETE
-
-1. ✅ **Low health vignette** - CSS-based radial gradient intensifies <50% health, red tint <25% with pulse
-2. ✅ **Screen shake on damage** - useScreenShake hook with intensity based on damage (5-16px, 250ms decay)
-3. ✅ **Mouse wheel weapon cycling** - Scroll up/down to cycle through 5 weapons during gameplay
-4. ✅ **Combo audio feedback** - Ascending 3-note arpeggios at 5x/10x/15x milestones, sparkle layer at 15x+
-5. ✅ **Object pooling system** - ObjectPool and ParticlePool classes, PooledHitParticles with instanced meshes
-
-**Implementation Details**:
-- `HealthVignette.jsx` - Opacity 0-0.8 based on health, separate red tint layer with CSS animation
-- `useScreenShake.js` - Exponential decay over 15 frames, random x/y offset with configurable intensity
-- Mouse wheel handler prevents default scroll, only active when pointer locked
-- `playComboMilestone(milestone)` in SoundManager with dynamic frequency scaling (400Hz base + 200Hz per level)
-- `ObjectPool.js` - Generic pool with acquire/release, ParticlePool extends with updateParticles lifecycle
-- `PooledHitParticles.jsx` - Uses THREE.InstancedMesh for 12 particles, much faster than individual meshes
-
-### Sprint 5: Audio & Visual Feedback ✅ COMPLETE
-
-1. ✅ **Low health heartbeat** - Pulsing 60Hz bass "lub-dub" pattern, tempo 1000ms→250ms as health 30%→0%
-2. ✅ **Weapon muzzle flash** - Screen-edge radial gradient flash for explosive/plasma/AA, 100ms fade
-3. ✅ **Proximity warning system** - Directional indicators for targets <15 units, PROXIMITY ALERT at <8 units
-4. ✅ **Wave clear celebration** - Performance-based audio (triumphant fanfare + sparkles at 80%+ accuracy)
-5. ✅ **Enhanced wave transition** - Performance ratings (PERFECT/EXCELLENT/GOOD), gold glow for 90%+ accuracy
-
-**Implementation Details**:
-- `startHeartbeat(health)` / `stopHeartbeat()` / `updateHeartbeat(health)` in SoundManager
-- Low-pass filter at 200Hz for muffled heartbeat, automatic tempo adjustment on health change
-- `MuzzleFlashOverlay.jsx` - Weapon-specific colors (orange/magenta/yellow), triggered on ammo decrease
-- `ProximityWarning.jsx` - Calculates 3D distance, displays up to 6 closest threats with pulsing arrows
-- `playWaveClear(performanceFactor)` - Ascending major triad arpeggio, sparkle layer for high performance
-- WaveTransition enhanced with `getPerformanceRating()` and `.perfect` CSS class for gold effects
-
-### Sprint 6: Dynamic Music & Streaks ✅ COMPLETE
-
-1. ✅ **Dynamic music system** - Procedural layered audio with 4 layers: ambient drone, bass pulse, percussion (wave 3+), lead synth (wave 5+)
-2. ✅ **Kill streak announcements** - Visual overlay + power chord sound at 10x/15x/20x/25x/30+ combos
-3. ✅ **Music intensity scaling** - Volume boost per wave, layers fade in/out based on game state
-4. ✅ **Streak messages** - KILLING SPREE (10x), DOMINATING (15x), RAMPAGE (20x), LEGENDARY (25x), UNSTOPPABLE (30x+)
-5. ✅ **Audio integration** - Automatic start/stop on game state changes, respects music toggle
-
-**Implementation Details**:
-- `DynamicMusicSystem.js` - 4-layer procedural audio: 40Hz drone, 80Hz pad with LFO, 120 BPM bass/percussion, A minor pentatonic lead
-- Layers activate progressively: bass @ wave 1, percussion @ wave 3, lead @ wave 5
-- `playKillStreak(streak)` - Square wave power chord (root + fifth), intensity scales with streak count
-- `KillStreakAnnouncement.jsx` - Dramatic orange/yellow gradient box, shake animation, auto-dismiss 2s
-- Music system singleton with start/stop/updateWave/setVolume methods
-
-### Sprint 7: Settings & Accessibility (Pending)
-
-1. Mouse sensitivity slider (X/Y separate)
-2. Invert Y-axis option
-3. Mouse smoothing toggle
-4. Colorblind mode options (target color schemes)
-5. Reduce motion toggle (disable particles/shake)
-6. High contrast mode
-
-### Sprint 8: Optimization & Testing (Pending)
-
-1. Migrate more effects to use ObjectPool
-2. Spatial partitioning for collision detection
-3. LOD system for distant targets (reduce geometry)
-4. Performance profiling with Chrome DevTools
-5. Extensive playtest and balance tuning
+- **Easy**: 400ms reaction delay, large random offset
+- **Medium**: 200ms delay, small offset
+- **Hard**: 50ms delay, minimal offset (nearly perfect)
 
 ---
 
-## 💡 Bonus Ideas (Phase 10?)
+## 📋 Implementation Sprint Plan
 
-### Advanced Features
+### Sprint 1: Breakout (Days 1-2)
 
-- **Slow-motion on perfect kills** (all targets hit in combo)
-- **Kill cam replay** for impressive shots
-- **Challenge modes** (time attack, accuracy challenge, no-damage run)
-- **Modifiers** (low gravity, double speed, giant targets)
-- **Leaderboard integration** (online high scores)
-- **Replay system** (save/share gameplay)
+- Day 1: Core mechanics, paddle, ball, brick rendering
+- Day 2: Polish, power-ups, audio, high scores
 
-### Weapon Variants
+### Sprint 2: Space Invaders (Days 3-4)
 
-- **Laser**: Continuous beam (hold to fire, overheats)
-- **Shotgun**: Slug mode (single powerful shot)
-- **Explosive**: Sticky grenades (delayed explosion)
-- **New**: Railgun (pierces multiple targets)
-- **New**: Cluster bomb (splits into bomblets)
+- Day 3: Player, enemies, formation movement
+- Day 4: Shooting, shields, waves, audio
 
-### Target Variants
+### Sprint 3: Flappy Bird (Day 5)
 
-- **Shielded targets** (require multiple hits)
-- **Phasing targets** (teleport periodically)
-- **Splitting targets** (pre-emptively split when damaged)
-- **Homing targets** (chase the player)
-- **Kamikaze targets** (explode on contact)
+- Single day: Bird physics, pipes, scoring, audio
+
+### Sprint 4: Pong 3D (Day 6)
+
+- Single day: 3D scene, paddles, AI, physics
+
+### Sprint 5: Integration & Polish (Day 7)
+
+- Update homepage with all 4 new game cards
+- E2E tests for new games
+- Cross-game UI consistency check
+- Performance optimization
+- Documentation updates
 
 ---
 
-## 🧪 Testing Checklist
+## 🎨 Consistent Arcade Aesthetic
 
-### Gameplay Feel
+All games share:
 
-- [ ] Target-target collisions feel natural
-- [ ] Weapons have satisfying visual feedback
-- [ ] Target destruction is rewarding
-- [ ] Audio enhances immersion
-- [ ] Speed boost feels balanced
+- **Color Palette**: Neon cyan (#00ffff), magenta (#ff1493), yellow (#ffff00)
+- **Effects**: Scanlines, CRT curvature, screen glow
+- **UI**: Arcade-style fonts, pixel-perfect borders
+- **Audio**: Procedural retro sounds, consistent volume controls
+- **Controls**: Intuitive, documented on pause screen
+- **Scoring**: High score leaderboards for all games
+
+---
+
+## 🎯 Success Metrics
 
 ### Technical
 
-- [ ] Stable 60 FPS with all effects
-- [ ] No collision detection bugs/edge cases
-- [ ] Proper cleanup of particles/effects
-- [ ] No memory leaks during long play sessions
-- [ ] Consistent physics across different frame rates
+- [ ] All 4 games playable start-to-finish
+- [ ] <100ms input latency
+- [ ] 60 FPS stable performance
+- [ ] High scores persist across sessions
+- [ ] Audio settings apply to all games
+- [ ] No console errors
 
-### Accessibility
+### User Experience
 
-- [ ] Colorblind modes work correctly
-- [ ] Reduced motion mode disables appropriate effects
-- [ ] High contrast mode readable
-- [ ] Audio cues complement visual feedback
+- [ ] Clear controls (documented in-game)
+- [ ] Immediate restart capability
+- [ ] Satisfying audio/visual feedback
+- [ ] Fair difficulty progression
+- [ ] Addictive "one more try" quality
 
-### Polish
+### Code Quality
 
-- [ ] Every weapon feels unique and impactful
-- [ ] Target destruction is satisfying
-- [ ] Audio/visual feedback is cohesive
-- [ ] No jarring visual/audio moments
-- [ ] Game feels "juicy" and responsive
-
----
-
-## 📊 Success Metrics
-
-### Quantitative
-
-- Player retention (% who complete wave 5+)
-- Average playtime per session
-- Highest wave reached (median)
-- Weapon usage distribution (are all weapons viable?)
-- Power-up collection rate
-
-### Qualitative
-
-- "Do weapons feel impactful?"
-- "Are target destructions satisfying?"
-- "Does audio enhance the experience?"
-- "Is speed boost balanced?"
-- "Would you play again?"
+- [ ] 70%+ code reuse from framework
+- [ ] Consistent file structure across games
+- [ ] Reusable components clearly separated
+- [ ] No duplication of audio/scoring/input logic
+- [ ] Clean separation: game logic vs rendering
 
 ---
 
 ## 🚀 Phase 10 Deliverables
 
-1. **Full collision physics** with target-target interactions
-2. **Enhanced weapon effects** for all weapon types
-3. **Polished target feedback** for all states (spawn, hit, split, destroy)
-4. **Rich audio** with spatial positioning and dynamic mixing
-5. **Improved UI/UX** with animations and settings
-6. **Balanced gameplay** with tuned speed boost and weapons
-7. **Performance optimizations** for smooth 60 FPS with all effects
-8. **Comprehensive testing** across all systems
+By end of Phase 10, the arcade will have:
+
+1. ✅ **Asteroid** - 6DOF space shooter (COMPLETE)
+2. 🔄 **FPS** - Terrain-based 3D shooter (IN PROGRESS)
+3. 🧱 **Breakout** - 2D brick-breaker (TO BUILD)
+4. 👾 **Space Invaders** - 2D formation shooter (TO BUILD)
+5. 🐦 **Flappy Bird** - Endless runner (TO BUILD)
+6. 🏓 **Pong 3D** - AI opponent sports game (TO BUILD)
+
+**6 unique games** showcasing 2D, 3D, different genres, rapid development capability, and reusable architecture.
 
 ---
 
-**Target Completion**: 3-4 weeks  
-**Focus**: Making the game feel polished and professional
+## 📦 Homepage Updates
+
+Add to `app/pages/index.js`:
+
+```javascript
+const games = [
+  { title: 'Asteroid', icon: '🎯', description: 'Blast asteroids in space', route: '/asteroid' },
+  { title: 'FPS', icon: '🎮', description: 'First-person shooter', route: '/fps' },
+  { title: 'Breakout', icon: '🧱', description: 'Classic brick breaking', route: '/breakout' },
+  { title: 'Space Invaders', icon: '👾', description: 'Defend Earth from aliens', route: '/space-invaders' },
+  { title: 'Flappy Bird', icon: '🐦', description: 'Fly through pipes', route: '/flappy' },
+  { title: 'Pong 3D', icon: '🏓', description: 'Beat the AI', route: '/pong' },
+];
+```
+
+**Result**: Professional arcade portfolio with diverse gameplay styles.
