@@ -418,30 +418,38 @@ lib/
 4. ✅ **Dynamic crosshair system** - Weapon-specific colors, velocity-based scaling, hit pulse animation
 5. ✅ **HUD animations** - Health bar pulse on damage (0.5s), ammo flash on fire (0.2s)
 
-### Sprint 4: Settings & Accessibility (Week 2)
+### Sprint 4: Screen Effects & Feedback ✅ COMPLETE
 
-1. Mouse sensitivity slider
-2. Separate X/Y sensitivity options
+1. ✅ **Low health vignette** - CSS-based radial gradient intensifies <50% health, red tint <25% with pulse
+2. ✅ **Screen shake on damage** - useScreenShake hook with intensity based on damage (5-16px, 250ms decay)
+3. ✅ **Mouse wheel weapon cycling** - Scroll up/down to cycle through 5 weapons during gameplay
+4. ✅ **Combo audio feedback** - Ascending 3-note arpeggios at 5x/10x/15x milestones, sparkle layer at 15x+
+5. ✅ **Object pooling system** - ObjectPool and ParticlePool classes, PooledHitParticles with instanced meshes
+
+**Implementation Details**:
+- `HealthVignette.jsx` - Opacity 0-0.8 based on health, separate red tint layer with CSS animation
+- `useScreenShake.js` - Exponential decay over 15 frames, random x/y offset with configurable intensity
+- Mouse wheel handler prevents default scroll, only active when pointer locked
+- `playComboMilestone(milestone)` in SoundManager with dynamic frequency scaling (400Hz base + 200Hz per level)
+- `ObjectPool.js` - Generic pool with acquire/release, ParticlePool extends with updateParticles lifecycle
+- `PooledHitParticles.jsx` - Uses THREE.InstancedMesh for 12 particles, much faster than individual meshes
+
+### Sprint 5: Settings & Accessibility (Pending)
+
+1. Mouse sensitivity slider (X/Y separate)
+2. Invert Y-axis option
 3. Mouse smoothing toggle
-4. Invert Y-axis option
-5. Colorblind mode options
-6. Reduce motion toggle
+4. Colorblind mode options (target color schemes)
+5. Reduce motion toggle (disable particles/shake)
+6. High contrast mode
 
-### Sprint 5: UI/UX Polish (Week 3)
+### Sprint 6: Optimization & Testing (Pending)
 
-1. Dynamic crosshair system
-2. HUD animations (health pulse, ammo flash, combo grow)
-3. Screen effects (vignette, color grading)
-4. Settings menu (sensitivity, accessibility)
-5. Damage numbers and score popups
-
-### Sprint 6: Optimization & Testing (Week 3)
-
-1. Object pooling implementation
-2. Spatial partitioning for collisions
-3. LOD system for targets
-4. Performance profiling
-5. Playtest and balance tuning
+1. Migrate more effects to use ObjectPool
+2. Spatial partitioning for collision detection
+3. LOD system for distant targets (reduce geometry)
+4. Performance profiling with Chrome DevTools
+5. Extensive playtest and balance tuning
 
 ---
 

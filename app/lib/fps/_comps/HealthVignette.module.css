@@ -1,0 +1,51 @@
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  
+  /* Radial gradient for vignette effect */
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.6) 80%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  
+  transition: opacity 0.3s ease;
+}
+
+.redTint {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 11;
+  
+  /* Red overlay for critical health */
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    transparent 30%,
+    rgba(180, 0, 0, 0.3) 70%,
+    rgba(120, 0, 0, 0.5) 100%
+  );
+  
+  transition: opacity 0.3s ease;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

@@ -3,6 +3,7 @@ export const handlePlayerHit = ({
   setHealth,
   showFlash,
   playSound,
+  triggerShake,
   defense: { shieldActive, setShieldActive, invincibilityActive },
 }) => {
   // If invincible, ignore damage completely
@@ -26,6 +27,8 @@ export const handlePlayerHit = ({
       return newShieldValue || false;
     });
     playSound('hit'); // Play shield hit sound
+    // Light shake for shield hit
+    if (triggerShake) triggerShake(5);
     return;
   }
 
@@ -41,4 +44,8 @@ export const handlePlayerHit = ({
   });
   showFlash('red', 500); // Show red flash for 500ms
   playSound('hit'); // Play hit sound
+  
+  // Shake intensity based on damage amount (5-20 maps to 8-16 pixels)
+  const shakeIntensity = Math.round(hpLoss * 0.8);
+  if (triggerShake) triggerShake(shakeIntensity);
 };

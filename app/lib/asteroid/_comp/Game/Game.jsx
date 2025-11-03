@@ -30,9 +30,11 @@ const DebugMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/DebugMenu'), { s
 const WaveTransition = dynamic(() => import('@/lib/asteroid/_comp/UI/WaveTransition'), { ssr: false });
 const PauseMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/PauseMenu'), { ssr: false });
 const SlowMotionOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/SlowMotionOverlay'), { ssr: false });
+const HealthVignette = dynamic(() => import('@/lib/fps/_comps/HealthVignette'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
+import { useScreenShake } from '@/lib/shared/ui/useScreenShake';
 
 const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
   <div className={styles.statsDisplay}>
@@ -45,6 +47,7 @@ const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
 
 const Game = ({ onHit, onMiss }) => {
   const { musicEnabled } = useAudio();
+  const [shakeStyle, triggerShake] = useScreenShake();
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
@@ -235,6 +238,32 @@ const Game = ({ onHit, onMiss }) => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setWeapon, setAmmo]);
+
+  // Mouse wheel weapon cycling
+  useEffect(() => {
+    const weaponOrder = ['spread', 'laser', 'explosive', 'aa', 'plasma'];
+    
+    const handleWheel = (e) => {
+      // Only cycle weapons when pointer is locked (in game)
+      if (!document.pointerLockElement || gameOver || paused) return;
+      
+      e.preventDefault();
+      
+      setWeapon((currentWeapon) => {
+        const currentIndex = weaponOrder.indexOf(currentWeapon);
+        if (currentIndex === -1) return currentWeapon;
+        
+        // Scroll up = previous weapon, scroll down = next weapon
+        const direction = e.deltaY < 0 ? -1 : 1;
+        const newIndex = (currentIndex + direction + weaponOrder.length) % weaponOrder.length;
+        
+        return weaponOrder[newIndex];
+      });
+    };
+    
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [setWeapon, gameOver, paused]);
 
   // Keyboard shortcut: press 't' to cycle trail quality Off -> Low -> High
   useEffect(() => {
@@ -465,14 +494,27 @@ const Game = ({ onHit, onMiss }) => {
         setHealth,
         showFlash,
         playSound,
+        triggerShake,
         defense: {
           shieldActive,
           setShieldActive,
           invincibilityActive,
         },
       }),
-    [setHealth, showFlash, playSound, shieldActive, setShieldActive, invincibilityActive]
+    [setHealth, showFlash, playSound, triggerShake, shieldActive, setShieldActive, invincibilityActive]
   );
+
+  // Play combo milestone sounds
+  useEffect(() => {
+    // Play sound at milestones: 5, 10, 15, 20, etc.
+    if (combo > 0 && combo % 5 === 0) {
+      // Dynamic import to ensure soundManager is available
+      import('@/utils/audio/SoundManager').then((module) => {
+        const soundManager = module.default;
+        soundManager.playComboMilestone(combo);
+      });
+    }
+  }, [combo]);
 
   // Check for game over when health reaches 0
   useEffect(() => {
@@ -504,7 +546,8 @@ const Game = ({ onHit, onMiss }) => {
   // Game only ends when health reaches 0
 
   return (
-    <div className={styles.gameContainer}>
+    <div className={styles.gameContainer} style={shakeStyle}>
+      <HealthVignette health={health} />
       <FlashOverlays flashQueue={flashQueue} />
       <GameCanvas
         gameOver={gameOver}

@@ -487,6 +487,64 @@ class SoundManager {
       }
     }
   }
+
+  // Play combo milestone sound - ascending tones that increase in pitch with combo level
+  // milestone: 5, 10, 15, 20, etc.
+  playComboMilestone(milestone) {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+      
+      // Higher combo = higher base frequency and more harmonics
+      const level = milestone / 5; // 5x=1, 10x=2, 15x=3, etc.
+      const baseFreq = 400 + (level * 200); // 600Hz, 800Hz, 1000Hz, etc.
+      const duration = 0.25 + (level * 0.05); // Slightly longer for higher combos
+      
+      // Create 3-note ascending arpeggio
+      for (let i = 0; i < 3; i++) {
+        const startTime = now + (i * 0.05);
+        const freq = baseFreq * Math.pow(1.25, i); // Major 3rd intervals
+        
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, startTime);
+        
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.15, startTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      }
+      
+      // Add a sparkle layer for higher combos
+      if (level >= 3) {
+        const sparkle = ctx.createOscillator();
+        sparkle.type = 'sine';
+        sparkle.frequency.setValueAtTime(2400, now);
+        sparkle.frequency.exponentialRampToValueAtTime(3600, now + 0.2);
+        
+        const sparkleGain = ctx.createGain();
+        sparkleGain.gain.setValueAtTime(0.1, now);
+        sparkleGain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+        
+        sparkle.connect(sparkleGain).connect(ctx.destination);
+        sparkle.start(now);
+        sparkle.stop(now + 0.2);
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play combo sound:', error.message);
+      }
+    }
+  }
 }
 
 // Create a singleton instance
