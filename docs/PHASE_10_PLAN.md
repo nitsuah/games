@@ -434,7 +434,38 @@ lib/
 - `ObjectPool.js` - Generic pool with acquire/release, ParticlePool extends with updateParticles lifecycle
 - `PooledHitParticles.jsx` - Uses THREE.InstancedMesh for 12 particles, much faster than individual meshes
 
-### Sprint 5: Settings & Accessibility (Pending)
+### Sprint 5: Audio & Visual Feedback ✅ COMPLETE
+
+1. ✅ **Low health heartbeat** - Pulsing 60Hz bass "lub-dub" pattern, tempo 1000ms→250ms as health 30%→0%
+2. ✅ **Weapon muzzle flash** - Screen-edge radial gradient flash for explosive/plasma/AA, 100ms fade
+3. ✅ **Proximity warning system** - Directional indicators for targets <15 units, PROXIMITY ALERT at <8 units
+4. ✅ **Wave clear celebration** - Performance-based audio (triumphant fanfare + sparkles at 80%+ accuracy)
+5. ✅ **Enhanced wave transition** - Performance ratings (PERFECT/EXCELLENT/GOOD), gold glow for 90%+ accuracy
+
+**Implementation Details**:
+- `startHeartbeat(health)` / `stopHeartbeat()` / `updateHeartbeat(health)` in SoundManager
+- Low-pass filter at 200Hz for muffled heartbeat, automatic tempo adjustment on health change
+- `MuzzleFlashOverlay.jsx` - Weapon-specific colors (orange/magenta/yellow), triggered on ammo decrease
+- `ProximityWarning.jsx` - Calculates 3D distance, displays up to 6 closest threats with pulsing arrows
+- `playWaveClear(performanceFactor)` - Ascending major triad arpeggio, sparkle layer for high performance
+- WaveTransition enhanced with `getPerformanceRating()` and `.perfect` CSS class for gold effects
+
+### Sprint 6: Dynamic Music & Streaks ✅ COMPLETE
+
+1. ✅ **Dynamic music system** - Procedural layered audio with 4 layers: ambient drone, bass pulse, percussion (wave 3+), lead synth (wave 5+)
+2. ✅ **Kill streak announcements** - Visual overlay + power chord sound at 10x/15x/20x/25x/30+ combos
+3. ✅ **Music intensity scaling** - Volume boost per wave, layers fade in/out based on game state
+4. ✅ **Streak messages** - KILLING SPREE (10x), DOMINATING (15x), RAMPAGE (20x), LEGENDARY (25x), UNSTOPPABLE (30x+)
+5. ✅ **Audio integration** - Automatic start/stop on game state changes, respects music toggle
+
+**Implementation Details**:
+- `DynamicMusicSystem.js` - 4-layer procedural audio: 40Hz drone, 80Hz pad with LFO, 120 BPM bass/percussion, A minor pentatonic lead
+- Layers activate progressively: bass @ wave 1, percussion @ wave 3, lead @ wave 5
+- `playKillStreak(streak)` - Square wave power chord (root + fifth), intensity scales with streak count
+- `KillStreakAnnouncement.jsx` - Dramatic orange/yellow gradient box, shake animation, auto-dismiss 2s
+- Music system singleton with start/stop/updateWave/setVolume methods
+
+### Sprint 7: Settings & Accessibility (Pending)
 
 1. Mouse sensitivity slider (X/Y separate)
 2. Invert Y-axis option
@@ -443,7 +474,7 @@ lib/
 5. Reduce motion toggle (disable particles/shake)
 6. High contrast mode
 
-### Sprint 6: Optimization & Testing (Pending)
+### Sprint 8: Optimization & Testing (Pending)
 
 1. Migrate more effects to use ObjectPool
 2. Spatial partitioning for collision detection

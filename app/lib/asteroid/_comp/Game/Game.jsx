@@ -31,6 +31,9 @@ const WaveTransition = dynamic(() => import('@/lib/asteroid/_comp/UI/WaveTransit
 const PauseMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/PauseMenu'), { ssr: false });
 const SlowMotionOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/SlowMotionOverlay'), { ssr: false });
 const HealthVignette = dynamic(() => import('@/lib/fps/_comps/HealthVignette'), { ssr: false });
+const MuzzleFlashOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/MuzzleFlashOverlay'), { ssr: false });
+const ProximityWarning = dynamic(() => import('@/lib/asteroid/_comp/UI/ProximityWarning'), { ssr: false });
+const KillStreakAnnouncement = dynamic(() => import('@/lib/asteroid/_comp/UI/KillStreakAnnouncement'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
@@ -216,6 +219,8 @@ const Game = ({ onHit, onMiss }) => {
   // Crosshair state
   const [playerVelocity, setPlayerVelocity] = useState(0);
   const [crosshairHitFlash, setCrosshairHitFlash] = useState(false);
+  const [showMuzzleFlash, setShowMuzzleFlash] = useState(false);
+  const [showKillStreak, setShowKillStreak] = useState(false);
 
   // Power-up and flash overlay state/logic
   const {
@@ -290,6 +295,37 @@ const Game = ({ onHit, onMiss }) => {
   }, [setHighScore, setBestAccuracy]);
 
   // Score is now updated incrementally in handleTargetHit, no need for recalculation effect
+
+  // Dynamic music system - procedural layered audio
+  useEffect(() => {
+    if (gameOver || !musicEnabled || paused || showWaveTransition) return;
+    
+    import('@/utils/audio/DynamicMusicSystem').then((module) => {
+      const musicSystem = module.getDynamicMusicSystem();
+      
+      if (!musicSystem.isPlaying) {
+        musicSystem.start(currentWave);
+      }
+    });
+    
+    // Cleanup on unmount or game over
+    return () => {
+      import('@/utils/audio/DynamicMusicSystem').then((module) => {
+        if (gameOver) {
+          module.getDynamicMusicSystem().stop();
+        }
+      });
+    };
+  }, [musicEnabled, gameOver, paused, showWaveTransition, currentWave]);
+
+  // Update music intensity when wave changes
+  useEffect(() => {
+    if (!gameOver && musicEnabled && !paused) {
+      import('@/utils/audio/DynamicMusicSystem').then((module) => {
+        module.getDynamicMusicSystem().updateWave(currentWave);
+      });
+    }
+  }, [currentWave, gameOver, musicEnabled, paused]);
 
   // Play background music on mount and control based on musicEnabled
   useEffect(() => {
@@ -516,6 +552,42 @@ const Game = ({ onHit, onMiss }) => {
     }
   }, [combo]);
 
+  // Show kill streak announcements at major milestones
+  useEffect(() => {
+    if (combo >= 10 && combo % 5 === 0) {
+      setShowKillStreak(true);
+      setTimeout(() => setShowKillStreak(false), 2000);
+    }
+  }, [combo]);
+
+  // Muzzle flash effect for high-power weapons
+  const prevAmmoRef = useRef(ammo);
+  useEffect(() => {
+    // Trigger flash when firing explosive, plasma, or AA (high power weapons)
+    if (['explosive', 'plasma', 'aa'].includes(weapon)) {
+      if (ammo[weapon] < prevAmmoRef.current[weapon]) {
+        setShowMuzzleFlash(true);
+        setTimeout(() => setShowMuzzleFlash(false), 100);
+      }
+    }
+    prevAmmoRef.current = ammo;
+  }, [ammo, weapon]);
+
+  // Low health heartbeat audio
+  useEffect(() => {
+    import('@/utils/audio/SoundManager').then((module) => {
+      const soundManager = module.default;
+      soundManager.updateHeartbeat(health);
+    });
+    
+    // Cleanup: stop heartbeat when component unmounts or game ends
+    return () => {
+      import('@/utils/audio/SoundManager').then((module) => {
+        module.default.stopHeartbeat();
+      });
+    };
+  }, [health, gameOver]);
+
   // Check for game over when health reaches 0
   useEffect(() => {
     if (health <= 0 && !gameOver) {
@@ -698,6 +770,9 @@ const Game = ({ onHit, onMiss }) => {
         />
       )}
       <SlowMotionOverlay active={slowMotionActive} />
+      <MuzzleFlashOverlay active={showMuzzleFlash} weapon={weapon} />
+      <ProximityWarning targets={targets} playerPosition={[0, 0, 0]} />
+      {showKillStreak && <KillStreakAnnouncement combo={combo} onComplete={() => setShowKillStreak(false)} />}
     </div>
   );
 };

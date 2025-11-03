@@ -6,6 +6,8 @@ class SoundManager {
     this.isInitialized = false;
     this.audioCtx = null;
     this.soundEnabled = true; // Default to enabled
+    this.heartbeatInterval = null;
+    this.heartbeatGain = null;
   }
 
   setSoundEnabled(enabled) {
@@ -542,6 +544,228 @@ class SoundManager {
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
         console.warn('Failed to play combo sound:', error.message);
+      }
+    }
+  }
+
+  /**
+   * Start low health heartbeat audio loop
+   * healthPercent: 0-100, controls tempo (lower health = faster heartbeat)
+   */
+  startHeartbeat(healthPercent) {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    // Only start if health is low enough (<30%)
+    if (healthPercent >= 30) {
+      this.stopHeartbeat();
+      return;
+    }
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // Clear existing heartbeat if any
+      if (this.heartbeatInterval) {
+        this.stopHeartbeat();
+      }
+      
+      // Calculate interval based on health (30% = 1000ms, 10% = 400ms, 0% = 250ms)
+      const interval = 1000 - (30 - healthPercent) * 25;
+      const clampedInterval = Math.max(250, Math.min(1000, interval));
+      
+      const playBeat = () => {
+        const ctx = this.audioCtx;
+        const now = ctx.currentTime;
+        const duration = 0.15;
+        
+        // Two-part heartbeat: "lub-dub"
+        // First beat (lub)
+        const osc1 = ctx.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(60, now);
+        osc1.frequency.exponentialRampToValueAtTime(40, now + duration);
+        
+        const gain1 = ctx.createGain();
+        gain1.gain.setValueAtTime(0.3, now);
+        gain1.gain.exponentialRampToValueAtTime(0.01, now + duration);
+        
+        // Second beat (dub) - slightly delayed and quieter
+        const osc2 = ctx.createOscillator();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(50, now + 0.1);
+        osc2.frequency.exponentialRampToValueAtTime(35, now + 0.1 + duration);
+        
+        const gain2 = ctx.createGain();
+        gain2.gain.setValueAtTime(0.2, now + 0.1);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.1 + duration);
+        
+        // Low-pass filter for muffled heartbeat sound
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(200, now);
+        
+        osc1.connect(gain1).connect(filter).connect(ctx.destination);
+        osc2.connect(gain2).connect(filter).connect(ctx.destination);
+        
+        osc1.start(now);
+        osc2.start(now + 0.1);
+        osc1.stop(now + duration);
+        osc2.stop(now + 0.1 + duration);
+      };
+      
+      // Play immediately, then set interval
+      playBeat();
+      this.heartbeatInterval = setInterval(playBeat, clampedInterval);
+      
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to start heartbeat:', error.message);
+      }
+    }
+  }
+
+  /**
+   * Stop the heartbeat loop
+   */
+  stopHeartbeat() {
+    if (this.heartbeatInterval) {
+      clearInterval(this.heartbeatInterval);
+      this.heartbeatInterval = null;
+    }
+  }
+
+  /**
+   * Update heartbeat tempo based on current health
+   */
+  updateHeartbeat(healthPercent) {
+    if (healthPercent >= 30) {
+      this.stopHeartbeat();
+    } else if (this.heartbeatInterval) {
+      // Restart with new tempo
+      this.startHeartbeat(healthPercent);
+    } else {
+      // Start if not already playing
+      this.startHeartbeat(healthPercent);
+    }
+  }
+
+  /**
+   * Play kill streak announcement sound
+   * streak: 10, 20, 30, etc.
+   */
+  playKillStreak(streak) {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+      const duration = 0.4;
+      
+      // Higher streaks = higher pitch and more harmonics
+      const intensity = Math.min(streak / 10, 5); // 1-5x multiplier
+      const baseFreq = 300 + (intensity * 100); // 400Hz - 800Hz
+      
+      // Power chord (root + fifth)
+      const root = ctx.createOscillator();
+      root.type = 'square';
+      root.frequency.setValueAtTime(baseFreq, now);
+      
+      const fifth = ctx.createOscillator();
+      fifth.type = 'square';
+      fifth.frequency.setValueAtTime(baseFreq * 1.5, now);
+      
+      const rootGain = ctx.createGain();
+      rootGain.gain.setValueAtTime(0, now);
+      rootGain.gain.linearRampToValueAtTime(0.2, now + 0.01);
+      rootGain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+      
+      const fifthGain = ctx.createGain();
+      fifthGain.gain.setValueAtTime(0, now);
+      fifthGain.gain.linearRampToValueAtTime(0.15, now + 0.01);
+      fifthGain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+      
+      // Distortion/overdrive for aggressive sound
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(2000, now);
+      filter.Q.setValueAtTime(2, now);
+      
+      root.connect(rootGain).connect(filter).connect(ctx.destination);
+      fifth.connect(fifthGain).connect(filter).connect(ctx.destination);
+      
+      root.start(now);
+      fifth.start(now);
+      root.stop(now + duration);
+      fifth.stop(now + duration);
+      
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play kill streak sound:', error.message);
+      }
+    }
+  }
+
+  /**
+   * Play wave clear celebration sound
+   * Performance factor (0-1): 0 = poor, 1 = perfect
+   */
+  playWaveClear(performanceFactor = 1.0) {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+      const duration = 0.8;
+      
+      // Base triumphant fanfare
+      const baseFreq = 400 + (performanceFactor * 200); // Higher pitch for better performance
+      
+      // Create ascending victory arpeggio
+      const notes = [baseFreq, baseFreq * 1.25, baseFreq * 1.5, baseFreq * 2]; // Major triad + octave
+      
+      notes.forEach((freq, i) => {
+        const startTime = now + (i * 0.1);
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, startTime);
+        
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.2, startTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      });
+      
+      // Add sparkle layer for high performance (>80%)
+      if (performanceFactor > 0.8) {
+        for (let i = 0; i < 5; i++) {
+          const sparkleTime = now + 0.4 + (i * 0.05);
+          const sparkleOsc = ctx.createOscillator();
+          sparkleOsc.type = 'sine';
+          sparkleOsc.frequency.setValueAtTime(1800 + Math.random() * 1200, sparkleTime);
+          
+          const sparkleGain = ctx.createGain();
+          sparkleGain.gain.setValueAtTime(0.12, sparkleTime);
+          sparkleGain.gain.exponentialRampToValueAtTime(0.01, sparkleTime + 0.2);
+          
+          sparkleOsc.connect(sparkleGain).connect(ctx.destination);
+          sparkleOsc.start(sparkleTime);
+          sparkleOsc.stop(sparkleTime + 0.2);
+        }
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play wave clear sound:', error.message);
       }
     }
   }

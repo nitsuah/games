@@ -1,11 +1,31 @@
+import { useEffect } from 'react';
 import styles from './WaveTransition.module.css';
 
 const WaveTransition = ({ wave = 1, score = 0, highScore = 0, isNewHighScore = false, accuracy = 0 }) => {
+  // Calculate performance factor (0-1) based on accuracy
+  const performanceFactor = Math.min(1, (accuracy || 0) / 100);
+  
+  // Get performance rating
+  const getPerformanceRating = () => {
+    if (accuracy >= 90) return '🌟 PERFECT!';
+    if (accuracy >= 75) return '⭐ EXCELLENT!';
+    if (accuracy >= 60) return '✓ GOOD';
+    return '✓ COMPLETE';
+  };
+  
+  // Play wave clear sound on mount
+  useEffect(() => {
+    import('@/utils/audio/SoundManager').then((module) => {
+      module.default.playWaveClear(performanceFactor);
+    });
+  }, [performanceFactor]);
+  
   return (
     <div className={styles.overlay}>
-      <div className={styles.container}>
+      <div className={`${styles.container} ${performanceFactor > 0.8 ? styles.perfect : ''}`}>
         <div className={styles.header}>
           <h1 className={styles.title}>WAVE {wave} COMPLETE!</h1>
+          <div className={styles.performanceRating}>{getPerformanceRating()}</div>
           <div className={styles.scanline}></div>
         </div>
         
