@@ -1,16 +1,37 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+import React from 'react';
 
-// Suppress React Three Fiber primitive casing warnings in tests
+// Mock React.createElement to handle three.js primitives without errors
+const originalCreateElement = React.createElement;
+const threePrimitives = new Set([
+  'primitive', 'mesh', 'sprite', 'group', 'scene',
+  'boxGeometry', 'sphereGeometry', 'planeGeometry', 'circleGeometry', 'coneGeometry',
+  'meshStandardMaterial', 'meshBasicMaterial', 'spriteMaterial', 'lineBasicMaterial',
+  'ambientLight', 'directionalLight', 'pointLight', 'spotLight', 'hemisphereLight',
+  'perspectiveCamera', 'orthographicCamera'
+]);
+
+React.createElement = function(type, props, ...children) {
+  // If it's a three.js primitive, create a mock component
+  if (typeof type === 'string' && threePrimitives.has(type)) {
+    const MockComponent = React.forwardRef((_props, _ref) => null);
+    MockComponent.displayName = type;
+    return originalCreateElement(MockComponent, props, ...children);
+  }
+  return originalCreateElement(type, props, ...children);
+};
+
+// Suppress React Three Fiber warnings
 const originalError = console.error;
 beforeAll(() => {
   console.error = (...args) => {
-    // Filter out react-three-fiber primitive warnings
     if (
       typeof args[0] === 'string' &&
       (args[0].includes('react-three') || 
-       args[0].includes('primitive') ||
-       args[0].includes('lower case'))
+       args[0].includes('is using incorrect casing') ||
+       args[0].includes('lower case') ||
+       args[0].includes('PascalCase'))
     ) {
       return;
     }

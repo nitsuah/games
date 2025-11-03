@@ -35,13 +35,11 @@ const ShootingSystem = ({
   const [shellCasings, setShellCasings] = useState([]);
   const mouseDownRef = useRef(false);
   const autoFireIntervalRef = useRef(null);
-  const effectIdCounterRef = useRef(0);
   const aaShotCounterRef = useRef(0); // Track alternating shots for AA weapon
 
-  // Helper function to generate unique effect IDs
+  // Helper function to generate unique effect IDs using crypto.randomUUID()
   const generateEffectId = (prefix) => {
-    effectIdCounterRef.current += 1;
-    return `${prefix}-${Date.now()}-${effectIdCounterRef.current}`;
+    return `${prefix}-${crypto.randomUUID()}`;
   };
 
   const handleShoot = () => {

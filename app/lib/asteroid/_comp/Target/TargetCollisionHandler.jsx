@@ -47,7 +47,9 @@ const TargetCollisionHandler = ({ targets, setTargets }) => {
         position: new THREE.Vector3(t.x, t.y, t.z),
         velocity: new THREE.Vector3(t.vx || 0, t.vy || 0, t.vz || 0),
         radius: t.size || 10,
-        mass: (t.size || 10) ** 3, // Mass ∝ volume (r³)
+        // Mass proportional to volume: assuming t.size is radius, volume = (4/3)πr³
+        // Simplified to r³ for gameplay purposes (π and 4/3 constants don't affect collision ratios)
+        mass: (t.size || 10) ** 3,
       }));
     
     if (activeTargets.length < 2) return;
