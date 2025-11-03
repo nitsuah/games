@@ -1,28 +1,16 @@
 # Phase 10: Build 4 New Arcade Games# Phase 10: Build 4 New Arcade Games
 
-
-
 **Status**: 🚀 IN PROGRESS  **Status**: 🚀 IN PROGRESS  
 
-**Foundation**: Asteroid game complete with reusable framework ✅**Foundation**: Asteroid game complete with reusable framework ✅
-
-
+**Foundation**: Asteroid game complete with reusable framework ✅
 
 ------
 
-
-
 ## 🎯 Mission## 🎯 Mission
-
-
 
 Build 4 new arcade games using the framework from Asteroid. Show rapid iteration and code reuse.**Build 4 new arcade games** using the framework we built during Asteroid development. Demonstrate rapid iteration and code reuse across different game genres.
 
-
-
 ### Games to Build### Games to Build
-
-
 
 1. 🧱 **Breakout** - 2D brick-breaking (1-2 days)1. 🧱 **Breakout** - 2D brick-breaking (Est: 1-2 days)
 
@@ -32,19 +20,11 @@ Build 4 new arcade games using the framework from Asteroid. Show rapid iteration
 
 4. 🏓 **Pong 3D** - AI opponent (1 day)4. 🏓 **Pong 3D** - AI opponent (Est: 1 day)
 
-
-
 **Target**: 5-6 playable games (Asteroid + FPS + 4 new)**Target**: 5-6 playable games total (Asteroid + FPS + 4 new games)
-
-
 
 ------
 
-
-
 ## 🧱 Sprint 1: Breakout (Days 1-2)## 🏗️ What We Already Have (Framework ✅)
-
-
 
 ### Core Mechanics### Reusable Systems (70%+ Code Reuse)
 
@@ -68,25 +48,31 @@ Build 4 new arcade games using the framework from Asteroid. Show rapid iteration
 
 ### Files- Easy to adapt for arrow keys, WASD, spacebar
 
+``` shell
+app/pages/breakout.jsx
+app/lib/breakout/
+  BreakoutGame.jsx
+  BreakoutCanvas.jsx
+  components/
+    Paddle.js
+    Ball.js
+    BrickGrid.js
+    PowerUpDrop.js
 ```
 
-app/pages/breakout.jsx**Scoring** ✅
+**Scoring** ✅
 
+```bash
 app/lib/breakout/- `ScoreManager.js` - Score calculation, combos
-
   BreakoutGame.jsx- `HighScoreManager.js` - localStorage leaderboards
-
   components/- `StatsTracker.js` - Accuracy, playtime
-
     Paddle.js
-
     Ball.js**UI/UX** ✅
-
     BrickGrid.js- `ArcadeCard.jsx` - Game selection (already on homepage)
-
     PowerUpDrop.js- Arcade aesthetic: scanlines, neon glow, CRT effects
+```
 
-```- Settings menu pattern (mouse, audio, accessibility)
+- Settings menu pattern (mouse, audio, accessibility)
 
 - Game over/pause overlays
 
