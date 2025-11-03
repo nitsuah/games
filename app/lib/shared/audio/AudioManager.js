@@ -71,8 +71,9 @@ class AudioManager {
       audio.volume = options.volume !== undefined ? options.volume : 1.0;
       
       // Use absolute path from public directory
-      audio.src = process.env.NODE_ENV === 'development' 
-        ? `http://localhost:3000${src}` 
+      // In development, use window.location.origin to avoid hardcoded localhost
+      audio.src = process.env.NODE_ENV === 'development' && typeof window !== 'undefined'
+        ? `${window.location.origin}${src}` 
         : src;
 
       audio.load();

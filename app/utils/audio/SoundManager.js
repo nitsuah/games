@@ -35,7 +35,7 @@ class SoundManager {
     if (ctx && !this.masterGain) {
       this.masterGain = ctx.createGain();
       this.masterGain.gain.setValueAtTime(this.sfxVolume, ctx.currentTime);
-      this.masterGain.connect(this.getOutputNode(ctx));
+      this.masterGain.connect(ctx.destination);
     }
     return this.masterGain || ctx.destination;
   }

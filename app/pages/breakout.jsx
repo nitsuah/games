@@ -37,7 +37,7 @@ export default function BreakoutPage() {
         background: 'linear-gradient(180deg, #0a0a0a 0%, #1a0a2e 100%)',
         gap: '2rem',
       }}>
-        <ArcadeHeader text="BREAKOUT" variant="large" />
+        <ArcadeHeader title="BREAKOUT" />
         <div style={{
           display: 'flex',
           gap: '1rem',
@@ -47,13 +47,15 @@ export default function BreakoutPage() {
           <ArcadeButton
             onClick={() => setGameStarted(true)}
             variant={VARIANTS.SUCCESS}
-            label="START GAME"
-          />
+          >
+            START GAME
+          </ArcadeButton>
           <ArcadeButton
             onClick={() => window.location.href = '/'}
             variant={VARIANTS.SECONDARY}
-            label="BACK TO MENU"
-          />
+          >
+            BACK TO MENU
+          </ArcadeButton>
         </div>
         <div style={{
           color: '#8892b0',
