@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import { useAudio } from '@/contexts/AudioContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import styles from './Game.module.css';
 import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
 import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
@@ -34,6 +35,7 @@ const HealthVignette = dynamic(() => import('@/lib/fps/_comps/HealthVignette'), 
 const MuzzleFlashOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/MuzzleFlashOverlay'), { ssr: false });
 const ProximityWarning = dynamic(() => import('@/lib/asteroid/_comp/UI/ProximityWarning'), { ssr: false });
 const KillStreakAnnouncement = dynamic(() => import('@/lib/asteroid/_comp/UI/KillStreakAnnouncement'), { ssr: false });
+const SettingsMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/SettingsMenu'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
@@ -50,7 +52,8 @@ const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
 
 const Game = ({ onHit, onMiss }) => {
   const { musicEnabled } = useAudio();
-  const [shakeStyle, triggerShake] = useScreenShake();
+  const { settings } = useSettings();
+  const [shakeStyle, triggerShake] = useScreenShake(settings.reduceMotion);
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
@@ -59,6 +62,7 @@ const Game = ({ onHit, onMiss }) => {
   const comboTimerRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
@@ -284,10 +288,18 @@ const Game = ({ onHit, onMiss }) => {
           return next;
         });
       }
+      // Open settings with 'O' key (when not paused/game over)
+      if (e.key && e.key.toLowerCase() === 'o' && !paused && !gameOver) {
+        setShowSettings(true);
+      }
+      // Close settings with 'Escape' key
+      if (e.key === 'Escape' && showSettings) {
+        setShowSettings(false);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [setTrailQuality]);
+  }, [setTrailQuality, paused, gameOver, showSettings]);
 
   // Load saved scores
   useEffect(() => {
@@ -326,6 +338,30 @@ const Game = ({ onHit, onMiss }) => {
       });
     }
   }, [currentWave, gameOver, musicEnabled, paused]);
+
+  // Apply volume settings from SettingsContext
+  useEffect(() => {
+    // Apply music volume to DynamicMusicSystem
+    import('@/utils/audio/DynamicMusicSystem').then((module) => {
+      const musicSystem = module.getDynamicMusicSystem();
+      const musicVolume = settings.masterVolume * settings.musicVolume;
+      musicSystem.setVolume(musicVolume);
+    });
+
+    // Apply SFX volume to SoundManager
+    import('@/utils/audio/SoundManager').then((module) => {
+      const soundManager = module.default;
+      const sfxVolume = settings.masterVolume * settings.sfxVolume;
+      soundManager.setSfxVolume(sfxVolume);
+    });
+  }, [settings.masterVolume, settings.musicVolume, settings.sfxVolume]);
+
+  // Apply high contrast mode
+  useEffect(() => {
+    import('@/utils/highContrastMode').then((module) => {
+      module.applyHighContrastMode(settings.highContrast);
+    });
+  }, [settings.highContrast]);
 
   // Play background music on mount and control based on musicEnabled
   useEffect(() => {
@@ -481,7 +517,7 @@ const Game = ({ onHit, onMiss }) => {
       setTimeout(() => {
         setCurrentWave(nextWave);
         const targetCount = getTargetCountForWave(nextWave);
-        setTargets(generateInitialTargets(targetCount, nextWave));
+        setTargets(generateInitialTargets(targetCount, nextWave, settings.colorblindMode));
         setShowWaveTransition(false);
       }, 5000);
     }
@@ -517,6 +553,7 @@ const Game = ({ onHit, onMiss }) => {
       comboTimerRef,
       setCurrentWave,
       setShowWaveTransition,
+      colorblindMode: settings.colorblindMode,
     });
 
   // HANDLE REFS
@@ -749,6 +786,7 @@ const Game = ({ onHit, onMiss }) => {
               comboTimerRef,
               setCurrentWave,
               setShowWaveTransition,
+              colorblindMode: settings.colorblindMode,
             });
             setShowLaser([]);
             setFlashQueue([]);
@@ -773,6 +811,12 @@ const Game = ({ onHit, onMiss }) => {
       <MuzzleFlashOverlay active={showMuzzleFlash} weapon={weapon} />
       <ProximityWarning targets={targets} playerPosition={[0, 0, 0]} />
       {showKillStreak && <KillStreakAnnouncement combo={combo} onComplete={() => setShowKillStreak(false)} />}
+      {showSettings && (
+        <SettingsMenu
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
     </div>
   );
 };

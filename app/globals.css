@@ -122,3 +122,40 @@ html, body {
   --ui-transition-medium: 0.3s ease;
   --ui-transition-slow: 0.5s ease;
 }
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility: High contrast mode enhancements */
+.high-contrast-mode {
+  /* Increase text weight for better visibility */
+  font-weight: 600;
+}
+
+.high-contrast-mode * {
+  /* Remove transparency for clearer definition */
+  backdrop-filter: none !important;
+}
+
+.high-contrast-mode button,
+.high-contrast-mode a,
+.high-contrast-mode input,
+.high-contrast-mode select {
+  /* Thicker borders for interactive elements */
+  border-width: 2px !important;
+}
+
+.high-contrast-mode ::selection {
+  /* High contrast selection colors */
+  background-color: #00ffff;
+  color: #000000;
+}

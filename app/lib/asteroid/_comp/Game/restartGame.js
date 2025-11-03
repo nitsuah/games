@@ -21,6 +21,7 @@ export const restartGame = ({
   comboTimerRef,
   setCurrentWave,
   setShowWaveTransition,
+  colorblindMode = 'none',
 }) => {
   setScore(0);
   setHits(0);
@@ -53,6 +54,6 @@ export const restartGame = ({
     setShowWaveTransition(false);
   }
 
-  // Generate initial targets for wave 1 (10 targets)
-  setTargets(generateInitialTargets(10, 1));
+  // Generate initial targets for wave 1 (10 targets) with colorblind mode support
+  setTargets(generateInitialTargets(10, 1, colorblindMode));
 };

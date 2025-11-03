@@ -1,12 +1,14 @@
 import { now } from '@/utils/time';
+import { getTargetColor } from './colorblindModes';
 
 /**
  * Generate initial targets for game restart
  * @param {number} count - Number of targets to generate
  * @param {number} wave - Current wave number (affects speed and difficulty)
+ * @param {string} colorblindMode - Colorblind mode setting ('none', 'deuteranopia', 'protanopia', 'tritanopia')
  * @returns {Array} Array of target objects with velocity vectors (Phase 9)
  */
-export const generateInitialTargets = (count = 10, wave = 1) => {
+export const generateInitialTargets = (count = 10, wave = 1, colorblindMode = 'none') => {
   const patterns = [
     // Pattern 1: Cardinal directions
     { x: 15, y: 0, z: 0 },
@@ -42,8 +44,8 @@ export const generateInitialTargets = (count = 10, wave = 1) => {
   return patterns.slice(0, targetCount).map((pos, index) => {
     // Random size between 5-15 (small to large targets)
     const size = 5 + Math.random() * 10;
-    // Color based on size: small=green, medium=yellow, large=red
-    const color = size < 8 ? '#00ff00' : size < 12 ? '#ffff00' : '#ff4400';
+    // Color based on size with colorblind mode support
+    const color = getTargetColor(size, colorblindMode);
     
     // Add slight variation to speed (±20%)
     const speedVariation = 0.8 + Math.random() * 0.4;

@@ -8,10 +8,36 @@ class SoundManager {
     this.soundEnabled = true; // Default to enabled
     this.heartbeatInterval = null;
     this.heartbeatGain = null;
+    this.masterGain = null; // Master volume control
+    this.sfxVolume = 0.8; // Default SFX volume (0-1)
   }
 
   setSoundEnabled(enabled) {
     this.soundEnabled = enabled;
+  }
+
+  /**
+   * Set SFX volume (0-1)
+   */
+  setSfxVolume(volume) {
+    this.sfxVolume = Math.max(0, Math.min(1, volume));
+    if (this.masterGain && this.audioCtx) {
+      const now = this.audioCtx.currentTime;
+      this.masterGain.gain.linearRampToValueAtTime(this.sfxVolume, now + 0.1);
+    }
+  }
+
+  /**
+   * Get output destination (masterGain if available, else ctx.destination)
+   */
+  getOutputNode(ctx) {
+    // Ensure master gain is created if we have a context
+    if (ctx && !this.masterGain) {
+      this.masterGain = ctx.createGain();
+      this.masterGain.gain.setValueAtTime(this.sfxVolume, ctx.currentTime);
+      this.masterGain.connect(this.getOutputNode(ctx));
+    }
+    return this.masterGain || ctx.destination;
   }
 
   initialize() {
@@ -22,6 +48,11 @@ class SoundManager {
       // lazily create an AudioContext for one-shot sounds
       if (typeof window !== 'undefined' && !this.audioCtx) {
         this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Create master gain for volume control
+        this.masterGain = this.audioCtx.createGain();
+        this.masterGain.gain.setValueAtTime(this.sfxVolume, this.audioCtx.currentTime);
+        this.masterGain.connect(this.audioCtx.destination);
       }
       this.isInitialized = true;
     } catch (error) {
@@ -117,15 +148,16 @@ class SoundManager {
       panNode.pan.setValueAtTime(Math.max(-1, Math.min(1, pan)), now);
     }
 
-    // routing: noise + osc + rumble -> optional pan -> destination
+    // routing: noise + osc + rumble -> optional pan -> output (masterGain)
+    const output = this.getOutputNode(ctx);
     if (panNode) {
-      noise.connect(noiseGain).connect(panNode).connect(ctx.destination);
-      osc.connect(oscGain).connect(panNode).connect(ctx.destination);
-      rumbleOsc.connect(rumbleGain).connect(lowpass).connect(panNode).connect(ctx.destination);
+      noise.connect(noiseGain).connect(panNode).connect(output);
+      osc.connect(oscGain).connect(panNode).connect(output);
+      rumbleOsc.connect(rumbleGain).connect(lowpass).connect(panNode).connect(output);
     } else {
-      noise.connect(noiseGain).connect(ctx.destination);
-      osc.connect(oscGain).connect(ctx.destination);
-      rumbleOsc.connect(rumbleGain).connect(lowpass).connect(ctx.destination);
+      noise.connect(noiseGain).connect(output);
+      osc.connect(oscGain).connect(output);
+      rumbleOsc.connect(rumbleGain).connect(lowpass).connect(output);
     }
 
     // start/stop
@@ -166,7 +198,7 @@ class SoundManager {
 
       osc1.connect(gain);
       osc2.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(this.getOutputNode(ctx));
 
       osc1.start(now);
       osc2.start(now);
@@ -226,7 +258,7 @@ class SoundManager {
 
     noise.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(this.getOutputNode(ctx));
 
     noise.start(now);
     noise.stop(now + duration);
@@ -260,7 +292,7 @@ class SoundManager {
       gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
 
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(this.getOutputNode(ctx));
 
       osc.start(now);
       osc.stop(now + duration);
@@ -305,7 +337,7 @@ class SoundManager {
 
     noise.connect(filter);
     filter.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(this.getOutputNode(ctx));
 
     noise.start(now);
     noise.stop(now + duration);
@@ -352,8 +384,8 @@ class SoundManager {
 
       osc.connect(gain);
       osc2.connect(gain2);
-      gain.connect(ctx.destination);
-      gain2.connect(ctx.destination);
+      gain.connect(this.getOutputNode(ctx));
+      gain2.connect(this.getOutputNode(ctx));
 
       osc.start(now);
       osc2.start(now);
@@ -412,8 +444,8 @@ class SoundManager {
       noise.connect(filter);
       filter.connect(gain);
       thump.connect(thumpGain);
-      gain.connect(ctx.destination);
-      thumpGain.connect(ctx.destination);
+      gain.connect(this.getOutputNode(ctx));
+      thumpGain.connect(this.getOutputNode(ctx));
 
       noise.start(now);
       thump.start(now);
@@ -473,9 +505,9 @@ class SoundManager {
       noiseGain.gain.setValueAtTime(0.2, now);
       noiseGain.gain.exponentialRampToValueAtTime(0.01, now + duration * 0.4);
 
-      bass.connect(bassGain).connect(ctx.destination);
-      mid.connect(midGain).connect(ctx.destination);
-      noise.connect(noiseGain).connect(ctx.destination);
+      bass.connect(bassGain).connect(this.getOutputNode(ctx));
+      mid.connect(midGain).connect(this.getOutputNode(ctx));
+      noise.connect(noiseGain).connect(this.getOutputNode(ctx));
 
       bass.start(now);
       mid.start(now);
@@ -521,7 +553,7 @@ class SoundManager {
         gain.gain.linearRampToValueAtTime(0.15, startTime + 0.01);
         gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
         
-        osc.connect(gain).connect(ctx.destination);
+        osc.connect(gain).connect(this.getOutputNode(ctx));
         osc.start(startTime);
         osc.stop(startTime + duration);
       }
@@ -537,7 +569,7 @@ class SoundManager {
         sparkleGain.gain.setValueAtTime(0.1, now);
         sparkleGain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
         
-        sparkle.connect(sparkleGain).connect(ctx.destination);
+        sparkle.connect(sparkleGain).connect(this.getOutputNode(ctx));
         sparkle.start(now);
         sparkle.stop(now + 0.2);
       }
@@ -605,8 +637,8 @@ class SoundManager {
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(200, now);
         
-        osc1.connect(gain1).connect(filter).connect(ctx.destination);
-        osc2.connect(gain2).connect(filter).connect(ctx.destination);
+        osc1.connect(gain1).connect(filter).connect(this.getOutputNode(ctx));
+        osc2.connect(gain2).connect(filter).connect(this.getOutputNode(ctx));
         
         osc1.start(now);
         osc2.start(now + 0.1);
@@ -694,8 +726,8 @@ class SoundManager {
       filter.frequency.setValueAtTime(2000, now);
       filter.Q.setValueAtTime(2, now);
       
-      root.connect(rootGain).connect(filter).connect(ctx.destination);
-      fifth.connect(fifthGain).connect(filter).connect(ctx.destination);
+      root.connect(rootGain).connect(filter).connect(this.getOutputNode(ctx));
+      fifth.connect(fifthGain).connect(filter).connect(this.getOutputNode(ctx));
       
       root.start(now);
       fifth.start(now);
@@ -741,7 +773,7 @@ class SoundManager {
         gain.gain.linearRampToValueAtTime(0.2, startTime + 0.01);
         gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
         
-        osc.connect(gain).connect(ctx.destination);
+        osc.connect(gain).connect(this.getOutputNode(ctx));
         osc.start(startTime);
         osc.stop(startTime + duration);
       });
@@ -758,7 +790,7 @@ class SoundManager {
           sparkleGain.gain.setValueAtTime(0.12, sparkleTime);
           sparkleGain.gain.exponentialRampToValueAtTime(0.01, sparkleTime + 0.2);
           
-          sparkleOsc.connect(sparkleGain).connect(ctx.destination);
+          sparkleOsc.connect(sparkleGain).connect(this.getOutputNode(ctx));
           sparkleOsc.start(sparkleTime);
           sparkleOsc.stop(sparkleTime + 0.2);
         }

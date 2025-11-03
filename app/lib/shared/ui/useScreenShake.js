@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 /**
  * Custom hook for triggering screen shake effects
  * Returns [shakeStyle, triggerShake] where shakeStyle is a CSS transform
+ * @param {boolean} reduceMotion - If true, disables shake effects for accessibility
  */
-export function useScreenShake() {
+export function useScreenShake(reduceMotion = false) {
   const [shake, setShake] = useState({ x: 0, y: 0 });
   const [isShaking, setIsShaking] = useState(false);
 
@@ -41,12 +42,16 @@ export function useScreenShake() {
   }, [isShaking, shake.intensity]);
 
   const triggerShake = (intensity = 10) => {
+    // Don't trigger shake if reduce motion is enabled
+    if (reduceMotion) return;
+    
     setShake({ x: 0, y: 0, intensity });
     setIsShaking(true);
   };
 
   const shakeStyle = {
-    transform: `translate(${shake.x}px, ${shake.y}px)`,
+    // Return empty transform if reduce motion is enabled
+    transform: reduceMotion ? 'none' : `translate(${shake.x}px, ${shake.y}px)`,
     transition: 'transform 0.016s ease-out', // Smooth interpolation
   };
 
