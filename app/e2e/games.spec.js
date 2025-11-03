@@ -4,8 +4,11 @@ test.describe('Asteroid Game', () => {
   test('should load asteroid game page', async ({ page }) => {
     await page.goto('/asteroid');
     
-    // Wait for canvas to be ready instead of arbitrary timeout
-    await page.waitForSelector('canvas', { timeout: 10000 });
+    // Wait for page to load completely
+    await page.waitForLoadState('networkidle');
+    
+    // Wait for canvas to be ready with increased timeout
+    await page.waitForSelector('canvas', { timeout: 30000 });
     
     // Check canvas exists
     const canvas = page.locator('canvas');
@@ -17,7 +20,8 @@ test.describe('Asteroid Game', () => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     
     await page.goto('/asteroid');
-    await page.waitForSelector('canvas', { timeout: 10000 });
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('canvas', { timeout: 30000 });
     
     // Click canvas to attempt pointer lock (won't actually lock in headless)
     const canvas = page.locator('canvas');
@@ -82,8 +86,11 @@ test.describe('FPS Game', () => {
   test('should load FPS game page', async ({ page }) => {
     await page.goto('/fps');
     
-    // Wait for canvas to be ready instead of arbitrary timeout
-    await page.waitForSelector('canvas', { timeout: 10000 });
+    // Wait for page to load completely
+    await page.waitForLoadState('networkidle');
+    
+    // Wait for canvas to be ready with increased timeout
+    await page.waitForSelector('canvas', { timeout: 30000 });
     
     // Check canvas exists
     const canvas = page.locator('canvas');
@@ -92,7 +99,8 @@ test.describe('FPS Game', () => {
 
   test('should display game UI elements', async ({ page }) => {
     await page.goto('/fps');
-    await page.waitForSelector('canvas', { timeout: 10000 });
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('canvas', { timeout: 30000 });
     
     // Canvas should be present
     const canvas = page.locator('canvas');

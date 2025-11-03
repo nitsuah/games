@@ -77,9 +77,10 @@ jobs:
     - name: Run E2E tests
       run: |
         cd app
-        # Start production server in background and run E2E tests
-        npm start &
-        sleep 10
+        # Start production server in background with proper host binding
+        npm start -- -H 0.0.0.0 &
+        # Use wait-on to ensure server is ready before running tests
+        npx wait-on http://localhost:3000 --timeout 60000
         npm run test:e2e
       continue-on-error: false
         
@@ -144,8 +145,8 @@ jobs:
       run: |
         cd app
         npm run build
-        npm start &
-        sleep 10
+        npm start -- -H 0.0.0.0 &
+        npx wait-on http://localhost:3000 --timeout 60000
         
     - name: Run Lighthouse audit
       uses: treosh/lighthouse-ci-action@v10
