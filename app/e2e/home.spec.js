@@ -14,12 +14,17 @@ test.describe('Home Page', () => {
     const heading = page.getByRole('heading', { name: /ARCADE/i });
     await expect(heading).toBeVisible({ timeout: 10000 });
     
+    // Switch to grid mode to see all games (homepage starts in carousel mode)
+    const displayModeButton = page.locator('button').filter({ hasText: /[⊞☰⊟]/ });
+    await displayModeButton.click();
+    await page.waitForTimeout(500); // Wait for mode transition
+    
     // Check game buttons exist (using ArcadeCard components which render as buttons)
     const asteroidButton = page.getByRole('button').filter({ hasText: /Asteroid/ });
-    const fpsButton = page.getByRole('button').filter({ hasText: /FPS/ });
+    const breakoutButton = page.getByRole('button').filter({ hasText: /Breakout/ });
     
     await expect(asteroidButton).toBeVisible({ timeout: 10000 });
-    await expect(fpsButton).toBeVisible({ timeout: 10000 });
+    await expect(breakoutButton).toBeVisible({ timeout: 10000 });
   });
 
   test('should navigate to Asteroid game', async ({ page }) => {
@@ -40,21 +45,26 @@ test.describe('Home Page', () => {
     expect(page.url()).toContain('/asteroid');
   });
 
-  test('should navigate to FPS game', async ({ page }) => {
+  test('should navigate to Breakout game', async ({ page }) => {
     await page.goto('/');
     
     // Wait for page to be fully loaded with increased timeout
     await page.waitForLoadState('networkidle', { timeout: 30000 });
     
-    // Click FPS button - ArcadeCard renders a button containing the text
-    const fpsButton = page.getByRole('button').filter({ hasText: /FPS/ });
-    await expect(fpsButton).toBeVisible({ timeout: 10000 });
-    await fpsButton.click();
+    // Switch to grid mode to see all games
+    const displayModeButton = page.locator('button').filter({ hasText: /[⊞☰⊟]/ });
+    await displayModeButton.click();
+    await page.waitForTimeout(500);
+    
+    // Click Breakout button - ArcadeCard renders a button containing the text
+    const breakoutButton = page.getByRole('button').filter({ hasText: /Breakout/ });
+    await expect(breakoutButton).toBeVisible({ timeout: 10000 });
+    await breakoutButton.click();
     
     // Wait for navigation with increased timeout
-    await page.waitForURL(/\/fps/, { timeout: 30000 });
+    await page.waitForURL(/\/breakout/, { timeout: 30000 });
     
-    // Check we're on the FPS page
-    expect(page.url()).toContain('/fps');
+    // Check we're on the Breakout page
+    expect(page.url()).toContain('/breakout');
   });
 });
