@@ -1,6 +1,7 @@
 import { now } from '@/utils/time';
 import { splitTarget } from '../Target/splitTarget';
 import { MIN_ALIVE_TIME } from '../config';
+import soundManager from '@/utils/audio/SoundManager';
 
 export const handleTargetHit = ({
   targetId,
@@ -15,6 +16,7 @@ export const handleTargetHit = ({
   setCombo,
   setComboMultiplier,
   comboTimerRef,
+  setScorePopups,
 }) => {
   if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
     return;
@@ -40,6 +42,12 @@ export const handleTargetHit = ({
         // Base points per hit
         pointsEarned = 100;
 
+        // Play hit impact sound with pitch based on target size
+        // Larger targets = lower pitch (0.7), smaller = higher pitch (up to 2.0)
+        const pitchVariation = Math.max(0.7, Math.min(2.0, 10 / target.size));
+        const intensity = Math.min(1.5, target.size / 5); // Larger targets = louder impact
+        soundManager.playHitImpact(intensity, pitchVariation);
+
         if (target.size > 1) {
           // Use the shared splitTarget utility, but override x/y/z with current position
           const fragments = splitTarget({ ...target, x: currentX, y: currentY, z: currentZ }, now);
@@ -47,6 +55,24 @@ export const handleTargetHit = ({
         }
 
         updatedTargets.push({ ...target, isHit: true });
+        
+        // Create score popup at target position (will be calculated with multiplier below)
+        if (setScorePopups) {
+          const popupId = `popup-${targetId}-${Date.now()}`;
+          setScorePopups((prev) => [
+            ...prev,
+            {
+              id: popupId,
+              position: [currentX, currentY, currentZ],
+              score: pointsEarned, // Will be updated with multiplier after calculation
+            },
+          ]);
+          
+          // Remove popup after duration
+          setTimeout(() => {
+            setScorePopups((prev) => prev.filter((p) => p.id !== popupId));
+          }, 1000);
+        }
       } else {
         updatedTargets.push(target);
       }
@@ -79,8 +105,18 @@ export const handleTargetHit = ({
   });
 
   // Add score incrementally with multiplier
+  const finalScore = Math.round(pointsEarned * multiplier);
   if (pointsEarned > 0) {
-    setScore((prevScore) => prevScore + Math.round(pointsEarned * multiplier));
+    setScore((prevScore) => prevScore + finalScore);
+    
+    // Update score popup with final multiplied score
+    if (setScorePopups) {
+      setScorePopups((prev) => 
+        prev.map((p) => 
+          p.score === pointsEarned ? { ...p, score: finalScore } : p
+        )
+      );
+    }
   }
 
   // Reset combo timer

@@ -202,32 +202,6 @@ lib/
 
 ---
 
-### 3. Weapon Visual Effects
-
-#### Laser
-
-- ✅ Already has beam visualization
-- **Add**: Charge-up glow effect
-- **Add**: Muzzle flash at origin point
-- **Add**: Impact spark/flash at hit point
-- **Enhance**: Beam thickness based on distance (thicker at source)
-
-#### Spread/Shotgun
-
-- ✅ Has buckshot visualization
-- **Add**: Smoke puff at firing point
-- **Add**: Tracer lines fade gradually (currently instant)
-- **Enhance**: Hit markers for each pellet that connects
-- **Add**: Shell casing particles
-
-#### Explosive
-
-- ✅ Has explosion effect
-- **Add**: Shockwave ring expanding from impact
-- **Add**: Screen flash for close explosions
-- **Add**: Debris/particle field at explosion center
-- **Enhance**: Explosion size scales with splash damage dealt
-
 ---
 
 ### 4. Target Visual Feedback
@@ -423,30 +397,35 @@ lib/
 4. ✅ Target-target collision physics (verified already implemented in Phase 9)
 5. ✅ Speed boost tuning (reduced player speeds for better balance)
 
-### Sprint 2: Weapon Visual Effects (Week 1) 🔄 IN PROGRESS
+### Sprint 2: Visual & Audio Effects ✅ COMPLETE
 
 1. ✅ Shell casings for spread weapon (physical ejection with bounce)
 2. ✅ Enhanced explosion effects (multi-layer with fire, shockwave, debris)
-3. ⏳ Target visual feedback (spawn/hit/split/destroy animations)
-4. ⏳ Audio polish (layer weapon sounds, impact variations, power-up sounds)
-5. Muzzle flashes for all weapons (already exists)
-6. Enhanced impact effects (sparks, particles, flashes) (already exists)
+3. ✅ Target spawn animations (fade in, scale up over 300ms)
+4. ✅ Target hit feedback (flash, HitParticles, scale pulse)
+5. ✅ Target split animations (SplitParticles component with 20 particles, radial burst)
+6. ✅ Weapon sounds with variation (playLaserShoot, playShotgunShoot, playCannonShoot)
+7. ✅ Hit impact sounds with pitch/intensity based on target size
+8. ✅ Explosion sounds with spatial pan and size variation
+9. ✅ Muzzle flashes for all weapons (already existed)
+10. ✅ Impact effects (already existed)
 
-### Sprint 3: Target Visual Feedback (Week 2)
+### Sprint 3: UI/UX Polish & Controls ✅ COMPLETE
 
-1. Spawn animations (fade in, scale up)
-2. Hit feedback (flash, scale pulse, particles)
-3. Split animations (particle burst, trails)
-4. Destruction effects (explosions, fragments)
-5. Score popups and combo displays
+1. ✅ **Camera-Player Rotation Sync** - Fixed using quaternion copy for accurate 3D rotation
+2. ✅ Score popups integration - Wired ScorePopup to display at target hit positions with multiplier
+3. ✅ Combo display enhancements - Added grow animation (scale 1.3x) when combo increases
+4. 🔄 Dynamic crosshair system (expand/contract, hit confirmation) - IN PROGRESS
+5. HUD animations (health pulse on damage, ammo flash when low) - NEXT
 
-### Sprint 4: Audio Polish (Week 2)
+### Sprint 4: Settings & Accessibility (Week 2)
 
-1. Layer and mix weapon sounds
-2. Add impact sound variations
-3. Implement power-up sound effects
-4. Dynamic music system
-5. Spatial audio positioning
+1. Mouse sensitivity slider
+2. Separate X/Y sensitivity options
+3. Mouse smoothing toggle
+4. Invert Y-axis option
+5. Colorblind mode options
+6. Reduce motion toggle
 
 ### Sprint 5: UI/UX Polish (Week 3)
 

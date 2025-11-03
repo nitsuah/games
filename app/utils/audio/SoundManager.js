@@ -314,6 +314,179 @@ class SoundManager {
       }
     }
   }
+
+  // Play laser weapon sound - sci-fi beam with slight pitch variation
+  playLaserShoot(variation = 0) {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+      const duration = 0.12;
+
+      // High-frequency sweep for laser sound
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      const baseFreq = 800 + (variation * 100);
+      osc.frequency.setValueAtTime(baseFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.4, now + duration);
+
+      // Add harmonic for richness
+      const osc2 = ctx.createOscillator();
+      osc2.type = 'square';
+      osc2.frequency.setValueAtTime(baseFreq * 2, now);
+      osc2.frequency.exponentialRampToValueAtTime(baseFreq * 0.8, now + duration);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+      const gain2 = ctx.createGain();
+      gain2.gain.setValueAtTime(0.08, now);
+      gain2.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+      osc.connect(gain);
+      osc2.connect(gain2);
+      gain.connect(ctx.destination);
+      gain2.connect(ctx.destination);
+
+      osc.start(now);
+      osc2.start(now);
+      osc.stop(now + duration);
+      osc2.stop(now + duration);
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play laser sound:', error.message);
+      }
+    }
+  }
+
+  // Play shotgun/spread weapon sound - punchy blast with slight variation
+  playShotgunShoot(variation = 0) {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+      const duration = 0.2;
+
+      // Noise burst for shotgun blast
+      const noise = ctx.createBufferSource();
+      const bufferSize = ctx.sampleRate * duration;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        const decay = Math.pow(1 - (i / bufferSize), 2);
+        data[i] = (Math.random() * 2 - 1) * decay;
+      }
+      noise.buffer = buffer;
+
+      // Bandpass filter for punch
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(200 + (variation * 50), now);
+      filter.Q.setValueAtTime(2, now);
+
+      // Add low thump
+      const thump = ctx.createOscillator();
+      thump.type = 'sine';
+      thump.frequency.setValueAtTime(80, now);
+      thump.frequency.exponentialRampToValueAtTime(40, now + duration * 0.5);
+
+      const thumpGain = ctx.createGain();
+      thumpGain.gain.setValueAtTime(0.4, now);
+      thumpGain.gain.exponentialRampToValueAtTime(0.01, now + duration * 0.6);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      thump.connect(thumpGain);
+      gain.connect(ctx.destination);
+      thumpGain.connect(ctx.destination);
+
+      noise.start(now);
+      thump.start(now);
+      noise.stop(now + duration);
+      thump.stop(now + duration);
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play shotgun sound:', error.message);
+      }
+    }
+  }
+
+  // Play cannon weapon sound - deep mechanical boom
+  playCannonShoot(variation = 0) {
+    if (!this.soundEnabled) return;
+    if (typeof window === 'undefined') return;
+    
+    try {
+      if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const ctx = this.audioCtx;
+      const now = ctx.currentTime;
+      const duration = 0.3;
+
+      // Deep bass thump
+      const bass = ctx.createOscillator();
+      bass.type = 'sine';
+      bass.frequency.setValueAtTime(60 + (variation * 10), now);
+      bass.frequency.exponentialRampToValueAtTime(30, now + duration);
+
+      // Mid-range mechanical sound
+      const mid = ctx.createOscillator();
+      mid.type = 'triangle';
+      mid.frequency.setValueAtTime(150, now);
+      mid.frequency.exponentialRampToValueAtTime(80, now + duration * 0.5);
+
+      // Noise for mechanical texture
+      const noise = ctx.createBufferSource();
+      const bufferSize = ctx.sampleRate * duration;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        const decay = Math.pow(1 - (i / bufferSize), 1.5);
+        data[i] = (Math.random() * 2 - 1) * decay * 0.3;
+      }
+      noise.buffer = buffer;
+
+      const bassGain = ctx.createGain();
+      bassGain.gain.setValueAtTime(0.5, now);
+      bassGain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+      const midGain = ctx.createGain();
+      midGain.gain.setValueAtTime(0.3, now);
+      midGain.gain.exponentialRampToValueAtTime(0.01, now + duration * 0.6);
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.2, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.01, now + duration * 0.4);
+
+      bass.connect(bassGain).connect(ctx.destination);
+      mid.connect(midGain).connect(ctx.destination);
+      noise.connect(noiseGain).connect(ctx.destination);
+
+      bass.start(now);
+      mid.start(now);
+      noise.start(now);
+      bass.stop(now + duration);
+      mid.stop(now + duration);
+      noise.stop(now + duration);
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play cannon sound:', error.message);
+      }
+    }
+  }
 }
 
 // Create a singleton instance

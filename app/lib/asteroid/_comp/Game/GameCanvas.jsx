@@ -11,6 +11,8 @@ import ShieldEffect from '@/lib/asteroid/_comp/UI/ShieldEffect';
 import InvincibilityEffect from '@/lib/asteroid/_comp/UI/InvincibilityEffect';
 import BoundaryBox from '@/lib/asteroid/_comp/UI/BoundaryBox';
 
+import ScorePopup from '@/_components/effects/ScorePopup';
+
 const GameCanvas = ({
   gameOver,
   paused,
@@ -37,6 +39,7 @@ const GameCanvas = ({
   speedBoostActive,
   invincibilityActive,
   trailQuality = 'high',
+  scorePopups = [],
 }) => {
   return (
     <Canvas
@@ -120,6 +123,16 @@ const GameCanvas = ({
       <PowerUp position={[-48, 0, 0]} size={1.8} type="speedBoost" onCollect={handlePowerUpCollect} />
       <PowerUp position={[-45, 20, 15]} size={1.8} type="speedBoost" onCollect={handlePowerUpCollect} />
       <PowerUp position={[-50, -20, 12]} size={1.8} type="speedBoost" onCollect={handlePowerUpCollect} />
+
+      {/* Score popups */}
+      {scorePopups.map((popup) => (
+        <ScorePopup
+          key={popup.id}
+          position={popup.position}
+          score={popup.score}
+          onComplete={() => {}}
+        />
+      ))}
     </Canvas>
   );
 };

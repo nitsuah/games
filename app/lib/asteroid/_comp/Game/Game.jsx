@@ -207,6 +207,9 @@ const Game = ({ onHit, onMiss }) => {
     }, duration);
   };
 
+  // Score popups state
+  const [scorePopups, setScorePopups] = useState([]);
+
   // Power-up and flash overlay state/logic
   const {
     shieldActive,
@@ -355,8 +358,9 @@ const Game = ({ onHit, onMiss }) => {
         setCombo,
         setComboMultiplier,
         comboTimerRef,
+        setScorePopups, // Add score popup creation
       }),
-    [cooldowns, weapon, ammo, setTargets, setHits, setScore, onHit]
+    [cooldowns, weapon, ammo, setTargets, setHits, setScore, onHit, setScorePopups]
   );
   // Add logging to confirm splitting logic
   useEffect(() => {
@@ -522,6 +526,7 @@ const Game = ({ onHit, onMiss }) => {
         invincibilityActive={invincibilityActive}
         speedBoostActive={speedBoostActive}
         trailQuality={trailQuality}
+        scorePopups={scorePopups}
       />
       {/* HUD Layout - Organized in 4 corners */}
       

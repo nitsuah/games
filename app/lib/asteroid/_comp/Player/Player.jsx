@@ -242,8 +242,13 @@ const Player = ({
     // Phase 9: Sync player mesh position and rotation with camera
     const offset = new THREE.Vector3(0, -1, 0);
     meshRef.current.position.copy(camera.position).add(offset);
-    // Copy camera rotation to player body so it matches camera orientation
-    meshRef.current.rotation.copy(camera.rotation);
+    
+    // Copy camera rotation to player body - use quaternion for accurate rotation sync
+    // This ensures the player mesh matches camera orientation exactly
+    meshRef.current.quaternion.copy(camera.quaternion);
+    
+    // Also sync rotation order to match camera
+    meshRef.current.rotation.order = camera.rotation.order;
 
     // === COLLISION PHYSICS (Phase 8: Bounce and momentum transfer) ===
     targets.forEach((target) => {

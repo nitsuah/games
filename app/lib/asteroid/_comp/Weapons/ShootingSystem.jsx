@@ -81,6 +81,16 @@ const ShootingSystem = ({
       { id: generateEffectId('muzzle'), position: flashPosition, weaponType: weapon },
     ]);
 
+    // Play weapon-specific sound with variation
+    const soundVariation = Math.random() - 0.5; // -0.5 to 0.5 for pitch/timbre variety
+    if (weapon === 'laser') {
+      soundManager.playLaserShoot(soundVariation);
+    } else if (weapon === 'spread') {
+      soundManager.playShotgunShoot(soundVariation);
+    } else if (weapon === 'aa' || weapon === 'explosive') {
+      soundManager.playCannonShoot(soundVariation);
+    }
+
     // Spawn shell casings for spread weapon (shotgun)
     if (weapon === 'spread') {
       const casingCount = WEAPON_CONFIG.spread.count; // Match pellet count
