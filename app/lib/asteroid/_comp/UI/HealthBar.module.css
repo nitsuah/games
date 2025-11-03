@@ -64,3 +64,22 @@
     opacity: 0.6;
   }
 }
+
+@keyframes damagePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 0, 0, 0);
+  }
+  30% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(255, 0, 0, 0);
+  }
+}
+
+.damagePulse {
+  animation: damagePulse 0.5s ease-out;
+}

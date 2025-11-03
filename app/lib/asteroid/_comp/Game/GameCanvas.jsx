@@ -40,6 +40,7 @@ const GameCanvas = ({
   invincibilityActive,
   trailQuality = 'high',
   scorePopups = [],
+  setPlayerVelocity,
 }) => {
   return (
     <Canvas
@@ -57,6 +58,7 @@ const GameCanvas = ({
         showWaveTransition={showWaveTransition}
         setShowBlueFlash={setShowBlueFlash}
         speedBoostActive={speedBoostActive}
+        setPlayerVelocity={setPlayerVelocity}
       />
       <ShootingSystem
         onHit={onHit}

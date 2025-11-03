@@ -1,7 +1,19 @@
+import { useEffect, useState, useRef } from 'react';
 import styles from './HealthBar.module.css';
 
 const HealthBar = ({ health, maxHealth = 100 }) => {
   const percentage = Math.max(0, Math.min(100, (health / maxHealth) * 100));
+  const [damagePulse, setDamagePulse] = useState(false);
+  const prevHealthRef = useRef(health);
+
+  // Trigger pulse animation when health decreases
+  useEffect(() => {
+    if (health < prevHealthRef.current) {
+      setDamagePulse(true);
+      setTimeout(() => setDamagePulse(false), 500);
+    }
+    prevHealthRef.current = health;
+  }, [health]);
 
   // Determine bar color based on health level
   const getBarColor = () => {
@@ -16,7 +28,7 @@ const HealthBar = ({ health, maxHealth = 100 }) => {
   return (
     <div className={styles.container}>
       <div className={styles.label}>Health</div>
-      <div className={styles.barContainer}>
+      <div className={`${styles.barContainer} ${damagePulse ? styles.damagePulse : ''}`}>
         <div
           className={`${styles.bar} ${isCritical ? styles.critical : ''}`}
           style={{

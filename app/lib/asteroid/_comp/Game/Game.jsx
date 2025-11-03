@@ -19,7 +19,7 @@ import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/
 import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
 import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
 import { saveGameStats } from '@/utils/saveGameStats';
-const ShotReticle = dynamic(() => import('@/lib/asteroid/_comp/UI/ShotReticle'), { ssr: false });
+const DynamicCrosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/DynamicCrosshair'), { ssr: false });
 const PowerUpIndicator = dynamic(() => import('@/lib/asteroid/_comp/UI/PowerUpIndicator'), { ssr: false });
 const HealthBar = dynamic(() => import('@/lib/asteroid/_comp/UI/HealthBar'), { ssr: false });
 const FPSCounter = dynamic(() => import('@/lib/asteroid/_comp/UI/FPSCounter'), { ssr: false });
@@ -209,6 +209,10 @@ const Game = ({ onHit, onMiss }) => {
 
   // Score popups state
   const [scorePopups, setScorePopups] = useState([]);
+  
+  // Crosshair state
+  const [playerVelocity, setPlayerVelocity] = useState(0);
+  const [crosshairHitFlash, setCrosshairHitFlash] = useState(false);
 
   // Power-up and flash overlay state/logic
   const {
@@ -344,7 +348,7 @@ const Game = ({ onHit, onMiss }) => {
 
   // HANDLE HIT
   const handleTargetHit = useCallback(
-    (targetId) =>
+    (targetId) => {
       handleTargetHitFn({
         targetId,
         cooldowns,
@@ -359,8 +363,13 @@ const Game = ({ onHit, onMiss }) => {
         setComboMultiplier,
         comboTimerRef,
         setScorePopups, // Add score popup creation
-      }),
-    [cooldowns, weapon, ammo, setTargets, setHits, setScore, onHit, setScorePopups]
+      });
+      
+      // Trigger crosshair hit flash
+      setCrosshairHitFlash(true);
+      setTimeout(() => setCrosshairHitFlash(false), 200);
+    },
+    [cooldowns, weapon, ammo, setTargets, setHits, setScore, onHit, setScorePopups, setCrosshairHitFlash]
   );
   // Add logging to confirm splitting logic
   useEffect(() => {
@@ -527,6 +536,7 @@ const Game = ({ onHit, onMiss }) => {
         speedBoostActive={speedBoostActive}
         trailQuality={trailQuality}
         scorePopups={scorePopups}
+        setPlayerVelocity={setPlayerVelocity}
       />
       {/* HUD Layout - Organized in 4 corners */}
       
@@ -564,7 +574,16 @@ const Game = ({ onHit, onMiss }) => {
 
       {/* BOTTOM LEFT - Debug menu */}
       <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
-      {weapon === 'spread' && <ShotReticle />}
+      
+      {/* Dynamic Crosshair - replaces ShotReticle */}
+      {!gameOver && !paused && (
+        <DynamicCrosshair 
+          weapon={weapon} 
+          velocity={playerVelocity} 
+          onHit={crosshairHitFlash} 
+        />
+      )}
+      
       {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
       <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
         <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />

@@ -415,8 +415,8 @@ lib/
 1. ✅ **Camera-Player Rotation Sync** - Fixed using quaternion copy for accurate 3D rotation
 2. ✅ Score popups integration - Wired ScorePopup to display at target hit positions with multiplier
 3. ✅ Combo display enhancements - Added grow animation (scale 1.3x) when combo increases
-4. 🔄 Dynamic crosshair system (expand/contract, hit confirmation) - IN PROGRESS
-5. HUD animations (health pulse on damage, ammo flash when low) - NEXT
+4. ✅ **Dynamic crosshair system** - Weapon-specific colors, velocity-based scaling, hit pulse animation
+5. ✅ **HUD animations** - Health bar pulse on damage (0.5s), ammo flash on fire (0.2s)
 
 ### Sprint 4: Settings & Accessibility (Week 2)
 

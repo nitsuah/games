@@ -14,6 +14,7 @@ const Player = ({
   isPaused,
   showWaveTransition,
   setShowBlueFlash,
+  setPlayerVelocity,
 }) => {
   const meshRef = useRef();
   const { camera } = useThree();
@@ -207,6 +208,11 @@ const Player = ({
 
     // Apply velocity to camera position
     camera.position.add(velocityRef.current);
+    
+    // Report velocity magnitude for crosshair scaling
+    if (setPlayerVelocity) {
+      setPlayerVelocity(velocityRef.current.length());
+    }
 
     // === CAMERA ROTATION PHYSICS (Phase 8: Roll/Yaw) ===
     // Roll (Z/C keys)
