@@ -21,18 +21,24 @@ test.describe('Asteroid Game', () => {
     
     await page.goto('/asteroid');
     await page.waitForLoadState('domcontentloaded');
+    
+    // Wait longer for 3D assets to load
+    await page.waitForTimeout(2000);
+    
+    // Wait for canvas with extended timeout
     await page.waitForSelector('canvas', { timeout: 30000 });
     
-    // Click canvas to attempt pointer lock (won't actually lock in headless)
+    // Get canvas and verify it's visible
     const canvas = page.locator('canvas');
     await expect(canvas).toBeVisible({ timeout: 10000 });
+    
+    // Click canvas to attempt pointer lock (won't actually lock in headless)
     await canvas.click();
     
-    // In headless mode, pointer lock won't work, but we verify no errors
-    // Wait a bit to ensure no crashes
+    // Wait to ensure no crashes
     await page.waitForTimeout(1000);
     
-    // Check that game didn't crash
+    // Verify canvas is still visible (game didn't crash)
     await expect(canvas).toBeVisible();
   });
 
@@ -44,12 +50,7 @@ test.describe('Asteroid Game', () => {
     await page.waitForLoadState('domcontentloaded');
     
     // Additional wait to ensure React components and event listeners are fully mounted
-    await page.waitForTimeout(1000);
-    
-    // Click on canvas to ensure the game has focus
-    const canvas = page.locator('canvas');
-    await canvas.click();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1500);
     
     // Set initial trail quality to ensure consistent test
     await page.evaluate(() => {
@@ -59,25 +60,33 @@ test.describe('Asteroid Game', () => {
     // Reload to pick up localStorage change
     await page.reload();
     await page.waitForSelector('canvas', { timeout: 15000 });
-    await page.waitForTimeout(1000);
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(1500);
+    
+    // Get fresh canvas locator after reload and click to ensure focus
+    const canvas = page.locator('canvas');
     await canvas.click();
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
     
     // Get initial trail quality from localStorage
     const initialQuality = await page.evaluate(() => {
       return localStorage.getItem('trailQuality') || 'high';
     });
     
-    // Press 'T' key to cycle trail quality
-    await page.keyboard.press('KeyT');
+    console.log('Initial quality:', initialQuality);
     
-    // Wait for localStorage to update and React state to sync
-    await page.waitForTimeout(500);
+    // Press 'T' key to cycle trail quality - use page.keyboard instead of canvas
+    await page.keyboard.press('t');
+    
+    // Wait longer for localStorage to update and React state to sync
+    await page.waitForTimeout(1000);
     
     // Verify localStorage was updated
     const newQuality = await page.evaluate(() => {
       return localStorage.getItem('trailQuality');
     });
+    
+    console.log('New quality after T press:', newQuality);
     
     // Quality should have cycled: high -> off, off -> low, low -> high
     const expectedCycle = {
@@ -97,7 +106,12 @@ test.describe('Breakout Game', () => {
     // Wait for page to load completely
     await page.waitForLoadState('domcontentloaded');
     
-    // Wait for canvas to be ready with increased timeout
+    // Click START GAME button to launch the game
+    const startButton = page.getByRole('button', { name: /START GAME/i });
+    await expect(startButton).toBeVisible({ timeout: 10000 });
+    await startButton.click();
+    
+    // Now wait for canvas to appear
     await page.waitForSelector('canvas', { timeout: 30000 });
     
     // Check canvas exists
@@ -108,6 +122,12 @@ test.describe('Breakout Game', () => {
   test('should display game UI elements', async ({ page }) => {
     await page.goto('/breakout');
     await page.waitForLoadState('domcontentloaded');
+    
+    // Click START GAME button
+    const startButton = page.getByRole('button', { name: /START GAME/i });
+    await startButton.click();
+    
+    // Wait for canvas
     await page.waitForSelector('canvas', { timeout: 30000 });
     
     // Canvas should be present
