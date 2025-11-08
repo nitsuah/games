@@ -61,6 +61,7 @@
   letter-spacing: 1px;
   box-shadow: 0 0 15px rgba(255, 102, 0, 0.6);
   animation: badgePulse 2s ease-in-out infinite;
+  will-change: box-shadow;
 }
 
 @keyframes badgePulse {
@@ -135,6 +136,7 @@
 .arrow {
   font-size: 14px;
   animation: arrowBounce 1.5s ease-in-out infinite;
+  will-change: transform;
 }
 
 @keyframes arrowBounce {
@@ -175,6 +177,7 @@
   font-size: 14px;
   color: var(--ui-primary, #00ffff);
   animation: arrowBounce 1.5s ease-in-out infinite;
+  will-change: transform;
 }
 
 .gridMode .title {

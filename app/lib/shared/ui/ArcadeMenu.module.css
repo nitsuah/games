@@ -13,6 +13,7 @@
   align-items: center;
   z-index: 1000;
   animation: fadeIn 0.3s ease-out;
+  will-change: opacity;
 }
 
 @keyframes fadeIn {
@@ -35,6 +36,7 @@
     0 0 30px rgba(0, 255, 255, 0.4),
     inset 0 0 20px rgba(0, 255, 255, 0.1);
   animation: slideIn 0.3s ease-out;
+  will-change: transform, opacity;
 }
 
 @keyframes slideIn {
