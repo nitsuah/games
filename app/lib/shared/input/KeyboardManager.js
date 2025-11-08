@@ -24,7 +24,9 @@ class KeyboardManager {
     window.addEventListener('keyup', this.handleKeyUp);
 
     this.initialized = true;
-    console.log('✅ KeyboardManager initialized');
+    if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+      console.log('✅ KeyboardManager initialized');
+    }
   }
 
   /**
@@ -170,7 +172,9 @@ class KeyboardManager {
     this.bindings.clear();
     this.initialized = false;
 
-    console.log('✅ KeyboardManager cleaned up');
+    if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+      console.log('✅ KeyboardManager cleaned up');
+    }
   }
 }
 

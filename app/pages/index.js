@@ -52,6 +52,11 @@ const PageContainer = styled.div`
   overflow: hidden;
   box-sizing: border-box;
 
+  /* Allow scrolling on small screens for accessibility */
+  @media (max-width: 600px) {
+    overflow-y: auto;
+  }
+
   /* CRT screen effect */
   &::before {
     content: '';

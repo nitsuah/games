@@ -43,7 +43,17 @@ const ArcadeButton = ({
   style = {},
   ...props
 }) => {
-  const variantClass = styles[`variant-${variant}`] || styles['variant-primary'];
+  // Validate variant in development mode
+  const validVariants = Object.values(VARIANTS);
+  const isValidVariant = validVariants.includes(variant);
+  
+  if (!isValidVariant && typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+    console.warn(
+      `[ArcadeButton] Unknown variant "${variant}" provided. Falling back to "primary". Valid variants are: ${validVariants.join(', ')}.`
+    );
+  }
+  
+  const variantClass = styles[`variant-${isValidVariant ? variant : 'primary'}`] || styles['variant-primary'];
   
   return (
     <button

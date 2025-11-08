@@ -36,7 +36,9 @@ class MouseManager {
     document.addEventListener('pointerlockchange', this.handlePointerLockChange);
 
     this.initialized = true;
-    console.log('✅ MouseManager initialized');
+    if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+      console.log('✅ MouseManager initialized');
+    }
   }
 
   /**
@@ -122,7 +124,9 @@ class MouseManager {
 
     try {
       await element.requestPointerLock();
-      console.log('✅ Pointer lock requested');
+      if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+        console.log('✅ Pointer lock requested');
+      }
     } catch (error) {
       console.error('❌ Failed to request pointer lock:', error);
     }
@@ -134,7 +138,9 @@ class MouseManager {
   exitPointerLock() {
     if (document.pointerLockElement) {
       document.exitPointerLock();
-      console.log('✅ Pointer lock exited');
+      if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+        console.log('✅ Pointer lock exited');
+      }
     }
   }
 
@@ -275,7 +281,9 @@ class MouseManager {
     this.exitPointerLock();
     this.initialized = false;
 
-    console.log('✅ MouseManager cleaned up');
+    if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+      console.log('✅ MouseManager cleaned up');
+    }
   }
 }
 

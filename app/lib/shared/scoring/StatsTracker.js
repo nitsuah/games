@@ -148,7 +148,9 @@ class StatsTracker {
       try {
         if (typeof window === 'undefined') return false;
         localStorage.setItem(`${this.statsKey}_bestAccuracy`, String(accuracy));
-        console.log(`✅ New best accuracy: ${accuracy.toFixed(1)}% (previous: ${currentBest.toFixed(1)}%)`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`✅ New best accuracy: ${accuracy.toFixed(1)}% (previous: ${currentBest.toFixed(1)}%)`);
+        }
         return true;
       } catch (error) {
         if (process.env.NODE_ENV === 'development') {
@@ -218,7 +220,9 @@ class StatsTracker {
       allTime.totalPlayTime += this.getSessionDuration();
 
       localStorage.setItem(this.statsKey, JSON.stringify(allTime));
-      console.log('✅ All-time stats updated');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ All-time stats updated');
+      }
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
         console.warn('Failed to save all-time stats:', error);
@@ -235,7 +239,9 @@ class StatsTracker {
       localStorage.removeItem(this.statsKey);
       localStorage.removeItem(`${this.statsKey}_bestAccuracy`);
       this.startSession(); // Reset session stats
-      console.log('✅ All stats cleared');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ All stats cleared');
+      }
     } catch (error) {
       console.warn('Failed to clear stats:', error);
     }

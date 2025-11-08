@@ -39,7 +39,9 @@ class HighScoreManager {
       try {
         if (typeof window === 'undefined') return false;
         localStorage.setItem(this.storageKey, String(score));
-        console.log(`✅ New high score: ${score} (previous: ${currentHigh})`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`✅ New high score: ${score} (previous: ${currentHigh})`);
+        }
         return true;
       } catch (error) {
         if (process.env.NODE_ENV === 'development') {
@@ -68,7 +70,9 @@ class HighScoreManager {
     try {
       if (typeof window === 'undefined') return;
       localStorage.removeItem(this.storageKey);
-      console.log('✅ High score cleared');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ High score cleared');
+      }
     } catch (error) {
       console.warn('Failed to clear high score:', error);
     }
@@ -116,7 +120,9 @@ class HighScoreManager {
       leaderboard.sort((a, b) => b.score - a.score); // Sort descending
 
       localStorage.setItem(this.leaderboardKey, JSON.stringify(leaderboard));
-      console.log(`✅ Leaderboard entry added: ${score} by ${name}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`✅ Leaderboard entry added: ${score} by ${name}`);
+      }
       return true;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
@@ -133,7 +139,9 @@ class HighScoreManager {
     try {
       if (typeof window === 'undefined') return;
       localStorage.removeItem(this.leaderboardKey);
-      console.log('✅ Leaderboard cleared');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Leaderboard cleared');
+      }
     } catch (error) {
       console.warn('Failed to clear leaderboard:', error);
     }
