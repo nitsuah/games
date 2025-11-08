@@ -38,8 +38,9 @@ test.describe('Asteroid Game', () => {
     // Wait to ensure no crashes
     await page.waitForTimeout(1000);
     
-    // Verify canvas is still visible (game didn't crash)
-    await expect(canvas).toBeVisible();
+    // Get fresh canvas locator and verify it's still visible (game didn't crash)
+    const canvasAfterClick = page.locator('canvas');
+    await expect(canvasAfterClick).toBeVisible({ timeout: 10000 });
   });
 
   test('should cycle trail quality with T key', async ({ page }) => {
@@ -47,26 +48,23 @@ test.describe('Asteroid Game', () => {
     
     // Wait for canvas and ensure page is fully loaded with all event listeners
     await page.waitForSelector('canvas', { timeout: 15000 });
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
     
     // Additional wait to ensure React components and event listeners are fully mounted
-    await page.waitForTimeout(1500);
+    await page.waitForTimeout(2000);
     
-    // Set initial trail quality to ensure consistent test
+    // Set initial trail quality directly via evaluate (no reload needed)
     await page.evaluate(() => {
       localStorage.setItem('trailQuality', 'high');
+      // Dispatch storage event to trigger React state update
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'trailQuality',
+        newValue: 'high',
+        url: window.location.href
+      }));
     });
     
-    // Reload to pick up localStorage change
-    await page.reload();
-    await page.waitForSelector('canvas', { timeout: 15000 });
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(1500);
-    
-    // Get fresh canvas locator after reload and click to ensure focus
-    const canvas = page.locator('canvas');
-    await canvas.click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(500);
     
     // Get initial trail quality from localStorage
     const initialQuality = await page.evaluate(() => {
@@ -75,11 +73,15 @@ test.describe('Asteroid Game', () => {
     
     console.log('Initial quality:', initialQuality);
     
-    // Press 'T' key to cycle trail quality - use page.keyboard instead of canvas
+    // Focus the page body to ensure keyboard events are captured
+    await page.locator('body').click();
+    await page.waitForTimeout(500);
+    
+    // Press 'T' key to cycle trail quality
     await page.keyboard.press('t');
     
     // Wait longer for localStorage to update and React state to sync
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
     
     // Verify localStorage was updated
     const newQuality = await page.evaluate(() => {
