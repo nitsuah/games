@@ -1,0 +1,168 @@
+.crosshairWrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  z-index: 1000;
+  width: 0;
+  height: 0;
+}
+
+.crosshair {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.1s ease-out;
+}
+
+/* Center dot */
+.centerDot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+/* Directional lines */
+.line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+}
+
+.lineTop {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 12px;
+}
+
+.lineBottom {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 12px;
+}
+
+.lineLeft {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 2px;
+}
+
+.lineRight {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 2px;
+}
+
+/* Outer ring for explosive/plasma */
+.outerRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Weapon-specific styles */
+.spreadCrosshair .line {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.laserCrosshair .centerDot {
+  background: rgba(0, 255, 255, 0.9);
+  box-shadow: 0 0 6px rgba(0, 255, 255, 1);
+}
+
+.laserCrosshair .line {
+  background: rgba(0, 255, 255, 0.8);
+  box-shadow: 0 0 4px rgba(0, 255, 255, 0.8);
+}
+
+.explosiveCrosshair .centerDot {
+  background: rgba(255, 140, 0, 0.9);
+  box-shadow: 0 0 6px rgba(255, 140, 0, 1);
+}
+
+.explosiveCrosshair .line {
+  background: rgba(255, 140, 0, 0.8);
+  box-shadow: 0 0 4px rgba(255, 140, 0, 0.8);
+}
+
+.explosiveCrosshair .outerRing {
+  border-color: rgba(255, 140, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.4);
+}
+
+.aaCrosshair .centerDot {
+  background: rgba(0, 255, 0, 0.9);
+  box-shadow: 0 0 6px rgba(0, 255, 0, 1);
+}
+
+.aaCrosshair .line {
+  background: rgba(0, 255, 0, 0.8);
+  box-shadow: 0 0 4px rgba(0, 255, 0, 0.8);
+}
+
+.plasmaCrosshair .centerDot {
+  background: rgba(255, 0, 255, 0.9);
+  box-shadow: 0 0 6px rgba(255, 0, 255, 1);
+}
+
+.plasmaCrosshair .line {
+  background: rgba(255, 0, 255, 0.8);
+  box-shadow: 0 0 4px rgba(255, 0, 255, 0.8);
+}
+
+.plasmaCrosshair .outerRing {
+  border-color: rgba(255, 0, 255, 0.5);
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.4);
+}
+
+/* Hit pulse animation */
+@keyframes hitPulse {
+  0% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.6;
+    filter: brightness(2);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+.hitPulse {
+  animation: hitPulse 0.2s ease-out;
+}
+
+.hitPulse .centerDot {
+  background: rgba(255, 255, 0, 1) !important;
+  box-shadow: 0 0 12px rgba(255, 255, 0, 1) !important;
+}
+
+.hitPulse .line {
+  background: rgba(255, 255, 0, 0.9) !important;
+  box-shadow: 0 0 8px rgba(255, 255, 0, 0.9) !important;
+}

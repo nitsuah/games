@@ -12,15 +12,40 @@ export const DEFAULT_TARGET_COLOR = '#00ff00';
 export const WEAPON_CONFIG = {
   // Tighter spread - no longer "soup can wide"
   // Default: single shot. Triple shot only with rapid fire active
-  spread: { angle: 0.15, count: 12, range: 80 }, // Reduced max range from 160 to 80 for faster trail fade
+  spread: { angle: 0.15, count: 12, range: 80 }, // Faster trail fade with lower max range
   laser: { color: 'cyan', range: 400 },
-  explosive: { radius: 30, color: 'orange' }, // Reduced from 50 to 30 for smaller explosion
+  explosive: { 
+    radius: 15, // Reduced from 30 for better balance
+    color: 'orange',
+  },
+  aa: { 
+    radius: 15, // Explosion radius for dual cannons
+    cannonOffset: 1.5, // Distance from center for left/right cannons
+    color: '#00ff00', 
+    speed: 1.8, 
+    damage: 0.5,
+  },
+  plasma: { 
+    radius: 40, 
+    color: '#ff00ff', 
+    chargeTime: 1500, 
+    damage: 2.0, 
+    speed: 0.8,
+  },
+};
+
+// Fire rate constants (in milliseconds)
+export const FIRE_RATES = {
+  LASER_CONTINUOUS: 50,      // Ultra-fast for continuous beam feel
+  RAPID_FIRE_POWER_UP: 300,  // 0.3 seconds for rapid fire power-up
 };
 
 export const WEAPON_TYPES = [
-  { key: 'spread', name: 'Spread Shot', maxAmmo: 30, cooldown: 0.3 },
+  { key: 'spread', name: 'Spread Shot', maxAmmo: 10, cooldown: 0.3 },
   { key: 'laser', name: 'Laser Beam', maxAmmo: 10, cooldown: 0 },
-  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Increased to 10, longer cooldown
+  { key: 'explosive', name: 'Explosive Shot', maxAmmo: 10, cooldown: 1.5 }, // Longer cooldown for balance
+  { key: 'aa', name: 'AA Cannon', maxAmmo: 20, cooldown: 0.25 }, // Phase 9: Fast firing dual cannon
+  { key: 'plasma', name: 'Plasma Cannon', maxAmmo: 5, cooldown: 2.0 }, // Phase 9: Powerful charge shot
 ];
 
 export const POWER_UP_COLORS = {
@@ -38,10 +63,13 @@ export const PLAYER_SPHERE_RADIUS = 2.0; // for collision detection
 
 export const EXPLOSION_DURATION = 120; // ms, for explosion visual timing
 
+// Initial ammo values derived from WEAPON_TYPES for single source of truth
 export const INITIAL_AMMO = {
-  spread: 30,
-  laser: 10,
-  explosive: 10, // Match the maxAmmo
+  spread: WEAPON_TYPES.find(w => w.key === 'spread').maxAmmo,
+  laser: WEAPON_TYPES.find(w => w.key === 'laser').maxAmmo,
+  explosive: WEAPON_TYPES.find(w => w.key === 'explosive').maxAmmo,
+  aa: WEAPON_TYPES.find(w => w.key === 'aa').maxAmmo,
+  plasma: WEAPON_TYPES.find(w => w.key === 'plasma').maxAmmo,
 };
 
 export const INITIAL_HEALTH = 100;
@@ -53,12 +81,14 @@ export const SCORE_VALUES = {
 };
 
 // Phase 8: Player physics constants for space-like movement with drift/inertia
+// Phase 9: Tuned down base speed and boost multiplier per QA feedback
+// Further tuning - reduced base speed and boost multiplier for better balance
 export const PLAYER_PHYSICS = {
   // Movement physics
-  BASE_ACCELERATION: 12.0, // Base acceleration for normal movement
-  SPEED_BOOST_ACCELERATION: 60.0, // Acceleration during speed boost
-  MAX_VELOCITY: 0.65, // Normal max velocity
-  SPEED_BOOST_MAX_VELOCITY: 2.8, // Max velocity during speed boost
+  BASE_ACCELERATION: 8.0, // Base acceleration (reduced from 10.0)
+  SPEED_BOOST_ACCELERATION: 32.0, // Acceleration during speed boost (reduced from 45.0)
+  MAX_VELOCITY: 0.45, // Normal max velocity (reduced from 0.55)
+  SPEED_BOOST_MAX_VELOCITY: 1.6, // Max velocity during speed boost (reduced from 2.2)
   DRAG_COEFFICIENT: 0.96, // High value for "tokyo drift feel"
   VELOCITY_THRESHOLD: 0.001, // Stop completely when very slow
   

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { WEAPON_CONFIG } from '../config';
 
 // Generic weapon handler
 export function weaponHandler({
@@ -13,6 +14,7 @@ export function weaponHandler({
   onMiss,
   weaponParams = {},
   triggerExplosion,
+  triggerImpact,
 }) {
   const forwardDirection = new THREE.Vector3();
   camera.getWorldDirection(forwardDirection);
@@ -42,6 +44,10 @@ export function weaponHandler({
         if (isIntersected) {
           hitTargets.add(target.id);
           playSound('hit');
+          // Trigger impact effect at target position
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 2);
+          }
           return { ...target, isHit: true };
         }
       }
@@ -87,6 +93,10 @@ export function weaponHandler({
         if (angle <= SPREAD_ANGLE * 2 && distance <= SPREAD_RANGE && Math.random() < distanceFactor) {
           hitTargets.add(target.id);
           playSound('hit');
+          // Trigger impact effect at target position
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 2);
+          }
           return { ...target, isHit: true };
         }
       }
@@ -137,7 +147,7 @@ export function weaponHandler({
 
   if (type === 'explosive') {
     // Explosive logic
-    const { explosionRadius = 15 } = weaponParams; // Cut in half from 30 to 15
+    const { explosionRadius = WEAPON_CONFIG.explosive.radius } = weaponParams;
     const maxRange = 100;
     const raycaster = new THREE.Raycaster(from, forwardDirection);
     
@@ -162,6 +172,109 @@ export function weaponHandler({
         if (explosionSphere.containsPoint(targetPosition)) {
           hitTargets.add(target.id);
           playSound('hit');
+          // Trigger impact effect at each target position
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 3);
+          }
+          return { ...target, isHit: true };
+        }
+      }
+      return target;
+    });
+    setTargets(updatedTargets);
+
+    if (hitTargets.size === 0) {
+      playSound('miss');
+      if (onMiss) onMiss();
+    }
+    return;
+  }
+
+  if (type === 'aa') {
+    // AA (Anti-Aircraft) weapon: dual cannons with alternating fire and smaller explosions
+    const { 
+      explosionRadius = WEAPON_CONFIG.aa.radius, 
+      cannonOffset = WEAPON_CONFIG.aa.cannonOffset, 
+      shotCounter = 0 
+    } = weaponParams;
+    const maxRange = 100;
+    
+    // Calculate left/right cannon position (alternates each shot)
+    const right = new THREE.Vector3();
+    right.crossVectors(forwardDirection, camera.up).normalize();
+    const isLeftCannon = shotCounter % 2 === 0;
+    const cannonSide = isLeftCannon ? -1 : 1;
+    const cannonPosition = from.clone().add(right.multiplyScalar(cannonOffset * cannonSide));
+    
+    const raycaster = new THREE.Raycaster(cannonPosition, forwardDirection);
+    const validObjects = scene.children.filter(obj => obj.matrixWorld !== null);
+    const intersects = raycaster.intersectObjects(validObjects, true);
+    
+    const impactPoint =
+      intersects[0]?.point || cannonPosition.clone().add(forwardDirection.multiplyScalar(maxRange));
+    
+    if (setShowLaser) {
+      setShowLaser([{ from: cannonPosition, to: impactPoint, speed: 1.8 }]);
+      setTimeout(() => setShowLaser(null), 300);
+    }
+    
+    if (triggerExplosion) triggerExplosion(impactPoint, explosionRadius);
+
+    const explosionSphere = new THREE.Sphere(impactPoint, explosionRadius);
+    const hitTargets = new Set();
+    const updatedTargets = targets.map((target) => {
+      if (!target.isHit) {
+        const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
+        if (explosionSphere.containsPoint(targetPosition)) {
+          hitTargets.add(target.id);
+          playSound('hit');
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 2);
+          }
+          return { ...target, isHit: true };
+        }
+      }
+      return target;
+    });
+    setTargets(updatedTargets);
+
+    if (hitTargets.size === 0) {
+      playSound('miss');
+      if (onMiss) onMiss();
+    }
+    return;
+  }
+
+  if (type === 'plasma') {
+    // Plasma weapon: large slow-moving energy ball with high damage and large explosion
+    const { explosionRadius = 40 } = weaponParams;
+    const maxRange = 120;
+    
+    const raycaster = new THREE.Raycaster(from, forwardDirection);
+    const validObjects = scene.children.filter(obj => obj.matrixWorld !== null);
+    const intersects = raycaster.intersectObjects(validObjects, true);
+    
+    const impactPoint =
+      intersects[0]?.point || from.clone().add(forwardDirection.multiplyScalar(maxRange));
+    
+    if (setShowLaser) {
+      setShowLaser([{ from, to: impactPoint, speed: 0.5, color: '#ff00ff' }]);
+      setTimeout(() => setShowLaser(null), 600);
+    }
+    
+    if (triggerExplosion) triggerExplosion(impactPoint, explosionRadius);
+
+    const explosionSphere = new THREE.Sphere(impactPoint, explosionRadius);
+    const hitTargets = new Set();
+    const updatedTargets = targets.map((target) => {
+      if (!target.isHit) {
+        const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
+        if (explosionSphere.containsPoint(targetPosition)) {
+          hitTargets.add(target.id);
+          playSound('hit');
+          if (triggerImpact) {
+            triggerImpact(targetPosition, target.size * 4);
+          }
           return { ...target, isHit: true };
         }
       }

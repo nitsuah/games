@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import { useAudio } from '@/contexts/AudioContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import styles from './Game.module.css';
 import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
 import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
@@ -19,7 +20,7 @@ import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/
 import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
 import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
 import { saveGameStats } from '@/utils/saveGameStats';
-const ShotReticle = dynamic(() => import('@/lib/asteroid/_comp/UI/ShotReticle'), { ssr: false });
+const DynamicCrosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/DynamicCrosshair'), { ssr: false });
 const PowerUpIndicator = dynamic(() => import('@/lib/asteroid/_comp/UI/PowerUpIndicator'), { ssr: false });
 const HealthBar = dynamic(() => import('@/lib/asteroid/_comp/UI/HealthBar'), { ssr: false });
 const FPSCounter = dynamic(() => import('@/lib/asteroid/_comp/UI/FPSCounter'), { ssr: false });
@@ -30,9 +31,15 @@ const DebugMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/DebugMenu'), { s
 const WaveTransition = dynamic(() => import('@/lib/asteroid/_comp/UI/WaveTransition'), { ssr: false });
 const PauseMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/PauseMenu'), { ssr: false });
 const SlowMotionOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/SlowMotionOverlay'), { ssr: false });
+const HealthVignette = dynamic(() => import('@/lib/fps/_comps/HealthVignette'), { ssr: false });
+const MuzzleFlashOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/MuzzleFlashOverlay'), { ssr: false });
+const ProximityWarning = dynamic(() => import('@/lib/asteroid/_comp/UI/ProximityWarning'), { ssr: false });
+const KillStreakAnnouncement = dynamic(() => import('@/lib/asteroid/_comp/UI/KillStreakAnnouncement'), { ssr: false });
+const SettingsMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/SettingsMenu'), { ssr: false });
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
+import { useScreenShake } from '@/lib/shared/ui/useScreenShake';
 
 const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
   <div className={styles.statsDisplay}>
@@ -45,6 +52,8 @@ const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
 
 const Game = ({ onHit, onMiss }) => {
   const { musicEnabled } = useAudio();
+  const { settings } = useSettings();
+  const [shakeStyle, triggerShake] = useScreenShake(settings.reduceMotion);
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
@@ -53,6 +62,7 @@ const Game = ({ onHit, onMiss }) => {
   const comboTimerRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
@@ -207,6 +217,15 @@ const Game = ({ onHit, onMiss }) => {
     }, duration);
   };
 
+  // Score popups state
+  const [scorePopups, setScorePopups] = useState([]);
+  
+  // Crosshair state
+  const [playerVelocity, setPlayerVelocity] = useState(0);
+  const [crosshairHitFlash, setCrosshairHitFlash] = useState(false);
+  const [showMuzzleFlash, setShowMuzzleFlash] = useState(false);
+  const [showKillStreak, setShowKillStreak] = useState(false);
+
   // Power-up and flash overlay state/logic
   const {
     shieldActive,
@@ -222,27 +241,38 @@ const Game = ({ onHit, onMiss }) => {
     handlePowerUpCollect,
   } = usePowerUps(setHealth, setTargets, showFlash, setAmmo);
 
-  // Apply slow motion effect
-  useEffect(() => {
-    if (slowMotionActive) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Slow Motion is active. Target speeds are reduced.');
-      }
-      setTargets((prevTargets) =>
-        prevTargets.map((target) => ({
-          ...target,
-          speed: target.speed * 0.1, // Reduce target speed by 90%
-        }))
-      );
-    }
-  }, [slowMotionActive]);
-
   // Weapon switch, ammo, & reload handler
   useEffect(() => {
     const handleKeyDown = (e) => handleKeyDownFn(e, setWeapon, setAmmo, setPaused);
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setWeapon, setAmmo]);
+
+  // Mouse wheel weapon cycling
+  useEffect(() => {
+    const weaponOrder = ['spread', 'laser', 'explosive', 'aa', 'plasma'];
+    
+    const handleWheel = (e) => {
+      // Only cycle weapons when pointer is locked (in game)
+      if (!document.pointerLockElement || gameOver || paused) return;
+      
+      e.preventDefault();
+      
+      setWeapon((currentWeapon) => {
+        const currentIndex = weaponOrder.indexOf(currentWeapon);
+        if (currentIndex === -1) return currentWeapon;
+        
+        // Scroll up = previous weapon, scroll down = next weapon
+        const direction = e.deltaY < 0 ? -1 : 1;
+        const newIndex = (currentIndex + direction + weaponOrder.length) % weaponOrder.length;
+        
+        return weaponOrder[newIndex];
+      });
+    };
+    
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [setWeapon, gameOver, paused]);
 
   // Keyboard shortcut: press 't' to cycle trail quality Off -> Low -> High
   useEffect(() => {
@@ -258,10 +288,18 @@ const Game = ({ onHit, onMiss }) => {
           return next;
         });
       }
+      // Open settings with 'O' key (when not paused/game over)
+      if (e.key && e.key.toLowerCase() === 'o' && !paused && !gameOver) {
+        setShowSettings(true);
+      }
+      // Close settings with 'Escape' key
+      if (e.key === 'Escape' && showSettings) {
+        setShowSettings(false);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [setTrailQuality]);
+  }, [setTrailQuality, paused, gameOver, showSettings]);
 
   // Load saved scores
   useEffect(() => {
@@ -269,6 +307,61 @@ const Game = ({ onHit, onMiss }) => {
   }, [setHighScore, setBestAccuracy]);
 
   // Score is now updated incrementally in handleTargetHit, no need for recalculation effect
+
+  // Dynamic music system - procedural layered audio
+  useEffect(() => {
+    if (gameOver || !musicEnabled || paused || showWaveTransition) return;
+    
+    import('@/utils/audio/DynamicMusicSystem').then((module) => {
+      const musicSystem = module.getDynamicMusicSystem();
+      
+      if (!musicSystem.isPlaying) {
+        musicSystem.start(currentWave);
+      }
+    });
+    
+    // Cleanup on unmount or game over
+    return () => {
+      import('@/utils/audio/DynamicMusicSystem').then((module) => {
+        if (gameOver) {
+          module.getDynamicMusicSystem().stop();
+        }
+      });
+    };
+  }, [musicEnabled, gameOver, paused, showWaveTransition, currentWave]);
+
+  // Update music intensity when wave changes
+  useEffect(() => {
+    if (!gameOver && musicEnabled && !paused) {
+      import('@/utils/audio/DynamicMusicSystem').then((module) => {
+        module.getDynamicMusicSystem().updateWave(currentWave);
+      });
+    }
+  }, [currentWave, gameOver, musicEnabled, paused]);
+
+  // Apply volume settings from SettingsContext
+  useEffect(() => {
+    // Apply music volume to DynamicMusicSystem
+    import('@/utils/audio/DynamicMusicSystem').then((module) => {
+      const musicSystem = module.getDynamicMusicSystem();
+      const musicVolume = settings.masterVolume * settings.musicVolume;
+      musicSystem.setVolume(musicVolume);
+    });
+
+    // Apply SFX volume to SoundManager
+    import('@/utils/audio/SoundManager').then((module) => {
+      const soundManager = module.default;
+      const sfxVolume = settings.masterVolume * settings.sfxVolume;
+      soundManager.setSfxVolume(sfxVolume);
+    });
+  }, [settings.masterVolume, settings.musicVolume, settings.sfxVolume]);
+
+  // Apply high contrast mode
+  useEffect(() => {
+    import('@/utils/highContrastMode').then((module) => {
+      module.applyHighContrastMode(settings.highContrast);
+    });
+  }, [settings.highContrast]);
 
   // Play background music on mount and control based on musicEnabled
   useEffect(() => {
@@ -356,7 +449,7 @@ const Game = ({ onHit, onMiss }) => {
 
   // HANDLE HIT
   const handleTargetHit = useCallback(
-    (targetId) =>
+    (targetId) => {
       handleTargetHitFn({
         targetId,
         cooldowns,
@@ -370,8 +463,14 @@ const Game = ({ onHit, onMiss }) => {
         setCombo,
         setComboMultiplier,
         comboTimerRef,
-      }),
-    [cooldowns, weapon, ammo, setTargets, setHits, setScore, onHit]
+        setScorePopups, // Add score popup creation
+      });
+      
+      // Trigger crosshair hit flash
+      setCrosshairHitFlash(true);
+      setTimeout(() => setCrosshairHitFlash(false), 200);
+    },
+    [cooldowns, weapon, ammo, setTargets, setHits, setScore, onHit, setScorePopups, setCrosshairHitFlash]
   );
   // Add logging to confirm splitting logic
   useEffect(() => {
@@ -418,7 +517,7 @@ const Game = ({ onHit, onMiss }) => {
       setTimeout(() => {
         setCurrentWave(nextWave);
         const targetCount = getTargetCountForWave(nextWave);
-        setTargets(generateInitialTargets(targetCount, nextWave));
+        setTargets(generateInitialTargets(targetCount, nextWave, settings.colorblindMode));
         setShowWaveTransition(false);
       }, 5000);
     }
@@ -454,6 +553,7 @@ const Game = ({ onHit, onMiss }) => {
       comboTimerRef,
       setCurrentWave,
       setShowWaveTransition,
+      colorblindMode: settings.colorblindMode,
     });
 
   // HANDLE REFS
@@ -467,14 +567,63 @@ const Game = ({ onHit, onMiss }) => {
         setHealth,
         showFlash,
         playSound,
+        triggerShake,
         defense: {
           shieldActive,
           setShieldActive,
           invincibilityActive,
         },
       }),
-    [setHealth, showFlash, playSound, shieldActive, setShieldActive, invincibilityActive]
+    [setHealth, showFlash, playSound, triggerShake, shieldActive, setShieldActive, invincibilityActive]
   );
+
+  // Play combo milestone sounds
+  useEffect(() => {
+    // Play sound at milestones: 5, 10, 15, 20, etc.
+    if (combo > 0 && combo % 5 === 0) {
+      // Dynamic import to ensure soundManager is available
+      import('@/utils/audio/SoundManager').then((module) => {
+        const soundManager = module.default;
+        soundManager.playComboMilestone(combo);
+      });
+    }
+  }, [combo]);
+
+  // Show kill streak announcements at major milestones
+  useEffect(() => {
+    if (combo >= 10 && combo % 5 === 0) {
+      setShowKillStreak(true);
+      setTimeout(() => setShowKillStreak(false), 2000);
+    }
+  }, [combo]);
+
+  // Muzzle flash effect for high-power weapons
+  const prevAmmoRef = useRef(ammo);
+  useEffect(() => {
+    // Trigger flash when firing explosive, plasma, or AA (high power weapons)
+    if (['explosive', 'plasma', 'aa'].includes(weapon)) {
+      if (ammo[weapon] < prevAmmoRef.current[weapon]) {
+        setShowMuzzleFlash(true);
+        setTimeout(() => setShowMuzzleFlash(false), 100);
+      }
+    }
+    prevAmmoRef.current = ammo;
+  }, [ammo, weapon]);
+
+  // Low health heartbeat audio
+  useEffect(() => {
+    import('@/utils/audio/SoundManager').then((module) => {
+      const soundManager = module.default;
+      soundManager.updateHeartbeat(health);
+    });
+    
+    // Cleanup: stop heartbeat when component unmounts or game ends
+    return () => {
+      import('@/utils/audio/SoundManager').then((module) => {
+        module.default.stopHeartbeat();
+      });
+    };
+  }, [health, gameOver]);
 
   // Check for game over when health reaches 0
   useEffect(() => {
@@ -506,7 +655,8 @@ const Game = ({ onHit, onMiss }) => {
   // Game only ends when health reaches 0
 
   return (
-    <div className={styles.gameContainer}>
+    <div className={styles.gameContainer} style={shakeStyle}>
+      <HealthVignette health={health} />
       <FlashOverlays flashQueue={flashQueue} />
       <GameCanvas
         gameOver={gameOver}
@@ -537,6 +687,8 @@ const Game = ({ onHit, onMiss }) => {
         invincibilityActive={invincibilityActive}
         speedBoostActive={speedBoostActive}
         trailQuality={trailQuality}
+        scorePopups={scorePopups}
+        setPlayerVelocity={setPlayerVelocity}
       />
       {/* HUD Layout - Organized in 4 corners */}
       
@@ -574,7 +726,16 @@ const Game = ({ onHit, onMiss }) => {
 
       {/* BOTTOM LEFT - Debug menu */}
       <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
-      {weapon === 'spread' && <ShotReticle />}
+      
+      {/* Dynamic Crosshair - replaces ShotReticle */}
+      {!gameOver && !paused && (
+        <DynamicCrosshair 
+          weapon={weapon} 
+          velocity={playerVelocity} 
+          onHit={crosshairHitFlash} 
+        />
+      )}
+      
       {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
       <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
         <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
@@ -625,6 +786,7 @@ const Game = ({ onHit, onMiss }) => {
               comboTimerRef,
               setCurrentWave,
               setShowWaveTransition,
+              colorblindMode: settings.colorblindMode,
             });
             setShowLaser([]);
             setFlashQueue([]);
@@ -646,6 +808,15 @@ const Game = ({ onHit, onMiss }) => {
         />
       )}
       <SlowMotionOverlay active={slowMotionActive} />
+      <MuzzleFlashOverlay active={showMuzzleFlash} weapon={weapon} />
+      <ProximityWarning targets={targets} playerPosition={[0, 0, 0]} />
+      {showKillStreak && <KillStreakAnnouncement combo={combo} onComplete={() => setShowKillStreak(false)} />}
+      {showSettings && (
+        <SettingsMenu
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
     </div>
   );
 };

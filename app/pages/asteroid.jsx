@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import { AudioProvider, useAudio } from '@/contexts/AudioContext';
+import { SettingsProvider } from '@/contexts/SettingsContext';
 
 // Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
 const Game = dynamic(() => import('@/lib/asteroid/_comp/Game/Game'), { ssr: false });
@@ -33,9 +34,11 @@ const GameContainer = styled.div`
 
 const AsteroidPage = () => {
   return (
-    <AudioProvider>
-      <AsteroidContent />
-    </AudioProvider>
+    <SettingsProvider>
+      <AudioProvider>
+        <AsteroidContent />
+      </AudioProvider>
+    </SettingsProvider>
   );
 };
 

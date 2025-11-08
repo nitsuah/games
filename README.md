@@ -23,7 +23,7 @@
 
 ### Quick Start
 
-```powershell
+```sh
 cd app
 npm install
 npm run dev

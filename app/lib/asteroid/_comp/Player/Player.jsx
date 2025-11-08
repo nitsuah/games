@@ -14,6 +14,7 @@ const Player = ({
   isPaused,
   showWaveTransition,
   setShowBlueFlash,
+  setPlayerVelocity,
 }) => {
   const meshRef = useRef();
   const { camera } = useThree();
@@ -207,6 +208,11 @@ const Player = ({
 
     // Apply velocity to camera position
     camera.position.add(velocityRef.current);
+    
+    // Report velocity magnitude for crosshair scaling
+    if (setPlayerVelocity) {
+      setPlayerVelocity(velocityRef.current.length());
+    }
 
     // === CAMERA ROTATION PHYSICS (Phase 8: Roll/Yaw) ===
     // Roll (Z/C keys)
@@ -239,8 +245,16 @@ const Player = ({
     if (Math.abs(angularVelocityRef.current.roll) < 0.001) angularVelocityRef.current.roll = 0;
     if (Math.abs(angularVelocityRef.current.yaw) < 0.001) angularVelocityRef.current.yaw = 0;
 
+    // Phase 9: Sync player mesh position and rotation with camera
     const offset = new THREE.Vector3(0, -1, 0);
     meshRef.current.position.copy(camera.position).add(offset);
+    
+    // Copy camera rotation to player body - use quaternion for accurate rotation sync
+    // This ensures the player mesh matches camera orientation exactly
+    meshRef.current.quaternion.copy(camera.quaternion);
+    
+    // Also sync rotation order to match camera
+    meshRef.current.rotation.order = camera.rotation.order;
 
     // === COLLISION PHYSICS (Phase 8: Bounce and momentum transfer) ===
     targets.forEach((target) => {

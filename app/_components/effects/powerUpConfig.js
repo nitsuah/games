@@ -1,13 +1,16 @@
 import { WEAPON_TYPES } from '../../lib/asteroid/_comp/config';
+import soundManager from '../../utils/audio/SoundManager';
 
 // Pulse animation patterns for power-up visual feedback
 const HEALTH_PULSE_OPACITIES = [250, 100, 200, 80, 150, 50, 0];
 const HEALTH_PULSE_DELAYS = [0, 100, 200, 300, 400, 500, 650];
 
 /**
- * Creates a pulse animation effect using multiple flash calls
+ * Creates a pulse animation effect using multiple flash calls.
+ * Used for health power-up collection feedback with gradual fade.
+ * 
  * @param {Function} showFlash - Flash function from game context
- * @param {string} color - Flash color
+ * @param {string} color - Flash color ('green', 'blue', 'red', etc.)
  * @param {number[]} opacities - Array of opacity values (0-255)
  * @param {number[]} delays - Array of delay values in ms (must match opacities length)
  * @returns {Function} Cleanup function to clear all timeouts
@@ -33,6 +36,41 @@ function createPulseEffect(showFlash, color, opacities, delays) {
   };
 }
 
+/**
+ * Creates a timed power-up effect that automatically deactivates after a duration.
+ * Extracts common pattern of: activate → show flash → schedule deactivation.
+ * Improves testability by separating duration management from effect logic.
+ * 
+ * @param {Object} context - Power-up context with setters and showFlash
+ * @param {Function} context.setActive - Setter function for the active state (e.g., setRapidFireActive)
+ * @param {Function} context.showFlash - Flash function for visual feedback
+ * @param {string} color - Flash color for activation/deactivation
+ * @param {number} duration - Duration in milliseconds
+ * @param {Function} [onActivate] - Optional callback when power-up activates
+ * @param {Function} [onDeactivate] - Optional callback when power-up deactivates
+ * @returns {Function} Cleanup function to clear timeout
+ */
+function createTimedPowerUp(context, color, duration, onActivate, onDeactivate, powerUpType = 'default') {
+  const { setActive, showFlash } = context;
+  
+  // Activate
+  setActive(true);
+  showFlash(color, 100);
+  soundManager.playPowerUpActivate(powerUpType); // Play activation sound
+  if (onActivate) onActivate();
+  
+  // Schedule deactivation
+  const timeoutId = setTimeout(() => {
+    setActive(false);
+    showFlash(color, 0);
+    soundManager.playPowerUpDeactivate(); // Play deactivation sound
+    if (onDeactivate) onDeactivate();
+  }, duration);
+  
+  // Return cleanup function
+  return () => clearTimeout(timeoutId);
+}
+
 export const POWER_UPS = [
   {
     type: 'health',
@@ -44,6 +82,7 @@ export const POWER_UPS = [
       setHealth((prev) => {
         if (prev < 100) {
           collected = true;
+          soundManager.playPowerUpCollect(); // Play sound on collection
           return Math.min(prev + 25, 100);
         }
         return prev;
@@ -59,11 +98,14 @@ export const POWER_UPS = [
           
           if (needsAmmo) {
             collected = true;
+            soundManager.playPowerUpCollect(); // Play sound on collection
             // Restore all ammo to max
             return {
               spread: WEAPON_TYPES.find((w) => w.key === 'spread').maxAmmo,
               laser: WEAPON_TYPES.find((w) => w.key === 'laser').maxAmmo,
               explosive: WEAPON_TYPES.find((w) => w.key === 'explosive').maxAmmo,
+              aa: WEAPON_TYPES.find((w) => w.key === 'aa').maxAmmo,
+              plasma: WEAPON_TYPES.find((w) => w.key === 'plasma').maxAmmo,
             };
           }
           return prev;
@@ -80,14 +122,14 @@ export const POWER_UPS = [
     type: 'speedBoost',
     duration: 10000,
     effect: ({ setSpeedBoostActive, showFlash }) => {
-      setSpeedBoostActive(true);
-      showFlash('orange', 100);
-      const timeoutId = setTimeout(() => {
-        setSpeedBoostActive(false);
-        showFlash('orange', 0);
-      }, 10000);
-      
-      return () => clearTimeout(timeoutId);
+      return createTimedPowerUp(
+        { setActive: setSpeedBoostActive, showFlash },
+        'orange',
+        10000,
+        undefined,
+        undefined,
+        'default' // Pass power-up type for sound
+      );
     },
   },
   {
@@ -97,6 +139,7 @@ export const POWER_UPS = [
       // Stack shield hits - add 3 to existing count
       setShieldActive((prev) => (prev || 0) + 3);
       showFlash('blue', 100);
+      soundManager.playPowerUpActivate('shield'); // Play activation sound
       console.log('Shield activated - added 3 hit points');
     },
   },
@@ -104,30 +147,28 @@ export const POWER_UPS = [
     type: 'invincibility',
     duration: 10000,
     effect: ({ setInvincibilityActive, showFlash }) => {
-      setInvincibilityActive(true);
-      showFlash('yellow', 100);
-      const timeoutId = setTimeout(() => {
-        setInvincibilityActive(false);
-        showFlash('yellow', 0);
-      }, 10000);
-      
-      return () => clearTimeout(timeoutId);
+      return createTimedPowerUp(
+        { setActive: setInvincibilityActive, showFlash },
+        'yellow',
+        10000,
+        undefined,
+        undefined,
+        'default' // Pass power-up type for sound
+      );
     },
   },
   {
     type: 'rapidFire',
     duration: 10000,
     effect: ({ setRapidFireActive, showFlash }) => {
-      console.log('🔫 RAPID FIRE ACTIVATED!');
-      setRapidFireActive(true);
-      showFlash('red', 100);
-      const timeoutId = setTimeout(() => {
-        console.log('🔫 Rapid fire ended');
-        setRapidFireActive(false);
-        showFlash('red', 0);
-      }, 10000);
-      
-      return () => clearTimeout(timeoutId);
+      return createTimedPowerUp(
+        { setActive: setRapidFireActive, showFlash },
+        'red',
+        10000,
+        () => console.log('🔫 RAPID FIRE ACTIVATED!'),
+        () => console.log('🔫 Rapid fire ended'),
+        'rapidFire' // Pass power-up type for sound
+      );
     },
   },
   {
@@ -136,6 +177,7 @@ export const POWER_UPS = [
     effect: ({ setSlowMotionActive, setTargets, showFlash }) => {
       setSlowMotionActive(true);
       showFlash('purple', 100);
+      soundManager.playPowerUpActivate('slowMotion'); // Play activation sound
       // Phase 8 FIX: Store original speed to restore properly after time slow
       setTargets((prevTargets) =>
         prevTargets.map((target) => ({
@@ -147,6 +189,7 @@ export const POWER_UPS = [
       const timeoutId = setTimeout(() => {
         setSlowMotionActive(false);
         showFlash('purple', 0);
+        soundManager.playPowerUpDeactivate(); // Play deactivation sound
         // Restore to original speed, not speed*2 (which breaks if target was split during slow-mo)
         setTargets((prevTargets) =>
           prevTargets.map((target) => {

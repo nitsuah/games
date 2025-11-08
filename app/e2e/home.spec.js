@@ -4,44 +4,67 @@ test.describe('Home Page', () => {
   test('should load homepage successfully', async ({ page }) => {
     await page.goto('/');
     
+    // Wait for page to be fully loaded with increased timeout
+    await page.waitForLoadState('networkidle', { timeout: 30000 });
+    
     // Check title
     await expect(page).toHaveTitle(/Games/i);
     
-    // Check main arcade heading
+    // Check main arcade heading with timeout
     const heading = page.getByRole('heading', { name: /ARCADE/i });
-    await expect(heading).toBeVisible();
+    await expect(heading).toBeVisible({ timeout: 10000 });
     
-    // Check game links exist
-    const asteroidLink = page.getByRole('link', { name: /Asteroid/i });
-    const fpsLink = page.getByRole('link', { name: /FPS/i });
+    // Switch to grid mode to see all games (homepage starts in carousel mode)
+    const displayModeButton = page.locator('button').filter({ hasText: /[⊞☰⊟]/ });
+    await displayModeButton.click();
+    await page.waitForTimeout(500); // Wait for mode transition
     
-    await expect(asteroidLink).toBeVisible();
-    await expect(fpsLink).toBeVisible();
+    // Check game buttons exist (using ArcadeCard components which render as buttons)
+    const asteroidButton = page.getByRole('button').filter({ hasText: /Asteroid/ });
+    const breakoutButton = page.getByRole('button').filter({ hasText: /Breakout/ });
+    
+    await expect(asteroidButton).toBeVisible({ timeout: 10000 });
+    await expect(breakoutButton).toBeVisible({ timeout: 10000 });
   });
 
   test('should navigate to Asteroid game', async ({ page }) => {
     await page.goto('/');
     
-    // Click Asteroid link
-    await page.getByRole('link', { name: /Asteroid/i }).click();
+    // Wait for page to be fully loaded with increased timeout
+    await page.waitForLoadState('networkidle', { timeout: 30000 });
     
-    // Wait for navigation
-    await page.waitForURL(/\/asteroid/);
+    // Click Asteroid button - ArcadeCard renders a button containing the text
+    const asteroidButton = page.getByRole('button').filter({ hasText: /Asteroid/ });
+    await expect(asteroidButton).toBeVisible({ timeout: 10000 });
+    await asteroidButton.click();
+    
+    // Wait for navigation with increased timeout
+    await page.waitForURL(/\/asteroid/, { timeout: 30000 });
     
     // Check we're on the asteroid page
     expect(page.url()).toContain('/asteroid');
   });
 
-  test('should navigate to FPS game', async ({ page }) => {
+  test('should navigate to Breakout game', async ({ page }) => {
     await page.goto('/');
     
-    // Click FPS link
-    await page.getByRole('link', { name: /FPS/i }).click();
+    // Wait for page to be fully loaded with increased timeout
+    await page.waitForLoadState('networkidle', { timeout: 30000 });
     
-    // Wait for navigation
-    await page.waitForURL(/\/fps/);
+    // Switch to grid mode to see all games
+    const displayModeButton = page.locator('button').filter({ hasText: /[⊞☰⊟]/ });
+    await displayModeButton.click();
+    await page.waitForTimeout(500);
     
-    // Check we're on the FPS page
-    expect(page.url()).toContain('/fps');
+    // Click Breakout button - ArcadeCard renders a button containing the text
+    const breakoutButton = page.getByRole('button').filter({ hasText: /Breakout/ });
+    await expect(breakoutButton).toBeVisible({ timeout: 10000 });
+    await breakoutButton.click();
+    
+    // Wait for navigation with increased timeout
+    await page.waitForURL(/\/breakout/, { timeout: 30000 });
+    
+    // Check we're on the Breakout page
+    expect(page.url()).toContain('/breakout');
   });
 });

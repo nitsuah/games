@@ -54,6 +54,31 @@
   animation: glow 2s ease-in-out infinite alternate;
 }
 
+.performanceRating {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffd700;
+  margin-top: 10px;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.container.perfect {
+  border-color: #ffd700;
+  box-shadow: 
+    0 0 80px rgba(255, 215, 0, 0.6),
+    inset 0 0 100px rgba(255, 215, 0, 0.1);
+  animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), perfectGlow 2s ease-in-out infinite;
+}
+
+.container.perfect .title {
+  color: #ffd700;
+  text-shadow: 
+    0 0 40px #ffd700,
+    0 0 60px #ffd700,
+    0 4px 8px rgba(0, 0, 0, 1);
+}
+
 .stats {
   display: flex;
   flex-direction: column;
@@ -155,4 +180,31 @@
 @keyframes scanlineMove {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes perfectGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 80px rgba(255, 215, 0, 0.6),
+      inset 0 0 100px rgba(255, 215, 0, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 120px rgba(255, 215, 0, 0.8),
+      inset 0 0 140px rgba(255, 215, 0, 0.15);
+  }
 }

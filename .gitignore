@@ -9,3 +9,9 @@ TODO.md
 .venv/
 env/
 coverage/
+app/test-output.txt
+
+# Playwright test artifacts
+app/test-results/
+app/playwright-report/
+app/playwright/.cache/

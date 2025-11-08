@@ -8,7 +8,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 5,
       z: 0,
       size: 6,
-      speed: 2,
+      vx: 0.1,
+      vy: 0.05,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -25,7 +27,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 8,
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -34,20 +38,24 @@ describe('splitTarget - Target Splitting Logic', () => {
     expect(result[1].size).toBe(4);
   });
 
-  test('should double the speed', () => {
+  test('should double velocity magnitude with spread', () => {
     const target = {
       id: 'target-1',
       x: 0,
       y: 0,
       z: 0,
       size: 6,
-      speed: 3,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
 
-    expect(result[0].speed).toBe(6);
-    expect(result[1].speed).toBe(6);
+    // Velocity should be approximately doubled (with some spread added)
+    // One goes right (+), one goes left (-)
+    expect(result[0].vx).toBeGreaterThan(0.2); // Base doubled + spread
+    expect(result[1].vx).toBeLessThan(0.2); // Base doubled - spread
   });
 
   test('should position targets on opposite sides', () => {
@@ -57,7 +65,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 5,
       z: 3,
       size: 6,
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -76,7 +86,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 6,
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
       isHit: true, // Original was hit
     };
 
@@ -86,6 +98,24 @@ describe('splitTarget - Target Splitting Logic', () => {
     expect(result[1].isHit).toBe(false);
   });
 
+  test('should assign mass based on size (Phase 9)', () => {
+    const target = {
+      id: 'target-1',
+      x: 0,
+      y: 0,
+      z: 0,
+      size: 10, // Will become 5
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
+    };
+
+    const result = splitTarget(target);
+
+    expect(result[0].mass).toBe(5); // Mass = size
+    expect(result[1].mass).toBe(5);
+  });
+
   test('should assign color based on size - blue for > 4', () => {
     const target = {
       id: 'target-1',
@@ -93,7 +123,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 10, // Will become 5
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -109,7 +141,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 8, // Will become 4
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -125,7 +159,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 6, // Will become 3
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -141,7 +177,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 4, // Will become 2
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -157,7 +195,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 2, // Will become 1
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -174,7 +214,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 6,
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target, mockNow);
@@ -193,7 +235,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 6,
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -211,7 +255,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 6, // offset range should be 7 (size + 1)
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -228,7 +274,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 6,
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     // Run multiple times to verify randomness
@@ -253,7 +301,9 @@ describe('splitTarget - Target Splitting Logic', () => {
       y: 0,
       z: 0,
       size: 6,
-      speed: 2,
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
@@ -264,44 +314,22 @@ describe('splitTarget - Target Splitting Logic', () => {
     expect(result[1].id).toBe('special-target-123-2');
   });
 
-  // Phase 8: Time slow inertia bug fix tests
-  test('should preserve originalSpeed when splitting during slow motion', () => {
+  test('should have velocity divergence (split targets move apart)', () => {
     const target = {
       id: 'target-1',
       x: 0,
       y: 0,
       z: 0,
       size: 6,
-      speed: 1, // Current slowed speed
-      originalSpeed: 2, // Original speed before slow motion
+      vx: 0.1,
+      vy: 0,
+      vz: 0,
     };
 
     const result = splitTarget(target);
 
-    // Split targets should preserve originalSpeed for restoration after slow-mo
-    expect(result[0].originalSpeed).toBe(4); // 2 * 2 (doubled like speed)
-    expect(result[1].originalSpeed).toBe(4);
-    expect(result[0].speed).toBe(2); // Current speed is doubled
-    expect(result[1].speed).toBe(2);
-  });
-
-  test('should not set originalSpeed when not in slow motion', () => {
-    const target = {
-      id: 'target-1',
-      x: 0,
-      y: 0,
-      z: 0,
-      size: 6,
-      speed: 2,
-      // No originalSpeed field
-    };
-
-    const result = splitTarget(target);
-
-    // Should not have originalSpeed when not in slow motion
-    expect(result[0].originalSpeed).toBeUndefined();
-    expect(result[1].originalSpeed).toBeUndefined();
-    expect(result[0].speed).toBe(4);
-    expect(result[1].speed).toBe(4);
+    // First target should have more positive x velocity (moving right)
+    // Second target should have less positive or negative x velocity (moving left)
+    expect(result[0].vx).toBeGreaterThan(result[1].vx);
   });
 });

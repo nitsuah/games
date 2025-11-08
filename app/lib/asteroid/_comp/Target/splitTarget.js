@@ -1,6 +1,27 @@
+/**
+ * Configuration for target splitting behavior
+ * 
+ * @property {number} VELOCITY_MULTIPLIER - Multiplies parent velocity by this factor.
+ *   Range: 1.0-3.0. Higher values create faster, more challenging split targets.
+ *   Default 2.0 doubles velocity for dynamic gameplay.
+ * 
+ * @property {number} SPREAD_FACTOR - Random velocity variation for divergence.
+ *   Range: 0.0-1.0. Controls how much fragments spread apart.
+ *   Default 0.3 creates noticeable divergence without excessive scatter.
+ * 
+ * @property {number} BASE_DIVERGENCE - Minimum velocity added for separation.
+ *   Range: 0.0-0.1. Ensures fragments separate even when parent is slow/stationary.
+ *   Default 0.02 provides subtle separation in all cases.
+ */
+const SPLIT_CONFIG = {
+  VELOCITY_MULTIPLIER: 2,   // How much faster split targets move
+  SPREAD_FACTOR: 0.3,       // Random velocity spread for divergence
+  BASE_DIVERGENCE: 0.02,    // Base velocity added for separation
+};
+
 export function splitTarget(target, nowFn = Date.now) {
   const newSize = target.size * 0.5;
-  const newSpeed = target.speed * 2;
+  const newMass = newSize; // Phase 9: Mass based on size
   const offsetRange = target.size + 1; // Use original size + buffer for spread
   const spawnTime = nowFn();
   const newColor =
@@ -14,9 +35,10 @@ export function splitTarget(target, nowFn = Date.now) {
       ? '#00ffff'
       : '#ffff00';
   
-  // Phase 8: Preserve originalSpeed during slow motion to fix inertia bug
-  // If originalSpeed exists, double it (like speed). Otherwise undefined.
-  const newOriginalSpeed = target.originalSpeed ? target.originalSpeed * 2 : undefined;
+  // Phase 9: Double velocity magnitude and add random spread
+  const baseVx = (target.vx || 0) * SPLIT_CONFIG.VELOCITY_MULTIPLIER;
+  const baseVy = (target.vy || 0) * SPLIT_CONFIG.VELOCITY_MULTIPLIER;
+  const baseVz = (target.vz || 0) * SPLIT_CONFIG.VELOCITY_MULTIPLIER;
   
   return [
     {
@@ -26,10 +48,13 @@ export function splitTarget(target, nowFn = Date.now) {
       z: target.z + Math.random() * offsetRange - offsetRange / 2,
       isHit: false,
       size: newSize,
-      speed: newSpeed,
+      mass: newMass,
+      // Add rightward velocity component + spread
+      vx: baseVx + (SPLIT_CONFIG.BASE_DIVERGENCE + Math.random() * SPLIT_CONFIG.SPREAD_FACTOR),
+      vy: baseVy + (Math.random() - 0.5) * SPLIT_CONFIG.SPREAD_FACTOR,
+      vz: baseVz + (Math.random() - 0.5) * SPLIT_CONFIG.SPREAD_FACTOR,
       color: newColor,
       spawnTime,
-      originalSpeed: newOriginalSpeed,
     },
     {
       id: `${target.id}-2`,
@@ -38,10 +63,13 @@ export function splitTarget(target, nowFn = Date.now) {
       z: target.z + Math.random() * offsetRange - offsetRange / 2,
       isHit: false,
       size: newSize,
-      speed: newSpeed,
+      mass: newMass,
+      // Add leftward velocity component + spread
+      vx: baseVx - (SPLIT_CONFIG.BASE_DIVERGENCE + Math.random() * SPLIT_CONFIG.SPREAD_FACTOR),
+      vy: baseVy + (Math.random() - 0.5) * SPLIT_CONFIG.SPREAD_FACTOR,
+      vz: baseVz + (Math.random() - 0.5) * SPLIT_CONFIG.SPREAD_FACTOR,
       color: newColor,
       spawnTime,
-      originalSpeed: newOriginalSpeed,
     },
   ];
 }

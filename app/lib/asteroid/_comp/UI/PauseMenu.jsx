@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import styles from './PauseMenu.module.css';
 import { useAudio } from '@/contexts/AudioContext';
+import ArcadeMenu from '@/lib/shared/ui/ArcadeMenu';
+import ArcadeButton, { VARIANTS } from '@/lib/shared/ui/ArcadeButton';
 
 const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
   const { soundEnabled, musicEnabled, toggleSound, toggleMusic } = useAudio();
@@ -32,13 +34,7 @@ const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
   };
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.menu}>
-        {/* Phase 8: Arcade-style header */}
-        <div className={styles.header}>
-          <h1 className={styles.title}>PAUSED</h1>
-          <div className={styles.scanline}></div>
-        </div>
+    <ArcadeMenu title="PAUSED">
 
         {/* Score display with arcade styling */}
         <div className={styles.scoreDisplay}>
@@ -50,13 +46,14 @@ const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
 
         {/* Action buttons */}
         <div className={styles.buttons}>
-          <button className={`${styles.button} ${styles.resumeButton}`} onClick={onResume}>
-            <span className={styles.buttonIcon}>▶️</span>
-            <span className={styles.buttonText}>
-              <span>RESUME</span>
-              <span className={styles.buttonHint}>Press ESC</span>
-            </span>
-          </button>
+          <ArcadeButton 
+            variant={VARIANTS.PRIMARY} 
+            icon="▶️" 
+            hint="Press ESC"
+            onClick={onResume}
+          >
+            RESUME
+          </ArcadeButton>
 
           {/* Audio controls with arcade toggle style */}
           <div className={styles.audioSection}>
@@ -88,44 +85,40 @@ const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
 
           {/* Restart button */}
           {onRestart && !showRestartConfirm && (
-            <button 
-              className={`${styles.button} ${styles.restartButton}`} 
+            <ArcadeButton
+              variant={VARIANTS.WARNING}
+              icon="🔄"
+              hint="Start from Wave 1"
               onClick={handleRestartClick}
             >
-              <span className={styles.buttonIcon}>🔄</span>
-              <span className={styles.buttonText}>
-                <span>RESTART</span>
-                <span className={styles.buttonHint}>Start from Wave 1</span>
-              </span>
-            </button>
+              RESTART
+            </ArcadeButton>
           )}
 
           {showRestartConfirm && (
             <div className={styles.confirmBox} onMouseDown={(e) => e.stopPropagation()} onClick={(e) => e.stopPropagation()}>
               <div className={styles.confirmTitle}>⚠️ CONFIRM RESTART?</div>
               <div className={styles.confirmButtons}>
-                <button className={`${styles.button} ${styles.confirmYes}`} onClick={handleRestartClick}>
+                <ArcadeButton variant={VARIANTS.WARNING} onClick={handleRestartClick}>
                   YES
-                </button>
-                <button className={`${styles.button} ${styles.confirmNo}`} onClick={handleCancelRestart}>
+                </ArcadeButton>
+                <ArcadeButton variant={VARIANTS.SECONDARY} onClick={handleCancelRestart}>
                   CANCEL
-                </button>
+                </ArcadeButton>
               </div>
             </div>
           )}
 
           {/* Quit button */}
           {!showQuitConfirm && (
-            <button 
-              className={`${styles.button} ${styles.quitButton}`} 
+            <ArcadeButton
+              variant={VARIANTS.DANGER}
+              icon="🏠"
+              hint="Return to Main Menu"
               onClick={handleQuitClick}
             >
-              <span className={styles.buttonIcon}>🏠</span>
-              <span className={styles.buttonText}>
-                <span>QUIT</span>
-                <span className={styles.buttonHint}>Return to Main Menu</span>
-              </span>
-            </button>
+              QUIT
+            </ArcadeButton>
           )}
 
           {showQuitConfirm && (
@@ -133,12 +126,12 @@ const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
               <div className={styles.confirmTitle}>⚠️ CONFIRM QUIT?</div>
               <div className={styles.confirmText}>Progress will be lost!</div>
               <div className={styles.confirmButtons}>
-                <button className={`${styles.button} ${styles.confirmYes}`} onClick={handleQuitClick}>
+                <ArcadeButton variant={VARIANTS.DANGER} onClick={handleQuitClick}>
                   YES
-                </button>
-                <button className={`${styles.button} ${styles.confirmNo}`} onClick={handleCancelQuit}>
+                </ArcadeButton>
+                <ArcadeButton variant={VARIANTS.SECONDARY} onClick={handleCancelQuit}>
                   CANCEL
-                </button>
+                </ArcadeButton>
               </div>
             </div>
           )}
@@ -148,8 +141,7 @@ const PauseMenu = ({ onResume, onQuit, onRestart, score }) => {
         <div className={styles.footer}>
           <kbd>ESC</kbd> Resume • <kbd>R</kbd> Refill Ammo • <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> Change Weapon
         </div>
-      </div>
-    </div>
+    </ArcadeMenu>
   );
 };
 
