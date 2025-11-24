@@ -150,6 +150,8 @@ export const GameCarousel = () => {
     { title: 'Asteroid', icon: '🎯', description: 'Blast asteroids in space', route: '/asteroid' },
     { title: 'FPS', icon: '🎮', description: 'First-person shooter action', route: '/fps' },
     { title: 'Breakout', icon: '🧱', description: 'Classic brick breaking action', route: '/breakout' },
+    { title: 'Invaders', icon: '👾', description: 'Defend Earth from aliens', route: '/space-invaders' },
+    { title: 'Flappy', icon: '🐦', description: 'Tap to fly!', route: '/flappy' },
   ];
 
   useEffect(() => {
