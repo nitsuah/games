@@ -1,8 +1,8 @@
 # Tasks
 
 ## Todo
-- [ ] Task 1
-- [ ] Task 2
+- [ ] Implement user login validation
+- [ ] Add password reset functionality
 
 ## In Progress
 - [ ] Current task
