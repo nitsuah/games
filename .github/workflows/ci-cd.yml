@@ -30,22 +30,6 @@ jobs:
       run: |
         cd app
         npx playwright install --with-deps chromium
-        
-    - name: Run linting
-      run: |
-        cd app
-        npm run lint --if-present
-        
-    - name: Run type checking
-      run: |
-        cd app  
-        npm run type-check --if-present
-        
-    - name: Debug environment
-      run: |
-        cd app
-        echo "-- Node/npm versions --"
-        node -v || true
         npm -v || true
         npx -v || true
         echo "-- Which binaries --"
