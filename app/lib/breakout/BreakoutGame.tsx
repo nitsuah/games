@@ -7,6 +7,7 @@ import { PowerUpSystem, PowerUpType } from './components/PowerUpSystem';
 import { WaveManager } from '@/lib/shared/progression/WaveManager';
 import { LivesManager } from '@/lib/shared/progression/LivesManager';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
+import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
   position: relative;
@@ -81,6 +82,7 @@ export const BreakoutGame = () => {
         waveManager: new WaveManager({ initialWave: 1 }),
         livesManager: new LivesManager({ initialLives: 3 }),
         highScoreManager: new HighScoreManager('breakout'),
+        soundSystem: new SimpleSoundSystem(),
         input: { left: false, right: false },
         isRunning: false,
         lastTime: 0,
@@ -178,6 +180,7 @@ export const BreakoutGame = () => {
 
                     ball.y = state.paddle.y - ball.radius;
                     ball.bounceY();
+                    state.soundSystem.hit();
 
                     // Add some horizontal velocity based on hit position
                     const hitPos = (ball.x - state.paddle.x) / state.paddle.getCurrentWidth();
@@ -188,6 +191,7 @@ export const BreakoutGame = () => {
                 if (state.brickGrid) {
                     const hitBrick = state.brickGrid.checkCollision(ball);
                     if (hitBrick) {
+                        state.soundSystem.destroy();
                         setScore(prev => {
                             const newScore = prev + hitBrick.value;
                             if (newScore > state.highScoreManager.getHighScore()) {
@@ -236,6 +240,7 @@ export const BreakoutGame = () => {
                     })];
                     if (state.paddle) state.paddle.reset(350);
                 } else {
+                    state.soundSystem.gameOver();
                     setGameOver(true);
                     state.isRunning = false;
                 }
@@ -244,6 +249,7 @@ export const BreakoutGame = () => {
             // Update & Draw PowerUps
             if (state.powerUpSystem && state.paddle) {
                 state.powerUpSystem.update(dt, state.paddle, (type: PowerUpType) => {
+                    state.soundSystem.powerUp();
                     // Handle powerup collection
                     if (type === 'multiBall') {
                         state.balls.push(new Ball({

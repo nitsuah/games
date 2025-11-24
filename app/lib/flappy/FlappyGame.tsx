@@ -4,6 +4,7 @@ import { Bird } from './components/Bird';
 import { PipeManager } from './components/PipeManager';
 import { Background } from './components/Background';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
+import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
   position: relative;
@@ -78,153 +79,58 @@ export const FlappyGame = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
-    const [gameState, setGameState] = useState<'ready' | 'playing' | 'gameover'>('ready');
-
-    const gameRef = useRef({
-        bird: null as Bird | null,
-        pipeManager: null as PipeManager | null,
-        background: null as Background | null,
-        highScoreManager: new HighScoreManager('flappy'),
-        lastTime: 0,
-        speed: 200,
-    });
-
-    const requestRef = useRef<number | null>(null);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        const state = gameRef.current;
-
-        // Init
-        if (!state.bird) {
-            state.bird = new Bird(100, 300);
-            state.pipeManager = new PipeManager(canvas.width, canvas.height);
-            state.background = new Background(canvas.width, canvas.height);
-        }
-
-        setHighScore(state.highScoreManager.getHighScore());
-
-        // Input
-        const handleInput = (e: KeyboardEvent | MouseEvent) => {
-            if (gameState === 'gameover') return;
-
-            if (e instanceof KeyboardEvent && e.key !== ' ' && e.key !== 'ArrowUp') return;
-            if (e instanceof KeyboardEvent) e.preventDefault(); // Stop scrolling
-
-            if (gameState === 'ready') {
-                setGameState('playing');
-                state.lastTime = performance.now();
-                if (state.bird) state.bird.flap();
-            } else if (gameState === 'playing') {
-                if (state.bird) state.bird.flap();
-            }
-        };
-
-        window.addEventListener('keydown', handleInput);
-        window.addEventListener('mousedown', handleInput);
-
-        // Loop
-        const loop = (timestamp: number) => {
-            if (gameState === 'gameover') return; // Stop loop on game over
-
-            const dt = (timestamp - state.lastTime) / 1000;
-            state.lastTime = timestamp;
-
-            // Clear
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Update
-            if (state.background) {
-                state.background.update(dt, gameState === 'playing' ? state.speed : 50);
-                state.background.draw(ctx);
+}
             }
 
-            if (gameState === 'playing') {
-                if (state.bird) {
-                    state.bird.update(dt);
-                    state.bird.draw(ctx);
-                }
+// Ground (draw last to cover pipes)
+ctx.fillStyle = '#e0ac69'; // Sand color
+ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+ctx.fillStyle = '#75b85b'; // Grass top
+ctx.fillRect(0, canvas.height - 20, canvas.width, 4);
 
-                if (state.pipeManager) {
-                    state.pipeManager.update(dt, () => {
-                        setScore(prev => {
-                            const newScore = prev + 1;
-                            if (newScore > state.highScoreManager.getHighScore()) {
-                                state.highScoreManager.saveHighScore(newScore);
-                                setHighScore(newScore);
-                            }
-                            return newScore;
-                        });
-                    });
-                    state.pipeManager.draw(ctx);
-
-                    // Collision
-                    if (state.bird && state.pipeManager.checkCollision(state.bird)) {
-                        setGameState('gameover');
-                    }
-                }
-            } else if (gameState === 'ready') {
-                // Draw bird hovering
-                if (state.bird) {
-                    state.bird.y = 300 + Math.sin(timestamp / 200) * 10;
-                    state.bird.draw(ctx);
-                }
-            }
-
-            // Ground (draw last to cover pipes)
-            ctx.fillStyle = '#e0ac69'; // Sand color
-            ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
-            ctx.fillStyle = '#75b85b'; // Grass top
-            ctx.fillRect(0, canvas.height - 20, canvas.width, 4);
-
-            requestRef.current = requestAnimationFrame(loop);
+requestRef.current = requestAnimationFrame(loop);
         };
 
-        state.lastTime = performance.now();
-        requestRef.current = requestAnimationFrame(loop);
+state.lastTime = performance.now();
+requestRef.current = requestAnimationFrame(loop);
 
-        return () => {
-            window.removeEventListener('keydown', handleInput);
-            window.removeEventListener('mousedown', handleInput);
-            if (requestRef.current) cancelAnimationFrame(requestRef.current);
-        };
+return () => {
+    window.removeEventListener('keydown', handleInput);
+    window.removeEventListener('mousedown', handleInput);
+    if (requestRef.current) cancelAnimationFrame(requestRef.current);
+};
     }, [gameState]);
 
-    const handleRestart = () => {
-        const state = gameRef.current;
-        if (state.bird) state.bird.reset(300);
-        if (state.pipeManager) state.pipeManager.reset();
-        setScore(0);
-        setGameState('ready');
-    };
+const handleRestart = () => {
+    const state = gameRef.current;
+    if (state.bird) state.bird.reset(300);
+    if (state.pipeManager) state.pipeManager.reset();
+    setScore(0);
+    setGameState('ready');
+};
 
-    return (
-        <GameContainer>
-            <Canvas ref={canvasRef} width={800} height={600} />
-            <UIOverlay>
-                {score}
-            </UIOverlay>
+return (
+    <GameContainer>
+        <Canvas ref={canvasRef} width={800} height={600} />
+        <UIOverlay>
+            {score}
+        </UIOverlay>
 
-            {gameState === 'ready' && (
-                <StartScreen>
-                    <h1>FLAPPY BIRD</h1>
-                    <p>Press Space or Click to Flap</p>
-                </StartScreen>
-            )}
+        {gameState === 'ready' && (
+            <StartScreen>
+                <h1>FLAPPY BIRD</h1>
+                <p>Press Space or Click to Flap</p>
+            </StartScreen>
+        )}
 
-            {gameState === 'gameover' && (
-                <GameOverScreen>
-                    <h2>GAME OVER</h2>
-                    <p>Score: {score}</p>
-                    <p>Best: {highScore}</p>
-                    <Button onClick={handleRestart}>PLAY AGAIN</Button>
-                </GameOverScreen>
-            )}
-        </GameContainer>
-    );
+        {gameState === 'gameover' && (
+            <GameOverScreen>
+                <h2>GAME OVER</h2>
+                <p>Score: {score}</p>
+                <p>Best: {highScore}</p>
+                <Button onClick={handleRestart}>PLAY AGAIN</Button>
+            </GameOverScreen>
+        )}
+    </GameContainer>
+);
 };
