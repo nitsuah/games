@@ -148,6 +148,18 @@
   }
 }
 
+/* Carousel mode - bigger and centered */
+.carouselMode {
+  padding: 40px;
+  min-width: 300px;
+  transform: scale(1.05);
+  margin: 20px;
+}
+
+.carouselMode:hover {
+  transform: scale(1.1) translateY(-8px);
+}
+
 /* Grid mode - compact icon view */
 .gridMode {
   padding: 20px;

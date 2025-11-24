@@ -110,7 +110,7 @@ const CarouselArrow = styled.button<{ $direction: 'left' | 'right' }>`
 
 const DisplayModeButton = styled.button`
   position: absolute;
-  top: 10px;
+  top: 50px;
   right: 10px;
   background: rgba(0, 255, 255, 0.1);
   border: 2px solid #00ffff;
@@ -142,107 +142,107 @@ const DisplayModeButton = styled.button`
 `;
 
 export const GameCarousel = () => {
-    const router = useRouter();
-    const [displayMode, setDisplayMode] = useState<'carousel' | 'grid' | 'list'>('carousel');
-    const [currentGameIndex, setCurrentGameIndex] = useState(0);
+  const router = useRouter();
+  const [displayMode, setDisplayMode] = useState<'carousel' | 'grid' | 'list'>('carousel');
+  const [currentGameIndex, setCurrentGameIndex] = useState(0);
 
-    const games = [
-        { title: 'Asteroid', icon: '🎯', description: 'Blast asteroids in space', route: '/asteroid' },
-        { title: 'FPS', icon: '🎮', description: 'First-person shooter action', route: '/fps' },
-        { title: 'Breakout', icon: '🧱', description: 'Classic brick breaking action', route: '/breakout' },
-    ];
+  const games = [
+    { title: 'Asteroid', icon: '🎯', description: 'Blast asteroids in space', route: '/asteroid' },
+    { title: 'FPS', icon: '🎮', description: 'First-person shooter action', route: '/fps' },
+    { title: 'Breakout', icon: '🧱', description: 'Classic brick breaking action', route: '/breakout' },
+  ];
 
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            // Only handle arrow keys, not other keys
-            if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
-                return;
-            }
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle arrow keys, not other keys
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        return;
+      }
 
-            // Prevent default scrolling behavior
-            e.preventDefault();
+      // Prevent default scrolling behavior
+      e.preventDefault();
 
-            if (displayMode === 'carousel') {
-                // In carousel mode, left/right arrows navigate games
-                if (e.key === 'ArrowLeft') {
-                    prevGame();
-                } else if (e.key === 'ArrowRight') {
-                    nextGame();
-                }
-            } else if (displayMode === 'grid' || displayMode === 'list') {
-                // In grid/list mode, up/down arrows navigate games
-                if (e.key === 'ArrowUp') {
-                    setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
-                } else if (e.key === 'ArrowDown') {
-                    setCurrentGameIndex((prev) => (prev + 1) % games.length);
-                }
-                // Also support left/right in grid mode
-                if (displayMode === 'grid' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
-                    if (e.key === 'ArrowLeft') {
-                        setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
-                    } else {
-                        setCurrentGameIndex((prev) => (prev + 1) % games.length);
-                    }
-                }
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [displayMode, games.length]);
-
-    const cycleDisplayMode = () => {
-        setDisplayMode(prev => {
-            if (prev === 'carousel') return 'grid';
-            if (prev === 'grid') return 'list';
-            return 'carousel';
-        });
+      if (displayMode === 'carousel') {
+        // In carousel mode, left/right arrows navigate games
+        if (e.key === 'ArrowLeft') {
+          prevGame();
+        } else if (e.key === 'ArrowRight') {
+          nextGame();
+        }
+      } else if (displayMode === 'grid' || displayMode === 'list') {
+        // In grid/list mode, up/down arrows navigate games
+        if (e.key === 'ArrowUp') {
+          setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
+        } else if (e.key === 'ArrowDown') {
+          setCurrentGameIndex((prev) => (prev + 1) % games.length);
+        }
+        // Also support left/right in grid mode
+        if (displayMode === 'grid' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+          if (e.key === 'ArrowLeft') {
+            setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
+          } else {
+            setCurrentGameIndex((prev) => (prev + 1) % games.length);
+          }
+        }
+      }
     };
 
-    const getDisplayIcon = () => {
-        if (displayMode === 'carousel') return '⊞';
-        if (displayMode === 'grid') return '☰';
-        return '⊟';
-    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [displayMode, games.length]);
 
-    const nextGame = () => {
-        setCurrentGameIndex((prev) => (prev + 1) % games.length);
-    };
+  const cycleDisplayMode = () => {
+    setDisplayMode(prev => {
+      if (prev === 'carousel') return 'grid';
+      if (prev === 'grid') return 'list';
+      return 'carousel';
+    });
+  };
 
-    const prevGame = () => {
-        setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
-    };
+  const getDisplayIcon = () => {
+    if (displayMode === 'carousel') return '⊞';
+    if (displayMode === 'grid') return '☰';
+    return '⊟';
+  };
 
-    const displayedGames = displayMode === 'carousel' ? [games[currentGameIndex]] : games;
+  const nextGame = () => {
+    setCurrentGameIndex((prev) => (prev + 1) % games.length);
+  };
 
-    return (
-        <>
-            <DisplayModeButton onClick={cycleDisplayMode} title={`Switch to ${displayMode === 'carousel' ? 'grid' : displayMode === 'grid' ? 'list' : 'carousel'} mode`}>
-                {getDisplayIcon()}
-            </DisplayModeButton>
+  const prevGame = () => {
+    setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
+  };
 
-            <GameList $mode={displayMode}>
-                {displayMode === 'carousel' && games.length > 1 && (
-                    <>
-                        <CarouselArrow $direction="left" onClick={prevGame}>
-                            ←
-                        </CarouselArrow>
-                        <CarouselArrow $direction="right" onClick={nextGame}>
-                            →
-                        </CarouselArrow>
-                    </>
-                )}
-                {displayedGames.map((game) => (
-                    <ArcadeCard
-                        key={game.title}
-                        title={game.title}
-                        icon={game.icon}
-                        description={game.description}
-                        onClick={() => router.push(game.route)}
-                        displayMode={displayMode}
-                    />
-                ))}
-            </GameList>
-        </>
-    );
+  const displayedGames = displayMode === 'carousel' ? [games[currentGameIndex]] : games;
+
+  return (
+    <>
+      <DisplayModeButton onClick={cycleDisplayMode} title={`Switch to ${displayMode === 'carousel' ? 'grid' : displayMode === 'grid' ? 'list' : 'carousel'} mode`}>
+        {getDisplayIcon()}
+      </DisplayModeButton>
+
+      <GameList $mode={displayMode}>
+        {displayMode === 'carousel' && games.length > 1 && (
+          <>
+            <CarouselArrow $direction="left" onClick={prevGame}>
+              ←
+            </CarouselArrow>
+            <CarouselArrow $direction="right" onClick={nextGame}>
+              →
+            </CarouselArrow>
+          </>
+        )}
+        {displayedGames.map((game) => (
+          <ArcadeCard
+            key={game.title}
+            title={game.title}
+            icon={game.icon}
+            description={game.description}
+            onClick={() => router.push(game.route)}
+            displayMode={displayMode}
+          />
+        ))}
+      </GameList>
+    </>
+  );
 };

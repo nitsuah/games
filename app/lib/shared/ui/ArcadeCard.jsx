@@ -12,23 +12,23 @@ function getDisplayModeClass(mode) {
     case 'list':
       return styles.listMode;
     case 'carousel':
-      return '';
+      return styles.carouselMode;
     default:
       return '';
   }
 }
 
-export default function ArcadeCard({ 
-  title, 
-  icon, 
-  description, 
-  onClick, 
+export default function ArcadeCard({
+  title,
+  icon,
+  description,
+  onClick,
   className = '',
   badge = null,
   displayMode = 'carousel'
 }) {
   const modeClass = getDisplayModeClass(displayMode);
-  
+
   return (
     <button className={`${styles.card} ${className} ${modeClass}`} onClick={onClick}>
       {badge && <div className={styles.badge}>{badge}</div>}
