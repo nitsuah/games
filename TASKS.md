@@ -5,7 +5,7 @@
 - [ ] Add password reset functionality
 
 ## In Progress
-- [ ] Current task
+- [ ] Refactoring authentication module
 
 ## Done
 - [x] Completed task
