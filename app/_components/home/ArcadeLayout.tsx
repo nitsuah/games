@@ -54,21 +54,20 @@ const PageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   max-width: 100vw;
   background: linear-gradient(135deg, #0a0015 0%, #1a0030 50%, #0a0015 100%);
   color: white;
   font-family: 'Courier New', monospace;
   margin: 0;
   padding: 0;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   overflow: hidden;
   box-sizing: border-box;
-
-  @media (max-width: 600px) {
-    overflow-y: auto;
-  }
 
   &::before {
     content: '';
@@ -156,16 +155,12 @@ const Title = styled.h2`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 12px;
   
   @media (max-width: 768px) {
     font-size: 36px;
-    gap: 10px;
+    gap: 8px;
     letter-spacing: 6px;
-    
-    span:first-child {
-      display: none;
-    }
   }
 `;
 
@@ -222,8 +217,7 @@ const ArcadeCabinet = styled.div`
     top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 700px;
-    max-width: 95vw;
+    width: min(700px, 95vw);
     height: 120px;
     background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #ff1493 100%);
     border-radius: 50% 50% 0 0 / 100% 100% 0 0;
@@ -241,8 +235,7 @@ const ArcadeCabinet = styled.div`
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 700px;
-    max-width: 95vw;
+    width: min(700px, 95vw);
     height: 140px;
     background: linear-gradient(180deg, #ff8c00 0%, #ffa500 50%, #ff8c00 100%);
     border: 6px solid #ffaa00;
@@ -251,18 +244,6 @@ const ArcadeCabinet = styled.div`
       0 15px 50px rgba(255, 140, 0, 0.8),
       inset 0 -25px 50px rgba(255, 165, 0, 0.4);
     z-index: 10;
-  }
-  
-  @media (max-width: 768px) {
-    max-width: 95vw;
-    
-    &::before {
-      width: 95vw;
-    }
-    
-    &::after {
-      width: 95vw;
-    }
   }
 `;
 
@@ -483,43 +464,43 @@ const MarqueeText = styled.h1`
 `;
 
 interface ArcadeLayoutProps {
-    children: ReactNode;
-    headerContent?: ReactNode;
+  children: ReactNode;
+  headerContent?: ReactNode;
 }
 
 export const ArcadeLayout = ({ children, headerContent }: ArcadeLayoutProps) => {
-    return (
-        <PageContainer>
-            <ArcadeCabinet>
-                <MarqueeText>ARCADE</MarqueeText>
-                <Joystick />
-                <CoinSlot />
-                <ControlsContainer>
-                    <ButtonDecoration>
-                        <span />
-                        <span />
-                        <span />
-                        <span />
-                    </ButtonDecoration>
-                </ControlsContainer>
+  return (
+    <PageContainer>
+      <ArcadeCabinet>
+        <MarqueeText>ARCADE</MarqueeText>
+        <Joystick />
+        <CoinSlot />
+        <ControlsContainer>
+          <ButtonDecoration>
+            <span />
+            <span />
+            <span />
+            <span />
+          </ButtonDecoration>
+        </ControlsContainer>
 
-                <ArcadeFrame>
-                    <Scanline />
-                    {headerContent}
-                    <Header>
-                        <Title>
-                            <span>🕹️</span>
-                            <span>PLAY</span>
-                            <span>🕹️</span>
-                        </Title>
-                        <Subtitle>Select Your Game</Subtitle>
-                    </Header>
+        <ArcadeFrame>
+          <Scanline />
+          {headerContent}
+          <Header>
+            <Title>
+              <span>🕹️</span>
+              <span>PLAY</span>
+              <span>🕹️</span>
+            </Title>
+            <Subtitle>Select Your Game</Subtitle>
+          </Header>
 
-                    {children}
+          {children}
 
-                    <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>
-                </ArcadeFrame>
-            </ArcadeCabinet>
-        </PageContainer>
-    );
+          <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>
+        </ArcadeFrame>
+      </ArcadeCabinet>
+    </PageContainer>
+  );
 };

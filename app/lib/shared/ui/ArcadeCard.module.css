@@ -23,11 +23,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, 
-    transparent 0%, 
-    rgba(0, 255, 255, 0.1) 50%, 
-    transparent 100%
-  );
+  background: linear-gradient(135deg,
+      transparent 0%,
+      rgba(0, 255, 255, 0.1) 50%,
+      transparent 100%);
   transform: translateX(-100%);
   transition: transform 0.6s;
 }
@@ -39,7 +38,7 @@
 .card:hover {
   transform: translateY(-8px);
   border-color: var(--ui-primary, #00ffff);
-  box-shadow: 
+  box-shadow:
     0 10px 40px rgba(0, 255, 255, 0.4),
     inset 0 0 20px rgba(0, 255, 255, 0.1);
 }
@@ -65,9 +64,12 @@
 }
 
 @keyframes badgePulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 15px rgba(255, 102, 0, 0.6);
   }
+
   50% {
     box-shadow: 0 0 25px rgba(255, 102, 0, 0.8);
   }
@@ -140,119 +142,134 @@
 }
 
 @keyframes arrowBounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateX(0);
   }
+
   50% {
     transform: translateX(5px);
   }
 }
 
-/* Carousel mode - bigger and centered */
+/* Carousel mode - show all games in circular arrangement */
 .carouselMode {
-  padding: 40px;
-  min-width: 300px;
-  transform: scale(1.05);
-  margin: 20px;
+  padding: 30px;
+  min-width: 280px;
+  margin: 0;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: absolute;
 }
 
-.carouselMode:hover {
-  transform: scale(1.1) translateY(-8px);
+.carouselMode.current {
+  transform: scale(1.0) translateY(0) translateX(0);
+  z-index: 10;
+  opacity: 1;
+  position: relative;
 }
 
-/* Grid mode - compact icon view */
+.carouselMode.current:hover {
+  transform: scale(1.05) translateY(-8px);
+}
+
+/* Background cards in circular arrangement */
+.carouselMode:not(.current) {
+  opacity: 0.25;
+  z-index: 1;
+  pointer-events: none;
+  filter: brightness(0.4);
+  transition: all 0.4s ease;
+}
+
+/* Grid mode - equal-sized squares */
 .gridMode {
   padding: 20px;
-  min-width: 140px;
-  flex: 1 1 140px;
-  max-width: 200px;
+  width: 150px;
+  height: 150px;
+  min-width: 150px;
+  min-height: 150px;
+  max-width: 150px;
+  max-height: 150px;
+}
+
+@media (max-width: 768px) {
+  .gridMode {
+    width: 120px;
+    height: 120px;
+    min-width: 120px;
+    min-height: 120px;
+    max-width: 120px;
+    max-height: 120px;
+    padding: 15px;
+  }
 }
 
 .gridMode .iconWrapper {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
 }
 
 .gridMode .icon {
-  font-size: 40px;
+  font-size: 35px;
 }
 
 .titleRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   justify-content: center;
-  margin: 8px 0 0 0;
+  margin: 5px 0 0 0;
 }
 
 .playIcon {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--ui-primary, #00ffff);
   animation: arrowBounce 1.5s ease-in-out infinite;
   will-change: transform;
 }
 
 .gridMode .title {
-  font-size: 18px;
-  letter-spacing: 2px;
+  font-size: 16px;
+  letter-spacing: 1px;
   margin: 0;
 }
 
-.gridMode .playPrompt {
-  font-size: 12px;
-  margin-top: 5px;
-  gap: 5px;
-}
-
-/* List mode - horizontal layout */
-.listMode {
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 30px;
-  gap: 20px;
-  width: 100%;
-  text-align: left;
-}
-
-.listMode .iconWrapper {
-  width: 60px;
-  height: 60px;
-  flex-shrink: 0;
-}
-
-.listMode .icon {
-  font-size: 35px;
-}
-
-.listMode .title {
-  font-size: 24px;
-  letter-spacing: 2px;
-  margin: 0;
-  text-align: left;
-  flex-grow: 1;
-}
-
-.listMode .description {
-  text-align: left;
-  flex-grow: 2;
-  margin: 0;
-}
-
-.listMode .playPrompt {
-  margin: 0;
-  flex-shrink: 0;
-  font-size: 24px;
-}
-
-/* Hide PLAY prompt in grid mode */
 .gridMode .playPrompt {
   display: none;
 }
 
-/* Hide PLAY prompt in list mode on small screens */
-@media (max-width: 768px) {
-  .listMode .playPrompt {
-    display: none;
-  }
+/* List mode - vertical scrollable cards */
+.listMode {
+  flex-direction: column;
+  align-items: center;
+  padding: 25px;
+  gap: 15px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.listMode .iconWrapper {
+  width: 80px;
+  height: 80px;
+}
+
+.listMode .icon {
+  font-size: 45px;
+}
+
+.listMode .title {
+  font-size: 22px;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.listMode .description {
+  margin: 0;
+}
+
+.listMode .playPrompt {
+  margin-top: 5px;
+  font-size: 16px;
 }

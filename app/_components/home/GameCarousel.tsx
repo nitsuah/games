@@ -19,22 +19,28 @@ const GameList = styled.div<{ $mode: string }>`
     flex-wrap: nowrap;
     overflow: hidden;
     max-width: 500px;
+    position: relative;
+    min-height: 400px;
   `}
   
   ${props => props.$mode === 'grid' && `
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    max-width: 90%;
-    gap: 25px;
+    grid-template-columns: repeat(3, 150px);
+    max-width: 550px;
+    gap: 20px;
     justify-items: center;
+    justify-content: center;
     
-    @media (min-width: 768px) {
-      max-width: 600px;
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(3, 130px);
+      max-width: 450px;
+      gap: 15px;
     }
     
     @media (min-width: 1024px) {
-      max-width: 800px;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(3, 160px);
+      max-width: 580px;
+      gap: 25px;
     }
   `}
   
@@ -43,7 +49,7 @@ const GameList = styled.div<{ $mode: string }>`
     max-width: 550px;
     overflow-y: auto;
     max-height: 450px;
-    padding-right: 10px;
+    padding: 10px 10px 10px 0;
     
     /* Custom scrollbar styling */
     &::-webkit-scrollbar {
@@ -70,7 +76,7 @@ const CarouselArrow = styled.button<{ $direction: 'left' | 'right' }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  ${props => props.$direction === 'left' ? 'left: -60px;' : 'right: -60px;'}
+  ${props => props.$direction === 'left' ? 'left: -50px;' : 'right: -50px;'}
   background: rgba(0, 255, 255, 0.2);
   border: 2px solid #00ffff;
   border-radius: 50%;
@@ -97,14 +103,14 @@ const CarouselArrow = styled.button<{ $direction: 'left' | 'right' }>`
   }
   
   @media (max-width: 768px) {
-    ${props => props.$direction === 'left' ? 'left: -30px;' : 'right: -30px;'}
-    width: 35px;
-    height: 35px;
-    font-size: 20px;
+    ${props => props.$direction === 'left' ? 'left: 10px;' : 'right: 10px;'}
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
   }
   
   @media (min-width: 1200px) {
-    ${props => props.$direction === 'left' ? 'left: -80px;' : 'right: -80px;'}
+    ${props => props.$direction === 'left' ? 'left: -70px;' : 'right: -70px;'}
   }
 `;
 
@@ -217,7 +223,18 @@ export const GameCarousel = () => {
     setCurrentGameIndex((prev) => (prev - 1 + games.length) % games.length);
   };
 
-  const displayedGames = displayMode === 'carousel' ? [games[currentGameIndex]] : games;
+  // For carousel mode, show prev, current, and next cards
+  const getCarouselGames = () => {
+    const prevIndex = (currentGameIndex - 1 + games.length) % games.length;
+    const nextIndex = (currentGameIndex + 1) % games.length;
+    return [
+      { ...games[prevIndex], position: 'prev' },
+      { ...games[currentGameIndex], position: 'current' },
+      { ...games[nextIndex], position: 'next' },
+    ];
+  };
+
+  const displayedGames = displayMode === 'carousel' ? getCarouselGames() : games;
 
   return (
     <>
@@ -236,14 +253,15 @@ export const GameCarousel = () => {
             </CarouselArrow>
           </>
         )}
-        {displayedGames.map((game) => (
+        {displayedGames.map((game, index) => (
           <ArcadeCard
-            key={game.title}
+            key={displayMode === 'carousel' ? `${game.title}-${index}` : game.title}
             title={game.title}
             icon={game.icon}
             description={game.description}
             onClick={() => router.push(game.route)}
             displayMode={displayMode}
+            carouselPosition={displayMode === 'carousel' ? (game as any).position : undefined}
           />
         ))}
       </GameList>
