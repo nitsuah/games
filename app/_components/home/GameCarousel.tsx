@@ -152,6 +152,8 @@ export const GameCarousel = () => {
     { title: 'Breakout', icon: '🧱', description: 'Classic brick breaking action', route: '/breakout' },
     { title: 'Invaders', icon: '👾', description: 'Defend Earth from aliens', route: '/space-invaders' },
     { title: 'Flappy', icon: '🐦', description: 'Tap to fly!', route: '/flappy' },
+    { title: 'Snake', icon: '🐍', description: 'Eat and grow!', route: '/snake' },
+    { title: 'Pong', icon: '🏓', description: 'Classic paddle battle', route: '/pong' },
   ];
 
   useEffect(() => {
