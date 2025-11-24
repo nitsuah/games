@@ -23,15 +23,18 @@ export class LivesManager {
 
     /**
      * Attempt to lose a life. Returns true if life was lost, false if invincible.
+     * @param currentTime - Current timestamp in milliseconds. If not provided, uses Date.now().
+     *                      For testing, always provide a specific timestamp.
      */
-    loseLife(currentTime: number = Date.now()): boolean {
-        if (this.isInvincible(currentTime)) {
+    loseLife(currentTime?: number): boolean {
+        const time = currentTime ?? Date.now();
+        if (this.isInvincible(time)) {
             return false;
         }
 
         if (this.lives > 0) {
             this.lives--;
-            this.lastHitTime = currentTime;
+            this.lastHitTime = time;
             return true;
         }
 
@@ -47,9 +50,12 @@ export class LivesManager {
 
     /**
      * Check if player is currently invincible
+     * @param currentTime - Current timestamp in milliseconds. If not provided, uses Date.now().
+     *                      For testing, always provide a specific timestamp.
      */
-    isInvincible(currentTime: number = Date.now()): boolean {
-        return (currentTime - this.lastHitTime) < this.invincibilityDuration;
+    isInvincible(currentTime?: number): boolean {
+        const time = currentTime ?? Date.now();
+        return (time - this.lastHitTime) < this.invincibilityDuration;
     }
 
     /**

@@ -87,6 +87,9 @@ export const BreakoutGame = () => {
         isRunning: false,
         lastTime: 0,
     });
+    
+    // Store timeout IDs for cleanup
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -228,7 +231,8 @@ export const BreakoutGame = () => {
             // Check for ball death
             state.balls = state.balls.filter(b => b.y - b.radius < canvas.height);
             if (state.balls.length === 0) {
-                if (state.livesManager.loseLife()) {
+                const currentTime = performance.now();
+                if (state.livesManager.loseLife(currentTime)) {
                     setLives(state.livesManager.lives);
                     // Reset ball
                     state.balls = [new Ball({
@@ -261,7 +265,16 @@ export const BreakoutGame = () => {
                         }));
                     } else if (type === 'expandPaddle' && state.paddle) {
                         state.paddle.widthMultiplier = 1.5;
-                        setTimeout(() => { if (state.paddle) state.paddle.widthMultiplier = 1; }, 10000);
+                        // Clear any existing timeout
+                        if (timeoutRef.current) {
+                            clearTimeout(timeoutRef.current);
+                        }
+                        timeoutRef.current = setTimeout(() => {
+                            if (state.paddle) {
+                                state.paddle.widthMultiplier = 1;
+                            }
+                            timeoutRef.current = null;
+                        }, 10000);
                     }
                     // Add other powerups...
                 });
@@ -285,6 +298,11 @@ export const BreakoutGame = () => {
             state.isRunning = false;
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
+            // Clear any pending timeouts
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+                timeoutRef.current = null;
+            }
         };
     }, []);
 
@@ -307,23 +325,25 @@ export const BreakoutGame = () => {
             color: '#fff',
         })];
 
+        // Clear power-up drops
+        if (state.powerUpSystem) {
+            state.powerUpSystem.drops = [];
+        }
+        
+        // Clear any pending timeouts
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        
+        // Reset paddle width multiplier
+        if (state.paddle) {
+            state.paddle.widthMultiplier = 1;
+        }
+
+        // The game loop is already running in useEffect, just ensure it continues
         state.isRunning = true;
         state.lastTime = performance.now();
-
-        // Re-trigger loop if needed (useEffect handles init, but this handles restart)
-        const canvas = canvasRef.current;
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                const loop = (timestamp: number) => {
-                    if (!state.isRunning) return;
-                    // ... (simplified loop restart logic, ideally refactor loop out of useEffect)
-                    // For now, force reload or simple state reset is enough for prototype
-                    window.location.reload();
-                };
-                // requestAnimationFrame(loop);
-            }
-        }
     };
 
     return (

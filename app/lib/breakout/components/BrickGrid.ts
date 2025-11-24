@@ -110,6 +110,26 @@ export class BrickGrid {
 }
 
 function darkenColor(color: string, percent: number): string {
-    // Simple helper to darken hex color (placeholder logic)
+    if (color.startsWith('#')) {
+        let hex = color.slice(1);
+        if (hex.length === 3) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+        let num = parseInt(hex, 16);
+        let r = (num >> 16) & 0xFF;
+        let g = (num >> 8) & 0xFF;
+        let b = num & 0xFF;
+        let factor = 1 - percent / 100;
+        r = Math.max(0, Math.min(255, Math.floor(r * factor)));
+        g = Math.max(0, Math.min(255, Math.floor(g * factor)));
+        b = Math.max(0, Math.min(255, Math.floor(b * factor)));
+        return (
+            '#' +
+            r.toString(16).padStart(2, '0') +
+            g.toString(16).padStart(2, '0') +
+            b.toString(16).padStart(2, '0')
+        );
+    }
+    // If not hex, just return original color
     return color;
 }

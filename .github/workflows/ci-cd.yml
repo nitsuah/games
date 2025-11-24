@@ -30,15 +30,7 @@ jobs:
       run: |
         cd app
         npx playwright install --with-deps chromium
-        npm -v || true
-        npx -v || true
-        echo "-- Which binaries --"
-        which node || true
-        which npm || true
-        which npx || true
-        echo "-- Print tested command --"
-        echo "npm run test:ci --if-present"
-        echo "-- Print environment vars relevant to Node/NPM --"
+    
     - name: Run type checking
       run: |
         cd app
