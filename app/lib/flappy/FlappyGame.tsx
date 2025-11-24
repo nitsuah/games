@@ -89,6 +89,8 @@ export const FlappyGame = () => {
         speed: 200,
     });
 
+    const requestRef = useRef<number | null>(null);
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -99,9 +101,11 @@ export const FlappyGame = () => {
         const state = gameRef.current;
 
         // Init
-        state.bird = new Bird(100, 300);
-        state.pipeManager = new PipeManager(canvas.width, canvas.height);
-        state.background = new Background(canvas.width, canvas.height);
+        if (!state.bird) {
+            state.bird = new Bird(100, 300);
+            state.pipeManager = new PipeManager(canvas.width, canvas.height);
+            state.background = new Background(canvas.width, canvas.height);
+        }
 
         setHighScore(state.highScoreManager.getHighScore());
 
@@ -178,17 +182,16 @@ export const FlappyGame = () => {
             ctx.fillStyle = '#75b85b'; // Grass top
             ctx.fillRect(0, canvas.height - 20, canvas.width, 4);
 
-            if (gameState !== 'gameover') {
-                requestAnimationFrame(loop);
-            }
+            requestRef.current = requestAnimationFrame(loop);
         };
 
         state.lastTime = performance.now();
-        requestAnimationFrame(loop);
+        requestRef.current = requestAnimationFrame(loop);
 
         return () => {
             window.removeEventListener('keydown', handleInput);
             window.removeEventListener('mousedown', handleInput);
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
         };
     }, [gameState]);
 
