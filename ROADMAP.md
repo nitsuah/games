@@ -1,8 +1,10 @@
 # Roadmap
 
 ## Q1
-- [ ] Core features
-- [ ] Initial release
+- [ ] User authentication
+- [ ] Data persistence
+- [ ] API endpoints for core entities
+- [ ] Public launch with user registration and basic dashboard
 
 ## Q2
 - [ ] User feedback integration
