@@ -66,12 +66,12 @@ test.describe('Breakout Game', () => {
     await expect(startButton).toBeVisible({ timeout: 10000 });
     await startButton.click();
     
-    // Wait for Three.js canvas to initialize (it takes longer than regular canvas)
-    await page.waitForSelector('canvas', { timeout: 60000 });
+    // Wait for canvas to initialize (Canvas 2D should load quickly)
+    await page.waitForSelector('canvas', { timeout: 30000 });
     
     // Check canvas exists and is visible
     const canvas = page.locator('canvas');
-    await expect(canvas).toBeVisible({ timeout: 15000 });
+    await expect(canvas).toBeVisible({ timeout: 10000 });
   });
 
   test('should display game UI elements', async ({ page }) => {
@@ -83,12 +83,12 @@ test.describe('Breakout Game', () => {
     await expect(startButton).toBeVisible({ timeout: 10000 });
     await startButton.click();
     
-    // Wait for Three.js canvas to initialize
-    await page.waitForSelector('canvas', { timeout: 60000 });
+    // Wait for canvas to initialize
+    await page.waitForSelector('canvas', { timeout: 30000 });
     
     // Canvas should be present and visible
     const canvas = page.locator('canvas');
-    await expect(canvas).toBeVisible({ timeout: 15000 });
+    await expect(canvas).toBeVisible({ timeout: 10000 });
     
     // Verify the game container is visible
     const gameContainer = page.locator('div').first();
