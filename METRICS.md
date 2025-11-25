@@ -6,7 +6,7 @@
 | --------------------- | -------------- | ----------- | ------ |
 | Code Coverage         | ~85%           | >80%        | ✅     |
 | Unit Tests            | 218 passing    | >200        | ✅     |
-| E2E Tests             | 6 scenarios    | >5          | ✅     |
+| E2E Tests             | 8 scenarios    | >5          | ✅     |
 | Build Time            | ~15s           | <30s        | ✅     |
 | Bundle Size (JS)      | ~450KB         | <500KB      | ✅     |
 | Lighthouse Score      | 95+            | >90         | ✅     |
@@ -20,23 +20,28 @@
 | Shared UI Components      | 42    | ✅ Passing |
 | Shared Systems            | 36    | ✅ Passing |
 | Utilities & Effects       | 28    | ✅ Passing |
-| **Total**                 | **218** | **✅ All Passing** |
+| **Total Unit Tests**      | **218** | **✅ All Passing** |
+| **E2E Tests**             | **8**   | **✅ All Passing** |
 
 ## Performance Metrics
 
-| Game        | FPS Avg | Load Time | Memory Usage |
-| ----------- | ------- | --------- | ------------ |
-| Asteroid    | 60      | ~1.2s     | ~80MB        |
-| FPS         | 60      | ~1.5s     | ~95MB        |
-| Breakout    | 60      | ~0.8s     | ~65MB        |
+| Game           | FPS Avg | Load Time | Memory Usage |
+| -------------- | ------- | --------- | ------------ |
+| Asteroid       | 60      | ~1.2s     | ~80MB        |
+| FPS            | 60      | ~1.5s     | ~95MB        |
+| Breakout       | 60      | ~0.8s     | ~65MB        |
+| Flappy         | 60      | ~0.5s     | ~50MB        |
+| Pong           | 60      | ~0.4s     | ~45MB        |
+| Snake          | 60      | ~0.4s     | ~45MB        |
+| Space Invaders | 60      | ~0.6s     | ~60MB        |
 
 ## Health Indicators
 
 | Metric                | Value      | Trend | Notes                     |
 | --------------------- | ---------- | ----- | ------------------------- |
 | Open Issues           | 0          | ✅    | All critical issues resolved |
-| Open PRs              | 2          | →     | Documentation & bug fixes |
-| PR Turnaround         | ~2 hours   | ✅    | Fast iteration cycle      |
+| Open PRs              | 0          | ✅    | All merged                |
+| PR Turnaround         | ~32-37h    | →     | Recent avg: 1-2 days      |
 | Skipped Tests         | 0          | ✅    | No disabled tests         |
 | Failed Builds         | 0          | ✅    | CI/CD stable              |
 | Deploy Success Rate   | 100%       | ✅    | Last 20 deploys successful |
@@ -49,7 +54,7 @@
 | ESLint Warnings       | 0          | <5       | ✅     |
 | TypeScript Errors     | 0          | 0        | ✅     |
 | Prettier Violations   | 0          | 0        | ✅     |
-| Outdated Dependencies | 3          | <10      | ✅     |
+| Outdated Dependencies | 13         | <15      | ✅     |
 
 ## Accessibility
 
