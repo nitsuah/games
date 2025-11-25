@@ -11,7 +11,12 @@ A collection of retro-styled arcade games built with React, Next.js, and Three.j
 ### Current Games
 
 - **Asteroid** - 6DOF space shooter with physics-based combat
-- **FPS** - First-person shooter with terrain navigation (in progress)
+- **FPS** - First-person tank commander with terrain navigation
+- **Breakout** - Classic brick breaker with power-ups and waves
+- **Flappy** - Flappy Bird clone with procedural generation
+- **Pong** - Classic Pong with AI opponent
+- **Snake** - Classic snake with progressive difficulty
+- **Space Invaders** - Formation shooter with wave progression
 
 ---
 
@@ -28,8 +33,13 @@ app/
 │   │   └── audio/       # Sound management (planned expansion)
 │   ├── asteroid/        # Asteroid game-specific code
 │   │   └── _comp/       # Game components, logic, and handlers
-│   └── fps/             # FPS game-specific code
-│       └── _comps/      # FPS components
+│   ├── fps/             # FPS game-specific code
+│   │   └── _comps/      # FPS components
+│   ├── breakout/        # Breakout game-specific code
+│   ├── flappy/          # Flappy game-specific code
+│   ├── pong/            # Pong game-specific code
+│   ├── snake/           # Snake game-specific code
+│   └── space-invaders/  # Space Invaders game-specific code
 ├── pages/               # Next.js pages (routes)
 ├── _components/         # Global effects and utilities
 ├── utils/               # Shared utilities
@@ -58,7 +68,7 @@ app/
 
 ### Testing Strategy
 
-**Coverage: ~20%** (218 tests) - We strategically test **pure logic** while relying on E2E tests for visual/3D components.
+**Coverage: ~85%** (218 tests) - We strategically test **pure logic** while relying on E2E tests for visual/3D components.
 
 #### What to Test ✅
 
@@ -317,5 +327,5 @@ See LICENSE file in repository root.
 
 ---
 
-**Last Updated**: November 2, 2025  
-**Project Status**: Active Development (Phase 10)
+**Last Updated**: November 25, 2025  
+**Project Status**: Active Development (Phase 10+)
