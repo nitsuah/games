@@ -66,10 +66,23 @@ Open `http://localhost:3000`
 ```bash
 app/
 ├── pages/           # Next.js pages
-│   ├── asteroid/    # Asteroid game components
-│   └── fps/         # FPS game components
-├── lib/             # Shared game logic
-├── _components/     # Reusable components
+│   ├── asteroid.jsx      # Asteroid space shooter
+│   ├── fps.jsx          # FPS tank game  
+│   ├── breakout.jsx     # Breakout brick breaker
+│   ├── flappy.tsx       # Flappy bird clone
+│   ├── pong.tsx         # Pong with AI
+│   ├── snake.tsx        # Classic snake
+│   └── space-invaders.tsx # Space invaders
+├── lib/             # Game-specific logic
+│   ├── asteroid/    # Asteroid game code
+│   ├── fps/         # FPS game code
+│   ├── breakout/    # Breakout game code
+│   ├── flappy/      # Flappy game code
+│   ├── pong/        # Pong game code
+│   ├── snake/       # Snake game code
+│   ├── space-invaders/ # Space invaders code
+│   └── shared/      # Shared systems (physics, audio, UI)
+├── _components/     # Global effects and reusable components
 ├── e2e/             # E2E tests (Playwright)
 └── scripts/         # Build/test scripts
 ```
