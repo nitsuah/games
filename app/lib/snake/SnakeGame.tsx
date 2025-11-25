@@ -204,6 +204,8 @@ export const SnakeGame = () => {
             state.isRunning = false;
             window.removeEventListener('keydown', handleKeyDown);
         };
+        // Empty dependency array is intentional: this effect initializes the entire game
+        // and all state functions (setScore, setGameOver, setHighScore) are stable from React
     }, []);
 
     const handleRestart = () => {

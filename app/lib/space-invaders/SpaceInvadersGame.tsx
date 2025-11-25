@@ -271,6 +271,8 @@ export const SpaceInvadersGame = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
+    // Empty dependency array is intentional: this effect initializes the entire game
+    // and all state functions (setScore, setLives, etc.) are stable from React
   }, []);
 
   const handleRestart = () => {

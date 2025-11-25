@@ -199,7 +199,7 @@ export const GameCarousel = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [displayMode]);
+  }, [displayMode, games.length]);
 
   const cycleDisplayMode = () => {
     setDisplayMode(prev => {

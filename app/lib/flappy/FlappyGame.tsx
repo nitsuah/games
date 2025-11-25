@@ -207,6 +207,7 @@ export const FlappyGame = () => {
       window.removeEventListener('mousedown', handleInput);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
+    // Dependency array correctly includes gameState to re-run when gameState changes
   }, [gameState]);
 
   const handleRestart = () => {

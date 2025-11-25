@@ -217,6 +217,8 @@ export const PongGame = () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
+        // Empty dependency array is intentional: this effect initializes the entire game
+        // and all state functions (setPlayerScore, setAiScore, setGameOver, setWinner) are stable from React
     }, []);
 
     const handleRestart = () => {

@@ -304,6 +304,8 @@ export const BreakoutGame = () => {
                 timeoutRef.current = null;
             }
         };
+        // Empty dependency array is intentional: this effect sets up the entire game
+        // and all state functions (setScore, setLives, etc.) are stable
     }, []);
 
     const handleRestart = () => {
