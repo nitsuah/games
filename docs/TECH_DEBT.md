@@ -1,7 +1,7 @@
 # Tech Debt & Improvements
 
 **Last Updated**: November 25, 2025  
-**Status**: 0 critical issues
+**Status**: 0 critical issues | 3 medium priority items
 
 ---
 
