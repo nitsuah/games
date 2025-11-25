@@ -1,66 +1,35 @@
 # Tech Debt & Improvements
 
-**Last Updated**: November 25, 2025 (Phase 10)  
+**Last Updated**: November 25, 2025  
 **Status**: 0 critical issues
 
 ---
 
-## PR Feedback
-
-✅ All Copilot PR feedback addressed as of commit 7373dd2
-
-
 ## Active Items
 
-### 1. Power-Up Config Testability
+### Performance Optimization
 
-**File:** `_components/effects/powerUpConfig.js`  
-**Priority:** Medium  
+- [ ] Object pooling for particles/effects - Reduce GC overhead
+- [ ] LOD system - Reduce particle count at distance
+- [ ] Performance monitoring - Add metrics for game loop bottlenecks
 
-Complex setTimeout logic makes testing difficult. Consider extracting duration management:
+### Code Quality
 
-```javascript
-// Current: Mixed concerns
-effect: ({ setSpeedBoostActive, showFlash }) => {
-  setSpeedBoostActive(true);
-  showFlash('orange', 100);
-  setTimeout(() => setSpeedBoostActive(false), 10000);
-}
+- [ ] JSDoc comments for shared systems
+- [ ] Extract CSS from JSX files into separate stylesheets
+- [ ] Improve test coverage for game logic (target 75%+)
+- [ ] Standardize coding style with ESLint/Prettier
+- [ ] Review and update dependencies
 
-// Refactor: Separated concerns
-effect: (context) => {
-  activateSpeedBoost(context);
-  scheduleDeactivation(context, 10000);
-}
-```
+### Refactoring Candidates
 
-### 2. Performance Optimization
+- [ ] Power-Up config testability - Extract setTimeout logic
+- [ ] Identify high LOC files for potential splitting
+- [ ] Modularize shared UI components further
+- [ ] Remove dead code and unused assets
+- [ ] Optimize asset loading (lazy loading, preloading)
+- [ ] Minify large assets for faster load times
 
-**Priority:** High (Phase 10)
+---
 
-- [ ] **Object pooling** for particles/effects - Reduce GC overhead
-- [ ] **LOD system** - Reduce particle count at distance
-
-### 3. Code Quality Improvements
-
-**Priority:** Medium
-
-- **JSDoc comments** - Better IDE support and documentation
-- **TypeScript migration** - Consider gradual adoption for type safety
-- **Performance monitoring** - Add metrics for game loop bottlenecks
-
-### Cleanup and Refactoring
-
-- Go through every single file and folder with a fine tooth comb. identify the areas of improvement such as:
-  - Identify high line of code files for potential splitting
-  - Remove any css from jsx files and place in separate standard css files
-  - Modularize shared UI components or commonly used functions or utilities
-  - Improve test coverage for critical game logic functions
-  - Standardize coding style with ESLint/Prettier configurations
-  - Review and update dependencies to latest stable versions
-  - Validate our CI checks for code quality and test coverage
-  - Document architecture decisions in `docs/ARCHITECTURE.md`
-  - Minify any large assets (images/sounds) for faster load times
-  - Optimize asset loading with lazy loading or preloading strategies
-  - Implement caching strategies for frequently used data or assets
-  - Identify code that may not be used or things we can remove (comments, dead code, unused assets, etc) but be prudent to understand what it is first and how it might be used or referenced before removing it.
+All major features complete. Focus on polish and optimization.
