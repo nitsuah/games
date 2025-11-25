@@ -62,14 +62,14 @@ test.describe('Breakout Game', () => {
     await page.waitForLoadState('domcontentloaded');
     
     // Click START GAME button to launch the game
-    const startButton = page.getByRole('button', { name: /START GAME/i });
+    const startButton = page.getByTestId('start-game-button');
     await expect(startButton).toBeVisible({ timeout: 10000 });
     await startButton.click();
     
-    // Now wait for canvas to appear
+    // Wait for canvas to initialize (Canvas 2D should load quickly)
     await page.waitForSelector('canvas', { timeout: 30000 });
     
-    // Check canvas exists
+    // Check canvas exists and is visible
     const canvas = page.locator('canvas');
     await expect(canvas).toBeVisible({ timeout: 10000 });
   });
@@ -79,18 +79,19 @@ test.describe('Breakout Game', () => {
     await page.waitForLoadState('domcontentloaded');
     
     // Click START GAME button
-    const startButton = page.getByRole('button', { name: /START GAME/i });
+    const startButton = page.getByTestId('start-game-button');
+    await expect(startButton).toBeVisible({ timeout: 10000 });
     await startButton.click();
     
-    // Wait for canvas
+    // Wait for canvas to initialize
     await page.waitForSelector('canvas', { timeout: 30000 });
     
-    // Canvas should be present
+    // Canvas should be present and visible
     const canvas = page.locator('canvas');
     await expect(canvas).toBeVisible({ timeout: 10000 });
     
-    // Basic smoke test - page loads without crashing
-    const body = page.locator('body');
-    await expect(body).toBeVisible();
+    // Verify the game container is visible
+    const gameContainer = page.locator('div').first();
+    await expect(gameContainer).toBeVisible();
   });
 });

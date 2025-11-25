@@ -5,8 +5,8 @@ import dynamic from 'next/dynamic';
 import ArcadeHeader from '@/lib/shared/ui/ArcadeHeader';
 import ArcadeButton, { VARIANTS } from '@/lib/shared/ui/ArcadeButton';
 
-// Dynamically import the canvas to avoid SSR issues with Three.js
-const BreakoutCanvas = dynamic(() => import('@/lib/breakout/BreakoutCanvas'), {
+// Dynamically import the game component to avoid SSR issues
+const BreakoutGame = dynamic(() => import('@/lib/breakout/BreakoutGame.tsx').then(mod => ({ default: mod.BreakoutGame })), {
   ssr: false,
   loading: () => (
     <div style={{ 
@@ -47,6 +47,8 @@ export default function BreakoutPage() {
           <ArcadeButton
             onClick={() => setGameStarted(true)}
             variant={VARIANTS.SUCCESS}
+            aria-label="START GAME"
+            data-testid="start-game-button"
           >
             START GAME
           </ArcadeButton>
@@ -65,11 +67,11 @@ export default function BreakoutPage() {
           padding: '0 2rem',
         }}>
           <p>Break all the bricks with your paddle!</p>
-          <p style={{ marginTop: '0.5rem' }}>Mouse: Move paddle | Click: Launch ball</p>
+          <p style={{ marginTop: '0.5rem' }}>Arrow Keys: Move paddle | Space: Launch ball</p>
         </div>
       </div>
     );
   }
 
-  return <BreakoutCanvas onExit={() => setGameStarted(false)} />;
+  return <BreakoutGame />;
 }

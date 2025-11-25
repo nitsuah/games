@@ -15,18 +15,19 @@ const ShellCasing = ({ position, direction, onComplete }) => {
   const meshRef = useRef();
   const startTime = useRef(Date.now());
   const duration = 2000; // 2 seconds lifetime
-  
+
   // Calculate ejection velocity (to the right of firing direction)
   const initialState = useMemo(() => {
     const right = new THREE.Vector3();
+    if (!direction) return { velocity: new THREE.Vector3(), angularVelocity: new THREE.Vector3(), rotation: new THREE.Euler() };
     right.crossVectors(direction, new THREE.Vector3(0, 1, 0)).normalize();
-    
+
     // Eject to the right and slightly backward
     const ejectionDir = right.clone()
       .multiplyScalar(0.8 + Math.random() * 0.4)
       .add(direction.clone().multiplyScalar(-0.2))
       .add(new THREE.Vector3(0, 0.3, 0)); // Slight upward component
-    
+
     return {
       velocity: ejectionDir.multiplyScalar(0.05 + Math.random() * 0.03),
       angularVelocity: new THREE.Vector3(
@@ -52,12 +53,12 @@ const ShellCasing = ({ position, direction, onComplete }) => {
     if (meshRef.current) {
       // Apply gravity
       state.current.velocity.y -= 0.0015 * (delta * 60);
-      
+
       // Update position
       meshRef.current.position.x += state.current.velocity.x * (delta * 60);
       meshRef.current.position.y += state.current.velocity.y * (delta * 60);
       meshRef.current.position.z += state.current.velocity.z * (delta * 60);
-      
+
       // Simple ground bounce (y = 0)
       if (meshRef.current.position.y < 0) {
         meshRef.current.position.y = 0;
@@ -66,7 +67,7 @@ const ShellCasing = ({ position, direction, onComplete }) => {
         state.current.velocity.z *= 0.7;
         state.current.angularVelocity.multiplyScalar(0.6);
       }
-      
+
       // Apply rotation
       state.current.rotation.x += state.current.angularVelocity.x * (delta * 60);
       state.current.rotation.y += state.current.angularVelocity.y * (delta * 60);
@@ -76,7 +77,7 @@ const ShellCasing = ({ position, direction, onComplete }) => {
         state.current.rotation.y,
         state.current.rotation.z
       );
-      
+
       // Fade out in last 25% of lifetime
       if (progress > 0.75) {
         meshRef.current.material.opacity = (1 - progress) * 4;
