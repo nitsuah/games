@@ -47,6 +47,8 @@ export default function BreakoutPage() {
           <ArcadeButton
             onClick={() => setGameStarted(true)}
             variant={VARIANTS.SUCCESS}
+            aria-label="START GAME"
+            data-testid="start-game-button"
           >
             START GAME
           </ArcadeButton>

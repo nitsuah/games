@@ -61,10 +61,10 @@ test.describe('Breakout Game', () => {
     // Wait for page to load completely
     await page.waitForLoadState('domcontentloaded');
     
-    // Click START GAME button to launch the game
-    const startButton = page.getByRole('button', { name: /START GAME/i });
-    await expect(startButton).toBeVisible({ timeout: 10000 });
-    await startButton.click();
+  // Click START GAME button to launch the game
+  const startButton = page.getByTestId('start-game-button');
+  await expect(startButton).toBeVisible({ timeout: 10000 });
+  await startButton.click();
     
     // Now wait for canvas to appear
     await page.waitForSelector('canvas', { timeout: 30000 });
@@ -78,9 +78,9 @@ test.describe('Breakout Game', () => {
     await page.goto('/breakout');
     await page.waitForLoadState('domcontentloaded');
     
-    // Click START GAME button
-    const startButton = page.getByRole('button', { name: /START GAME/i });
-    await startButton.click();
+  // Click START GAME button
+  const startButton = page.getByTestId('start-game-button');
+  await startButton.click();
     
     // Wait for canvas
     await page.waitForSelector('canvas', { timeout: 30000 });
