@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
+// Physics constants
+const PADDLE_SPIN_MULTIPLIER = 400; // How much paddle position affects ball vertical velocity
+
 const GameContainer = styled.div`
   position: relative;
   width: 800px;
@@ -137,7 +140,7 @@ export const PongGame = () => {
                 state.ball.x = state.playerPaddle.x - state.ball.radius;
                 // Add spin based on where it hit the paddle
                 const hitPos = (state.ball.y - state.playerPaddle.y) / state.playerPaddle.height;
-                state.ball.vy += (hitPos - 0.5) * 400;
+                state.ball.vy += (hitPos - 0.5) * PADDLE_SPIN_MULTIPLIER;
                 state.soundSystem.hit();
             }
 

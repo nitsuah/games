@@ -304,10 +304,11 @@ export const BreakoutGame = () => {
                 timeoutRef.current = null;
             }
         };
-        // Empty dependency array is intentional: this effect sets up the entire game
-        // and all state functions (setScore, setLives, etc.) are stable.
-        // Game restart is handled explicitly via handleRestart() which resets
-        // game state and reinitializes objects without re-running the effect.
+        // Empty dependency array is intentional: this effect sets up the entire game.
+        // All state setter functions (setScore, setLives, etc.) are stable from React.
+        // Game restart is handled explicitly via handleRestart(), which is only called
+        // from UI events (e.g., button click) and not from within this effect.
+        // Therefore, handleRestart does not need to be in the dependencies.
     }, []);
 
     const handleRestart = () => {
