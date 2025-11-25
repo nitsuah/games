@@ -35,6 +35,42 @@
 - **Mechanics**: Wave management, brick patterns, paddle physics
 - **Goal**: Clear all bricks, progress through waves, set high scores
 
+### 🐦 Flappy Bird
+
+**Status**: ✅ Complete | **Playable**: `/flappy`
+
+- **Controls**: Spacebar/Click to flap
+- **Features**: Procedural pipe generation, high score tracking, smooth animations
+- **Mechanics**: Physics-based flight, collision detection, endless gameplay
+- **Goal**: Survive as long as possible, avoid pipes, set high scores
+
+### 🏓 Pong
+
+**Status**: ✅ Complete | **Playable**: `/pong`
+
+- **Controls**: Arrow keys or Mouse to move paddle
+- **Features**: AI opponent with adjustable difficulty, score tracking, classic arcade feel
+- **Mechanics**: Ball physics with paddle spin, progressive difficulty
+- **Goal**: First to 11 points wins
+
+### 🐍 Snake
+
+**Status**: ✅ Complete | **Playable**: `/snake`
+
+- **Controls**: Arrow keys to change direction
+- **Features**: Classic snake mechanics, high score tracking, progressive difficulty
+- **Mechanics**: Grid-based movement, growth system, collision detection
+- **Goal**: Eat food, grow longer, avoid walls and self
+
+### 👾 Space Invaders
+
+**Status**: ✅ Complete | **Playable**: `/space-invaders`
+
+- **Controls**: Arrow keys to move, Spacebar to shoot
+- **Features**: Formation enemies, shields, wave progression, classic arcade gameplay
+- **Mechanics**: Enemy patterns, increasing difficulty, defensive shields
+- **Goal**: Destroy all enemies, survive waves, achieve high score
+
 ## 🛠️ Development
 
 ### Quick Start
@@ -101,7 +137,7 @@ app/
 
 ### Recent Milestones
 
-- ✅ All 3 games fully playable and tested
+- ✅ All 7 games fully playable and tested
 - ✅ Code quality improvements (TypeScript types, documentation)
 - ✅ Performance optimizations (game loops, physics)
 - ✅ Comprehensive test coverage (218 unit tests)
@@ -111,7 +147,7 @@ app/
 ### Active Development
 
 - 📝 Documentation updates and consolidation
-- 🔧 Tech debt management (see `docs/TECH_DEBT.md`)
+- 🔧 Tech debt management (see CONTRIBUTING.md)
 - 🎨 Performance monitoring and optimization
 - 🚀 Continuous deployment to Netlify
 

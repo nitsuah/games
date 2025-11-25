@@ -30,10 +30,36 @@
 - [ ] Add tutorial/help screens for each game
 - [ ] Implement seasonal events system
 
+### Tech Debt
+
+#### Performance Optimization
+
+- [ ] Object pooling for particles/effects - Reduce GC overhead
+- [ ] LOD system - Reduce particle count at distance
+- [ ] Performance monitoring - Add metrics for game loop bottlenecks
+
+#### Code Quality
+
+- [ ] JSDoc comments for shared systems
+- [ ] Extract CSS from JSX files into separate stylesheets
+- [ ] Improve test coverage for game logic (target 75%+)
+- [ ] Standardize coding style with ESLint/Prettier
+- [ ] Review and update dependencies
+
+#### Refactoring Candidates
+
+- [ ] Power-Up config testability - Extract setTimeout logic
+- [ ] Identify high LOC files for potential splitting
+- [ ] Modularize shared UI components further
+- [ ] Remove dead code and unused assets
+- [ ] Optimize asset loading (lazy loading, preloading)
+- [ ] Minify large assets for faster load times
+
 ## Blocked
 
 - [ ] Multiplayer support (waiting on backend architecture decision)
-- [ ] User authentication (pending service selection: Firebase vs Supabase)
+- [ ] User authentication (pending service selection: Neon
+The Neon extension powers Netlify DB for serverless Postgres in one command.)
 
 ## Done
 
@@ -44,7 +70,7 @@
 - [x] Fix TypeScript types in GameCarousel
 - [x] Enhance useEffect documentation in game components
 - [x] Extract magic numbers to named constants
-- [x] Update README with all 3 games
+- [x] Update README with all 7 games
 - [x] Complete 218 unit tests across all games
 - [x] Implement E2E tests for all game flows
 - [x] Set up CI/CD pipeline with GitHub Actions

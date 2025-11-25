@@ -2,7 +2,7 @@
 
 ## Current Focus (Q4 2025)
 
-- [x] Complete 3 core games (Asteroid, FPS, Breakout)
+- [x] Complete 7 arcade games (Asteroid, FPS, Breakout, Flappy, Pong, Snake, Space Invaders)
 - [x] Comprehensive test coverage (218 unit tests + E2E)
 - [x] Production deployment pipeline (CI/CD, Netlify)
 - [x] Code quality improvements (ESLint, TypeScript types, documentation)
@@ -14,7 +14,7 @@
 
 ### New Games & Features
 
-- [ ] Add 2-3 new classic arcade games (Snake, Tetris, Pac-Man style)
+- [ ] Add 2-3 new classic arcade games (Tetris, Pac-Man, Galaga style)
 - [ ] Implement global leaderboards (Firebase/Supabase)
 - [ ] Add game difficulty settings (Easy/Normal/Hard)
 - [ ] Multiplayer support for select games
