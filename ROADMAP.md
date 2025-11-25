@@ -1,27 +1,97 @@
 # Roadmap
 
-## Q1
-- [ ] User authentication
-- [ ] Data persistence
-- [ ] API endpoints for core entities
-- [ ] Public launch with user registration and basic dashboard
+## Current Focus (Q4 2025)
 
-## Q2
-- [ ] User feedback integration
-- [ ] Performance improvements
+- [x] Complete 3 core games (Asteroid, FPS, Breakout)
+- [x] Comprehensive test coverage (218 unit tests + E2E)
+- [x] Production deployment pipeline (CI/CD, Netlify)
+- [x] Code quality improvements (ESLint, TypeScript types, documentation)
+- [ ] Performance optimization (object pooling, LOD system)
+- [ ] Accessibility audit and improvements
+- [ ] Mobile support and touch controls
 
-## Q3
-- [ ] Advanced features
-- [ ] Mobile support
+## Q1 2026
 
-## Q4
-- [ ] Enterprise features
+### New Games & Features
+
+- [ ] Add 2-3 new classic arcade games (Snake, Tetris, Pac-Man style)
+- [ ] Implement global leaderboards (Firebase/Supabase)
+- [ ] Add game difficulty settings (Easy/Normal/Hard)
+- [ ] Multiplayer support for select games
+
+### User Experience
+
+- [ ] User authentication (GitHub OAuth, Google)
+- [ ] User profiles and statistics dashboard
+- [ ] Save game progress and preferences
+- [ ] Achievement system
+
+### Technical Improvements
+
+- [ ] Complete TypeScript migration
+- [ ] Improve bundle size (code splitting, lazy loading)
+- [ ] Add service worker for offline play
+- [ ] Implement analytics (game metrics, user behavior)
+
+## Q2 2026
+
+### Polish & Performance
+
+- [ ] Advanced visual effects (particles, shaders)
+- [ ] Audio system improvements (spatial audio, music tracks)
+- [ ] Performance monitoring dashboard
+- [ ] Mobile-first responsive design
+
+### Community Features
+
+- [ ] User feedback integration system
+- [ ] Community game modes/challenges
+- [ ] Replay system (record and share gameplay)
+- [ ] Social sharing features
+
+## Q3 2026
+
+### Advanced Features
+
+- [ ] Custom game creator/editor
+- [ ] Mod support and community content
+- [ ] Tournament system
+- [ ] Seasonal events and special modes
+
+### Platform Expansion
+
+- [ ] PWA installation
+- [ ] Desktop app (Electron)
+- [ ] Mobile app (React Native)
+- [ ] Console controller support
+
+## Q4 2026
+
+### Enterprise & Monetization
+
+- [ ] Premium features/skins
+- [ ] Ad integration (non-intrusive)
+- [ ] Sponsorship opportunities
+- [ ] Educational licensing
+
+### Long-term Vision
+
+- [ ] Game engine abstraction for easier game creation
+- [ ] API for third-party integrations
+- [ ] White-label arcade platform
+- [ ] International localization
+
+---
+
+**Last Updated**: November 25, 2025
 
 <!--
 AGENT INSTRUCTIONS:
-This file tracks the project's high-level goals.
-1. Organize items by Quarter (Q1, Q2, etc.) or Milestone.
-2. Mark items as [x] when completed.
-3. Add new strategic goals as they emerge.
-4. Ensure items are high-level features or milestones, not individual bug fixes.
+This file tracks the project's high-level goals and future direction.
+1. Organize items by Quarter (Q1, Q2, etc.) or time period.
+2. Mark items as [x] when completed, move to appropriate section.
+3. Add new strategic goals as they emerge from user requests or project needs.
+4. Keep items high-level (features, milestones) not individual bug fixes.
+5. Update "Last Updated" date when making significant changes.
+6. Focus on realistic, achievable goals based on project velocity.
 -->
