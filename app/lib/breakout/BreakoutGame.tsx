@@ -305,7 +305,9 @@ export const BreakoutGame = () => {
             }
         };
         // Empty dependency array is intentional: this effect sets up the entire game
-        // and all state functions (setScore, setLives, etc.) are stable
+        // and all state functions (setScore, setLives, etc.) are stable.
+        // Game restart is handled explicitly via handleRestart() which resets
+        // game state and reinitializes objects without re-running the effect.
     }, []);
 
     const handleRestart = () => {

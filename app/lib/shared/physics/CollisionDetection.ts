@@ -50,8 +50,7 @@ export function calculateElasticCollision(
     // Calculate velocity along collision normal
     const velocityAlongNormal = relativeVelocity.dot(collisionNormal);
 
-    // Objects are moving apart (negative means A moving away from B along normal)
-    // Positive means approaching, negative means separating
+    // Objects are separating - no collision response needed
     if (velocityAlongNormal < 0) {
         return { velA: velA.clone(), velB: velB.clone() };
     }

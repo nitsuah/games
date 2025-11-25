@@ -3,6 +3,17 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ArcadeCard from '@/lib/shared/ui/ArcadeCard';
 
+type Game = {
+  title: string;
+  icon: string;
+  description: string;
+  route: string;
+};
+
+type GameWithPosition = Game & {
+  position: 'prev' | 'current' | 'next';
+};
+
 const GameList = styled.div<{ $mode: string }>`
   display: flex;
   flex-direction: ${props => props.$mode === 'list' ? 'column' : 'row'};
@@ -224,17 +235,17 @@ export const GameCarousel = () => {
   };
 
   // For carousel mode, show prev, current, and next cards
-  const getCarouselGames = () => {
+  const getCarouselGames = (): GameWithPosition[] => {
     const prevIndex = (currentGameIndex - 1 + games.length) % games.length;
     const nextIndex = (currentGameIndex + 1) % games.length;
     return [
-      { ...games[prevIndex], position: 'prev' },
-      { ...games[currentGameIndex], position: 'current' },
-      { ...games[nextIndex], position: 'next' },
+      { ...games[prevIndex], position: 'prev' as const },
+      { ...games[currentGameIndex], position: 'current' as const },
+      { ...games[nextIndex], position: 'next' as const },
     ];
   };
 
-  const displayedGames = displayMode === 'carousel' ? getCarouselGames() : games;
+  const displayedGames: (Game | GameWithPosition)[] = displayMode === 'carousel' ? getCarouselGames() : games;
 
   return (
     <>
@@ -261,7 +272,7 @@ export const GameCarousel = () => {
             description={game.description}
             onClick={() => router.push(game.route)}
             displayMode={displayMode}
-            carouselPosition={displayMode === 'carousel' ? (game as any).position : undefined}
+            carouselPosition={displayMode === 'carousel' ? (game as GameWithPosition).position : undefined}
           />
         ))}
       </GameList>

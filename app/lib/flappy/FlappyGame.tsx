@@ -207,7 +207,9 @@ export const FlappyGame = () => {
       window.removeEventListener('mousedown', handleInput);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-    // Dependency array correctly includes gameState to re-run when gameState changes
+    // gameState dependency is required: the game loop closure captures gameState
+    // and needs to re-run when transitioning between ready/playing/gameover states
+    // to properly update the loop's conditional logic
   }, [gameState]);
 
   const handleRestart = () => {

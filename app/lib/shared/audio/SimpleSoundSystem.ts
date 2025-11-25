@@ -1,11 +1,17 @@
 // Simple sound effects system using Web Audio API
+declare global {
+    interface Window {
+        webkitAudioContext: typeof AudioContext;
+    }
+}
+
 export class SimpleSoundSystem {
     private audioContext: AudioContext | null = null;
     private enabled: boolean = true;
 
     constructor() {
         if (typeof window !== 'undefined') {
-            this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
     }
 
