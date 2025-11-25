@@ -41,7 +41,7 @@
 | --------------------- | ---------- | ----- | ------------------------- |
 | Open Issues           | 0          | ✅    | All critical issues resolved |
 | Open PRs              | 0          | ✅    | All merged                |
-| PR Turnaround         | ~32-37h    | →     | Recent avg: 1-2 days      |
+| PR Turnaround         | ~32-37h    | ⚠️    | Recent avg: 1-2 days      |
 | Skipped Tests         | 0          | ✅    | No disabled tests         |
 | Failed Builds         | 0          | ✅    | CI/CD stable              |
 | Deploy Success Rate   | 100%       | ✅    | Last 20 deploys successful |
@@ -54,7 +54,7 @@
 | ESLint Warnings       | 0          | <5       | ✅     |
 | TypeScript Errors     | 0          | 0        | ✅     |
 | Prettier Violations   | 0          | 0        | ✅     |
-| Outdated Dependencies | 13         | <15      | ✅     |
+| Outdated Dependencies | 13         | <15      | ⚠️     |
 
 ## Accessibility
 

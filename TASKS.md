@@ -58,7 +58,7 @@
 ## Blocked
 
 - [ ] Multiplayer support (waiting on backend architecture decision)
-- [ ] User authentication (pending service selection: Neon
+- [ ] User authentication (use Neon
 The Neon extension powers Netlify DB for serverless Postgres in one command.)
 
 ## Done
@@ -70,7 +70,7 @@ The Neon extension powers Netlify DB for serverless Postgres in one command.)
 - [x] Fix TypeScript types in GameCarousel
 - [x] Enhance useEffect documentation in game components
 - [x] Extract magic numbers to named constants
-- [x] Update README with all 7 games
+- [x] Update README to document all 7 games (Asteroid, FPS Tank Commander, Breakout Classic, Flappy, Pong, Snake, Space Invaders)
 - [x] Complete 218 unit tests across all games
 - [x] Implement E2E tests for all game flows
 - [x] Set up CI/CD pipeline with GitHub Actions

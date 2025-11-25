@@ -147,7 +147,7 @@ app/
 ### Active Development
 
 - 📝 Documentation updates and consolidation
-- 🔧 Tech debt management (see CONTRIBUTING.md)
+- 🔧 Tech debt management (see CONTRIBUTING.md for current guidelines; TECH_DEBT.md retained for legacy reference)
 - 🎨 Performance monitoring and optimization
 - 🚀 Continuous deployment to Netlify
 
