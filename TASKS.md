@@ -58,8 +58,7 @@
 ## Blocked
 
 - [ ] Multiplayer support (waiting on backend architecture decision)
-- [ ] User authentication (use Neon
-The Neon extension powers Netlify DB for serverless Postgres in one command.)
+- [ ] User authentication (use Neon extension powers Netlify DB for serverless Postgres in one command.)
 
 ## Done
 
