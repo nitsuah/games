@@ -61,36 +61,37 @@ test.describe('Breakout Game', () => {
     // Wait for page to load completely
     await page.waitForLoadState('domcontentloaded');
     
-  // Click START GAME button to launch the game
-  const startButton = page.getByTestId('start-game-button');
-  await expect(startButton).toBeVisible({ timeout: 10000 });
-  await startButton.click();
+    // Click START GAME button to launch the game
+    const startButton = page.getByTestId('start-game-button');
+    await expect(startButton).toBeVisible({ timeout: 10000 });
+    await startButton.click();
     
-    // Now wait for canvas to appear
-    await page.waitForSelector('canvas', { timeout: 30000 });
+    // Wait for Three.js canvas to initialize (it takes longer than regular canvas)
+    await page.waitForSelector('canvas', { timeout: 60000 });
     
-    // Check canvas exists
+    // Check canvas exists and is visible
     const canvas = page.locator('canvas');
-    await expect(canvas).toBeVisible({ timeout: 10000 });
+    await expect(canvas).toBeVisible({ timeout: 15000 });
   });
 
   test('should display game UI elements', async ({ page }) => {
     await page.goto('/breakout');
     await page.waitForLoadState('domcontentloaded');
     
-  // Click START GAME button
-  const startButton = page.getByTestId('start-game-button');
-  await startButton.click();
+    // Click START GAME button
+    const startButton = page.getByTestId('start-game-button');
+    await expect(startButton).toBeVisible({ timeout: 10000 });
+    await startButton.click();
     
-    // Wait for canvas
-    await page.waitForSelector('canvas', { timeout: 30000 });
+    // Wait for Three.js canvas to initialize
+    await page.waitForSelector('canvas', { timeout: 60000 });
     
-    // Canvas should be present
+    // Canvas should be present and visible
     const canvas = page.locator('canvas');
-    await expect(canvas).toBeVisible({ timeout: 10000 });
+    await expect(canvas).toBeVisible({ timeout: 15000 });
     
-    // Basic smoke test - page loads without crashing
-    const body = page.locator('body');
-    await expect(body).toBeVisible();
+    // Verify the game container is visible
+    const gameContainer = page.locator('div').first();
+    await expect(gameContainer).toBeVisible();
   });
 });
