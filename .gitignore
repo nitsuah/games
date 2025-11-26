@@ -8,10 +8,14 @@ TODO.md
 
 .venv/
 env/
-coverage/
-app/test-output.txt
 
-# Playwright test artifacts
-app/test-results/
-app/playwright-report/
-app/playwright/.cache/
+# Test artifacts
+coverage/
+**/coverage/
+app/test-output.txt
+test-results/
+**/test-results/
+playwright-report/
+**/playwright-report/
+playwright/.cache/
+**/playwright/.cache/
