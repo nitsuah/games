@@ -4,7 +4,7 @@
 
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
-| Code Coverage         | ~85%           | Jest unit tests           |
+| Code Coverage         | 85%           | Jest unit tests           |
 | Unit Tests            | 218            | All passing               |
 | E2E Tests             | 8              | Playwright scenarios      |
 | Build Time            | ~15s           | Production build          |
