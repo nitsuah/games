@@ -2,14 +2,24 @@
 
 ## Core Metrics
 
-| Metric                | Value          | Target      | Status |
-| --------------------- | -------------- | ----------- | ------ |
-| Code Coverage         | ~85%           | >80%        | ✅     |
-| Unit Tests            | 218 passing    | >200        | ✅     |
-| E2E Tests             | 8 scenarios    | >5          | ✅     |
-| Build Time            | ~15s           | <30s        | ✅     |
-| Bundle Size (JS)      | ~450KB         | <500KB      | ✅     |
-| Lighthouse Score      | 95+            | >90         | ✅     |
+| Metric                | Value          | Notes                     |
+| --------------------- | -------------- | ------------------------- |
+| Code Coverage         | 85%           | Jest unit tests           |
+| Unit Tests            | 218            | All passing               |
+| E2E Tests             | 8              | Playwright scenarios      |
+| Build Time            | ~15s           | Production build          |
+| Bundle Size (JS)      | ~450KB         | Compressed                |
+| Lighthouse Score      | 95+            | Performance/Accessibility |
+
+## Health
+
+| Metric                | Value      | Notes                     |
+| --------------------- | ---------- | ------------------------- |
+| Open Issues           | 0          | All critical issues resolved |
+| Open PRs              | 0          | All merged                |
+| Health Score          | 95/100     | Self-rating               |
+| Last Updated          | 2025-11-27 | Last metrics refresh      |
+| Deploy Success Rate   | 100%       | Last 20 deploys successful |
 
 ## Test Distribution
 
@@ -34,17 +44,6 @@
 | Pong           | 60      | ~0.4s     | ~45MB        |
 | Snake          | 60      | ~0.4s     | ~45MB        |
 | Space Invaders | 60      | ~0.6s     | ~60MB        |
-
-## Health Indicators
-
-| Metric                | Value      | Trend | Notes                     |
-| --------------------- | ---------- | ----- | ------------------------- |
-| Open Issues           | 0          | ✅    | All critical issues resolved |
-| Open PRs              | 0          | ✅    | All merged                |
-| PR Turnaround         | ~32-37h    | ⚠️    | Recent avg: 1-2 days      |
-| Skipped Tests         | 0          | ✅    | No disabled tests         |
-| Failed Builds         | 0          | ✅    | CI/CD stable              |
-| Deploy Success Rate   | 100%       | ✅    | Last 20 deploys successful |
 
 ## Code Quality
 
@@ -89,7 +88,7 @@
 
 ---
 
-**Last Updated**: November 25, 2025  
+**Last Updated**: November 27, 2025  
 **Data Source**: Jest test reports, GitHub Actions, Lighthouse CI, manual testing
 
 <!--

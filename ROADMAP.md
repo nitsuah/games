@@ -1,6 +1,6 @@
-# Roadmap
+# 🎮 Games Collection Roadmap
 
-## Current Focus (Q4 2025)
+## Q4 2025: Production Ready (IN PROGRESS) 🚀
 
 - [x] Complete 7 arcade games (Asteroid, FPS, Breakout, Flappy, Pong, Snake, Space Invaders)
 - [x] Comprehensive test coverage (218 unit tests + E2E)
@@ -10,72 +10,49 @@
 - [ ] Accessibility audit and improvements
 - [ ] Mobile support and touch controls
 
-## Q1 2026
-
-### New Games & Features
+## Q1 2026: New Games & Features (Planned) 🎯
 
 - [ ] Add 2-3 new classic arcade games (Tetris, Pac-Man, Galaga style)
-- [ ] Implement global leaderboards (Firebase/Supabase)
+- [ ] Implement global leaderboards (Neon db)
 - [ ] Add game difficulty settings (Easy/Normal/Hard)
 - [ ] Multiplayer support for select games
-
-### User Experience
-
 - [ ] User authentication (GitHub OAuth, Google)
 - [ ] User profiles and statistics dashboard
 - [ ] Save game progress and preferences
 - [ ] Achievement system
-
-### Technical Improvements
-
 - [ ] Complete TypeScript migration
 - [ ] Improve bundle size (code splitting, lazy loading)
 - [ ] Add service worker for offline play
 - [ ] Implement analytics (game metrics, user behavior)
 
-## Q2 2026
-
-### Polish & Performance
+## Q2 2026: Polish & Performance (Planned) 🎨
 
 - [ ] Advanced visual effects (particles, shaders)
 - [ ] Audio system improvements (spatial audio, music tracks)
 - [ ] Performance monitoring dashboard
 - [ ] Mobile-first responsive design
-
-### Community Features
-
 - [ ] User feedback integration system
 - [ ] Community game modes/challenges
 - [ ] Replay system (record and share gameplay)
 - [ ] Social sharing features
 
-## Q3 2026
-
-### Advanced Features
+## Q3 2026: Advanced Features (Planned) 🔮
 
 - [ ] Custom game creator/editor
 - [ ] Mod support and community content
 - [ ] Tournament system
 - [ ] Seasonal events and special modes
-
-### Platform Expansion
-
 - [ ] PWA installation
 - [ ] Desktop app (Electron)
 - [ ] Mobile app (React Native)
 - [ ] Console controller support
 
-## Q4 2026
-
-### Enterprise & Monetization
+## Q4 2026: Enterprise & Monetization (Planned) 💰
 
 - [ ] Premium features/skins
 - [ ] Ad integration (non-intrusive)
 - [ ] Sponsorship opportunities
 - [ ] Educational licensing
-
-### Long-term Vision
-
 - [ ] Game engine abstraction for easier game creation
 - [ ] API for third-party integrations
 - [ ] White-label arcade platform
@@ -83,7 +60,7 @@
 
 ---
 
-**Last Updated**: November 25, 2025
+**Last Updated**: November 27, 2025
 
 <!--
 AGENT INSTRUCTIONS:
