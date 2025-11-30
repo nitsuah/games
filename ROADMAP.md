@@ -1,16 +1,16 @@
 # 🎮 Games Collection Roadmap
 
-## Q4 2025: Production Ready (IN PROGRESS) 🚀
+## 2025Q4: 🚀 Production Ready
 
 - [x] Complete 7 arcade games (Asteroid, FPS, Breakout, Flappy, Pong, Snake, Space Invaders)
 - [x] Comprehensive test coverage (218 unit tests + E2E)
-- [x] Production deployment pipeline (CI/CD, Netlify)
+- [x] Production deployment pipeline (CI/CD, Netlify, axe, etc.)
 - [x] Code quality improvements (ESLint, TypeScript types, documentation)
 - [ ] Performance optimization (object pooling, LOD system)
 - [ ] Accessibility audit and improvements
 - [ ] Mobile support and touch controls
 
-## Q1 2026: New Games & Features (Planned) 🎯
+## 2026Q1: 🎯 New Games & Features
 
 - [ ] Add 2-3 new classic arcade games (Tetris, Pac-Man, Galaga style)
 - [ ] Implement global leaderboards (Neon db)
@@ -25,7 +25,7 @@
 - [ ] Add service worker for offline play
 - [ ] Implement analytics (game metrics, user behavior)
 
-## Q2 2026: Polish & Performance (Planned) 🎨
+## 2026Q2: 🎨 Polish & Performance
 
 - [ ] Advanced visual effects (particles, shaders)
 - [ ] Audio system improvements (spatial audio, music tracks)
@@ -36,7 +36,7 @@
 - [ ] Replay system (record and share gameplay)
 - [ ] Social sharing features
 
-## Q3 2026: Advanced Features (Planned) 🔮
+## 2026Q3: 🔮 Advanced Features
 
 - [ ] Custom game creator/editor
 - [ ] Mod support and community content
@@ -47,7 +47,7 @@
 - [ ] Mobile app (React Native)
 - [ ] Console controller support
 
-## Q4 2026: Enterprise & Monetization (Planned) 💰
+## 2026Q4: 💰 Enterprise & Monetization
 
 - [ ] Premium features/skins
 - [ ] Ad integration (non-intrusive)
