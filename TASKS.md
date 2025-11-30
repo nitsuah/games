@@ -2,8 +2,6 @@
 
 ## Done
 
-### November 2025
-
 - [x] Address all Copilot PR feedback (JSDoc, constants, comments)
 - [x] Consolidate documentation (removed outdated planning docs)
 - [x] Fix TypeScript types in GameCarousel
@@ -14,9 +12,6 @@
 - [x] Implement E2E tests for all game flows
 - [x] Set up CI/CD pipeline with GitHub Actions
 - [x] Deploy to Netlify with automated builds
-
-### Earlier (Phase 1-10)
-
 - [x] Build Asteroid Space Shooter game
 - [x] Build FPS Tank Commander game
 - [x] Build Breakout Classic game
