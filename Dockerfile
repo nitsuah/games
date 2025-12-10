@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for Node.js applications
+# Multi-stage Dockerfile for Next.js application
 
 # ================================
 # Stage 1: Dependencies
@@ -7,7 +7,7 @@ FROM node:20-alpine AS deps
 WORKDIR /app
 
 # Copy package files for caching
-COPY package*.json ./
+COPY app/package*.json ./
 
 # Install dependencies (production only)
 RUN npm ci --only=production
@@ -19,13 +19,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy package files and install all dependencies (including devDependencies)
-COPY package*.json ./
+COPY app/package*.json ./
 RUN npm ci
 
 # Copy source code
-COPY . .
+COPY app/ .
 
-# Build the application
+# Build the Next.js application
 RUN npm run build
 
 # ================================
@@ -39,24 +39,24 @@ ENV NODE_ENV production
 
 # Create non-root user for security
 RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 appuser
+RUN adduser --system --uid 1001 nextjs
 
 # Copy necessary files from previous stages
-COPY --from=deps --chown=appuser:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=appuser:nodejs /app/games ./games
-COPY --from=builder --chown=appuser:nodejs /app/utils ./utils
-COPY --from=builder --chown=appuser:nodejs /app/*.html ./
-COPY --from=builder --chown=appuser:nodejs /app/package*.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Switch to non-root user
-USER appuser
+USER nextjs
 
 # Expose the application port
 EXPOSE 3000
 
-# Health check: check if main page is served
+# Health check: check if Next.js server is responding
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start the application
-CMD ["npx", "serve", "public", "-l", "3000"]
+# Start the Next.js application
+CMD ["npm", "start"]
