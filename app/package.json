@@ -5,7 +5,7 @@
     "@react-three/fiber": "^9.1.2",
     "gsap": "^3.12.2",
     "next": "^15.3.0",
-    "styled-components": "^6.1.17",
+    "styled-components": "^6.1.19",
     "three": "^0.175.0"
   },
   "scripts": {
