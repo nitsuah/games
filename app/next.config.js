@@ -4,6 +4,9 @@ const nextConfig = {
   compiler: {
     styledComponents: true, // Enables styled-components support
   },
+  // Empty turbopack config acknowledges Next.js 16's default Turbopack usage
+  // Webpack config below won't apply in production builds with Turbopack
+  turbopack: {},
   // Optimize bundle to reduce unused JavaScript
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
