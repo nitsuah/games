@@ -43,8 +43,9 @@ RUN adduser --system --uid 1001 appuser
 
 # Copy necessary files from previous stages
 COPY --from=deps --chown=appuser:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=appuser:nodejs /app/.next ./.next
-COPY --from=builder --chown=appuser:nodejs /app/public ./public
+COPY --from=builder --chown=appuser:nodejs /app/games ./games
+COPY --from=builder --chown=appuser:nodejs /app/utils ./utils
+COPY --from=builder --chown=appuser:nodejs /app/*.html ./
 COPY --from=builder --chown=appuser:nodejs /app/package*.json ./
 
 # Switch to non-root user
