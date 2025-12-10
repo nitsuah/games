@@ -130,7 +130,7 @@ jobs:
         npx wait-on http://localhost:3000 --timeout 60000
         
     - name: Run Lighthouse audit
-      uses: treosh/lighthouse-ci-action@v10
+      uses: treosh/lighthouse-ci-action@v12
       with:
         configPath: './.lighthouserc.json'
         # Disable the action's built-in artifact upload to avoid artifact-name errors
