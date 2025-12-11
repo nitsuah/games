@@ -1,9 +1,9 @@
 # Games Collection
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/25a0a90d-195b-4e53-9d94-9a4107321939/deploy-status)](https://app.netlify.com/projects/nitsuah-arcade/deploys)
-[![CI](https://github.com/nitsuah/games/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/nitsuah/games/actions)
+>3D web games built with Next.js, Three.js, and React Three Fiber.
 
-3D web games built with Next.js 15, Three.js, and React Three Fiber.
+[![CI](https://github.com/nitsuah/games/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/nitsuah/games/actions)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/25a0a90d-195b-4e53-9d94-9a4107321939/deploy-status)](https://app.netlify.com/projects/nitsuah-arcade/deploys)
 
 ## 🎮 Games
 
@@ -153,7 +153,7 @@ app/
 
 ## 🔧 Technical Stack
 
-- **Framework**: Next.js 15.3.0
+- **Framework**: Next.js 16.0.8
 - **3D Graphics**: Three.js 0.175.0, React Three Fiber 9.1.2
 - **Physics**: @react-three/cannon 6.6.0
 - **Styling**: Styled Components 6.1.17
@@ -163,4 +163,4 @@ app/
 
 ---
 
-Built with ❤️ using Next.js 15, Three.js, React Three Fiber
+Built with ❤️ using Next.js, Three.js, React Three Fiber
