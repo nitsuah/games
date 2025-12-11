@@ -57,5 +57,8 @@
     "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "tmp": "^0.2.4"
   }
 }
