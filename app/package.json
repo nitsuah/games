@@ -58,7 +58,7 @@
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
   },
+  "overridesComment": "Override tmp to ^0.2.4 due to security vulnerabilities in earlier versions. See https://github.com/raszi/node-tmp/issues/300 for details.",
   "overrides": {
     "tmp": "^0.2.4"
   }
-}
