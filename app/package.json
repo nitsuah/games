@@ -8,7 +8,7 @@
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "styled-components": "^6.1.19",
-    "three": "^0.175.0"
+    "three": "^0.182.0"
   },
   "scripts": {
     "dev": "next dev",
