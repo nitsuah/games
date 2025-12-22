@@ -44,7 +44,7 @@
     "babel-plugin-styled-components": "^2.1.4",
     "chrome-launcher": "^1.2.1",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.0.10",
+    "eslint-config-next": "^16.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
