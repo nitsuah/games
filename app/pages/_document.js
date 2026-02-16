@@ -1,16 +1,15 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
-
-// Shared CSP policy to avoid duplication between headers and meta tags.
-// Note: 'unsafe-eval' is avoided in production to satisfy security audits, 
-// though some 3D engines may require it for specific shader/script evaluation.
-const CSP_POLICY = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-src 'self' https://app.netlify.com/; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;";
+import crypto from 'crypto';
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
+
+    // Generate a per-request nonce
+    const nonce = crypto.randomBytes(16).toString('base64');
 
     try {
       ctx.renderPage = () =>
@@ -20,26 +19,28 @@ class MyDocument extends Document {
 
       const initialProps = await Document.getInitialProps(ctx);
 
-      // Extract styles from styled-components for SSR/Prerendering
-      const styleElements = sheet.getStyleElement();
+      // Attach nonce to styled-components style tags
+      const styleElements = sheet.getStyleElement().map((el) => React.cloneElement(el, { nonce }));
 
-      // CSP headers configured here are for local development / next start.
-      // For static exports, CSP must be defined via the meta tag in the render method.
+      // Set a per-request CSP header that includes the nonce so approved inline scripts/styles are allowed.
+      // Keep this CSP aligned with the stricter baseline in next.config.js but allow the per-request nonce.
       if (ctx.res && typeof ctx.res.setHeader === 'function') {
+        const csp = `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`;
         try {
-          ctx.res.setHeader('Content-Security-Policy', CSP_POLICY);
+          ctx.res.setHeader('Content-Security-Policy', csp);
         } catch {
-          // Fail silently during static export phase
+          // Fail silently if header cannot be set (avoid console warnings in production)
         }
       }
 
-      return { ...initialProps, styles: [...initialProps.styles, ...styleElements] };
+      return { ...initialProps, styles: [...initialProps.styles, ...styleElements], nonce };
     } finally {
       sheet.seal();
     }
   }
 
   render() {
+    const { nonce } = this.props;
     return (
       <Html lang="en">
         <Head>
@@ -50,18 +51,11 @@ class MyDocument extends Document {
           <title>Games</title>
           <link rel="icon" type="image/svg+xml" href="/favicon-home.svg" />
           <link rel="manifest" href="/manifest.json" />
-
-          {/* Use React-compatible httpEquiv prop name and shared constant */}
-          <meta
-            httpEquiv="Content-Security-Policy"
-            content={CSP_POLICY}
-          />
-
-          <script src="/register-sw.js" defer />
+          <script src="/register-sw.js" nonce={nonce} defer />
         </Head>
         <body>
           <Main />
-          <NextScript />
+          <NextScript nonce={nonce} />
         </body>
       </Html>
     );

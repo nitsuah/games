@@ -59,8 +59,8 @@ jobs:
     - name: Run E2E tests
       run: |
         cd app
-        # Use a static server for E2E tests since we are using 'output: export'
-        npx http-server@14.1.1 out -p 3000 &
+        # Start production server in background with proper host binding
+        npm start -- -H 0.0.0.0 &
         # Use wait-on to ensure server is ready before running tests
         npx wait-on http://localhost:3000 --timeout 60000
         npm run test:e2e
@@ -70,7 +70,7 @@ jobs:
       uses: actions/upload-artifact@v6
       with:
         name: build-files
-        path: app/out/
+        path: app/.next/
         
   deploy:
     needs: test-and-build
@@ -99,9 +99,10 @@ jobs:
       run: |
         cd app
         npm run build
+        npm run export --if-present
         
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@e9c66a37f080288a11235e32cbe2dc5fb3a679cc # v4.0.0
+      uses: peaceiris/actions-gh-pages@e9c66a37f080288a11235e32cbe2dc5fb3a679cc # Pinned to specific commit SHA for security
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: app/out
@@ -131,7 +132,7 @@ jobs:
       run: |
         cd app
         npm run build
-        npx http-server@14.1.1 out -p 3000 &
+        npm start -- -H 0.0.0.0 &
         npx wait-on http://localhost:3000 --timeout 60000
         
     - name: Run Lighthouse audit
