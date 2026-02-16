@@ -1,15 +1,11 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
-import crypto from 'crypto';
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
-
-    // Generate a nonce for build-time tagging (even if we relax CSP for static export)
-    const nonce = crypto.randomBytes(16).toString('base64');
 
     try {
       ctx.renderPage = () =>
@@ -19,10 +15,11 @@ class MyDocument extends Document {
 
       const initialProps = await Document.getInitialProps(ctx);
 
-      // Attach nonce to styled-components style tags
-      const styleElements = sheet.getStyleElement().map((el) => React.cloneElement(el, { nonce }));
+      // We are moving away from nonces for the static export as they cause hydration issues 
+      // and CSP violations when combined with 'unsafe-inline'.
+      const styleElements = sheet.getStyleElement();
 
-      // Setting CSP headers via res.setHeader is ignored in static export but kept for local development/next start
+      // CSP headers are ignored in static export but kept for local development/next start
       if (ctx.res && typeof ctx.res.setHeader === 'function') {
         const csp = `default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-src 'self' https://app.netlify.com/; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`;
         try {
@@ -32,14 +29,13 @@ class MyDocument extends Document {
         }
       }
 
-      return { ...initialProps, styles: [...initialProps.styles, ...styleElements], nonce };
+      return { ...initialProps, styles: [...initialProps.styles, ...styleElements] };
     } finally {
       sheet.seal();
     }
   }
 
   render() {
-    const { nonce } = this.props;
     return (
       <Html lang="en">
         <Head>
@@ -54,11 +50,11 @@ class MyDocument extends Document {
             http-equiv="Content-Security-Policy"
             content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-src 'self' https://app.netlify.com/; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;"
           />
-          <script src="/register-sw.js" nonce={nonce} defer />
+          <script src="/register-sw.js" defer />
         </Head>
         <body>
           <Main />
-          <NextScript nonce={nonce} />
+          <NextScript />
         </body>
       </Html>
     );

@@ -8,6 +8,7 @@ TODO.md
 
 .venv/
 env/
+app/out/
 .agent/
 
 # Test artifacts
@@ -20,3 +21,9 @@ playwright-report/
 **/playwright-report/
 playwright/.cache/
 **/playwright/.cache/
+.lighthouseci/
+**/.lighthouseci/
+lighthouse-report/
+**/lighthouse-report/
+lhci-report/
+**/lhci-report/
