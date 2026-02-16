@@ -25,7 +25,7 @@ class MyDocument extends Document {
       // Set a per-request CSP header that includes the nonce so approved inline scripts/styles are allowed.
       // Keep this CSP aligned with the stricter baseline in next.config.js but allow the per-request nonce.
       if (ctx.res && typeof ctx.res.setHeader === 'function') {
-        const csp = `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`;
+        const csp = `default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-src 'self' https://app.netlify.com/; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`;
         try {
           ctx.res.setHeader('Content-Security-Policy', csp);
         } catch {
@@ -53,7 +53,7 @@ class MyDocument extends Document {
           <link rel="manifest" href="/manifest.json" />
           <meta
             http-equiv="Content-Security-Policy"
-            content={`default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`}
+            content={`default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-src 'self' https://app.netlify.com/; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`}
           />
           <script src="/register-sw.js" nonce={nonce} defer />
         </Head>
