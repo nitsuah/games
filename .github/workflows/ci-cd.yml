@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read  # Required to checkout code
-      actions: write  # Required for uploading build artifacts
+      actions: read   # Minimal required for workflow run context
     
     steps:
     - name: Checkout code
