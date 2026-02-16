@@ -29,6 +29,7 @@
         "uses-text-compression": "off",
         "uses-long-cache-ttl": "off",
         "csp-xss": "warn",
+        "errors-in-console": "warn",
         "interactive": [
           "warn",
           {
