@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read  # Required to checkout code
-      actions: read   # Required to read workflow artifacts
+      actions: write  # Required for uploading build artifacts
     
     steps:
     - name: Checkout code
@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read  # Required to checkout code
-      actions: read   # Required to read workflow artifacts
+      actions: write  # Required for uploading audit artifacts
     
     steps:
     - name: Checkout code
