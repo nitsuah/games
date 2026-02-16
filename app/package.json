@@ -13,7 +13,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next build",
     "prebuild": "node ./scripts/prebuild-check.js",
     "start": "next start",
     "test": "jest --watch",
