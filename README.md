@@ -151,13 +151,25 @@ app/
 - 🎨 Performance monitoring and optimization
 - 🚀 Continuous deployment to Netlify
 
+## 🛡️ Security & Dependencies
+
+### Dependency Pinning
+All security overrides in `app/package.json` are pinned to **exact versions** rather than ranges. This ensures:
+1. **Reproducibility**: CI/CD and local environments use identical versions.
+2. **Security**: Prevents automatic upgrades to major versions that might introduce breaking changes or new vulnerabilities.
+
+### Active Overrides
+- **qs (6.15.0)**: Fixed High-severity `arrayLimit` bypass and DoS vulnerabilities.
+- **lodash (4.17.23)**: Fixed Prototype Pollution vulnerability.
+- **tmp (0.2.4)**: Tightened from `^0.2.4` to exact version for environment stability.
+
 ## 🔧 Technical Stack
 
-- **Framework**: Next.js 16.0.8
-- **3D Graphics**: Three.js 0.175.0, React Three Fiber 9.1.2
+- **Framework**: Next.js 16.1.6
+- **3D Graphics**: Three.js 0.182.0, React Three Fiber 9.5.0
 - **Physics**: @react-three/cannon 6.6.0
-- **Styling**: Styled Components 6.1.17
-- **Animation**: GSAP 3.12.2
+- **Styling**: Styled Components 6.3.9
+- **Animation**: GSAP 3.14.2
 - **Testing**: Jest 30.2.0, Playwright 1.56.1
 - **Build Tools**: ESLint 9.38.0, Prettier 3.6.2
 
