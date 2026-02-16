@@ -60,7 +60,7 @@ jobs:
       run: |
         cd app
         # Use a static server for E2E tests since we are using 'output: export'
-        npx http-server out -p 3000 &
+        npx http-server@14.1.1 out -p 3000 &
         # Use wait-on to ensure server is ready before running tests
         npx wait-on http://localhost:3000 --timeout 60000
         npm run test:e2e
@@ -131,7 +131,7 @@ jobs:
       run: |
         cd app
         npm run build
-        npx http-server out -p 3000 &
+        npx http-server@14.1.1 out -p 3000 &
         npx wait-on http://localhost:3000 --timeout 60000
         
     - name: Run Lighthouse audit
