@@ -83,12 +83,21 @@ npm run dev
 
 Open `http://localhost:3000`
 
+### Deployment & Hosting
+
+This project is configured as a **Static HTML Export** (`output: 'export'`). 
+
+- **Local Production Check**: Use `npm run build && npm start` to verify the static export locally.
+- **Hosting Provider Headers**: Since the app is static, Next.js `headers()` in `next.config.js` are ignored in production. You **must** configure security headers (like CSP) at the hosting provider level (e.g., `netlify.toml`, `_headers` for Cloudflare, etc.).
+- **No Server-Side Features**: The codebase avoids API routes, SSR, and ISR to remain compatible with static hosting environments.
+
 ### Key Commands
 
-- `npm run dev` - Start dev server
-- `npm run build` - Production build
+- `npm run dev` - Start development server
+- `npm run build` - Generate static HTML export in `out/`
+- `npm run start` - Serve the `out/` directory locally using `http-server`
 - `npm test` - Run unit tests
-- `npm run test:e2e` - Run E2E tests
+- `npm run test:e2e` - Run E2E tests using `http-server`
 - `npm run lint` - Check code quality
 
 ### Requirements
