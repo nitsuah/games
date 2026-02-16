@@ -83,12 +83,21 @@ npm run dev
 
 Open `http://localhost:3000`
 
+### Deployment & Hosting
+
+This project is configured as a **Static HTML Export** (`output: 'export'`). 
+
+- **Local Production Check**: Use `npm run build && npm start` to verify the static export locally.
+- **Hosting Provider Headers**: Since the app is static, Next.js `headers()` in `next.config.js` are ignored in production. You **must** configure security headers (like CSP) at the hosting provider level (e.g., `netlify.toml`, `_headers` for Cloudflare, etc.).
+- **No Server-Side Features**: The codebase avoids API routes, SSR, and ISR to remain compatible with static hosting environments.
+
 ### Key Commands
 
-- `npm run dev` - Start dev server
-- `npm run build` - Production build
+- `npm run dev` - Start development server
+- `npm run build` - Generate static HTML export in `out/`
+- `npm run start` - Serve the `out/` directory locally using `http-server`
 - `npm test` - Run unit tests
-- `npm run test:e2e` - Run E2E tests
+- `npm run test:e2e` - Run E2E tests using `http-server`
 - `npm run lint` - Check code quality
 
 ### Requirements
@@ -151,13 +160,25 @@ app/
 - 🎨 Performance monitoring and optimization
 - 🚀 Continuous deployment to Netlify
 
+## 🛡️ Security & Dependencies
+
+### Dependency Pinning
+All security overrides in `app/package.json` are pinned to **exact versions** rather than ranges. This ensures:
+1. **Reproducibility**: CI/CD and local environments use identical versions.
+2. **Security**: Prevents automatic upgrades to major versions that might introduce breaking changes or new vulnerabilities.
+
+### Active Overrides
+- **qs (6.15.0)**: Fixed High-severity `arrayLimit` bypass and DoS vulnerabilities.
+- **lodash (4.17.23)**: Fixed Prototype Pollution vulnerability.
+- **tmp (0.2.4)**: Tightened from `^0.2.4` to exact version for environment stability.
+
 ## 🔧 Technical Stack
 
-- **Framework**: Next.js 16.0.8
-- **3D Graphics**: Three.js 0.175.0, React Three Fiber 9.1.2
+- **Framework**: Next.js 16.1.6
+- **3D Graphics**: Three.js 0.182.0, React Three Fiber 9.5.0
 - **Physics**: @react-three/cannon 6.6.0
-- **Styling**: Styled Components 6.1.17
-- **Animation**: GSAP 3.12.2
+- **Styling**: Styled Components 6.3.9
+- **Animation**: GSAP 3.14.2
 - **Testing**: Jest 30.2.0, Playwright 1.56.1
 - **Build Tools**: ESLint 9.38.0, Prettier 3.6.2
 

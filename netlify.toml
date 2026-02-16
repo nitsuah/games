@@ -15,7 +15,7 @@
   # Next.js environment variables
   NEXT_TELEMETRY_DISABLED = "1"
 
-# Next.js plugin for Netlify (handles SSR)
+# Next.js plugin for Netlify (provides build optimizations and caching)
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 

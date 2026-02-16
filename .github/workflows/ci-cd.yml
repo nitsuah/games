@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read  # Required to checkout code
-      actions: read   # Required to read workflow artifacts
+      actions: read   # Minimal required for workflow run context
     
     steps:
     - name: Checkout code
@@ -102,7 +102,7 @@ jobs:
         npm run export --if-present
         
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
+      uses: peaceiris/actions-gh-pages@e9c66a37f080288a11235e32cbe2dc5fb3a679cc # Pinned to specific commit SHA for security
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: app/out
@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read  # Required to checkout code
-      actions: read   # Required to read workflow artifacts
+      actions: write  # Required for uploading audit artifacts
     
     steps:
     - name: Checkout code
@@ -136,7 +136,7 @@ jobs:
         npx wait-on http://localhost:3000 --timeout 60000
         
     - name: Run Lighthouse audit
-      uses: treosh/lighthouse-ci-action@v10
+      uses: treosh/lighthouse-ci-action@03becbfc543944dd6e7534f7ff768abb8a296826 # v10.1.0
       with:
         configPath: './.lighthouserc.json'
         # Disable the action's built-in artifact upload to avoid artifact-name errors
