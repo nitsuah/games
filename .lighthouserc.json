@@ -1,14 +1,58 @@
 {
   "ci": {
     "collect": {
-      "url": ["http://localhost:3000"]
+      "url": [
+        "http://localhost:3000"
+      ]
     },
     "assert": {
       "preset": "lighthouse:recommended",
       "assertions": {
-        "unused-javascript": ["error", {"maxLength": 3}],
-        "total-byte-weight": ["warn", {"maxNumericValue": 5242880}],
-        "non-composited-animations": ["warn", {"minScore": 0.5}]
+        "unused-javascript": [
+          "error",
+          {
+            "maxLength": 3
+          }
+        ],
+        "total-byte-weight": [
+          "warn",
+          {
+            "maxNumericValue": 5242880
+          }
+        ],
+        "non-composited-animations": [
+          "warn",
+          {
+            "minScore": 0.5
+          }
+        ],
+        "uses-text-compression": "off",
+        "uses-long-cache-ttl": "off",
+        "csp-xss": "off",
+        "interactive": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "largest-contentful-paint": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "mainthread-work-breakdown": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "max-potential-fid": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ]
       }
     }
   }
