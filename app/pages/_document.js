@@ -51,6 +51,10 @@ class MyDocument extends Document {
           <title>Games</title>
           <link rel="icon" type="image/svg+xml" href="/favicon-home.svg" />
           <link rel="manifest" href="/manifest.json" />
+          <meta
+            http-equiv="Content-Security-Policy"
+            content={`default-src 'self'; script-src 'self' 'nonce-${nonce}'; style-src 'self' 'nonce-${nonce}' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;`}
+          />
           <script src="/register-sw.js" nonce={nonce} defer />
         </Head>
         <body>
