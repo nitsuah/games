@@ -4,6 +4,7 @@ const nextConfig = {
   compiler: {
     styledComponents: true, // Enables styled-components support
   },
+  output: 'export', // Enable static export
   // Empty turbopack config acknowledges Next.js 16's default Turbopack usage
   // Webpack config below won't apply in production builds with Turbopack
   turbopack: {},
