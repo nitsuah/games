@@ -8,6 +8,7 @@ TODO.md
 
 .venv/
 env/
+.agent/
 
 # Test artifacts
 coverage/
