@@ -63,5 +63,9 @@
     "tmp": "0.2.4",
     "qs": "6.15.0",
     "lodash": "4.17.23"
+  },
+  "overridesMeta": {
+    "policy": "All overrides are pinned to exact versions for reproducibility and security.",
+    "tmp": "Pinned to exact version 0.2.4 to avoid unintended upgrades; previously used a caret range (^0.2.4) but was tightened for security/stability."
   }
 }
