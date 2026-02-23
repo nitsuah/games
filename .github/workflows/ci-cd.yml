@@ -102,7 +102,7 @@ jobs:
         npm run export --if-present
         
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@e9c66a37f080288a11235e32cbe2dc5fb3a679cc # Pinned to specific commit SHA for security
+      uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # Pinned to specific commit SHA for security
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: app/out
