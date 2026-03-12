@@ -67,7 +67,7 @@ jobs:
       continue-on-error: false
         
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: build-files
         path: app/.next/
@@ -102,7 +102,7 @@ jobs:
         npm run export --if-present
         
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@e9c66a37f080288a11235e32cbe2dc5fb3a679cc # Pinned to specific commit SHA for security
+      uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # Pinned to specific commit SHA for security
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: app/out
@@ -146,7 +146,7 @@ jobs:
         temporaryPublicStorage: true
     - name: Upload Lighthouse artifacts (safe)
       if: always()
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: lhci-results-${{ github.run_id }}
         path: |
