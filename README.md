@@ -94,10 +94,10 @@ This project is currently deployed as a **Next.js runtime build on Netlify**, no
 ### Key Commands
 
 - `npm run dev` - Start development server
-- `npm run build` - Generate static HTML export in `out/`
-- `npm run start` - Serve the `out/` directory locally using `http-server`
+- `npm run build` - Build the Next.js app for production
+- `npm run start` - Start the Next.js production server locally
 - `npm test` - Run unit tests
-- `npm run test:e2e` - Run E2E tests using `http-server`
+- `npm run test:e2e` - Run E2E tests with Playwright
 - `npm run lint` - Check code quality
 
 ### Requirements
