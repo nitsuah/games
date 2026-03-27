@@ -1,5 +1,7 @@
 # Games Collection Features
 
+Status guide: all game entries below are `[shipped]` unless otherwise noted. Planned platform work is called out inline.
+
 ## 🎮 Arcade Games
 
 ### 🚀 Asteroid Space Shooter
@@ -82,7 +84,7 @@
 - **ArcadeMenu**: Overlay menu system with arcade styling
 - **Consistent Design**: Unified neon aesthetic across all games (cyan, magenta, yellow)
 
-### 🔊 Audio System
+### 🔊 Audio System `[shipped with active runtime bug]`
 
 - **Sound Effects**: Comprehensive sound library for game actions (shoot, hit, explosion, power-up)
 - **Music Tracks**: Background music for each game
@@ -101,10 +103,10 @@
 
 ### 🚀 Performance Optimization
 
-- **Object Pooling**: Reusable object pools for particles (planned)
+- **Object Pooling**: Reusable object pools for particles `[planned]`
 - **Spatial Partitioning**: Efficient collision detection using grid-based partitioning
 - **60 FPS Target**: Optimized game loops maintaining 60 frames per second
-- **LOD System**: Level-of-detail system for distant objects (planned)
+- **LOD System**: Level-of-detail system for distant objects `[planned]`
 - **Bundle Optimization**: Code splitting and lazy loading strategies
 
 ### ♿ Accessibility
@@ -142,4 +144,4 @@
 - **GitHub Actions**: CI/CD pipeline with linting, testing, and E2E checks
 - **Lighthouse CI**: Automated performance and accessibility audits
 - **Preview Deployments**: Automatic preview URLs for pull requests
-- **Production Ready**: Stable deployment with 100% success rate
+- **Production Ready**: Live deployment exists, with current release-path cleanup tracked in TASKS.md and ROADMAP.md
