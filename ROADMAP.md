@@ -1,66 +1,70 @@
-# 🎮 Games Collection Roadmap
+# Roadmap
 
-## 2025Q4: 🚀 Production Ready
+Last Updated: 2026-03-27
 
-- [x] Complete 7 arcade games (Asteroid, FPS, Breakout, Flappy, Pong, Snake, Space Invaders)
-- [x] Comprehensive test coverage (218 unit tests + E2E)
-- [x] Production deployment pipeline (CI/CD, Netlify, axe, etc.)
-- [x] Code quality improvements (ESLint, TypeScript types, documentation)
-- [ ] Performance optimization (object pooling, LOD system)
-- [ ] Accessibility audit and improvements
-- [ ] Mobile support and touch controls
+> Games Collection is live as a browser arcade with multiple playable routes, but the next planning phase should prioritize release reliability and documentation accuracy before further expansion.
 
-## 2026Q1: 🎯 New Games & Features
+## 2025 Q4 (Status: Completed)
 
-- [ ] Add 2-3 new classic arcade games (Tetris, Pac-Man, Galaga style)
-- [ ] Implement global leaderboards (Neon db)
-- [ ] Add game difficulty settings (Easy/Normal/Hard)
-- [ ] Multiplayer support for select games
-- [ ] User authentication (GitHub OAuth, Google)
-- [ ] User profiles and statistics dashboard
-- [ ] Save game progress and preferences
-- [ ] Achievement system
-- [ ] Complete TypeScript migration
-- [ ] Improve bundle size (code splitting, lazy loading)
-- [ ] Add service worker for offline play
-- [ ] Implement analytics (game metrics, user behavior)
+- [x] Ship a live multi-game arcade foundation.
+	- Shipped: homepage carousel, seven playable routes, CI/CD, Netlify deployment, and shared game systems.
 
-## 2026Q2: 🎨 Polish & Performance
+- [x] Establish broad test and quality infrastructure.
+	- Shipped: unit tests, E2E coverage, linting, formatting, and accessibility-focused work.
 
-- [ ] Advanced visual effects (particles, shaders)
-- [ ] Audio system improvements (spatial audio, music tracks)
-- [ ] Performance monitoring dashboard
-- [ ] Mobile-first responsive design
-- [ ] User feedback integration system
-- [ ] Community game modes/challenges
-- [ ] Replay system (record and share gameplay)
-- [ ] Social sharing features
+## 2026 Q1 (Status: In Progress)
 
-## 2026Q3: 🔮 Advanced Features
+- [ ] Release Path Reliability (Committed)
+	- Objective: fix the broken Docker build path and document the true production hosting model.
+	- Why Now: audit found the current Docker image does not build and deployment docs contradict actual runtime configuration.
+	- Exit Criteria: Docker build succeeds, hosting model is unambiguous, and production instructions match reality.
 
-- [ ] Custom game creator/editor
-- [ ] Mod support and community content
-- [ ] Tournament system
-- [ ] Seasonal events and special modes
-- [ ] PWA installation
-- [ ] Desktop app (Electron)
-- [ ] Mobile app (React Native)
-- [ ] Console controller support
+- [ ] Live Runtime Stability (Committed)
+	- Objective: remove audio initialization failures and other noisy runtime errors on deployed game routes.
+	- Why Now: the live Asteroid route emits repeated `Sound not found: bgm` errors during first load.
+	- Exit Criteria: no repeated production console errors during route load and gameplay start.
 
-## 2026Q4: 💰 Enterprise & Monetization
+- [ ] Metrics Integrity Reset (Committed)
+	- Objective: replace estimated/self-reported metrics with measured values or explicit blockers.
+	- Why Now: current metrics contain unverifiable scores and optimistic placeholders.
+	- Exit Criteria: core metrics are evidence-backed and dated.
 
-- [ ] Premium features/skins
-- [ ] Ad integration (non-intrusive)
-- [ ] Sponsorship opportunities
-- [ ] Educational licensing
-- [ ] Game engine abstraction for easier game creation
-- [ ] API for third-party integrations
-- [ ] White-label arcade platform
-- [ ] International localization
+## 2026 Q2 (Status: Planned)
 
----
+- [ ] Platform Documentation Maturity (Committed)
+	- Objective: add dedicated architecture and interface documentation for the arcade platform.
+	- Scope: shared systems, route model, asset pipeline, deployment shape, and any external interfaces.
+	- Exit Criteria: `ARCHITECTURE.md` and `API.md` or equivalent decision records are in place.
 
-**Last Updated**: November 27, 2025
+- [ ] Performance And Responsiveness Pass (Committed)
+	- Objective: revisit object pooling, LOD, mobile responsiveness, and large-asset loading once build and runtime issues are stabilized.
+	- Scope: game-loop performance, responsive layouts, and asset delivery quality.
+	- Exit Criteria: platform-level performance goals are measured rather than assumed.
+
+- [ ] Accessibility And UX Verification (Exploratory)
+	- Objective: verify accessibility claims and game usability with current live routes.
+	- Exit Criteria: a validated accessibility baseline and prioritized follow-up list.
+
+## 2026 Q3 (Status: Planned)
+
+- [ ] Feature Expansion After Platform Readiness (Committed)
+	- Objective: only then prioritize leaderboards, difficulty settings, save data, achievements, and related progression features.
+	- Sequencing Rationale: platform reliability and deployment clarity should precede player-data features.
+	- Exit Criteria: one wave of progression features ships on top of a stable release path.
+
+- [ ] New Game Evaluation (Exploratory)
+	- Objective: assess whether additional arcade titles meaningfully improve the collection after core issues are addressed.
+	- Exit Criteria: new-game work is backed by quality capacity and usage evidence, not just backlog ambition.
+
+## 2026 Q4 (Status: Exploratory)
+
+- [ ] Social / Multiplayer Layer
+	- Objective: revisit multiplayer, authentication, and shared persistence only after the single-player arcade platform is operationally solid.
+	- Exit Criteria: architecture decision and readiness checklist exist before implementation starts.
+
+- [ ] Distribution Expansion
+	- Objective: evaluate offline/PWA, desktop packaging, and other platform expansion options once deployment/runtime quality is stable.
+	- Exit Criteria: a supported distribution strategy is chosen based on measured maintenance cost and user value.
 
 <!--
 AGENT INSTRUCTIONS:
