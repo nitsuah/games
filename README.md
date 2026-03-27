@@ -1,6 +1,6 @@
 # Games Collection
 
->3D web games built with Next.js, Three.js, and React Three Fiber.
+> Browser arcade collection built with Next.js, Three.js, and React Three Fiber. The live routes are shipped; the current work is release-path reliability and runtime cleanup.
 
 [![CI](https://github.com/nitsuah/games/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/nitsuah/games/actions)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/25a0a90d-195b-4e53-9d94-9a4107321939/deploy-status)](https://app.netlify.com/projects/nitsuah-arcade/deploys)
@@ -85,19 +85,19 @@ Open `http://localhost:3000`
 
 ### Deployment & Hosting
 
-This project is configured as a **Static HTML Export** (`output: 'export'`). 
+This project is currently deployed as a **Next.js runtime build on Netlify**, not a static export.
 
-- **Local Production Check**: Use `npm run build && npm start` to verify the static export locally.
-- **Hosting Provider Headers**: Since the app is static, Next.js `headers()` in `next.config.js` are ignored in production. You **must** configure security headers (like CSP) at the hosting provider level (e.g., `netlify.toml`, `_headers` for Cloudflare, etc.).
-- **No Server-Side Features**: The codebase avoids API routes, SSR, and ISR to remain compatible with static hosting environments.
+- **Local Production Check**: Use `npm run build && npm start` from `app/` to verify the current runtime deployment path locally.
+- **Hosting Provider**: `netlify.toml` uses `@netlify/plugin-nextjs`, publishes `.next`, and pins Node 22 for the deployed build.
+- **Release Note**: Docker and deployment docs are being re-aligned in the Q1 release-path work; treat older static-export references as historical.
 
 ### Key Commands
 
 - `npm run dev` - Start development server
-- `npm run build` - Generate static HTML export in `out/`
-- `npm run start` - Serve the `out/` directory locally using `http-server`
+- `npm run build` - Build the Next.js app for production
+- `npm run start` - Start the Next.js production server locally
 - `npm test` - Run unit tests
-- `npm run test:e2e` - Run E2E tests using `http-server`
+- `npm run test:e2e` - Run E2E tests with Playwright
 - `npm run lint` - Check code quality
 
 ### Requirements
@@ -142,7 +142,7 @@ app/
 
 ## 📈 Current Status
 
-**Version**: Phase 10+ ✅ Production Ready
+**Version**: Live arcade foundation shipped; release-path cleanup remains active.
 
 ### Recent Milestones
 
@@ -152,6 +152,7 @@ app/
 - ✅ Comprehensive test coverage (218 unit tests)
 - ✅ E2E testing for all game flows
 - ✅ Accessibility improvements (keyboard navigation, ARIA labels)
+- ⚠️ Runtime cleanup continues for the live audio initialization issue on Asteroid
 
 ### Active Development
 

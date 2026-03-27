@@ -1,79 +1,60 @@
 # Tasks
 
+Last Updated: 2026-03-27
+
 ## Done
+
+- [x] Validate the deployed arcade homepage and a playable route.
+  - Completed: 2026-03-27
+- [x] Confirm governance files exist for standard contribution and PR flow.
+  - Completed: 2026-03-27
 
 ## In Progress
 
-### Production Ready
-
-- [ ] Performance optimization - Object pooling for particles/effects
-- [ ] TypeScript migration - Convert remaining JavaScript files
-- [ ] Mobile support - Touch controls and responsive layouts
+- [ ] Re-baseline release planning against observed deployment and runtime behavior.
+  - Priority: P0
+  - Problem: the backlog had drifted away from the concrete blockers surfaced by the audit.
+  - Acceptance Criteria: TASKS.md and ROADMAP.md stay focused on release-path reliability and live runtime quality.
 
 ## Todo
 
-### High Priority
+- [ ] Fix the Docker production build path.
+  - Priority: P0
+  - Milestone: 2026 Q1
+  - Problem: the current Docker build path breaks on Node version mismatch, the `prepare` script, and missing ignore rules.
+  - Acceptance Criteria: the image builds cleanly from repo root with a supported Node version and a valid `.dockerignore`.
 
-- [ ] Add JSDoc comments to all public APIs
-- [ ] Implement global leaderboard system
-- [ ] Add game difficulty settings (Easy/Normal/Hard)
-- [ ] Performance monitoring dashboard
+- [ ] Resolve the live audio initialization failure on deployed game routes.
+  - Priority: P0
+  - Milestone: 2026 Q1
+  - Problem: the live Asteroid route emits repeated `Sound not found: bgm` errors during load.
+  - Acceptance Criteria: the audio initialization issue is fixed and route load is quiet in production.
 
-### Medium Priority
+- [ ] Align deployment documentation with the actual hosting model.
+  - Priority: P0
+  - Milestone: 2026 Q1
+  - Problem: README, Netlify, and Docker docs still disagree on whether the app is a static export or a Next.js runtime deployment.
+  - Acceptance Criteria: one production model is documented consistently across README and deployment notes.
 
-- [ ] Improve health power-up visual feedback
-- [ ] Refactor restart logic across games
-- [ ] Add service worker for offline support
-- [ ] Implement achievement system
-- [ ] Add replay/spectator mode
+- [ ] Refresh `METRICS.md` with measured values or explicit `TBD` markers.
+  - Priority: P1
+  - Milestone: 2026 Q1
+  - Problem: current metrics still include estimates and self-reported values.
+  - Acceptance Criteria: metrics are measured from CI or local runs, or blocked values are marked `TBD` with source notes.
 
-### Low Priority
+- [ ] Add dedicated architecture and interface documentation.
+  - Priority: P1
+  - Milestone: 2026 Q2
+  - Problem: architecture details are scattered instead of being available as a focused reference.
+  - Acceptance Criteria: `ARCHITECTURE.md` and `API.md` or a no-external-API decision record are added and linked from README.md.
 
-- [ ] Add more sound effects and music tracks
-- [ ] Create custom game skins/themes
-- [ ] Add tutorial/help screens for each game
-- [ ] Implement seasonal events system
+- [ ] Re-scope expansion work after platform issues are fixed.
+  - Priority: P2
+  - Milestone: 2026 Q3
+  - Problem: feature growth should not outrun packaging, deployment, and runtime stability work.
+  - Acceptance Criteria: larger feature initiatives stay sequenced behind the release-path fixes.
 
-### Tech Debt - Performance
+## Audit Notes
 
-- [ ] Object pooling for particles/effects - Reduce GC overhead
-- [ ] LOD system - Reduce particle count at distance
-- [ ] Performance monitoring - Add metrics for game loop bottlenecks
-
-### Tech Debt - Code Quality
-
-- [ ] JSDoc comments for shared systems
-- [ ] Extract CSS from JSX files into separate stylesheets
-- [ ] Improve test coverage for game logic (target 75%+)
-- [ ] Standardize coding style with ESLint/Prettier
-- [ ] Review and update dependencies
-
-### Tech Debt - Refactoring
-
-- [ ] Power-Up config testability - Extract setTimeout logic
-- [ ] Identify high LOC files for potential splitting
-- [ ] Modularize shared UI components further
-- [ ] Remove dead code and unused assets
-- [ ] Optimize asset loading (lazy loading, preloading)
-- [ ] Minify large assets for faster load times
-
-### Blocked
-
-- [ ] Multiplayer support (waiting on backend architecture decision)
-- [ ] User authentication (use Neon extension powers Netlify DB for serverless Postgres in one command.)
-
----
-
-**Last Updated**: November 27, 2025
-
-<!--
-AGENT INSTRUCTIONS:
-This file tracks specific actionable tasks organized by priority and status.
-1. Categorize tasks into "In Progress", "Todo" (with priority), "Blocked", and "Done".
-2. Add new tasks identified during code analysis, PRs, or planning sessions.
-3. Mark tasks as [x] when verified as complete, move to "Done" section with date.
-4. Keep task descriptions concise but actionable with clear acceptance criteria.
-5. For "Blocked" tasks, note the blocker reason.
-6. Review and prune "Done" section quarterly, archive very old items.
-7. Update "Last Updated" date when making significant changes.
--->
+- Docker-first validation failed during image build.
+- The live arcade home page loads, but the Asteroid route still shows repeated audio-related console errors during startup.

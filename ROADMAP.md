@@ -1,66 +1,33 @@
-# 🎮 Games Collection Roadmap
+# Roadmap
 
-## 2025Q4: 🚀 Production Ready
+Last Updated: 2026-03-27
 
-- [x] Complete 7 arcade games (Asteroid, FPS, Breakout, Flappy, Pong, Snake, Space Invaders)
-- [x] Comprehensive test coverage (218 unit tests + E2E)
-- [x] Production deployment pipeline (CI/CD, Netlify, axe, etc.)
-- [x] Code quality improvements (ESLint, TypeScript types, documentation)
-- [ ] Performance optimization (object pooling, LOD system)
-- [ ] Accessibility audit and improvements
-- [ ] Mobile support and touch controls
+## 2025 Q4 (Completed)
 
-## 2026Q1: 🎯 New Games & Features
+- [x] Ship the live multi-game arcade foundation.
+- [x] Establish broad test and quality infrastructure.
 
-- [ ] Add 2-3 new classic arcade games (Tetris, Pac-Man, Galaga style)
-- [ ] Implement global leaderboards (Neon db)
-- [ ] Add game difficulty settings (Easy/Normal/Hard)
-- [ ] Multiplayer support for select games
-- [ ] User authentication (GitHub OAuth, Google)
-- [ ] User profiles and statistics dashboard
-- [ ] Save game progress and preferences
-- [ ] Achievement system
-- [ ] Complete TypeScript migration
-- [ ] Improve bundle size (code splitting, lazy loading)
-- [ ] Add service worker for offline play
-- [ ] Implement analytics (game metrics, user behavior)
+## 2026 Q1 (In Progress)
 
-## 2026Q2: 🎨 Polish & Performance
+- [ ] Fix the Docker release path and document the actual hosting model.
+- [ ] Remove the live audio initialization failures from deployed routes.
+- [ ] Replace estimated metrics with measured values or explicit blockers.
 
-- [ ] Advanced visual effects (particles, shaders)
-- [ ] Audio system improvements (spatial audio, music tracks)
-- [ ] Performance monitoring dashboard
-- [ ] Mobile-first responsive design
-- [ ] User feedback integration system
-- [ ] Community game modes/challenges
-- [ ] Replay system (record and share gameplay)
-- [ ] Social sharing features
+## 2026 Q2 (Planned)
 
-## 2026Q3: 🔮 Advanced Features
+- [ ] Add dedicated architecture and interface documentation for the arcade platform.
+- [ ] Revisit performance, responsiveness, and large-asset delivery after the release-path fixes land.
+- [ ] Verify accessibility and UX against the current live routes.
 
-- [ ] Custom game creator/editor
-- [ ] Mod support and community content
-- [ ] Tournament system
-- [ ] Seasonal events and special modes
-- [ ] PWA installation
-- [ ] Desktop app (Electron)
-- [ ] Mobile app (React Native)
-- [ ] Console controller support
+## 2026 Q3 (Planned)
 
-## 2026Q4: 💰 Enterprise & Monetization
+- [ ] Prioritize progression and platform features only after release reliability is stable.
+- [ ] Evaluate additional game work based on evidence, not backlog volume.
 
-- [ ] Premium features/skins
-- [ ] Ad integration (non-intrusive)
-- [ ] Sponsorship opportunities
-- [ ] Educational licensing
-- [ ] Game engine abstraction for easier game creation
-- [ ] API for third-party integrations
-- [ ] White-label arcade platform
-- [ ] International localization
+## 2026 Q4 (Exploratory)
 
----
-
-**Last Updated**: November 27, 2025
+- [ ] Revisit social, multiplayer, and shared persistence after the platform is operationally solid.
+- [ ] Evaluate offline, PWA, desktop, or other distribution expansion options.
 
 <!--
 AGENT INSTRUCTIONS:
