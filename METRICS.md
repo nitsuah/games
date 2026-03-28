@@ -4,22 +4,22 @@
 
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
-| Code Coverage         | 85%           | Jest unit tests           |
-| Unit Tests            | 218            | All passing               |
-| E2E Tests             | 8              | Playwright scenarios      |
-| Build Time            | ~15s           | Production build          |
-| Bundle Size (JS)      | ~450KB         | Compressed                |
-| Lighthouse Score      | 95+            | Performance/Accessibility |
+| Code Coverage         | TBD            | Pending fresh `npm run test:coverage` capture. |
+| Unit Tests            | TBD            | Pending fresh CI/local run evidence. |
+| E2E Tests             | TBD            | Pending fresh Playwright run evidence. |
+| Build Time            | TBD            | Pending current run measurement. |
+| Bundle Size (JS)      | TBD            | Pending current build artifact analysis. |
+| Lighthouse Score      | TBD            | Pending current Lighthouse run. |
 
 ## Health
 
 | Metric                | Value      | Notes                     |
 | --------------------- | ---------- | ------------------------- |
-| Open Issues           | 0          | All critical issues resolved |
-| Open PRs              | 0          | All merged                |
-| Health Score          | 95/100     | Self-rating               |
-| Last Updated          | 2025-11-27 | Last metrics refresh      |
-| Deploy Success Rate   | 100%       | Last 20 deploys successful |
+| Open Issues           | TBD        | Pull from current GitHub state during next metrics refresh. |
+| Open PRs              | TBD        | Pull from current GitHub state during next metrics refresh. |
+| Health Score          | TBD        | Replace self-rating with computed score source. |
+| Last Updated          | 2026-03-27 | Metrics normalized to measured-or-TBD policy. |
+| Deploy Success Rate   | TBD        | Pull from provider and CI history. |
 
 ## Test Distribution
 
@@ -88,8 +88,8 @@
 
 ---
 
-**Last Updated**: November 27, 2025  
-**Data Source**: Jest test reports, GitHub Actions, Lighthouse CI, manual testing
+**Last Updated**: March 27, 2026  
+**Data Source**: Pending refresh from Jest, Playwright, GitHub Actions, and Lighthouse CI.
 
 <!--
 AGENT INSTRUCTIONS:

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useAudio } from '@/contexts/AudioContext';
 
 export const useSound = () => {
@@ -6,6 +6,7 @@ export const useSound = () => {
   const sounds = useRef({});
   const thruster = useRef(null);
   const audioContext = useRef(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const loadAudio = (src) => {
@@ -60,6 +61,7 @@ export const useSound = () => {
 
         // Register sounds with audio context
         registerSounds(sounds.current);
+        setIsReady(true);
 
         // Set up BGM
         sounds.current.bgm.loop = true;
@@ -102,13 +104,16 @@ export const useSound = () => {
       if (audioContext.current) {
         audioContext.current.close();
       }
+      setIsReady(false);
     };
   }, []);
 
-  const playSound = async (name) => {
+  const playSound = useCallback(async (name) => {
     const sound = sounds.current[name];
     if (!sound) {
-      console.error(`❌ Sound not found: ${name}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`Sound not ready yet: ${name}`);
+      }
       return;
     }
 
@@ -142,9 +147,9 @@ export const useSound = () => {
     } catch (error) {
       console.error(`❌ Failed to play ${name}:`, error);
     }
-  };
+  }, [musicEnabled, soundEnabled]);
 
-  const setThrusterVolume = (volume) => {
+  const setThrusterVolume = useCallback((volume) => {
     if (thruster.current) {
       const prevVolume = thruster.current.volume;
       thruster.current.volume = volume;
@@ -171,15 +176,15 @@ export const useSound = () => {
         console.log(`✅ Set thruster volume to: ${volume}`);
       }
     }
-  };
+  }, []);
 
-  const pauseSound = (name) => {
+  const pauseSound = useCallback((name) => {
     const sound = sounds.current[name];
     if (sound) {
       sound.pause();
       sound.currentTime = 0;
     }
-  };
+  }, []);
 
-  return { playSound, setThrusterVolume, pauseSound, sounds };
+  return { playSound, setThrusterVolume, pauseSound, sounds, isReady };
 };

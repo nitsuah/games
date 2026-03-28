@@ -89,7 +89,7 @@ This project is currently deployed as a **Next.js runtime build on Netlify**, no
 
 - **Local Production Check**: Use `npm run build && npm start` from `app/` to verify the current runtime deployment path locally.
 - **Hosting Provider**: `netlify.toml` uses `@netlify/plugin-nextjs`, publishes `.next`, and pins Node 22 for the deployed build.
-- **Release Note**: Docker and deployment docs are being re-aligned in the Q1 release-path work; treat older static-export references as historical.
+- **CI Model**: GitHub Actions validates lint, tests, build, E2E, Lighthouse, and Docker smoke checks; production deployment is handled by Netlify.
 
 ### Key Commands
 
@@ -140,6 +140,11 @@ app/
 - **CI/CD**: GitHub Actions (lint, test, E2E, Lighthouse audits)
 - **Code Quality**: ESLint + Prettier, pre-commit hooks
 
+## 📚 Architecture and Interfaces
+
+- `ARCHITECTURE.md` documents runtime layers, ownership boundaries, and extension guidance.
+- `API.md` captures the current no-external-API decision and existing interface surface.
+
 ## 📈 Current Status
 
 **Version**: Live arcade foundation shipped; release-path cleanup remains active.
@@ -152,7 +157,7 @@ app/
 - ✅ Comprehensive test coverage (218 unit tests)
 - ✅ E2E testing for all game flows
 - ✅ Accessibility improvements (keyboard navigation, ARIA labels)
-- ⚠️ Runtime cleanup continues for the live audio initialization issue on Asteroid
+- ✅ Asteroid audio startup race fixed (`bgm` readiness-gated on route init)
 
 ### Active Development
 

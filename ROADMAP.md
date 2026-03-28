@@ -1,6 +1,6 @@
 # Roadmap
 
-Last Updated: 2026-03-27
+Last Updated: 2026-03-28
 
 ## 2025 Q4 (Completed)
 
@@ -9,13 +9,14 @@ Last Updated: 2026-03-27
 
 ## 2026 Q1 (In Progress)
 
-- [ ] Fix the Docker release path and document the actual hosting model.
-- [ ] Remove the live audio initialization failures from deployed routes.
-- [ ] Replace estimated metrics with measured values or explicit blockers.
+- [x] Stabilize the Docker release path and add CI smoke validation.
+- [x] Document the actual hosting model consistently across project docs.
+- [x] Remove the live audio initialization failures from deployed routes.
+- [x] Replace estimated metrics with measured values or explicit blockers.
 
 ## 2026 Q2 (Planned)
 
-- [ ] Add dedicated architecture and interface documentation for the arcade platform.
+- [x] Add dedicated architecture and interface documentation for the arcade platform.
 - [ ] Revisit performance, responsiveness, and large-asset delivery after the release-path fixes land.
 - [ ] Verify accessibility and UX against the current live routes.
 

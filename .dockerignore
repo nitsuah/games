@@ -1,0 +1,11 @@
+.git
+.github
+app/.next
+app/node_modules
+app/playwright-report
+app/test-results
+app/coverage
+logs
+outputs
+**/__pycache__
+*.log
