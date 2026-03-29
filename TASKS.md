@@ -30,6 +30,8 @@ Last Updated: 2026-03-28
 - [x] Add dedicated architecture and interface documentation.
   - Completed: 2026-03-28
   - Evidence: added `ARCHITECTURE.md` and `API.md` and linked both from `README.md`.
+- [x] Enable Docker-based test/coverage workflow (see README and METRICS.md)
+- [x] Enable Docker-based E2E test workflow (see README and METRICS.md)
 
 ## In Progress
 

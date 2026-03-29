@@ -100,6 +100,26 @@ This project is currently deployed as a **Next.js runtime build on Netlify**, no
 - `npm run test:e2e` - Run E2E tests with Playwright
 - `npm run lint` - Check code quality
 
+#### Docker-based Test & Coverage
+
+To run all unit tests and collect coverage in Docker:
+
+```sh
+docker build --target test -t games-test .
+docker run --rm -it games-test npm run test:coverage
+```
+
+#### Docker-based E2E Tests
+
+To run all Playwright E2E tests in Docker:
+
+```sh
+docker build --target test -t games-test-e2e .
+docker run --rm -it games-test-e2e npm run test:e2e
+```
+
+This uses a Debian-based Node image to support Playwright browser dependencies. All E2E tests should pass in the container.
+
 ### Requirements
 
 - Node.js v22.21.0 (native Windows)

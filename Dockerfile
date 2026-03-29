@@ -13,6 +13,17 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY app/ .
 RUN npm run build
 
+
+# --- Test stage for running tests and coverage ---
+FROM node:22 AS test
+WORKDIR /app
+COPY app/package*.json ./
+COPY app/ .
+RUN npm ci --ignore-scripts
+# Install Playwright browsers for E2E tests
+RUN npx playwright install --with-deps
+
+# --- Production runner stage ---
 FROM node:22-alpine AS runner
 WORKDIR /app
 

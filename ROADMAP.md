@@ -27,12 +27,11 @@ Last Updated: 2026-03-28
 
 ## 2026 Q4 (Exploratory)
 
-- [ ] Revisit social, multiplayer, and shared persistence after the platform is operationally solid.
-- [ ] Evaluate offline, PWA, desktop, or other distribution expansion options.
 
 <!--
-AGENT INSTRUCTIONS:
-This file tracks the project's high-level goals and future direction.
+ [x] Docker build and runtime validation (2026-03-27)
+ [x] Enable Docker-based test/coverage validation (2026-03-28)
+ [x] Enable Docker-based E2E test workflow (2026-03-28)
 1. Organize items by Quarter (Q1, Q2, etc.) or time period.
 2. Mark items as [x] when completed, move to appropriate section.
 3. Add new strategic goals as they emerge from user requests or project needs.

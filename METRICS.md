@@ -1,3 +1,10 @@
+## Docker-based E2E Test Workflow
+
+All Playwright E2E tests can be run in Docker:
+
+- Build E2E test image: `docker build --target test -t games-test-e2e .`
+- Run all E2E tests: `docker run --rm -it games-test-e2e npm run test:e2e`
+- All 8 E2E tests pass in Docker (as of last validation)
 # Metrics
 
 ## Core Metrics
@@ -32,6 +39,16 @@
 | Utilities & Effects       | 28    | ✅ Passing |
 | **Total Unit Tests**      | **218** | **✅ All Passing** |
 | **E2E Tests**             | **8**   | **✅ All Passing** |
+
+## Docker-based Test & Coverage Workflow
+
+All unit tests and coverage can be run in Docker:
+
+- Build test image: `docker build --target test -t games-test .`
+- Run all unit tests with coverage: `docker run --rm -it games-test npm run test:coverage`
+- All 218 unit tests pass in Docker (as of last validation)
+
+Coverage (statements/branches/lines/functions): ~11%
 
 ## Performance Metrics
 
