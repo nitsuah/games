@@ -89,7 +89,7 @@ This project is currently deployed as a **Next.js runtime build on Netlify**, no
 
 - **Local Production Check**: Use `npm run build && npm start` from `app/` to verify the current runtime deployment path locally.
 - **Hosting Provider**: `netlify.toml` uses `@netlify/plugin-nextjs`, publishes `.next`, and pins Node 22 for the deployed build.
-- **CI Model**: GitHub Actions validates lint, tests, build, E2E, Lighthouse, and Docker smoke checks; production deployment is handled by Netlify.
+- **CI Model**: GitHub Actions validates tests, build, E2E, Lighthouse, and Docker smoke checks; production deployment is handled by Netlify.
 
 ### Key Commands
 
