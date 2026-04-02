@@ -1,19 +1,20 @@
+# Metrics
+
 ## Docker-based E2E Test Workflow
 
 All Playwright E2E tests can be run in Docker:
 
-- Build E2E test image: `docker build --target test -t games-test-e2e .`
+- Build E2E test image: `docker build --target test-e2e -t games-test-e2e .`
 - Run all E2E tests: `docker run --rm -it games-test-e2e npm run test:e2e`
 - All 8 E2E tests pass in Docker (as of last validation)
-# Metrics
 
 ## Core Metrics
 
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
-| Code Coverage         | TBD            | Pending fresh `npm run test:coverage` capture. |
-| Unit Tests            | TBD            | Pending fresh CI/local run evidence. |
-| E2E Tests             | TBD            | Pending fresh Playwright run evidence. |
+| Code Coverage         | ~11%           | Approximate result from last validation; refresh with `npm run test:coverage` for a current reading. |
+| Unit Tests            | 218 passing    | Based on last validated Docker/local run; refresh with current CI/local evidence as needed. |
+| E2E Tests             | 8 passing      | Based on last validated Playwright Docker run; refresh with a current Playwright run as needed. |
 | Build Time            | TBD            | Pending current run measurement. |
 | Bundle Size (JS)      | TBD            | Pending current build artifact analysis. |
 | Lighthouse Score      | TBD            | Pending current Lighthouse run. |
@@ -44,7 +45,7 @@ All Playwright E2E tests can be run in Docker:
 
 All unit tests and coverage can be run in Docker:
 
-- Build test image: `docker build --target test -t games-test .`
+- Build test image: `docker build --target test-unit -t games-test .`
 - Run all unit tests with coverage: `docker run --rm -it games-test npm run test:coverage`
 - All 218 unit tests pass in Docker (as of last validation)
 

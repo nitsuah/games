@@ -83,7 +83,7 @@ Audio is handled on the client via shared hooks/context and game-specific trigge
 
 - Unit tests cover reusable logic and behavior-critical modules.
 - E2E tests validate playable route behavior and game flow.
-- CI gates include lint, tests, build, and container smoke checks.
+- CI gates include type-checking, tests, build, and container smoke checks.
 
 ## Extension Guidelines
 
