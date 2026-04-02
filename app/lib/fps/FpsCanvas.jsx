@@ -1,6 +1,5 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import ComboDisplay from './_comps/ComboDisplay';
-const comboSoundUrl = '/sounds/combo.mp3';
 import { Canvas, extend } from '@react-three/fiber';
 import { Stats } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
@@ -28,7 +27,31 @@ export default function FpsCanvas() {
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
-  const comboAudio = useRef(typeof Audio !== 'undefined' ? new Audio(comboSoundUrl) : null);
+  const audioCtxRef = useRef(null);
+
+  const playComboSound = useCallback(() => {
+    if (typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+    } catch {
+      // Audio playback not available
+    }
+  }, []);
+
   const [bullets, setBullets] = useState([]);
   const [decals, setDecals] = useState([]);
   const [rapidFire, setRapidFire] = useState(false); // Track rapid fire state
@@ -43,17 +66,12 @@ export default function FpsCanvas() {
     setScore((prevScore) => prevScore + 100);
     setCombo((prev) => {
       const next = prev + 1;
-      if (next > 1 && comboAudio.current) {
-        comboAudio.current.currentTime = 0;
-        comboAudio.current.play();
+      if (next > 1) {
+        playComboSound();
       }
-      if (next > maxCombo) setMaxCombo(next);
+      setMaxCombo((prevMax) => (next > prevMax ? next : prevMax));
       return next;
     });
-  };
-
-  const handleMiss = () => {
-    setCombo(0);
   };
 
   const handleBulletHit = (hitPosition, normal) => {
@@ -136,7 +154,22 @@ export default function FpsCanvas() {
               key={bullet.id}
               start={bullet.start}
               end={bullet.end}
-              onComplete={() => {}}
+              onComplete={() => {
+                try {
+                  raycaster.current.set(
+                    bullet.start,
+                    new THREE.Vector3().subVectors(bullet.end, bullet.start).normalize()
+                  );
+                  const intersects = raycaster.current.intersectObject(terrainRef.current, true);
+                  if (intersects.length > 0) {
+                    const { point, face } = intersects[0];
+                    handleBulletHit(point, face.normal);
+                  }
+                } catch (error) {
+                  console.error('Error in Bullet onComplete raycasting:', error);
+                }
+                setBullets((prev) => prev.filter((b) => b.id !== bullet.id));
+              }}
             />
           ))}
           {decals.slice(-50).map((decal) => (
@@ -152,11 +185,15 @@ export default function FpsCanvas() {
         </Physics>
       </Canvas>
       <Crosshair />
+      <ComboDisplay combo={combo} />
       <div style={{ position: 'absolute', top: '50px', left: '10px', color: 'white', fontSize: '20px' }}>
         Score: {score}
       </div>
       <div style={{ position: 'absolute', top: '80px', left: '10px', color: 'white', fontSize: '20px' }}>
         Health: {playerHealth}
+      </div>
+      <div style={{ position: 'absolute', top: '110px', left: '10px', color: 'white', fontSize: '20px' }}>
+        Max Combo: {maxCombo}
       </div>
     </>
   );

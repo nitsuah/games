@@ -5,8 +5,8 @@ import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -19,10 +19,8 @@ const GameContainer = styled.div`
 
 const Canvas = styled.canvas`
     display: block;
-    width: 100vw;
-    height: calc(100vw * 0.75);
-    max-width: 80vw;
-    max-height: 80vh;
+    width: 100%;
+    max-width: 600px;
     aspect-ratio: 4/3;
     background: #000;
     box-shadow: 0 0 24px #000a;
