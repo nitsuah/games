@@ -105,7 +105,7 @@ This project is currently deployed as a **Next.js runtime build on Netlify**, no
 To run all unit tests and collect coverage in Docker:
 
 ```sh
-docker build --target test -t games-test .
+docker build --target test-unit -t games-test .
 docker run --rm -it games-test npm run test:coverage
 ```
 
@@ -114,7 +114,7 @@ docker run --rm -it games-test npm run test:coverage
 To run all Playwright E2E tests in Docker:
 
 ```sh
-docker build --target test -t games-test-e2e .
+docker build --target test-e2e -t games-test-e2e .
 docker run --rm -it games-test-e2e npm run test:e2e
 ```
 

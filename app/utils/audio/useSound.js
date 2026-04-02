@@ -122,7 +122,6 @@ export const useSound = () => {
       if (audioContext.current) {
         audioContext.current.close();
       }
-      setIsReady(false);
     };
   }, []);
 
