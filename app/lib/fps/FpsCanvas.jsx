@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
+import ComboDisplay from './_comps/ComboDisplay';
 import { Canvas, extend } from '@react-three/fiber';
 import { Stats } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
@@ -24,6 +25,33 @@ export default function FpsCanvas() {
   const [playerPosition, setPlayerPosition] = useState([0, 1, 0]); // Start Y at 1
   const [playerHealth, setPlayerHealth] = useState(100); // Track player health
   const [score, setScore] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [maxCombo, setMaxCombo] = useState(0);
+  const audioCtxRef = useRef(null);
+
+  const playComboSound = useCallback(() => {
+    if (typeof AudioContext === 'undefined' && typeof webkitAudioContext === 'undefined') return;
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const ctx = audioCtxRef.current;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.3);
+    } catch {
+      // Audio playback not available
+    }
+  }, []);
+
   const [bullets, setBullets] = useState([]);
   const [decals, setDecals] = useState([]);
   const [rapidFire, setRapidFire] = useState(false); // Track rapid fire state
@@ -36,6 +64,14 @@ export default function FpsCanvas() {
 
   const handleTargetHit = () => {
     setScore((prevScore) => prevScore + 100);
+    setCombo((prev) => {
+      const next = prev + 1;
+      if (next > 1) {
+        playComboSound();
+      }
+      setMaxCombo((prevMax) => (next > prevMax ? next : prevMax));
+      return next;
+    });
   };
 
   const handleBulletHit = (hitPosition, normal) => {
@@ -149,11 +185,15 @@ export default function FpsCanvas() {
         </Physics>
       </Canvas>
       <Crosshair />
+      <ComboDisplay combo={combo} />
       <div style={{ position: 'absolute', top: '50px', left: '10px', color: 'white', fontSize: '20px' }}>
         Score: {score}
       </div>
       <div style={{ position: 'absolute', top: '80px', left: '10px', color: 'white', fontSize: '20px' }}>
         Health: {playerHealth}
+      </div>
+      <div style={{ position: 'absolute', top: '110px', left: '10px', color: 'white', fontSize: '20px' }}>
+        Max Combo: {maxCombo}
       </div>
     </>
   );

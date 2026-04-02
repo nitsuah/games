@@ -27,8 +27,8 @@ const SnakePage = () => {
     return (
         <ArcadeLayout>
             <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', transform: 'scale(0.75)' }}>
-                <SnakeGame />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+              <SnakeGame />
             </div>
         </ArcadeLayout>
     );

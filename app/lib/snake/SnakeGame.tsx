@@ -4,17 +4,27 @@ import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
-  position: relative;
-  width: 800px;
-  height: 600px;
-  background: #000;
-  border: 4px solid #333;
-  margin: 0 auto;
-  overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    border: 4px solid #333;
+    margin: 0 auto;
+    overflow: hidden;
+    box-sizing: border-box;
 `;
 
 const Canvas = styled.canvas`
-  display: block;
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 4/3;
+    background: #000;
+    box-shadow: 0 0 24px #000a;
+    border-radius: 12px;
 `;
 
 const UIOverlay = styled.div`
@@ -214,7 +224,7 @@ export const SnakeGame = () => {
 
     return (
         <GameContainer>
-            <Canvas ref={canvasRef} width={800} height={800} />
+            <Canvas ref={canvasRef} width={800} height={600} />
             <UIOverlay>
                 <div>SCORE: {score}</div>
                 <div>HI: {highScore}</div>

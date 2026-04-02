@@ -8,16 +8,29 @@ import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
   position: relative;
-  width: 800px;
-  height: 600px;
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 4/3;
   background: #000;
   border: 4px solid #333;
   margin: 0 auto;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 `;
 
 const Canvas = styled.canvas`
   display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 800px;
+  max-height: 600px;
+  aspect-ratio: 4/3;
+  background: #000;
+  box-sizing: border-box;
 `;
 
 const UIOverlay = styled.div`
