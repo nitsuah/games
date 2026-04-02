@@ -1,62 +1,59 @@
 # Multi-stage Dockerfile for Next.js application
 
-# ================================
-# Stage 1: Dependencies
-# ================================
-FROM node:20-alpine AS deps
+FROM node:22.21.0-alpine AS deps
 WORKDIR /app
 
-# Copy package files for caching
+# Keep install scripts disabled in container to avoid husky prepare failures.
 COPY app/package*.json ./
+RUN npm ci --ignore-scripts
 
-# Install dependencies (production only)
-RUN npm ci --only=production
-
-# ================================
-# Stage 2: Builder
-# ================================
-FROM node:20-alpine AS builder
+FROM node:22.21.0-alpine AS builder
 WORKDIR /app
-
-# Copy package files and install all dependencies (including devDependencies)
-COPY app/package*.json ./
-RUN npm ci
-
-# Copy source code
+COPY --from=deps /app/node_modules ./node_modules
 COPY app/ .
-
-# Build the Next.js application
 RUN npm run build
 
-# ================================
-# Stage 3: Runner
-# ================================
-FROM node:20-alpine AS runner
+
+# --- Shared test base stage ---
+FROM node:22.21.0 AS test-base
+WORKDIR /app
+COPY app/package*.json ./
+COPY app/ .
+RUN npm ci --ignore-scripts
+
+# --- Lightweight unit test stage (no Playwright) ---
+FROM test-base AS test-unit
+
+# --- E2E test stage with Playwright browsers installed ---
+FROM test-base AS test-e2e
+# Install Playwright browsers for E2E tests
+RUN npx playwright install --with-deps
+
+# --- Production runner stage ---
+FROM node:22.21.0-alpine AS runner
 WORKDIR /app
 
-# Set to production environment
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Create non-root user for security
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy necessary files from previous stages
+# Copy runtime files
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
-# Switch to non-root user
+# Prune to production dependencies only, without running install scripts.
+RUN npm prune --omit=dev --ignore-scripts
+
 USER nextjs
 
-# Expose the application port
 EXPOSE 3000
 
-# Health check: check if Next.js server is responding
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start the Next.js application
 CMD ["npm", "start"]

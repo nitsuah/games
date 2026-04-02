@@ -1,0 +1,41 @@
+name: Docker Smoke
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  docker-smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Build image
+        run: docker build -t games-docker-smoke .
+
+      - name: Start container
+        run: docker run -d --name games-smoke -p 3000:3000 games-docker-smoke
+
+      - name: Wait for app
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:3000 >/dev/null; then
+              echo "App responded on attempt $i"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Games app did not respond within timeout"
+          docker logs games-smoke
+          exit 1
+
+      - name: Stop container
+        if: always()
+        run: docker rm -f games-smoke

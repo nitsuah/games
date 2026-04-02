@@ -193,7 +193,7 @@ const Game = ({ onHit, onMiss }) => {
       spawnTime: now(),
     },
   ]);
-  const { playSound, pauseSound } = useSound();
+  const { playSound, pauseSound, isReady: isAudioReady } = useSound();
 
   // Weapon state
   const [weapon, setWeapon] = useState('spread');
@@ -365,6 +365,10 @@ const Game = ({ onHit, onMiss }) => {
 
   // Play background music on mount and control based on musicEnabled
   useEffect(() => {
+    if (!isAudioReady) {
+      return;
+    }
+
     if (!gameOver && musicEnabled) {
       playSound('bgm').catch((err) => console.error('Failed to play bgm:', err));
     } else if (!musicEnabled) {
@@ -376,7 +380,7 @@ const Game = ({ onHit, onMiss }) => {
         pauseSound('bgm'); // Pause background music when the game ends
       }
     };
-  }, [playSound, pauseSound, gameOver, musicEnabled]);
+  }, [playSound, pauseSound, gameOver, musicEnabled, isAudioReady]);
 
   // Handle player state
   useEffect(() => {

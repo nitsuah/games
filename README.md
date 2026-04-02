@@ -89,7 +89,7 @@ This project is currently deployed as a **Next.js runtime build on Netlify**, no
 
 - **Local Production Check**: Use `npm run build && npm start` from `app/` to verify the current runtime deployment path locally.
 - **Hosting Provider**: `netlify.toml` uses `@netlify/plugin-nextjs`, publishes `.next`, and pins Node 22 for the deployed build.
-- **Release Note**: Docker and deployment docs are being re-aligned in the Q1 release-path work; treat older static-export references as historical.
+- **CI Model**: GitHub Actions validates tests, build, E2E, Lighthouse, and Docker smoke checks; production deployment is handled by Netlify.
 
 ### Key Commands
 
@@ -99,6 +99,26 @@ This project is currently deployed as a **Next.js runtime build on Netlify**, no
 - `npm test` - Run unit tests
 - `npm run test:e2e` - Run E2E tests with Playwright
 - `npm run lint` - Check code quality
+
+#### Docker-based Test & Coverage
+
+To run all unit tests and collect coverage in Docker:
+
+```sh
+docker build --target test-unit -t games-test .
+docker run --rm -it games-test npm run test:coverage
+```
+
+#### Docker-based E2E Tests
+
+To run all Playwright E2E tests in Docker:
+
+```sh
+docker build --target test-e2e -t games-test-e2e .
+docker run --rm -it games-test-e2e npm run test:e2e
+```
+
+This uses a Debian-based Node image to support Playwright browser dependencies. All E2E tests should pass in the container.
 
 ### Requirements
 
@@ -137,8 +157,13 @@ app/
 - **Unit Tests**: 218 passing (Jest)
 - **E2E Tests**: Full game flow coverage (Playwright)
 - **Test Coverage**: Core game logic covered
-- **CI/CD**: GitHub Actions (lint, test, E2E, Lighthouse audits)
+- **CI/CD**: GitHub Actions (type-check, test, E2E, Lighthouse audits)
 - **Code Quality**: ESLint + Prettier, pre-commit hooks
+
+## 📚 Architecture and Interfaces
+
+- `ARCHITECTURE.md` documents runtime layers, ownership boundaries, and extension guidance.
+- `API.md` captures the current no-external-API decision and existing interface surface.
 
 ## 📈 Current Status
 
@@ -152,7 +177,7 @@ app/
 - ✅ Comprehensive test coverage (218 unit tests)
 - ✅ E2E testing for all game flows
 - ✅ Accessibility improvements (keyboard navigation, ARIA labels)
-- ⚠️ Runtime cleanup continues for the live audio initialization issue on Asteroid
+- ✅ Asteroid audio startup race fixed (`bgm` readiness-gated on route init)
 
 ### Active Development
 
