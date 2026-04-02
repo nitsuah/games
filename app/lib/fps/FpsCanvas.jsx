@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react';
+import ComboDisplay from './_comps/ComboDisplay';
+const comboSoundUrl = '/sounds/combo.mp3';
 import { Canvas, extend } from '@react-three/fiber';
 import { Stats } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
@@ -24,6 +26,9 @@ export default function FpsCanvas() {
   const [playerPosition, setPlayerPosition] = useState([0, 1, 0]); // Start Y at 1
   const [playerHealth, setPlayerHealth] = useState(100); // Track player health
   const [score, setScore] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [maxCombo, setMaxCombo] = useState(0);
+  const comboAudio = useRef(typeof Audio !== 'undefined' ? new Audio(comboSoundUrl) : null);
   const [bullets, setBullets] = useState([]);
   const [decals, setDecals] = useState([]);
   const [rapidFire, setRapidFire] = useState(false); // Track rapid fire state
@@ -36,6 +41,19 @@ export default function FpsCanvas() {
 
   const handleTargetHit = () => {
     setScore((prevScore) => prevScore + 100);
+    setCombo((prev) => {
+      const next = prev + 1;
+      if (next > 1 && comboAudio.current) {
+        comboAudio.current.currentTime = 0;
+        comboAudio.current.play();
+      }
+      if (next > maxCombo) setMaxCombo(next);
+      return next;
+    });
+  };
+
+  const handleMiss = () => {
+    setCombo(0);
   };
 
   const handleBulletHit = (hitPosition, normal) => {
@@ -118,22 +136,7 @@ export default function FpsCanvas() {
               key={bullet.id}
               start={bullet.start}
               end={bullet.end}
-              onComplete={() => {
-                try {
-                  raycaster.current.set(
-                    bullet.start,
-                    new THREE.Vector3().subVectors(bullet.end, bullet.start).normalize()
-                  );
-                  const intersects = raycaster.current.intersectObject(terrainRef.current, true);
-                  if (intersects.length > 0) {
-                    const { point, face } = intersects[0];
-                    handleBulletHit(point, face.normal);
-                  }
-                } catch (error) {
-                  console.error('Error in Bullet onComplete raycasting:', error);
-                }
-                setBullets((prev) => prev.filter((b) => b.id !== bullet.id));
-              }}
+              onComplete={() => {}}
             />
           ))}
           {decals.slice(-50).map((decal) => (
