@@ -157,7 +157,7 @@ app/
 - **Unit Tests**: 218 passing (Jest)
 - **E2E Tests**: Full game flow coverage (Playwright)
 - **Test Coverage**: Core game logic covered
-- **CI/CD**: GitHub Actions (lint, test, E2E, Lighthouse audits)
+- **CI/CD**: GitHub Actions (type-check, test, E2E, Lighthouse audits)
 - **Code Quality**: ESLint + Prettier, pre-commit hooks
 
 ## 📚 Architecture and Interfaces

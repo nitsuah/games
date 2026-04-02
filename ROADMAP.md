@@ -7,7 +7,7 @@ Last Updated: 2026-03-28
 - [x] Ship the live multi-game arcade foundation.
 - [x] Establish broad test and quality infrastructure.
 
-## 2026 Q1 (In Progress)
+## 2026 Q1 (Completed)
 
 - [x] Stabilize the Docker release path and add CI smoke validation.
 - [x] Document the actual hosting model consistently across project docs.
@@ -29,9 +29,6 @@ Last Updated: 2026-03-28
 
 
 <!--
- [x] Docker build and runtime validation (2026-03-27)
- [x] Enable Docker-based test/coverage validation (2026-03-28)
- [x] Enable Docker-based E2E test workflow (2026-03-28)
 1. Organize items by Quarter (Q1, Q2, etc.) or time period.
 2. Mark items as [x] when completed, move to appropriate section.
 3. Add new strategic goals as they emerge from user requests or project needs.
