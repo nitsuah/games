@@ -1,6 +1,6 @@
 # Roadmap
 
-Last Updated: 2026-04-03 (pmo/q2-2026-planning)
+Last Updated: 2026-04-03
 
 ## 2025 Q4 (Completed)
 

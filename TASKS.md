@@ -1,6 +1,6 @@
 # Tasks
 
-Last Updated: 2026-04-03 (pmo/q2-2026-planning)
+Last Updated: 2026-04-03
 
 ## Done
 
@@ -51,6 +51,11 @@ Last Updated: 2026-04-03 (pmo/q2-2026-planning)
   - Priority: P2
   - Problem: game UI (HUD, scoreboard, menus) lacks ARIA labels, keyboard navigation, and sufficient color contrast in several spots.
   - Acceptance Criteria: no critical or serious a11y violations per axe-core; game control descriptions are accessible; color contrast meets WCAG AA.
+
+- [ ] **[Q2] UX verification pass** — walk through all live game routes as a first-time user and document any friction or broken states found.
+  - Priority: P2
+  - Problem: no structured first-run walkthrough has been performed; hidden friction points and broken states may exist across routes that aren't caught by automated checks.
+  - Acceptance Criteria: all live game routes exercised end-to-end; any friction or broken states logged as follow-up issues; findings summarized in METRICS.md or a dedicated audit note.
 
 - [ ] Re-scope expansion work after platform issues are fixed.
   - Priority: P2
