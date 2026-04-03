@@ -1,6 +1,6 @@
 # Roadmap
 
-Last Updated: 2026-03-28
+Last Updated: 2026-04-03
 
 ## 2025 Q4 (Completed)
 
@@ -17,8 +17,10 @@ Last Updated: 2026-03-28
 ## 2026 Q2 (Planned)
 
 - [x] Add dedicated architecture and interface documentation for the arcade platform.
-- [ ] Revisit performance, responsiveness, and large-asset delivery after the release-path fixes land.
-- [ ] Verify accessibility and UX against the current live routes.
+- [ ] **Performance and large-asset delivery**: audit and improve game asset loading (audio, sprites, backgrounds); lazy-load non-critical assets; reduce time-to-first-playable.
+- [ ] **Responsiveness and mobile UX**: verify game routes on mobile viewports; fix any touch/input regressions; ensure Asteroid and other games are playable on phone/tablet.
+- [ ] **Accessibility audit**: run and resolve core a11y issues (keyboard navigation, ARIA for game controls, color contrast on HUD/scoreboard).
+- [ ] **UX verification pass**: walk through all live game routes as a first-time user; document any friction or broken states found.
 
 ## 2026 Q3 (Planned)
 
