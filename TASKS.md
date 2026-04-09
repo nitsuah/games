@@ -32,6 +32,9 @@ Last Updated: 2026-04-03
   - Evidence: added `ARCHITECTURE.md` and `API.md` and linked both from `README.md`.
 - [x] Enable Docker-based test/coverage workflow (see README and METRICS.md)
 - [x] Enable Docker-based E2E test workflow (see README and METRICS.md)
+- [x] Defer homepage arcade audio asset loading until explicit user interaction.
+  - Completed: 2026-04-03
+  - Evidence: `app/_components/home/AudioController.tsx` now lazy-creates the audio element on unmute and sets `preload='none'`; verified by `app/tests/home/AudioController.test.jsx`.
 
 ## In Progress
 
