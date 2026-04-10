@@ -36,22 +36,6 @@ export const AudioController = () => {
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
-        // Create audio element with error handling
-        // Note: Audio file path is hardcoded. File existence is verified during build.
-        // If file is missing, error handler logs gracefully without breaking user experience.
-        try {
-            audioRef.current = new Audio('/sounds/arcade.mp3');
-            audioRef.current.loop = true;
-            audioRef.current.volume = 0.3;
-
-            // Handle audio loading errors
-            audioRef.current.addEventListener('error', (e) => {
-                console.error('Failed to load audio file:', e);
-            });
-        } catch (error) {
-            console.error('Failed to create Audio element:', error);
-        }
-
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -60,19 +44,45 @@ export const AudioController = () => {
         };
     }, []);
 
-    const toggleMute = () => {
+    const getOrCreateAudio = () => {
         if (audioRef.current) {
-            if (muted) {
-                audioRef.current.play().catch(e => {
-                    console.error(
-                        `Audio playback failed: ${e?.name ? e.name + ': ' : ''}${e?.message ?? e}. This may be due to browser autoplay restrictions, unsupported audio format, or lack of user interaction.`
-                    );
-                });
-            } else {
-                audioRef.current.pause();
-            }
-            setMuted(!muted);
+            return audioRef.current;
         }
+
+        // Lazy-create and lazy-fetch the audio asset only after explicit user intent.
+        try {
+            const audio = new Audio('/sounds/arcade.mp3');
+            audio.loop = true;
+            audio.volume = 0.3;
+            audio.preload = 'none';
+            audio.addEventListener('error', (e) => {
+                console.error('Failed to load audio file:', e);
+            });
+            audioRef.current = audio;
+            return audio;
+        } catch (error) {
+            console.error('Failed to create Audio element:', error);
+            return null;
+        }
+    };
+
+    const toggleMute = () => {
+        const audio = getOrCreateAudio();
+        if (!audio) {
+            return;
+        }
+
+        if (muted) {
+            audio.play().catch(e => {
+                console.error(
+                    `Audio playback failed: ${e?.name ? e.name + ': ' : ''}${e?.message ?? e}. This may be due to browser autoplay restrictions, unsupported audio format, or lack of user interaction.`
+                );
+            });
+        } else {
+            audio.pause();
+        }
+
+        setMuted(!muted);
     };
 
     return (
