@@ -264,17 +264,32 @@ export const GameCarousel = () => {
             </CarouselArrow>
           </>
         )}
-        {displayedGames.map((game, index) => (
-          <ArcadeCard
-            key={displayMode === 'carousel' ? `${game.title}-${index}` : game.title}
-            title={game.title}
-            icon={game.icon}
-            description={game.description}
-            onClick={() => router.push(game.route)}
-            displayMode={displayMode}
-            carouselPosition={displayMode === 'carousel' ? (game as GameWithPosition).position : undefined}
-          />
-        ))}
+        {displayedGames.map((game, index) => {
+          // Determine the index in the original games array for selection
+          const gameIdx = displayMode === 'carousel'
+            ? (game as GameWithPosition).position === 'prev'
+              ? (currentGameIndex - 1 + games.length) % games.length
+              : (game as GameWithPosition).position === 'current'
+                ? currentGameIndex
+                : (currentGameIndex + 1) % games.length
+            : index;
+          const isSelected = gameIdx === currentGameIndex;
+          const cardProps: any = {
+            key: displayMode === 'carousel' ? `${game.title}-${index}` : game.title,
+            title: game.title,
+            icon: game.icon,
+            description: game.description,
+            onClick: () => router.push(game.route),
+            displayMode,
+            isSelected,
+            tabIndex: isSelected ? 0 : -1,
+            testId: `game-card-${game.title.toLowerCase().replace(/\s+/g, '-')}`
+          };
+          if (displayMode === 'carousel' && typeof (game as GameWithPosition).position === 'string') {
+            cardProps.carouselPosition = (game as GameWithPosition).position;
+          }
+          return <ArcadeCard {...cardProps} />;
+        })}
       </GameList>
     </>
   );
