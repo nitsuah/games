@@ -66,6 +66,8 @@ Last Updated: 2026-04-03
   - Problem: feature growth should not outrun packaging, deployment, and runtime stability work.
   - Acceptance Criteria: larger feature initiatives stay sequenced behind the release-path fixes.
 
+- [ ] Fix game selection UI to allow programmatic and keyboard navigation for accessibility and automated testing. [ui-improvements][high]
+
 ## Audit Notes
 
 - Docker-first validation now succeeds locally, and CI has a dedicated Docker smoke workflow.

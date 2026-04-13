@@ -143,7 +143,20 @@ export const PongGame = () => {
                 state.soundSystem.hit();
             }
 
-            // Ball collision with paddles
+
+            // Ball collision with paddles (with minimum angle to avoid infinite loops)
+            const MIN_BALL_ANGLE = 0.25; // radians, ~14 degrees
+            function ensureMinAngle(vx: number, vy: number, minAngle: number) {
+                const speed = Math.sqrt(vx * vx + vy * vy);
+                const angle = Math.abs(Math.atan2(vy, vx));
+                if (angle < minAngle) {
+                    const sign = vy >= 0 ? 1 : -1;
+                    const newVy = Math.tan(minAngle) * Math.abs(vx) * sign;
+                    return { vx, vy: newVy };
+                }
+                return { vx, vy };
+            }
+
             // Player paddle
             if (state.ball.x + state.ball.radius > state.playerPaddle.x &&
                 state.ball.x - state.ball.radius < state.playerPaddle.x + state.playerPaddle.width &&
@@ -154,6 +167,10 @@ export const PongGame = () => {
                 // Add spin based on where it hit the paddle
                 const hitPos = (state.ball.y - state.playerPaddle.y) / state.playerPaddle.height;
                 state.ball.vy += (hitPos - 0.5) * PADDLE_SPIN_MULTIPLIER;
+                // Ensure minimum angle
+                const newVel = ensureMinAngle(state.ball.vx, state.ball.vy, MIN_BALL_ANGLE);
+                state.ball.vx = newVel.vx;
+                state.ball.vy = newVel.vy;
                 state.soundSystem.hit();
             }
 
@@ -166,6 +183,10 @@ export const PongGame = () => {
                 state.ball.x = state.aiPaddle.x + state.aiPaddle.width + state.ball.radius;
                 const hitPos = (state.ball.y - state.aiPaddle.y) / state.aiPaddle.height;
                 state.ball.vy += (hitPos - 0.5) * 400;
+                // Ensure minimum angle
+                const newVel = ensureMinAngle(state.ball.vx, state.ball.vy, MIN_BALL_ANGLE);
+                state.ball.vx = newVel.vx;
+                state.ball.vy = newVel.vy;
                 state.soundSystem.hit();
             }
 
