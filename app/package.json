@@ -40,7 +40,7 @@
     "@types/node": "^25.5.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/parser": "^8.57.2",
+    "@typescript-eslint/parser": "^8.58.1",
     "babel-plugin-styled-components": "^2.1.4",
     "baseline-browser-mapping": "^2.10.16",
     "chrome-launcher": "^1.2.1",
