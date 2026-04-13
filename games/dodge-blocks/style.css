@@ -1,0 +1,65 @@
+body {
+  background: #181c24;
+  color: #fff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+.container {
+  margin-top: 32px;
+  background: #23293a;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #0008;
+  padding: 24px 32px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h1 {
+  margin-bottom: 12px;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+canvas {
+  background: #111;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0006;
+  margin-bottom: 16px;
+}
+.controls {
+  margin-bottom: 16px;
+}
+button {
+  background: #00ffff;
+  color: #23293a;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #00bfbf;
+}
+.how-to-play {
+  background: #1a1e2a;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin-top: 8px;
+  width: 100%;
+  max-width: 320px;
+}
+.how-to-play h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+.how-to-play ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 1rem;
+}

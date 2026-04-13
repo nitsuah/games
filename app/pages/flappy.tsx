@@ -3,6 +3,22 @@ import { ArcadeLayout } from '@/_components/home/ArcadeLayout';
 import { FlappyGame } from '@/lib/flappy/FlappyGame';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import { AudioController } from '@/_components/home/AudioController';
+const HowToPlayOverlay = styled.div`
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  z-index: 1001;
+  box-shadow: 0 0 24px #000;
+  max-width: 90vw;
+  font-size: 1.1rem;
+  text-align: left;
+`;
 
 const BackButton = styled.button`
   position: absolute;
@@ -21,17 +37,40 @@ const BackButton = styled.button`
   }
 `;
 
-const FlappyPage = () => {
-    const router = useRouter();
+import { useState } from 'react';
 
-    return (
-        <ArcadeLayout>
-            <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', transform: 'scale(0.85)' }}>
-                <FlappyGame />
-            </div>
-        </ArcadeLayout>
-    );
+const FlappyPage = () => {
+  const router = useRouter();
+  const [showHowTo, setShowHowTo] = useState(true);
+
+  return (
+    <ArcadeLayout>
+      <AudioController />
+      <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
+      <button
+        style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'1rem', padding:'2px 10px', borderRadius:8, border:'none', background:'#222', color:'#fff', cursor:'pointer' }}
+        onClick={() => setShowHowTo(true)}
+      >How to Play</button>
+      {showHowTo && (
+        <HowToPlayOverlay>
+          <h2 style={{marginTop:0}}>How to Play Flappy Bird</h2>
+          <ul style={{margin:'8px 0 16px 20px'}}>
+            <li>Press Space or Click to flap</li>
+            <li>Fly through the gaps in the pipes</li>
+            <li>Don't hit the pipes or the ground!</li>
+            <li>Try to beat your high score</li>
+          </ul>
+          <button
+            style={{fontSize:'1rem',padding:'6px 18px',borderRadius:8,border:'none',background:'#00ffff',color:'#222',cursor:'pointer'}}
+            onClick={() => setShowHowTo(false)}
+          >Got it!</button>
+        </HowToPlayOverlay>
+      )}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', transform: 'scale(0.85)' }}>
+        <FlappyGame />
+      </div>
+    </ArcadeLayout>
+  );
 };
 
 export default FlappyPage;

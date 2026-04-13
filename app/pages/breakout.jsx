@@ -1,6 +1,23 @@
 'use client';
 
 import { useState } from 'react';
+import { AudioController } from '@/_components/home/AudioController';
+import styled from 'styled-components';
+const HowToPlayOverlay = styled.div`
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  z-index: 10;
+  box-shadow: 0 0 24px #000;
+  max-width: 90vw;
+  font-size: 1.1rem;
+  text-align: left;
+`;
 import dynamic from 'next/dynamic';
 import ArcadeHeader from '@/lib/shared/ui/ArcadeHeader';
 import ArcadeButton, { VARIANTS } from '@/lib/shared/ui/ArcadeButton';
@@ -28,7 +45,7 @@ export default function BreakoutPage() {
   if (!gameStarted) {
     return (
       <div style={{
-        width: '100%',
+        width: '100vw',
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -36,8 +53,31 @@ export default function BreakoutPage() {
         justifyContent: 'center',
         background: 'linear-gradient(180deg, #0a0a0a 0%, #1a0a2e 100%)',
         gap: '2rem',
+        position: 'relative',
+        overflowX: 'hidden',
       }}>
+        <AudioController />
         <ArcadeHeader title="BREAKOUT" />
+        <div style={{
+          background: 'rgba(0,0,0,0.85)',
+          color: '#fff',
+          padding: '24px 32px',
+          borderRadius: 16,
+          boxShadow: '0 0 24px #000',
+          maxWidth: 420,
+          margin: '0 auto',
+          fontSize: '1.1rem',
+          textAlign: 'left',
+        }}>
+          <h2 style={{marginTop:0}}>How to Play Breakout</h2>
+          <ul style={{margin:'8px 0 16px 20px'}}>
+            <li>Arrow Keys: Move paddle left/right</li>
+            <li>Space: Launch the ball</li>
+            <li>Break all the bricks to win the level</li>
+            <li>Catch power-ups for bonuses</li>
+            <li>Don't let the ball fall below the paddle!</li>
+          </ul>
+        </div>
         <div style={{
           display: 'flex',
           gap: '1rem',
@@ -73,5 +113,30 @@ export default function BreakoutPage() {
     );
   }
 
-  return <BreakoutGame />;
+  return (
+    <div style={{position:'relative',width:'100vw',height:'100vh',overflow:'hidden',background:'#000'}}>
+      <AudioController />
+      <button
+        style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'1rem', padding:'2px 10px', borderRadius:8, border:'none', background:'#222', color:'#fff', cursor:'pointer' }}
+        onClick={() => setShowHowTo(true)}
+      >How to Play</button>
+      {showHowTo && (
+        <HowToPlayOverlay>
+          <h2 style={{marginTop:0}}>How to Play Breakout</h2>
+          <ul style={{margin:'8px 0 16px 20px'}}>
+            <li>Arrow Keys: Move paddle left/right</li>
+            <li>Space: Launch the ball</li>
+            <li>Break all the bricks to win the level</li>
+            <li>Catch power-ups for bonuses</li>
+            <li>Don't let the ball fall below the paddle!</li>
+          </ul>
+          <button
+            style={{fontSize:'1rem',padding:'6px 18px',borderRadius:8,border:'none',background:'#00ffff',color:'#222',cursor:'pointer'}}
+            onClick={() => setShowHowTo(false)}
+          >Got it!</button>
+        </HowToPlayOverlay>
+      )}
+      <BreakoutGame />
+    </div>
+  );
 }

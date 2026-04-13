@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import { AudioProvider, useAudio } from '@/contexts/AudioContext';
+import { AudioController } from '@/_components/home/AudioController';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 
 // Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
 const Game = dynamic(() => import('@/lib/asteroid/_comp/Game/Game'), { ssr: false });
 const Crosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/Crosshair'), { ssr: false });
+
 
 const Instructions = styled.div`
   position: absolute;
@@ -20,6 +22,22 @@ const Instructions = styled.div`
   pointer-events: none;
   font-weight: bold;
   text-shadow: 0 0 8px #000;
+`;
+
+const HowToPlayOverlay = styled.div`
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  z-index: 10;
+  box-shadow: 0 0 24px #000;
+  max-width: 90vw;
+  font-size: 1.1rem;
+  text-align: left;
 `;
 
 const GameContainer = styled.div`
@@ -42,9 +60,12 @@ const AsteroidPage = () => {
   );
 };
 
+import React, { useState } from 'react';
+
 const AsteroidContent = () => {
-  const { soundEnabled } = useAudio(); // Get soundEnabled state
-  const { playSound } = useSound(); // Use the hook to access playSound
+  const { soundEnabled } = useAudio();
+  const { playSound } = useSound();
+  const [showHowTo, setShowHowTo] = useState(true);
 
   // Sync SoundManager with audio settings
   useEffect(() => {
@@ -53,32 +74,48 @@ const AsteroidContent = () => {
     });
   }, [soundEnabled]);
 
-  // Phase 8: Browser back navigation warning to prevent accidental progress loss
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       e.preventDefault();
-      e.returnValue = ''; // Chrome requires returnValue to be set
-      return ''; // Some browsers display a custom message
+      e.returnValue = '';
+      return '';
     };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
-  const handleHit = () => {
-    playSound('hit');
-  };
-
-  const handleMiss = () => {
-    playSound('miss');
-  };
+  const handleHit = () => playSound('hit');
+  const handleMiss = () => playSound('miss');
 
   return (
     <GameContainer>
-      <Instructions>Click to lock pointer as camera, Esc to exit</Instructions>
+      <AudioController />
+      <Instructions>
+        Click to lock pointer as camera, Esc to exit
+        <button
+          style={{ marginLeft: 16, fontSize: '1rem', padding: '2px 10px', borderRadius: 8, border: 'none', background: '#222', color: '#fff', cursor: 'pointer' }}
+          onClick={() => setShowHowTo(true)}
+        >How to Play</button>
+      </Instructions>
+      {showHowTo && (
+        <HowToPlayOverlay>
+          <h2 style={{marginTop:0}}>How to Play Asteroid</h2>
+          <ul style={{margin:'8px 0 16px 20px'}}>
+            <li>W/A/S/D: Move your ship in 3D space</li>
+            <li>Mouse: Aim and look around</li>
+            <li>Left Click: Fire weapon</li>
+            <li>1/2/3: Switch weapon types</li>
+            <li>Collect power-ups for bonuses</li>
+            <li>Survive waves and rack up your high score!</li>
+          </ul>
+          <button
+            style={{fontSize:'1rem',padding:'6px 18px',borderRadius:8,border:'none',background:'#00ffff',color:'#222',cursor:'pointer'}}
+            onClick={() => setShowHowTo(false)}
+          >Got it!</button>
+        </HowToPlayOverlay>
+      )}
       <Crosshair />
       <Game onHit={handleHit} onMiss={handleMiss} />
     </GameContainer>
