@@ -17,6 +17,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 4/3;
+  box-sizing: border-box;
+  justify-content: center;
 }
 h1 {
   margin-bottom: 12px;

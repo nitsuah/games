@@ -94,28 +94,7 @@ const AsteroidContent = () => {
       <AudioController />
       <Instructions>
         Click to lock pointer as camera, Esc to exit
-        <button
-          style={{ marginLeft: 16, fontSize: '1rem', padding: '2px 10px', borderRadius: 8, border: 'none', background: '#222', color: '#fff', cursor: 'pointer' }}
-          onClick={() => setShowHowTo(true)}
-        >How to Play</button>
       </Instructions>
-      {showHowTo && (
-        <HowToPlayOverlay>
-          <h2 style={{marginTop:0}}>How to Play Asteroid</h2>
-          <ul style={{margin:'8px 0 16px 20px'}}>
-            <li>W/A/S/D: Move your ship in 3D space</li>
-            <li>Mouse: Aim and look around</li>
-            <li>Left Click: Fire weapon</li>
-            <li>1/2/3: Switch weapon types</li>
-            <li>Collect power-ups for bonuses</li>
-            <li>Survive waves and rack up your high score!</li>
-          </ul>
-          <button
-            style={{fontSize:'1rem',padding:'6px 18px',borderRadius:8,border:'none',background:'#00ffff',color:'#222',cursor:'pointer'}}
-            onClick={() => setShowHowTo(false)}
-          >Got it!</button>
-        </HowToPlayOverlay>
-      )}
       <Crosshair />
       <Game onHit={handleHit} onMiss={handleMiss} />
     </GameContainer>

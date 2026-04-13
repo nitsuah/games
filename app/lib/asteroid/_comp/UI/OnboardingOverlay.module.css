@@ -1,0 +1,54 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 12, 20, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.content {
+  background: rgba(30, 34, 48, 0.98);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  padding: 40px 32px;
+  text-align: center;
+  color: #fff;
+  min-width: 320px;
+  max-width: 90vw;
+  animation: popIn 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.startButton {
+  margin-top: 28px;
+  padding: 14px 36px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #3af, #6ff);
+  color: #222;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  transition: background 0.2s, color 0.2s;
+}
+
+.startButton:hover {
+  background: linear-gradient(90deg, #6ff, #3af);
+  color: #111;
+}

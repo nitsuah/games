@@ -1,45 +1,46 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+// import dynamic from 'next/dynamic';
+// import OnboardingOverlay from '../UI/OnboardingOverlay';
+// import PowerUpPopup from '../UI/PowerUpPopup';
 import { useSound } from '@/utils/audio/useSound';
 import { useAudio } from '@/contexts/AudioContext';
 import { useSettings } from '@/contexts/SettingsContext';
-import styles from './Game.module.css';
-import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
-import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
-import dynamic from 'next/dynamic';
+// import styles from './Game.module.css';
+// import { handleHealthDepletion as handleHealthDepletionFn } from '@/lib/asteroid/_comp/Game/handleHealthDepletion';
+// import GameCanvas from '@/lib/asteroid/_comp/Game/GameCanvas';
 
-// Dynamically import overlays and UI components on the client to keep server bundles small
-const FlashOverlays = dynamic(() => import('@/lib/asteroid/_comp/UI/FlashOverlays'), { ssr: false });
-const GameOverOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/GameOverOverlay'), { ssr: false });
-const ScoreDisplay = dynamic(() => import('@/lib/asteroid/_comp/UI/ScoreDisplay'), { ssr: false });
-const WeaponDisplay = dynamic(() => import('@/lib/asteroid/_comp/UI/WeaponDisplay'), { ssr: false });
-import { now } from '@/utils/time';
-import { handleTargetHit as handleTargetHitFn } from '@/lib/asteroid/_comp/Game/handleTargetHit';
-import { handleMiss as handleMissFn } from '@/lib/asteroid/_comp/Game/handleMiss';
-import { restartGame as restartGameFn } from '@/lib/asteroid/_comp/Game/restartGame';
-import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/handlePlayerHit';
-import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
-import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
-import { saveGameStats } from '@/utils/saveGameStats';
-const DynamicCrosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/DynamicCrosshair'), { ssr: false });
-const PowerUpIndicator = dynamic(() => import('@/lib/asteroid/_comp/UI/PowerUpIndicator'), { ssr: false });
-const HealthBar = dynamic(() => import('@/lib/asteroid/_comp/UI/HealthBar'), { ssr: false });
-const FPSCounter = dynamic(() => import('@/lib/asteroid/_comp/UI/FPSCounter'), { ssr: false });
-const AmmoIndicator = dynamic(() => import('@/lib/asteroid/_comp/UI/AmmoIndicator'), { ssr: false });
-const ComboDisplay = dynamic(() => import('@/lib/asteroid/_comp/UI/ComboDisplay'), { ssr: false });
-const WaveIndicator = dynamic(() => import('@/lib/asteroid/_comp/UI/WaveIndicator'), { ssr: false });
-const DebugMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/DebugMenu'), { ssr: false });
-const WaveTransition = dynamic(() => import('@/lib/asteroid/_comp/UI/WaveTransition'), { ssr: false });
-const PauseMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/PauseMenu'), { ssr: false });
-const SlowMotionOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/SlowMotionOverlay'), { ssr: false });
-const HealthVignette = dynamic(() => import('@/lib/fps/_comps/HealthVignette'), { ssr: false });
-const MuzzleFlashOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/MuzzleFlashOverlay'), { ssr: false });
-const ProximityWarning = dynamic(() => import('@/lib/asteroid/_comp/UI/ProximityWarning'), { ssr: false });
-const KillStreakAnnouncement = dynamic(() => import('@/lib/asteroid/_comp/UI/KillStreakAnnouncement'), { ssr: false });
-const SettingsMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/SettingsMenu'), { ssr: false });
-import usePowerUps from '../../../../_components/effects/usePowerUps';
-import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
-import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
-import { useScreenShake } from '@/lib/shared/ui/useScreenShake';
+// const FlashOverlays = dynamic(() => import('@/lib/asteroid/_comp/UI/FlashOverlays'), { ssr: false });
+// const GameOverOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/GameOverOverlay'), { ssr: false });
+// const ScoreDisplay = dynamic(() => import('@/lib/asteroid/_comp/UI/ScoreDisplay'), { ssr: false });
+// const WeaponDisplay = dynamic(() => import('@/lib/asteroid/_comp/UI/WeaponDisplay'), { ssr: false });
+// import { now } from '@/utils/time';
+// import { handleTargetHit as handleTargetHitFn } from '@/lib/asteroid/_comp/Game/handleTargetHit';
+// import { handleMiss as handleMissFn } from '@/lib/asteroid/_comp/Game/handleMiss';
+// import { restartGame as restartGameFn } from '@/lib/asteroid/_comp/Game/restartGame';
+// import { handlePlayerHit as handlePlayerHitFn } from '@/lib/asteroid/_comp/Game/handlePlayerHit';
+// import { handleKeyDown as handleKeyDownFn } from '@/lib/asteroid/_comp/Game/handleKeyDown';
+// import { loadSavedScores as loadSavedScoresFn } from '@/lib/asteroid/_comp/Game/loadSavedScores';
+// import { saveGameStats } from '@/utils/saveGameStats';
+// const DynamicCrosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/DynamicCrosshair'), { ssr: false });
+// const PowerUpIndicator = dynamic(() => import('@/lib/asteroid/_comp/UI/PowerUpIndicator'), { ssr: false });
+// const HealthBar = dynamic(() => import('@/lib/asteroid/_comp/UI/HealthBar'), { ssr: false });
+// const FPSCounter = dynamic(() => import('@/lib/asteroid/_comp/UI/FPSCounter'), { ssr: false });
+// const AmmoIndicator = dynamic(() => import('@/lib/asteroid/_comp/UI/AmmoIndicator'), { ssr: false });
+// const ComboDisplay = dynamic(() => import('@/lib/asteroid/_comp/UI/ComboDisplay'), { ssr: false });
+// const WaveIndicator = dynamic(() => import('@/lib/asteroid/_comp/UI/WaveIndicator'), { ssr: false });
+// const DebugMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/DebugMenu'), { ssr: false });
+// const WaveTransition = dynamic(() => import('@/lib/asteroid/_comp/UI/WaveTransition'), { ssr: false });
+// const PauseMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/PauseMenu'), { ssr: false });
+// const SlowMotionOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/SlowMotionOverlay'), { ssr: false });
+// const HealthVignette = dynamic(() => import('@/lib/fps/_comps/HealthVignette'), { ssr: false });
+// const MuzzleFlashOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/MuzzleFlashOverlay'), { ssr: false });
+// const ProximityWarning = dynamic(() => import('@/lib/asteroid/_comp/UI/ProximityWarning'), { ssr: false });
+// const KillStreakAnnouncement = dynamic(() => import('@/lib/asteroid/_comp/UI/KillStreakAnnouncement'), { ssr: false });
+// const SettingsMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/SettingsMenu'), { ssr: false });
+// import usePowerUps from '../../../../_components/effects/usePowerUps';
+// import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
+// import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
+// import { useScreenShake } from '@/lib/shared/ui/useScreenShake';
 
 const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
   <div className={styles.statsDisplay}>
@@ -51,9 +52,25 @@ const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
 );
 
 const Game = ({ onHit, onMiss }) => {
+  // Onboarding overlay state (DISABLED FOR DEBUG)
+  // const [showOnboarding, setShowOnboarding] = useState(true);
+  // Ref for the actual canvas DOM node
+  // const canvasDomRef = useRef(null);
+  // Handler for starting the game
+  // const handleStartGame = () => {
+  //   setShowOnboarding(false);
+  //   // Lock pointer for immersive controls on the actual canvas DOM node
+  //   setTimeout(() => {
+  //     const canvas = canvasDomRef.current;
+  //     if (canvas && canvas.requestPointerLock) {
+  //       canvas.requestPointerLock();
+  //     }
+  //   }, 0);
+  // };
   const { musicEnabled } = useAudio();
   const { settings } = useSettings();
-  const [shakeStyle, triggerShake] = useScreenShake(settings.reduceMotion);
+  const shakeStyle = {};
+  const triggerShake = () => {};
   const [score, setScore] = useState(0);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
@@ -62,6 +79,8 @@ const Game = ({ onHit, onMiss }) => {
   const comboTimerRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(false);
+  // Derived paused state: true if onboarding or power-up popup is visible
+  const isPaused = paused || powerUpPopup.visible;
   const [showSettings, setShowSettings] = useState(false);
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
@@ -227,6 +246,16 @@ const Game = ({ onHit, onMiss }) => {
   const [showKillStreak, setShowKillStreak] = useState(false);
 
   // Power-up and flash overlay state/logic
+  // Power-up popup state
+  const [powerUpPopup, setPowerUpPopup] = useState({ type: null, visible: false });
+
+  // Enhanced power-up collect handler
+  const powerUpCollectWithPopup = (type) => {
+    setPowerUpPopup({ type, visible: true });
+    setTimeout(() => setPowerUpPopup({ type: null, visible: false }), 1200);
+    handlePowerUpCollect(type);
+  };
+
   const {
     shieldActive,
     setShieldActive,
@@ -243,36 +272,32 @@ const Game = ({ onHit, onMiss }) => {
 
   // Weapon switch, ammo, & reload handler
   useEffect(() => {
+    if (isPaused) return;
     const handleKeyDown = (e) => handleKeyDownFn(e, setWeapon, setAmmo, setPaused);
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [setWeapon, setAmmo]);
+  }, [setWeapon, setAmmo, isPaused]);
 
   // Mouse wheel weapon cycling
   useEffect(() => {
+    if (isPaused) return;
     const weaponOrder = ['spread', 'laser', 'explosive', 'aa', 'plasma'];
-    
     const handleWheel = (e) => {
       // Only cycle weapons when pointer is locked (in game)
-      if (!document.pointerLockElement || gameOver || paused) return;
-      
+      if (!document.pointerLockElement || gameOver || isPaused) return;
       e.preventDefault();
-      
       setWeapon((currentWeapon) => {
         const currentIndex = weaponOrder.indexOf(currentWeapon);
         if (currentIndex === -1) return currentWeapon;
-        
         // Scroll up = previous weapon, scroll down = next weapon
         const direction = e.deltaY < 0 ? -1 : 1;
         const newIndex = (currentIndex + direction + weaponOrder.length) % weaponOrder.length;
-        
         return weaponOrder[newIndex];
       });
     };
-    
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [setWeapon, gameOver, paused]);
+  }, [setWeapon, gameOver, isPaused]);
 
   // Keyboard shortcut: press 't' to cycle trail quality Off -> Low -> High
   useEffect(() => {
@@ -659,12 +684,13 @@ const Game = ({ onHit, onMiss }) => {
   // Game only ends when health reaches 0
 
   return (
-    <div className={styles.gameContainer} style={shakeStyle}>
-      <HealthVignette health={health} />
-      <FlashOverlays flashQueue={flashQueue} />
+    <div className={styles.gameContainer}>
+      {/* {showOnboarding && <OnboardingOverlay onStart={handleStartGame} />} */}
+      {/* <HealthVignette health={health} /> */}
+      {/* <FlashOverlays flashQueue={flashQueue} /> */}
       <GameCanvas
         gameOver={gameOver}
-        paused={paused}
+        paused={isPaused}
         showWaveTransition={showWaveTransition}
         health={health}
         targets={targets}
@@ -682,7 +708,7 @@ const Game = ({ onHit, onMiss }) => {
         setCooldowns={setCooldowns}
         showLaser={showLaser}
         setShowLaser={setShowLaser}
-        handlePowerUpCollect={handlePowerUpCollect}
+        handlePowerUpCollect={powerUpCollectWithPopup}
         handleTargetHit={handleTargetHit}
         handlePlayerHit={handlePlayerHit}
         shieldActive={shieldActive}
@@ -693,25 +719,27 @@ const Game = ({ onHit, onMiss }) => {
         trailQuality={trailQuality}
         scorePopups={scorePopups}
         setPlayerVelocity={setPlayerVelocity}
+        onCanvasCreated={canvas => { canvasDomRef.current = canvas; }}
       />
+      {/* <PowerUpPopup type={powerUpPopup.type} visible={powerUpPopup.visible} /> */}
       {/* HUD Layout - Organized in 4 corners */}
       
       {/* TOP LEFT - FPS */}
-      <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 500 }}>
+      {/* <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 500 }}>
         <FPSCounter />
-      </div>
+      </div> */}
       
       {/* TOP RIGHT - Wave, Score & Combo */}
-      <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
+      {/* <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
         <WaveIndicator wave={currentWave} showTransition={showWaveTransition} highestWave={highestWave} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
           <ScoreDisplay score={score} />
           <ComboDisplay combo={combo} multiplier={comboMultiplier} />
         </div>
-      </div>
+      </div> */}
       
       {/* RIGHT SIDE - Power-ups */}
-      <div style={{ position: 'fixed', top: '200px', right: 16, zIndex: 500 }}>
+      {/* <div style={{ position: 'fixed', top: '200px', right: 16, zIndex: 500 }}>
         <PowerUpIndicator
           shieldActive={shieldActive}
           rapidFireActive={rapidFireActive}
@@ -719,32 +747,32 @@ const Game = ({ onHit, onMiss }) => {
           invincibilityActive={invincibilityActive}
           speedBoostActive={speedBoostActive}
         />
-      </div>
+      </div> */}
       
       {/* BOTTOM RIGHT - Health, Weapon & Ammo */}
-      <div style={{ position: 'fixed', bottom: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+      {/* <div style={{ position: 'fixed', bottom: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
         <HealthBar health={health} maxHealth={INITIAL_HEALTH} />
         <AmmoIndicator weapon={weapon} ammo={ammo} />
         <WeaponDisplay weapon={weapon} ammo={ammo} cooldowns={cooldowns} />
-      </div>
+      </div> */}
 
       {/* BOTTOM LEFT - Debug menu */}
-      <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
+      {/* <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} /> */}
       
       {/* Dynamic Crosshair - replaces ShotReticle */}
-      {!gameOver && !paused && (
+      {/* {!gameOver && !paused && (
         <DynamicCrosshair 
           weapon={weapon} 
           velocity={playerVelocity} 
           onHit={crosshairHitFlash} 
         />
-      )}
+      )} */}
       
       {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
       <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
         <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
       </div>
-      {gameOver && (
+      {/* {gameOver && (
         <GameOverOverlay
           score={score}
           isNewHighScore={isNewHighScore}
@@ -755,8 +783,8 @@ const Game = ({ onHit, onMiss }) => {
           restartGame={restartGame}
           wave={currentWave}
         />
-      )}
-      {showWaveTransition && !gameOver && (
+      )} */}
+      {/* {showWaveTransition && !gameOver && (
         <WaveTransition 
           wave={currentWave}
           score={score}
@@ -764,8 +792,8 @@ const Game = ({ onHit, onMiss }) => {
           isNewHighScore={score > highScore}
           accuracy={hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0}
         />
-      )}
-      {paused && !gameOver && (
+      )} */}
+      {/* {paused && !gameOver && (
         <PauseMenu 
           onResume={() => setPaused(false)}
           onRestart={() => {
@@ -810,8 +838,8 @@ const Game = ({ onHit, onMiss }) => {
           }}
           score={score}
         />
-      )}
-      <SlowMotionOverlay active={slowMotionActive} />
+      )} */}
+      {/* <SlowMotionOverlay active={slowMotionActive} />
       <MuzzleFlashOverlay active={showMuzzleFlash} weapon={weapon} />
       <ProximityWarning targets={targets} playerPosition={[0, 0, 0]} />
       {showKillStreak && <KillStreakAnnouncement combo={combo} onComplete={() => setShowKillStreak(false)} />}
@@ -820,7 +848,7 @@ const Game = ({ onHit, onMiss }) => {
           isOpen={showSettings}
           onClose={() => setShowSettings(false)}
         />
-      )}
+      )} */}
     </div>
   );
 };

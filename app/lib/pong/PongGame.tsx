@@ -84,7 +84,7 @@ export const PongGame = () => {
     const gameState = useRef({
         ball: { x: 400, y: 300, vx: 300, vy: 200, radius: 8 },
         playerPaddle: { x: 750, y: 250, width: 15, height: 100, speed: 500 },
-        aiPaddle: { x: 35, y: 250, width: 15, height: 100, speed: 400 },
+        aiPaddle: { x: 35, y: 250, width: 15, height: 100, speed: 250 },
         input: { up: false, down: false },
         soundSystem: new SimpleSoundSystem(),
         isRunning: false,

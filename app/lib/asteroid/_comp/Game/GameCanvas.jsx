@@ -13,6 +13,8 @@ import BoundaryBox from '@/lib/asteroid/_comp/UI/BoundaryBox';
 
 import ScorePopup from '@/_components/effects/ScorePopup';
 
+import React from 'react';
+
 const GameCanvas = ({
   gameOver,
   paused,
@@ -41,9 +43,18 @@ const GameCanvas = ({
   trailQuality = 'high',
   scorePopups = [],
   setPlayerVelocity,
-}) => {
+}, ref) => {
   return (
     <Canvas
+      onCreated={({ gl }) => {
+        // Store the actual canvas DOM node for pointer lock
+        if (typeof window !== 'undefined' && typeof window.onCanvasCreated === 'function') {
+          window.onCanvasCreated(gl.domElement);
+        }
+        if (typeof onCanvasCreated === 'function') {
+          onCanvasCreated(gl.domElement);
+        }
+      }}
       camera={{ position: [0, 0, 10], fov: 75 }}
       style={{ background: '#000000', width: '100%', height: '100%' }}
     >
