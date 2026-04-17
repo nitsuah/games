@@ -4,38 +4,6 @@ Last Updated: 2026-04-03
 
 ## Done
 
-- [x] Validate the deployed arcade homepage and a playable route.
-  - Completed: 2026-03-27
-- [x] Confirm governance files exist for standard contribution and PR flow.
-  - Completed: 2026-03-27
-- [x] Fix the Docker production build path.
-  - Completed: 2026-03-27
-  - Evidence: `docker build -t games-devops-check .` now completes with Node 22 and install scripts disabled in-container.
-- [x] Add CI Docker smoke coverage for build and runtime startup.
-  - Completed: 2026-03-27
-  - Evidence: `.github/workflows/docker-smoke.yml` now builds the image, starts the container, and verifies HTTP readiness.
-- [x] Re-baseline release planning against observed deployment and runtime behavior.
-  - Completed: 2026-03-27
-  - Evidence: TASKS and ROADMAP now separate Docker-path completion from remaining deployment-model and runtime issues.
-- [x] Refresh `METRICS.md` with measured values or explicit `TBD` markers.
-  - Completed: 2026-03-27
-  - Evidence: estimated metrics were replaced with explicit `TBD` placeholders and source-note guidance in `METRICS.md`.
-- [x] Align deployment documentation with the actual hosting model.
-  - Completed: 2026-03-27
-  - Evidence: docs now consistently describe Netlify runtime deployment, and the stale GitHub Pages static-export CI deploy path was removed.
-- [x] Resolve the live audio initialization failure on deployed game routes.
-  - Completed: 2026-03-28
-  - Evidence: `useSound` now exposes readiness and memoized handlers, and Asteroid BGM startup is gated on readiness to avoid startup race logs.
-  - Validation: Docker image `games-audio-fix:local` was run and `/asteroid` was exercised without `Sound not found: bgm` console output.
-- [x] Add dedicated architecture and interface documentation.
-  - Completed: 2026-03-28
-  - Evidence: added `ARCHITECTURE.md` and `API.md` and linked both from `README.md`.
-- [x] Enable Docker-based test/coverage workflow (see README and METRICS.md)
-- [x] Enable Docker-based E2E test workflow (see README and METRICS.md)
-- [x] Defer homepage arcade audio asset loading until explicit user interaction.
-  - Completed: 2026-04-03
-  - Evidence: `app/_components/home/AudioController.tsx` now lazy-creates the audio element on unmute and sets `preload='none'`; verified by `app/tests/home/AudioController.test.jsx`.
-
 
 ## In Progress
 
