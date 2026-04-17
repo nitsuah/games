@@ -7,7 +7,7 @@
     "next": "^16.2.3",
     "react": "^19.2.1",
     "react-dom": "^19.2.4",
-    "styled-components": "^6.3.12",
+    "styled-components": "^6.4.0",
     "three": "^0.183.2"
   },
   "scripts": {
@@ -57,7 +57,7 @@
     "jest-environment-jsdom": "^30.3.0",
     "lighthouse": "^13.1.0",
     "lint-staged": "^16.4.0",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.2",
     "typescript": "^6.0.2"
   },
   "overrides": {
