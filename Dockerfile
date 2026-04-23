@@ -11,7 +11,9 @@ FROM node:22.21.0-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY app/ .
+COPY app/scripts ./scripts
 RUN npm run build
+
 
 
 # --- Shared test base stage ---
@@ -19,7 +21,13 @@ FROM node:22.21.0 AS test-base
 WORKDIR /app
 COPY app/package*.json ./
 COPY app/ .
-RUN npm ci --ignore-scripts
+COPY app/scripts ./scripts
+# Install all dependencies including devDependencies for testing/linting
+RUN npm install --ignore-scripts
+
+# --- Test image for break rocks ---
+FROM test-base AS test
+CMD ["npm", "run", "test:ci"]
 
 # --- Lightweight unit test stage (no Playwright) ---
 FROM test-base AS test-unit
