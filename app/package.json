@@ -42,7 +42,7 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/parser": "^8.58.2",
     "babel-plugin-styled-components": "^2.1.4",
-    "baseline-browser-mapping": "^2.10.20",
+    "baseline-browser-mapping": "^2.10.29",
     "chrome-launcher": "^1.2.1",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.2.4",
