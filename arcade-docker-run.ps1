@@ -12,6 +12,8 @@ function Test-PortAvailable($port) {
     $tcpListener = $null
     try {
         # Bind to all interfaces (0.0.0.0), matching how docker run -p binds ports
+        # Using Loopback (127.0.0.1) could report a port as free while it's already
+        # bound on another interface, causing docker run to fail
         $tcpListener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, $port)
         $tcpListener.Start()
         $tcpListener.Stop()
