@@ -9,6 +9,14 @@ const PADDLE_SPIN_MULTIPLIER = 400; // How much paddle position affects ball ver
 // Minimum ball angle to avoid infinite horizontal loops (~14 degrees)
 const MIN_BALL_ANGLE = 0.25; // radians
 
+/**
+ * Ensures the ball travels at a minimum angle relative to horizontal,
+ * preventing shallow trajectories that cause near-infinite horizontal loops.
+ * Preserves total ball speed when adjusting the angle.
+ * @param vx - Horizontal velocity component
+ * @param vy - Vertical velocity component
+ * @param minAngle - Minimum angle in radians (measured from horizontal)
+ */
 function ensureMinAngle(vx: number, vy: number, minAngle: number) {
     const speed = Math.sqrt(vx * vx + vy * vy);
     const angle = Math.atan2(Math.abs(vy), Math.abs(vx));
