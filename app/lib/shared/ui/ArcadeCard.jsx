@@ -39,9 +39,8 @@ export default function ArcadeCard({
       className={`${styles.card} ${className} ${modeClass} ${positionClass}`}
       onClick={onClick}
       aria-label={title}
-      aria-selected={isSelected}
+      aria-pressed={isSelected}
       tabIndex={tabIndex}
-      role="option"
       data-testid={testId}
     >
       {badge && <div className={styles.badge}>{badge}</div>}

@@ -6,6 +6,22 @@ import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 // Physics constants
 const PADDLE_SPIN_MULTIPLIER = 400; // How much paddle position affects ball vertical velocity
 
+// Minimum ball angle to avoid infinite horizontal loops (~14 degrees)
+const MIN_BALL_ANGLE = 0.25; // radians
+
+function ensureMinAngle(vx: number, vy: number, minAngle: number) {
+    const speed = Math.sqrt(vx * vx + vy * vy);
+    const angle = Math.atan2(Math.abs(vy), Math.abs(vx));
+    if (angle < minAngle) {
+        const vxSign = vx >= 0 ? 1 : -1;
+        const vySign = vy >= 0 ? 1 : -1;
+        const newVx = Math.cos(minAngle) * speed * vxSign;
+        const newVy = Math.sin(minAngle) * speed * vySign;
+        return { vx: newVx, vy: newVy };
+    }
+    return { vx, vy };
+}
+
 const GameContainer = styled.div`
     position: relative;
     width: 100%;
@@ -145,18 +161,6 @@ export const PongGame = () => {
 
 
             // Ball collision with paddles (with minimum angle to avoid infinite loops)
-            const MIN_BALL_ANGLE = 0.25; // radians, ~14 degrees
-            function ensureMinAngle(vx: number, vy: number, minAngle: number) {
-                const speed = Math.sqrt(vx * vx + vy * vy);
-                const angle = Math.abs(Math.atan2(vy, vx));
-                if (angle < minAngle) {
-                    const sign = vy >= 0 ? 1 : -1;
-                    const newVy = Math.tan(minAngle) * Math.abs(vx) * sign;
-                    return { vx, vy: newVy };
-                }
-                return { vx, vy };
-            }
-
             // Player paddle
             if (state.ball.x + state.ball.radius > state.playerPaddle.x &&
                 state.ball.x - state.ball.radius < state.playerPaddle.x + state.playerPaddle.width &&

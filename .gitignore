@@ -6,6 +6,9 @@ TODO.md
 /logs/*.log
 .git-backups/
 
+# Runtime coordination artifacts
+.arcade-ports
+
 .venv/
 env/
 app/out/

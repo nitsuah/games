@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -6,7 +6,15 @@ import * as THREE from 'three';
 export default function Bot({ position = [0, 1, 0], color = 'red', onDeath, playerPosition }) {
   const meshRef = useRef();
   const speed = 0.05; // Bot movement speed
-  const [health, setHealth] = React.useState(100);
+  const [health, setHealth] = useState(100);
+  const hasDied = useRef(false);
+
+  const triggerDeath = () => {
+    if (!hasDied.current) {
+      hasDied.current = true;
+      if (onDeath) onDeath();
+    }
+  };
 
   // Move bot toward player
   useFrame(() => {
@@ -18,14 +26,13 @@ export default function Bot({ position = [0, 1, 0], color = 'red', onDeath, play
     // Simple collision/hit logic (expand as needed)
     if (botPos.distanceTo(playerVec) < 1.5) {
       // Bot reached player (could deal damage, respawn, etc.)
-      if (onDeath) onDeath();
       setHealth(0);
     }
   });
 
   useEffect(() => {
-    if (health <= 0 && onDeath) onDeath();
-  }, [health, onDeath]);
+    if (health <= 0) triggerDeath();
+  }, [health]);
 
   return (
     <mesh ref={meshRef} position={position}>
