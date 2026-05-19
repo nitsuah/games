@@ -8,15 +8,16 @@ To run the arcade app in a Docker container on a cluster with many agents:
 3. The script will use the local `games` image and:
    - Search for an available port (starting at 3000)
    - Start the container with `-p <host_port>:3000` and `--env PORT=3000`
-   - Log the chosen port to `.arcade-ports` for other agents to check
+   - **Overwrite** `.arcade-ports` with the current port on each run (the file always reflects the last run only)
 4. To stop a running container:
    - `docker ps` to find the container name (e.g., arcade-3001)
    - `docker stop <container_name>`
    - `docker rm <container_name>`
 
 **Best Practices:**
-- Always check `.arcade-ports` before launching a new instance to avoid conflicts.
-- Clean up stopped containers and old port entries regularly.
+- `.arcade-ports` is a runtime artifact — it is listed in `.gitignore` and should not be committed to source control.
+- The script overwrites `.arcade-ports` on each run; it does not accumulate stale entries.
+- When a container is stopped, manually remove or clear `.arcade-ports` if you want to avoid stale references.
 - If you need a specific port, you can run:
   `docker run -d -p 3002:3000 --env PORT=3000 --name arcade-3002 games`
 

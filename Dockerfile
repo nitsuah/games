@@ -11,7 +11,6 @@ FROM node:22.21.0-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY app/ .
-COPY app/scripts ./scripts
 RUN npm run build
 
 
@@ -21,11 +20,10 @@ FROM node:22.21.0 AS test-base
 WORKDIR /app
 COPY app/package*.json ./
 COPY app/ .
-COPY app/scripts ./scripts
 # Install all dependencies including devDependencies for testing/linting
-RUN npm install --ignore-scripts
+RUN npm ci --ignore-scripts
 
-# --- Test image for break rocks ---
+# --- Test stage ---
 FROM test-base AS test
 CMD ["npm", "run", "test:ci"]
 

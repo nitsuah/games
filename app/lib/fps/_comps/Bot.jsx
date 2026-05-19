@@ -24,7 +24,7 @@ export default function Bot({ position = [0, 1, 0], color = 'red', onDeath, play
     const direction = playerVec.clone().sub(botPos).normalize();
     botPos.add(direction.multiplyScalar(speed));
     // Simple collision/hit logic (expand as needed)
-    if (botPos.distanceTo(playerVec) < 1.5) {
+    if (!hasDied.current && botPos.distanceTo(playerVec) < 1.5) {
       // Bot reached player (could deal damage, respawn, etc.)
       setHealth(0);
     }

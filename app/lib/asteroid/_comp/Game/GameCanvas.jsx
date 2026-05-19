@@ -43,14 +43,12 @@ const GameCanvas = ({
   trailQuality = 'high',
   scorePopups = [],
   setPlayerVelocity,
-}, ref) => {
+  onCanvasCreated,
+}) => {
   return (
     <Canvas
       onCreated={({ gl }) => {
         // Store the actual canvas DOM node for pointer lock
-        if (typeof window !== 'undefined' && typeof window.onCanvasCreated === 'function') {
-          window.onCanvasCreated(gl.domElement);
-        }
         if (typeof onCanvasCreated === 'function') {
           onCanvasCreated(gl.domElement);
         }
