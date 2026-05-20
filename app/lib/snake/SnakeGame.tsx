@@ -6,7 +6,8 @@ import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 const GameContainer = styled.div`
     position: relative;
     width: 100%;
-    height: 100%;
+    max-width: 700px;
+    aspect-ratio: 4/3;
     display: flex;
     align-items: center;
     justify-content: center;

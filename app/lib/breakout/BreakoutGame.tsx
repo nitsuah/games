@@ -37,17 +37,25 @@ const Canvas = styled.canvas`
 `;
 
 const UIOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  color: #fff;
-  font-family: 'Courier New', monospace;
-  font-size: 20px;
-  pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-width: 0;
+    padding: 20px 32px 0 32px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    pointer-events: none;
+    box-sizing: border-box;
+    z-index: 2;
+    @media (max-width: 900px) {
+        font-size: 16px;
+        padding: 12px 8px 0 8px;
+    }
 `;
 
 const GameOverScreen = styled.div`
@@ -365,7 +373,7 @@ export const BreakoutGame = () => {
     };
 
     return (
-        <GameContainer>
+        <GameContainer data-testid="game-container">
             <Canvas ref={canvasRef} width={800} height={600} />
             <UIOverlay>
                 <div>SCORE: {score}</div>

@@ -34,9 +34,9 @@ Last Updated: 2026-04-03
 - [x] Enable Docker-based E2E test workflow (see README and METRICS.md)
 - [x] Defer homepage arcade audio asset loading until explicit user interaction.
   - Completed: 2026-04-03
-  - Evidence: `app/_components/home/AudioController.tsx` now lazy-creates the audio element on unmute and sets `preload='none'`; verified by `app/tests/home/AudioController.test.jsx`.
+  - Evidence: `app/_components/home/AudioController.tsx` now lazy-creates the audio element on unmute and sets `preload='none'`; verified by `app/tests/home/AudioController.test.jsx`.## In Progress
 
-## In Progress
+- [ ] **[BLOCKED] Global client-side exception debugging** — All games fail to load in Docker due to a client-side ReferenceError. Last step: capture browser console logs from Dockerized app, diagnose, and fix. See docs/INSTRUCTIONS.md for handoff.
 
 ## Todo
 
@@ -65,6 +65,8 @@ Last Updated: 2026-04-03
   - Milestone: 2026 Q3
   - Problem: feature growth should not outrun packaging, deployment, and runtime stability work.
   - Acceptance Criteria: larger feature initiatives stay sequenced behind the release-path fixes.
+
+- [ ] Fix game selection UI to allow programmatic and keyboard navigation for accessibility and automated testing. [ui-improvements][high]
 
 ## Audit Notes
 

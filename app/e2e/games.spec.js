@@ -91,7 +91,7 @@ test.describe('Breakout Game', () => {
     await expect(canvas).toBeVisible({ timeout: 10000 });
     
     // Verify the game container is visible
-    const gameContainer = page.locator('div').first();
+    const gameContainer = page.getByTestId('game-container');
     await expect(gameContainer).toBeVisible();
   });
 });

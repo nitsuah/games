@@ -171,6 +171,8 @@ export const GameCarousel = () => {
     { title: 'Flappy', icon: '🐦', description: 'Tap to fly!', route: '/flappy' },
     { title: 'Snake', icon: '🐍', description: 'Eat and grow!', route: '/snake' },
     { title: 'Pong', icon: '🏓', description: 'Classic paddle battle', route: '/pong' },
+    { title: 'Memory Match', icon: '🧠', description: 'Flip cards to match pairs', route: '/memory-match' },
+    { title: 'Dodge Blocks', icon: '⬛', description: 'Dodge falling blocks!', route: '/dodge-blocks' },
   ];
 
   useEffect(() => {

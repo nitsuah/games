@@ -1,0 +1,23 @@
+.popup {
+  position: fixed;
+  left: 50%;
+  top: 18%;
+  transform: translate(-50%, 0);
+  background: linear-gradient(90deg, #3af, #6ff);
+  color: #222;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 18px 48px;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  z-index: 9999;
+  opacity: 0.96;
+  animation: popupFade 1.2s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes popupFade {
+  0% { opacity: 0; transform: translate(-50%, -30px) scale(0.9); }
+  20% { opacity: 1; transform: translate(-50%, 0) scale(1.05); }
+  80% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, 0) scale(0.95); }
+}

@@ -1,13 +1,15 @@
+import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
-import { useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import { AudioProvider, useAudio } from '@/contexts/AudioContext';
+import { AudioController } from '@/_components/home/AudioController';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 
 // Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
 const Game = dynamic(() => import('@/lib/asteroid/_comp/Game/Game'), { ssr: false });
 const Crosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/Crosshair'), { ssr: false });
+
 
 const Instructions = styled.div`
   position: absolute;
@@ -43,8 +45,8 @@ const AsteroidPage = () => {
 };
 
 const AsteroidContent = () => {
-  const { soundEnabled } = useAudio(); // Get soundEnabled state
-  const { playSound } = useSound(); // Use the hook to access playSound
+  const { soundEnabled } = useAudio();
+  const { playSound } = useSound();
 
   // Sync SoundManager with audio settings
   useEffect(() => {
@@ -53,32 +55,27 @@ const AsteroidContent = () => {
     });
   }, [soundEnabled]);
 
-  // Phase 8: Browser back navigation warning to prevent accidental progress loss
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       e.preventDefault();
-      e.returnValue = ''; // Chrome requires returnValue to be set
-      return ''; // Some browsers display a custom message
+      e.returnValue = '';
+      return '';
     };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
-  const handleHit = () => {
-    playSound('hit');
-  };
-
-  const handleMiss = () => {
-    playSound('miss');
-  };
+  const handleHit = () => playSound('hit');
+  const handleMiss = () => playSound('miss');
 
   return (
     <GameContainer>
-      <Instructions>Click to lock pointer as camera, Esc to exit</Instructions>
+      <AudioController />
+      <Instructions>
+        Click to lock pointer as camera, Esc to exit
+      </Instructions>
       <Crosshair />
       <Game onHit={handleHit} onMiss={handleMiss} />
     </GameContainer>

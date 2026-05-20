@@ -1,0 +1,109 @@
+body {
+  background: #181c24;
+  color: #fff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+/* New layout for side-by-side game and how-to panel */
+.container {
+  margin-top: 32px;
+  background: #23293a;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #0008;
+  padding: 24px 32px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-side-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.game-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 4/3;
+  background: #000;
+  border: 4px solid #333;
+  box-sizing: border-box;
+  justify-content: center;
+}
+h1 {
+  margin-bottom: 12px;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+canvas {
+  background: #111;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0006;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 4/3;
+}
+.controls {
+  margin-bottom: 16px;
+}
+button {
+  background: #00ffff;
+  color: #23293a;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #00bfbf;
+}
+.how-to-play {
+  background: #1a1e2a;
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin-top: 0;
+  margin-left: 0;
+  width: 220px;
+  min-width: 180px;
+  max-width: 240px;
+  box-shadow: 0 2px 12px #0006;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (max-width: 700px) {
+  .game-side-layout {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .how-to-play {
+    width: 100%;
+    max-width: 320px;
+    align-items: center;
+    margin-top: 16px;
+  }
+}
+.how-to-play h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+.how-to-play ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 1rem;
+}

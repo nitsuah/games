@@ -14,12 +14,18 @@ COPY app/ .
 RUN npm run build
 
 
+
 # --- Shared test base stage ---
 FROM node:22.21.0 AS test-base
 WORKDIR /app
 COPY app/package*.json ./
 COPY app/ .
+# Install all dependencies including devDependencies for testing/linting
 RUN npm ci --ignore-scripts
+
+# --- Test stage ---
+FROM test-base AS test
+CMD ["npm", "run", "test:ci"]
 
 # --- Lightweight unit test stage (no Playwright) ---
 FROM test-base AS test-unit

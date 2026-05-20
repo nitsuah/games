@@ -15,6 +15,7 @@ import Bullet from '@/lib/fps/_comps/Bullet';
 import Decal from '@/lib/fps/_comps/Decal';
 import ShootingHandler from '@/lib/fps/_comps/ShootingHandler';
 import PowerUp from '@/lib/fps/_comps/PowerUp';
+import Bot from '@/lib/fps/_comps/Bot';
 
 // Extend React Three Fiber's namespace to include BoxGeometry
 extend({ BoxGeometry: THREE.BoxGeometry });
@@ -182,6 +183,9 @@ export default function FpsCanvas() {
             setDecals={setDecals}
             rapidFire={rapidFire}
           />
+          <Bot position={[30, 3, -30]} color="red" playerPosition={playerPosition} onDeath={() => setScore((s) => s + 500)} />
+          <Bot position={[-30, 3, -30]} color="blue" playerPosition={playerPosition} onDeath={() => setScore((s) => s + 500)} />
+          <Bot position={[0, 3, 30]} color="green" playerPosition={playerPosition} onDeath={() => setScore((s) => s + 500)} />
         </Physics>
       </Canvas>
       <Crosshair />

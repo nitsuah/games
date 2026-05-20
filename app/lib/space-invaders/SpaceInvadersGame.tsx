@@ -12,12 +12,16 @@ import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
   position: relative;
-  width: 800px;
-  height: 600px;
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 4/3;
   background: #000;
   border: 4px solid #333;
   margin: 0 auto;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Canvas = styled.canvas`
