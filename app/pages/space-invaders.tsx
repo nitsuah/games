@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArcadeLayout } from '@/_components/home/ArcadeLayout';
 import { SpaceInvadersGame } from '@/lib/space-invaders/SpaceInvadersGame';
 import styled from 'styled-components';
@@ -36,8 +36,6 @@ const BackButton = styled.button`
     background: rgba(0, 255, 255, 0.3);
   }
 `;
-
-import { useState } from 'react';
 
 const SpaceInvadersPage = () => {
   const router = useRouter();

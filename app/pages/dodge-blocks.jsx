@@ -1,19 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ArcadeLayout } from '@/_components/home/ArcadeLayout';
 import { AudioController } from '@/_components/home/AudioController';
 
 const DodgeBlocks = () => {
-  useEffect(() => {
-    // Dynamically load the vanilla JS game
-    const script = document.createElement('script');
-    script.src = '/games/dodge-blocks/script.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   return (
     <>
       <AudioController />

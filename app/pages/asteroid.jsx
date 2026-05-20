@@ -1,6 +1,6 @@
+import React, { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
-import { useEffect } from 'react';
 import { useSound } from '@/utils/audio/useSound';
 import { AudioProvider, useAudio } from '@/contexts/AudioContext';
 import { AudioController } from '@/_components/home/AudioController';
@@ -24,22 +24,6 @@ const Instructions = styled.div`
   text-shadow: 0 0 8px #000;
 `;
 
-const HowToPlayOverlay = styled.div`
-  position: absolute;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.85);
-  color: #fff;
-  padding: 24px 32px;
-  border-radius: 16px;
-  z-index: 10;
-  box-shadow: 0 0 24px #000;
-  max-width: 90vw;
-  font-size: 1.1rem;
-  text-align: left;
-`;
-
 const GameContainer = styled.div`
   position: relative;
   width: 100vw;
@@ -60,12 +44,9 @@ const AsteroidPage = () => {
   );
 };
 
-import React, { useState } from 'react';
-
 const AsteroidContent = () => {
   const { soundEnabled } = useAudio();
   const { playSound } = useSound();
-  const [showHowTo, setShowHowTo] = useState(true);
 
   // Sync SoundManager with audio settings
   useEffect(() => {
