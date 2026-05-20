@@ -373,7 +373,7 @@ export const BreakoutGame = () => {
     };
 
     return (
-        <GameContainer>
+        <GameContainer data-testid="game-container">
             <Canvas ref={canvasRef} width={800} height={600} />
             <UIOverlay>
                 <div>SCORE: {score}</div>

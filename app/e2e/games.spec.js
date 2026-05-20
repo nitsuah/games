@@ -90,10 +90,8 @@ test.describe('Breakout Game', () => {
     const canvas = page.locator('canvas');
     await expect(canvas).toBeVisible({ timeout: 10000 });
     
-    // Verify the game container (the div wrapping the canvas) is visible.
-    // Note: page.locator('div').first() resolves to #__next which has zero
-    // height when ArcadeLayout uses position:fixed, so use div:has(canvas) instead.
-    const gameContainer = page.locator('div:has(canvas)').first();
+    // Verify the game container is visible
+    const gameContainer = page.getByTestId('game-container');
     await expect(gameContainer).toBeVisible();
   });
 });
