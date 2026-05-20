@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -9,12 +9,12 @@ export default function Bot({ position = [0, 1, 0], color = 'red', onDeath, play
   const [health, setHealth] = useState(100);
   const hasDied = useRef(false);
 
-  const triggerDeath = () => {
+  const triggerDeath = useCallback(() => {
     if (!hasDied.current) {
       hasDied.current = true;
       if (onDeath) onDeath();
     }
-  };
+  }, [onDeath]);
 
   // Move bot toward player
   useFrame(() => {
@@ -32,7 +32,7 @@ export default function Bot({ position = [0, 1, 0], color = 'red', onDeath, play
 
   useEffect(() => {
     if (health <= 0) triggerDeath();
-  }, [health]);
+  }, [health, triggerDeath]);
 
   return (
     <mesh ref={meshRef} position={position}>
