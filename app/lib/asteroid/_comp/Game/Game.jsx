@@ -251,25 +251,25 @@ const Game = ({ onHit, onMiss }) => {
   // Mouse wheel weapon cycling
   useEffect(() => {
     const weaponOrder = ['spread', 'laser', 'explosive', 'aa', 'plasma'];
-    
+
     const handleWheel = (e) => {
       // Only cycle weapons when pointer is locked (in game)
       if (!document.pointerLockElement || gameOver || paused) return;
-      
+
       e.preventDefault();
-      
+
       setWeapon((currentWeapon) => {
         const currentIndex = weaponOrder.indexOf(currentWeapon);
         if (currentIndex === -1) return currentWeapon;
-        
+
         // Scroll up = previous weapon, scroll down = next weapon
         const direction = e.deltaY < 0 ? -1 : 1;
         const newIndex = (currentIndex + direction + weaponOrder.length) % weaponOrder.length;
-        
+
         return weaponOrder[newIndex];
       });
     };
-    
+
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
   }, [setWeapon, gameOver, paused]);
