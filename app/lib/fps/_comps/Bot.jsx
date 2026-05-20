@@ -5,6 +5,8 @@ import * as THREE from 'three';
 // Simple tank bot for FPS game
 export default function Bot({ position = [0, 1, 0], color = 'red', onDeath, playerPosition }) {
   const meshRef = useRef();
+  const playerVecRef = useRef(new THREE.Vector3());
+  const directionRef = useRef(new THREE.Vector3());
   const speed = 0.05; // Bot movement speed
   const [health, setHealth] = useState(100);
   const hasDied = useRef(false);
@@ -20,9 +22,9 @@ export default function Bot({ position = [0, 1, 0], color = 'red', onDeath, play
   useFrame(() => {
     if (!meshRef.current || !playerPosition) return;
     const botPos = meshRef.current.position;
-    const playerVec = new THREE.Vector3(...playerPosition);
-    const direction = playerVec.clone().sub(botPos).normalize();
-    botPos.add(direction.multiplyScalar(speed));
+    const playerVec = playerVecRef.current.set(...playerPosition);
+    const direction = directionRef.current.subVectors(playerVec, botPos).normalize();
+    botPos.addScaledVector(direction, speed);
     // Simple collision/hit logic (expand as needed)
     if (!hasDied.current && botPos.distanceTo(playerVec) < 1.5) {
       // Bot reached player (could deal damage, respawn, etc.)

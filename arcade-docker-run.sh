@@ -8,6 +8,11 @@ PORT_FILE=".arcade-ports"
 DEFAULT_PORT=3000
 MAX_PORT=3999
 
+if ! command -v lsof >/dev/null 2>&1; then
+  echo "Missing dependency: lsof is required to find an available port." >&2
+  exit 1
+fi
+
 # Find an available port
 echo "Searching for available port..."
 PORT=$DEFAULT_PORT

@@ -17,7 +17,7 @@ To run the arcade app in a Docker container on a cluster with many agents:
 **Best Practices:**
 - `.arcade-ports` is a runtime artifact — it is listed in `.gitignore` and should not be committed to source control.
 - The script overwrites `.arcade-ports` on each run; it does not accumulate stale entries.
-- When a container is stopped, manually remove or clear `.arcade-ports` if you want to avoid stale references.
+- If you need to verify the active instance, use `docker ps` in addition to checking `.arcade-ports`.
 - If you need a specific port, you can run:
   `docker run -d -p 3002:3000 --env PORT=3000 --name arcade-3002 games`
 

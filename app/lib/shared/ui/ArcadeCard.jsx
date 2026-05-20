@@ -27,7 +27,6 @@ export default function ArcadeCard({
   badge = null,
   displayMode = 'carousel',
   carouselPosition = 'current',
-  isSelected = false,
   tabIndex = -1,
   testId = undefined
 }) {
@@ -39,7 +38,6 @@ export default function ArcadeCard({
       className={`${styles.card} ${className} ${modeClass} ${positionClass}`}
       onClick={onClick}
       aria-label={title}
-      aria-pressed={isSelected}
       tabIndex={tabIndex}
       data-testid={testId}
     >

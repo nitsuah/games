@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ArcadeCard from '@/lib/shared/ui/ArcadeCard';
@@ -8,10 +8,6 @@ type Game = {
   icon: string;
   description: string;
   route: string;
-};
-
-type GameWithPosition = Game & {
-  position: 'prev' | 'current' | 'next';
 };
 
 const GameList = styled.div`
@@ -32,81 +28,6 @@ const GameList = styled.div`
     grid-template-columns: repeat(3, 160px);
     max-width: 580px;
     gap: 25px;
-  }
-`;
-
-const CarouselArrow = styled.button<{ $direction: 'left' | 'right' }>`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  ${props => props.$direction === 'left' ? 'left: -50px;' : 'right: -50px;'}
-  background: rgba(0, 255, 255, 0.2);
-  border: 2px solid #00ffff;
-  border-radius: 50%;
-  color: #00ffff;
-  font-size: 28px;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-  
-  &:hover {
-    background: rgba(0, 255, 255, 0.4);
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-  }
-  
-  &:active {
-    transform: translateY(-50%) scale(0.95);
-  }
-  
-  @media (max-width: 768px) {
-    ${props => props.$direction === 'left' ? 'left: 10px;' : 'right: 10px;'}
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-  }
-  
-  @media (min-width: 1200px) {
-    ${props => props.$direction === 'left' ? 'left: -70px;' : 'right: -70px;'}
-  }
-`;
-
-const DisplayModeButton = styled.button`
-  position: absolute;
-  top: 50px;
-  right: 10px;
-  background: rgba(0, 255, 255, 0.1);
-  border: 2px solid #00ffff;
-  border-radius: 8px;
-  color: #00ffff;
-  font-family: 'Courier New', monospace;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px 12px;
-  z-index: 20;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-  transition: all 0.3s ease;
-  will-change: transform;
-  
-  &:hover {
-    background: rgba(0, 255, 255, 0.2);
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
-    transform: scale(1.05);
-  }
-  
-  &:active {
-    transform: scale(0.95);
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 20px;
-    padding: 6px 10px;
   }
 `;
 
@@ -134,8 +55,7 @@ export const GameCarousel = () => {
           description={game.description}
           onClick={() => router.push(game.route)}
           displayMode="grid"
-          isSelected={false}
-          tabIndex={-1}
+          tabIndex={0}
         />
       ))}
     </GameList>

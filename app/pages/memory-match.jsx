@@ -10,6 +10,7 @@ const MemoryMatch = () => {
         <iframe
           src="/games/memory-match/index.html"
           title="Memory Match"
+          sandbox="allow-scripts"
           width="400"
           height="600"
           style={{ border: 'none', borderRadius: 12, background: '#23293a', width: 400, height: 600 }}

@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound';
 import { AudioProvider, useAudio } from '@/contexts/AudioContext';
-import { AudioController } from '@/_components/home/AudioController';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 
 // Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
@@ -72,7 +71,6 @@ const AsteroidContent = () => {
 
   return (
     <GameContainer>
-      <AudioController />
       <Instructions>
         Click to lock pointer as camera, Esc to exit
       </Instructions>
