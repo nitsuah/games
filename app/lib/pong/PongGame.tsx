@@ -194,7 +194,7 @@ export const PongGame = () => {
                 state.ball.vx = Math.abs(state.ball.vx);
                 state.ball.x = state.aiPaddle.x + state.aiPaddle.width + state.ball.radius;
                 const hitPos = (state.ball.y - state.aiPaddle.y) / state.aiPaddle.height;
-                state.ball.vy += (hitPos - 0.5) * 400;
+                state.ball.vy += (hitPos - 0.5) * PADDLE_SPIN_MULTIPLIER;
                 // Ensure minimum angle
                 const newVel = ensureMinAngle(state.ball.vx, state.ball.vy, MIN_BALL_ANGLE);
                 state.ball.vx = newVel.vx;

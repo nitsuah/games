@@ -8,6 +8,11 @@ PORT_FILE=".arcade-ports"
 DEFAULT_PORT=3000
 MAX_PORT=3999
 
+if ! command -v lsof >/dev/null 2>&1; then
+  echo "Missing dependency: lsof is required to find an available port." >&2
+  exit 1
+fi
+
 # Find an available port
 echo "Searching for available port..."
 PORT=$DEFAULT_PORT
@@ -23,12 +28,11 @@ CONTAINER_NAME="arcade-$PORT"
 
 echo "Using port $PORT"
 
-printf 'PORT=%s\n' "$PORT" > "$PORT_FILE"
-
 if docker ps -aq --filter "name=^${CONTAINER_NAME}$" | grep -q .; then
   docker rm -f "$CONTAINER_NAME" >/dev/null
 fi
 
 docker run -d -p "$PORT":3000 --env PORT=3000 --name "$CONTAINER_NAME" games
+printf 'PORT=%s\n' "$PORT" > "$PORT_FILE"
 
 echo "Arcade running on http://localhost:$PORT (container port 3000)"
