@@ -26,11 +26,11 @@ const BreakoutGame = dynamic(() => import('@/lib/breakout/BreakoutGame.tsx').the
 export default function BreakoutPage() {
   const [gameStarted, setGameStarted] = useState(false);
 
-  if (!gameStarted) {
-    return (
-      <>
-        <AudioController />
-        <ArcadeLayout>
+  return (
+    <>
+      <AudioController />
+      <ArcadeLayout>
+        {!gameStarted ? (
           <div style={{
             width: '100%',
             display: 'flex',
@@ -83,18 +83,11 @@ export default function BreakoutPage() {
               </div>
             </div>
           </div>
-        </ArcadeLayout>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <AudioController />
-      <ArcadeLayout>
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 500 }}>
-          <BreakoutGame />
-        </div>
+        ) : (
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 500 }}>
+            <BreakoutGame />
+          </div>
+        )}
       </ArcadeLayout>
     </>
   );

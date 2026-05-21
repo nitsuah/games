@@ -36,9 +36,6 @@ $ContainerName = "arcade-$Port"
 
 Write-Host "Using port $Port"
 
-# Overwrite (not append) the port file so it reflects only the current run
-Set-Content -Path $PortFile -Value "PORT=$Port"
-
 # Remove any existing container with the same name before starting
 $existing = docker ps -aq --filter "name=^${ContainerName}$" 2>$null
 if ($existing) {
@@ -47,5 +44,11 @@ if ($existing) {
 
 # Run the Docker container
 docker run -d --name $ContainerName --env PORT=3000 -p "${Port}:3000" games
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+
+# Overwrite (not append) the port file so it reflects only the current run
+Set-Content -Path $PortFile -Value "PORT=$Port"
 
 Write-Host "Arcade running on http://localhost:$Port (container port 3000)"

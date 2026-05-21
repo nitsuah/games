@@ -27,7 +27,7 @@ export default function ArcadeCard({
   badge = null,
   displayMode = 'carousel',
   carouselPosition = 'current',
-  tabIndex = -1,
+  tabIndex,
   testId = undefined
 }) {
   const modeClass = getDisplayModeClass(displayMode);
