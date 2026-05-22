@@ -12,8 +12,8 @@ All Playwright E2E tests can be run in Docker:
 
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
-| Code Coverage         | ~11%           | Approximate result from last validation; refresh with `npm run test:coverage` for a current reading. |
-| Unit Tests            | 218 passing    | Based on last validated Docker/local run; refresh with current CI/local evidence as needed. |
+| Code Coverage         | 11.02% (Avg ~11.2%) | 11.02% Statements / 11.38% Branches / 11.18% Lines / 11.21% Functions from last Docker run. |
+| Unit Tests            | 219 passing    | Based on last validated Docker run; refresh with current CI/local evidence as needed. |
 | E2E Tests             | 8 passing      | Based on last validated Playwright Docker run; refresh with a current Playwright run as needed. |
 | Build Time            | TBD            | Pending current run measurement. |
 | Bundle Size (JS)      | TBD            | Pending current build artifact analysis. |
@@ -26,19 +26,19 @@ All Playwright E2E tests can be run in Docker:
 | Open Issues           | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Open PRs              | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Health Score          | TBD        | Replace self-rating with computed score source. |
-| Last Updated          | 2026-03-27 | Metrics normalized to measured-or-TBD policy. |
+| Last Updated          | 2026-05-22 | Metrics updated from Docker-based test run. |
 | Deploy Success Rate   | TBD        | Pull from provider and CI history. |
 
 ## Test Distribution
 
 | Test Suite                | Tests | Status     |
 | ------------------------- | ----- | ---------- |
-| Asteroid Game Logic       | 74    | ✅ Passing |
-| FPS Game Components       | 38    | ✅ Passing |
-| Shared UI Components      | 42    | ✅ Passing |
-| Shared Systems            | 36    | ✅ Passing |
-| Utilities & Effects       | 28    | ✅ Passing |
-| **Total Unit Tests**      | **218** | **✅ All Passing** |
+| Asteroid Game Logic       | 141   | ✅ Passing |
+| FPS Game Components       | 2     | ✅ Passing |
+| Shared UI Components      | 34    | ✅ Passing |
+| Shared Systems            | 15    | ✅ Passing |
+| Utilities & Effects       | 27    | ✅ Passing |
+| **Total Unit Tests**      | **219** | **✅ All Passing** |
 | **E2E Tests**             | **8**   | **✅ All Passing** |
 
 ## Docker-based Test & Coverage Workflow
@@ -47,9 +47,9 @@ All unit tests and coverage can be run in Docker:
 
 - Build test image: `docker build --target test-unit -t games-test .`
 - Run all unit tests with coverage: `docker run --rm -it games-test npm run test:coverage`
-- All 218 unit tests pass in Docker (as of last validation)
+- All 219 unit tests pass in Docker (as of last validation)
 
-Coverage (statements/branches/lines/functions): ~11%
+Coverage (statements/branches/lines/functions): 11.02% / 11.38% / 11.18% / 11.21% (~11.2% average)
 
 ## Performance Metrics
 
@@ -106,7 +106,7 @@ Coverage (statements/branches/lines/functions): ~11%
 
 ---
 
-**Last Updated**: March 27, 2026  
+**Last Updated**: May 22, 2026  
 **Data Source**: Pending refresh from Jest, Playwright, GitHub Actions, and Lighthouse CI.
 
 <!--
