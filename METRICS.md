@@ -12,9 +12,10 @@ All Playwright E2E tests can be run in Docker:
 
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
-| Code Coverage         | 11.02% (Avg ~11.2%) | 11.02% Statements / 11.38% Branches / 11.18% Lines / 11.21% Functions from last Docker run. |
-| Unit Tests            | 219 passing    | Based on last validated Docker run; refresh with current CI/local evidence as needed. |
-| E2E Tests             | 8 passing      | Based on last validated Playwright Docker run; refresh with a current Playwright run as needed. |
+| Code Coverage         | 90.21% statements | 90.21% Statements / 80.17% Branches / 90.43% Functions / 92.82% Lines from the latest Docker run. |
+| Unit Tests            | 440 passing    | 33/33 Jest suites passing in the latest Docker coverage run. |
+| E2E Tests             | 8 passing      | Based on the last validated Playwright Docker run; not rerun in this refresh. |
+| Test Files            | 33             | Current `app/tests` file count. |
 | Build Time            | TBD            | Pending current run measurement. |
 | Bundle Size (JS)      | TBD            | Pending current build artifact analysis. |
 | Lighthouse Score      | TBD            | Pending current Lighthouse run. |
@@ -27,19 +28,17 @@ All Playwright E2E tests can be run in Docker:
 | Open PRs              | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Health Score          | TBD        | Replace self-rating with computed score source. |
 | Last Updated          | 2026-05-22 | Metrics updated from Docker-based test run. |
+| Passing Unit Tests    | 440/440    | Latest Docker coverage run completed cleanly. |
 | Deploy Success Rate   | TBD        | Pull from provider and CI history. |
 
 ## Test Distribution
 
-| Test Suite                | Tests | Status     |
+| Test Group                | Count | Status     |
 | ------------------------- | ----- | ---------- |
-| Asteroid Game Logic       | 141   | ✅ Passing |
-| FPS Game Components       | 2     | ✅ Passing |
-| Shared UI Components      | 34    | ✅ Passing |
-| Shared Systems            | 15    | ✅ Passing |
-| Utilities & Effects       | 27    | ✅ Passing |
-| **Total Unit Tests**      | **219** | **✅ All Passing** |
-| **E2E Tests**             | **8**   | **✅ All Passing** |
+| Jest Test Suites          | 33    | ✅ Passing |
+| Jest Tests                | 440   | ✅ Passing |
+| Playwright E2E Tests      | 8     | ✅ Last validated |
+| **Current Unit Coverage** | **90.21% statements** | **✅ Docker validated** |
 
 ## Docker-based Test & Coverage Workflow
 
@@ -47,9 +46,9 @@ All unit tests and coverage can be run in Docker:
 
 - Build test image: `docker build --target test-unit -t games-test .`
 - Run all unit tests with coverage: `docker run --rm -it games-test npm run test:coverage`
-- All 219 unit tests pass in Docker (as of last validation)
+- All 440 unit tests pass in Docker across 33 suites (latest validation)
 
-Coverage (statements/branches/lines/functions): 11.02% / 11.38% / 11.18% / 11.21% (~11.2% average)
+Coverage (statements/branches/functions/lines): 90.21% / 80.17% / 90.43% / 92.82%
 
 ## Performance Metrics
 
@@ -107,7 +106,7 @@ Coverage (statements/branches/lines/functions): 11.02% / 11.38% / 11.18% / 11.21
 ---
 
 **Last Updated**: May 22, 2026  
-**Data Source**: Pending refresh from Jest, Playwright, GitHub Actions, and Lighthouse CI.
+**Data Source**: Latest Docker Jest coverage run plus previously validated Playwright Docker results.
 
 <!--
 AGENT INSTRUCTIONS:
