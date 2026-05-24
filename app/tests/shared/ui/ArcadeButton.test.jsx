@@ -2,6 +2,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import ArcadeButton, { VARIANTS } from '@/lib/shared/ui/ArcadeButton';
 
 describe('ArcadeButton', () => {
+  const originalNodeEnv = process.env.NODE_ENV;
+
+  afterAll(() => {
+    process.env.NODE_ENV = originalNodeEnv;
+  });
+
   it('renders with text', () => {
     render(<ArcadeButton>Click Me</ArcadeButton>);
     expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
@@ -101,5 +107,18 @@ describe('ArcadeButton', () => {
       SUCCESS: 'success',
       SECONDARY: 'secondary',
     });
+  });
+
+  it('warns and falls back to primary for unknown variant in development', () => {
+    process.env.NODE_ENV = 'development';
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+    render(<ArcadeButton variant="mystery">Unknown Variant</ArcadeButton>);
+    const button = screen.getByRole('button');
+
+    expect(button.className).toContain('variant-primary');
+    expect(warnSpy).toHaveBeenCalled();
+
+    warnSpy.mockRestore();
   });
 });

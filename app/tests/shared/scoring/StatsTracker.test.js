@@ -2,10 +2,16 @@ import StatsTracker from '@/lib/shared/scoring/StatsTracker';
 
 describe('StatsTracker', () => {
   let tracker;
+  const originalNodeEnv = process.env.NODE_ENV;
 
   beforeEach(() => {
     tracker = new StatsTracker('test-game');
     localStorage.clear();
+    process.env.NODE_ENV = originalNodeEnv;
+  });
+
+  afterAll(() => {
+    process.env.NODE_ENV = originalNodeEnv;
   });
 
   // ─── Constructor ──────────────────────────────────────────────────────────
@@ -234,6 +240,20 @@ describe('StatsTracker', () => {
       localStorage.setItem('test-game_stats_bestAccuracy', '85.5');
       expect(tracker.getBestAccuracy()).toBe(85.5);
     });
+
+    it('warns and returns 0 when localStorage.getItem throws in development', () => {
+      process.env.NODE_ENV = 'development';
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const getItemSpy = jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+        throw new Error('Storage read error');
+      });
+
+      expect(tracker.getBestAccuracy()).toBe(0);
+      expect(warnSpy).toHaveBeenCalled();
+
+      getItemSpy.mockRestore();
+      warnSpy.mockRestore();
+    });
   });
 
   // ─── saveBestAccuracy() ───────────────────────────────────────────────────
@@ -268,6 +288,30 @@ describe('StatsTracker', () => {
       // getBestAccuracy returns 0, so 100 > 0 → enters the try block → throws → returns false
       expect(tracker.saveBestAccuracy(100)).toBe(false);
       setItemSpy.mockRestore();
+    });
+
+    it('logs when saving a new best in development mode', () => {
+      process.env.NODE_ENV = 'development';
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      expect(tracker.saveBestAccuracy(88.8)).toBe(true);
+      expect(logSpy).toHaveBeenCalled();
+
+      logSpy.mockRestore();
+    });
+
+    it('warns when saving best accuracy fails in development mode', () => {
+      process.env.NODE_ENV = 'development';
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const setItemSpy = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('Storage write error');
+      });
+
+      expect(tracker.saveBestAccuracy(99)).toBe(false);
+      expect(warnSpy).toHaveBeenCalled();
+
+      setItemSpy.mockRestore();
+      warnSpy.mockRestore();
     });
   });
 
@@ -306,6 +350,28 @@ describe('StatsTracker', () => {
       localStorage.setItem('test-game_stats', '{invalid json}');
       const stats = tracker.getAllTimeStats();
       expect(stats.totalGames).toBe(0);
+    });
+
+    it('warns and returns defaults on parse/storage errors in development', () => {
+      process.env.NODE_ENV = 'development';
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const getItemSpy = jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+        throw new Error('Storage read error');
+      });
+
+      const stats = tracker.getAllTimeStats();
+      expect(stats).toEqual({
+        totalGames: 0,
+        totalHits: 0,
+        totalMisses: 0,
+        totalKills: 0,
+        totalDeaths: 0,
+        totalPlayTime: 0,
+      });
+      expect(warnSpy).toHaveBeenCalled();
+
+      getItemSpy.mockRestore();
+      warnSpy.mockRestore();
     });
   });
 
@@ -347,6 +413,36 @@ describe('StatsTracker', () => {
       expect(allTime.totalGames).toBe(2);
       expect(allTime.totalHits).toBe(3);
     });
+
+    it('logs successful all-time save in development mode', () => {
+      process.env.NODE_ENV = 'development';
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      tracker.startSession();
+      tracker.recordHit();
+      tracker.endSession();
+      tracker.saveToAllTimeStats();
+
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockRestore();
+    });
+
+    it('warns when all-time save fails in development mode', () => {
+      process.env.NODE_ENV = 'development';
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const setItemSpy = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('Storage write error');
+      });
+
+      tracker.startSession();
+      tracker.recordHit();
+      tracker.endSession();
+      tracker.saveToAllTimeStats();
+
+      expect(warnSpy).toHaveBeenCalled();
+      setItemSpy.mockRestore();
+      warnSpy.mockRestore();
+    });
   });
 
   // ─── clearAllStats() ──────────────────────────────────────────────────────
@@ -360,6 +456,29 @@ describe('StatsTracker', () => {
       expect(tracker.getBestAccuracy()).toBe(0);
       expect(tracker.getAllTimeStats()).toEqual(expect.objectContaining({ totalGames: 0 }));
       expect(tracker.hits).toBe(0);
+    });
+
+    it('logs when stats are cleared in development mode', () => {
+      process.env.NODE_ENV = 'development';
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      tracker.clearAllStats();
+
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockRestore();
+    });
+
+    it('warns when clearAllStats fails', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const removeItemSpy = jest.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+        throw new Error('Storage remove error');
+      });
+
+      tracker.clearAllStats();
+
+      expect(warnSpy).toHaveBeenCalled();
+      removeItemSpy.mockRestore();
+      warnSpy.mockRestore();
     });
   });
 

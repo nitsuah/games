@@ -517,5 +517,148 @@ describe('handleTargetHit - Combo System', () => {
     expect(result.length).toBe(1);
     expect(result[0].isHit).toBe(false);
   });
+
+  test('should create and later remove score popup when setScorePopups is provided', () => {
+    const spawnTime = performance.now() / 1000 - 5;
+    const prevTargets = [
+      { id: 1, size: 2, isHit: false, spawnTime, x: 1, y: 2, z: 3 },
+    ];
+
+    mockSetTargets = jest.fn((fn) => {
+      if (typeof fn === 'function') {
+        return fn(prevTargets);
+      }
+    });
+
+    const popupState = [];
+    const mockSetScorePopups = jest.fn((fn) => {
+      if (typeof fn === 'function') {
+        const next = fn(popupState);
+        popupState.length = 0;
+        popupState.push(...next);
+        return next;
+      }
+      popupState.length = 0;
+      popupState.push(...fn);
+      return fn;
+    });
+
+    const params = {
+      targetId: 1,
+      cooldowns: { spread: 0 },
+      weapon: 'spread',
+      ammo: { spread: 10 },
+      setTargets: mockSetTargets,
+      setHits: mockSetHits,
+      setScore: mockSetScore,
+      setScorePopups: mockSetScorePopups,
+      onHit: mockOnHit,
+      targetRefs: { current: {} },
+      setCombo: mockSetCombo,
+      setComboMultiplier: mockSetComboMultiplier,
+      comboTimerRef,
+    };
+
+    handleTargetHit(params);
+
+    expect(mockSetScorePopups).toHaveBeenCalled();
+    expect(popupState.length).toBe(1);
+    expect(popupState[0].position).toEqual([1, 2, 3]);
+
+    jest.advanceTimersByTime(1000);
+    expect(popupState.length).toBe(0);
+  });
+
+  test('should update popup score with combo multiplier', () => {
+    currentCombo = 4; // Next hit reaches combo 5 => x2 multiplier
+    const spawnTime = performance.now() / 1000 - 5;
+    const prevTargets = [
+      { id: 1, size: 2, isHit: false, spawnTime, x: 1, y: 2, z: 3 },
+    ];
+
+    mockSetTargets = jest.fn((fn) => {
+      if (typeof fn === 'function') {
+        return fn(prevTargets);
+      }
+    });
+
+    const popupState = [];
+    const mockSetScorePopups = jest.fn((fn) => {
+      if (typeof fn === 'function') {
+        const next = fn(popupState);
+        popupState.length = 0;
+        popupState.push(...next);
+        return next;
+      }
+      return fn;
+    });
+
+    const params = {
+      targetId: 1,
+      cooldowns: { spread: 0 },
+      weapon: 'spread',
+      ammo: { spread: 10 },
+      setTargets: mockSetTargets,
+      setHits: mockSetHits,
+      setScore: mockSetScore,
+      setScorePopups: mockSetScorePopups,
+      onHit: mockOnHit,
+      targetRefs: { current: {} },
+      setCombo: mockSetCombo,
+      setComboMultiplier: mockSetComboMultiplier,
+      comboTimerRef,
+    };
+
+    handleTargetHit(params);
+
+    expect(popupState.length).toBe(1);
+    expect(popupState[0].score).toBe(200);
+  });
+
+  test('should leave unrelated popup scores unchanged', () => {
+    currentCombo = 4;
+    const spawnTime = performance.now() / 1000 - 5;
+    const prevTargets = [
+      { id: 1, size: 2, isHit: false, spawnTime, x: 1, y: 2, z: 3 },
+    ];
+
+    mockSetTargets = jest.fn((fn) => {
+      if (typeof fn === 'function') {
+        return fn(prevTargets);
+      }
+    });
+
+    const popupState = [{ id: 'existing', score: 999, position: [0, 0, 0] }];
+    const mockSetScorePopups = jest.fn((fn) => {
+      if (typeof fn === 'function') {
+        const next = fn(popupState);
+        popupState.length = 0;
+        popupState.push(...next);
+        return next;
+      }
+      return fn;
+    });
+
+    const params = {
+      targetId: 1,
+      cooldowns: { spread: 0 },
+      weapon: 'spread',
+      ammo: { spread: 10 },
+      setTargets: mockSetTargets,
+      setHits: mockSetHits,
+      setScore: mockSetScore,
+      setScorePopups: mockSetScorePopups,
+      onHit: mockOnHit,
+      targetRefs: { current: {} },
+      setCombo: mockSetCombo,
+      setComboMultiplier: mockSetComboMultiplier,
+      comboTimerRef,
+    };
+
+    handleTargetHit(params);
+
+    const existing = popupState.find((p) => p.id === 'existing');
+    expect(existing.score).toBe(999);
+  });
 });
 

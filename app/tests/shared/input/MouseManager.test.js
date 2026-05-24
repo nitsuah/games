@@ -37,6 +37,7 @@ function dispatchMoveWithDelta(mm_instance, movementX, movementY, clientX = 400,
 
 describe('MouseManager', () => {
   let mm;
+  const originalNodeEnv = process.env.NODE_ENV;
 
   beforeEach(() => {
     mm = makeManager();
@@ -57,6 +58,11 @@ describe('MouseManager', () => {
 
   afterEach(() => {
     mm.cleanup();
+    process.env.NODE_ENV = originalNodeEnv;
+  });
+
+  afterAll(() => {
+    process.env.NODE_ENV = originalNodeEnv;
   });
 
   // ─── Constructor ──────────────────────────────────────────────────────────
@@ -82,6 +88,50 @@ describe('MouseManager', () => {
       mm.initialize();
       mm.initialize();
       expect(mm.initialized).toBe(true);
+    });
+
+    it('logs initialization in development mode', () => {
+      process.env.NODE_ENV = 'development';
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      mm.initialize();
+
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockRestore();
+    });
+  });
+
+  // ─── requestPointerLock() ────────────────────────────────────────────────
+  describe('requestPointerLock()', () => {
+    it('initializes and requests pointer lock successfully', async () => {
+      const requestPointerLock = jest.fn().mockResolvedValue(undefined);
+      const element = { requestPointerLock };
+
+      await mm.requestPointerLock(element);
+
+      expect(mm.initialized).toBe(true);
+      expect(requestPointerLock).toHaveBeenCalled();
+    });
+
+    it('logs pointer lock request in development mode', async () => {
+      process.env.NODE_ENV = 'development';
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+      const requestPointerLock = jest.fn().mockResolvedValue(undefined);
+
+      await mm.requestPointerLock({ requestPointerLock });
+
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockRestore();
+    });
+
+    it('logs an error when pointer lock request fails', async () => {
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const requestPointerLock = jest.fn().mockRejectedValue(new Error('Pointer lock denied'));
+
+      await mm.requestPointerLock({ requestPointerLock });
+
+      expect(errorSpy).toHaveBeenCalled();
+      errorSpy.mockRestore();
     });
   });
 
@@ -353,6 +403,23 @@ describe('MouseManager', () => {
       expect(document.exitPointerLock).toHaveBeenCalled();
     });
 
+    it('logs pointer lock exit in development mode', () => {
+      process.env.NODE_ENV = 'development';
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      Object.defineProperty(document, 'pointerLockElement', {
+        writable: true,
+        configurable: true,
+        value: document.body,
+      });
+      document.exitPointerLock = jest.fn();
+
+      mm.exitPointerLock();
+
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockRestore();
+    });
+
     it('does not throw when pointer is not locked', () => {
       Object.defineProperty(document, 'pointerLockElement', {
         writable: true,
@@ -382,6 +449,17 @@ describe('MouseManager', () => {
 
     it('is safe to call when not initialized', () => {
       expect(() => mm.cleanup()).not.toThrow();
+    });
+
+    it('logs cleanup in development mode', () => {
+      process.env.NODE_ENV = 'development';
+      const logSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      mm.initialize();
+      mm.cleanup();
+
+      expect(logSpy).toHaveBeenCalled();
+      logSpy.mockRestore();
     });
   });
 
