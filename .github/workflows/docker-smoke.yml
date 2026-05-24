@@ -17,6 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Build unit test image
+        run: docker build --target test-unit -t games-test .
+
+      - name: Confirm code coverage
+        run: docker run --rm games-test npm run test:coverage
+
       - name: Build image
         run: docker build -t games-docker-smoke .
 
