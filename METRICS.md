@@ -12,7 +12,7 @@ All Playwright E2E tests can be run in Docker:
 
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
-| Code Coverage         | 90.21% statements | 90.21% Statements / 80.17% Branches / 90.43% Functions / 92.82% Lines from the latest Docker run. |
+| Code Coverage         | 88.41% overall average | Average of 90.21% Statements / 80.17% Branches / 90.43% Functions / 92.82% Lines from the latest Docker run. |
 | Unit Tests            | 440 passing    | 33/33 Jest suites passing in the latest Docker coverage run. |
 | E2E Tests             | 8 passing      | Based on the last validated Playwright Docker run; not rerun in this refresh. |
 | Test Files            | 33             | Current `app/tests` file count. |
@@ -27,7 +27,7 @@ All Playwright E2E tests can be run in Docker:
 | Open Issues           | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Open PRs              | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Health Score          | TBD        | Replace self-rating with computed score source. |
-| Last Updated          | 2026-05-22 | Metrics updated from Docker-based test run. |
+| Last Updated          | 2026-05-24 | Metrics updated from Docker-based test run. |
 | Passing Unit Tests    | 440/440    | Latest Docker coverage run completed cleanly. |
 | Deploy Success Rate   | TBD        | Pull from provider and CI history. |
 
@@ -38,7 +38,7 @@ All Playwright E2E tests can be run in Docker:
 | Jest Test Suites          | 33    | ✅ Passing |
 | Jest Tests                | 440   | ✅ Passing |
 | Playwright E2E Tests      | 8     | ✅ Last validated |
-| **Current Unit Coverage** | **90.21% statements** | **✅ Docker validated** |
+| **Current Unit Coverage** | **88.41% overall average** | **✅ Docker validated (90.21% statements)** |
 
 ## Docker-based Test & Coverage Workflow
 
@@ -49,6 +49,7 @@ All unit tests and coverage can be run in Docker:
 - All 440 unit tests pass in Docker across 33 suites (latest validation)
 
 Coverage (statements/branches/functions/lines): 90.21% / 80.17% / 90.43% / 92.82%
+Overall average coverage: 88.41%
 
 ## Performance Metrics
 
@@ -105,7 +106,7 @@ Coverage (statements/branches/functions/lines): 90.21% / 80.17% / 90.43% / 92.82
 
 ---
 
-**Last Updated**: May 22, 2026  
+**Last Updated**: May 24, 2026  
 **Data Source**: Latest Docker Jest coverage run plus previously validated Playwright Docker results.
 
 <!--
