@@ -60,4 +60,52 @@ describe('ArcadeCard', () => {
     render(<ArcadeCard {...defaultProps} description={longDescription} />);
     expect(screen.getByText(longDescription)).toBeInTheDocument();
   });
+
+  it('renders grid mode layout and hides non-grid elements', () => {
+    render(<ArcadeCard {...defaultProps} displayMode="grid" />);
+
+    expect(screen.queryByText('Blast asteroids in space')).not.toBeInTheDocument();
+    expect(screen.queryByText('PLAY')).not.toBeInTheDocument();
+    expect(screen.getByRole('button').className).toContain('gridMode');
+  });
+
+  it('renders list mode without PLAY label', () => {
+    render(<ArcadeCard {...defaultProps} displayMode="list" />);
+
+    expect(screen.getByText('Blast asteroids in space')).toBeInTheDocument();
+    expect(screen.queryByText('PLAY')).not.toBeInTheDocument();
+    expect(screen.getByRole('button').className).toContain('listMode');
+  });
+
+  it('applies carousel and position classes when in carousel mode', () => {
+    render(<ArcadeCard {...defaultProps} displayMode="carousel" carouselPosition="current" />);
+
+    const card = screen.getByRole('button');
+    expect(card.className).toContain('carouselMode');
+    expect(card.className).toContain('current');
+  });
+
+  it('does not apply position class for non-carousel modes', () => {
+    render(<ArcadeCard {...defaultProps} displayMode="grid" carouselPosition="current" />);
+
+    const card = screen.getByRole('button');
+    expect(card.className).toContain('gridMode');
+    expect(card.className).not.toContain('current');
+  });
+
+  it('falls back gracefully for unknown display mode', () => {
+    render(<ArcadeCard {...defaultProps} displayMode="unknown-mode" />);
+
+    const card = screen.getByRole('button');
+    expect(card.className).not.toContain('gridMode');
+    expect(card.className).not.toContain('listMode');
+    expect(card.className).not.toContain('carouselMode');
+  });
+
+  it('passes through tabIndex and data-testid props', () => {
+    render(<ArcadeCard {...defaultProps} tabIndex={2} testId="arcade-card" />);
+
+    const card = screen.getByTestId('arcade-card');
+    expect(card).toHaveAttribute('tabindex', '2');
+  });
 });
