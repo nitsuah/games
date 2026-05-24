@@ -194,7 +194,7 @@ All security overrides in `app/package.json` are pinned to **exact versions** ra
 2. **Security**: Prevents automatic upgrades to major versions that might introduce breaking changes or new vulnerabilities.
 
 ### Active Overrides
-- **qs (6.15.0)**: Fixed High-severity `arrayLimit` bypass and DoS vulnerabilities.
+- **qs (6.15.2)**: Fixed High-severity `arrayLimit` bypass and DoS vulnerabilities.
 - **lodash (4.17.23)**: Fixed Prototype Pollution vulnerability.
 - **tmp (0.2.4)**: Tightened from `^0.2.4` to exact version for environment stability.
 

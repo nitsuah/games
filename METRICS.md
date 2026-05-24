@@ -12,7 +12,7 @@ All Playwright E2E tests can be run in Docker:
 
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
-| Code Coverage         | 90.21% statements | 90.21% Statements / 80.17% Branches / 90.43% Functions / 92.82% Lines from the latest Docker run. |
+| Code Coverage         | 90.21% |  |
 | Unit Tests            | 440 passing    | 33/33 Jest suites passing in the latest Docker coverage run. |
 | E2E Tests             | 8 passing      | Based on the last validated Playwright Docker run; not rerun in this refresh. |
 | Test Files            | 33             | Current `app/tests` file count. |
