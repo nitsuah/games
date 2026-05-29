@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Documentation updates for Overseer compliance (FEATURES.md, CHANGELOG.md)
 
+### Changed
+
+- Pinned eslint to 9.39.2 in app due to incompatibility with eslint-plugin-react@7.37.5 (which does not support eslint@10.x as of May 2026)
+
 ## [1.0.0] - 2025-11-25
 
 ### Added
