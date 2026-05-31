@@ -1,11 +1,15 @@
 # Multi-stage Dockerfile for Next.js application
 
+
 FROM node:22.21.0-alpine AS deps
 WORKDIR /app
-
 # Keep install scripts disabled in container to avoid husky prepare failures.
 COPY app/package*.json ./
 RUN npm ci --ignore-scripts
+# Patch tmp vulnerability after install
+COPY app/scripts/patch-tmp.sh /patch-tmp.sh
+RUN chmod +x /patch-tmp.sh && /patch-tmp.sh
+
 
 FROM node:22.21.0-alpine AS builder
 WORKDIR /app
@@ -22,6 +26,9 @@ COPY app/package*.json ./
 COPY app/ .
 # Install all dependencies including devDependencies for testing/linting
 RUN npm ci --ignore-scripts
+# Patch tmp vulnerability after install
+COPY .github/tmp-vuln-fix/patch-tmp.sh /patch-tmp.sh
+RUN chmod +x /patch-tmp.sh && /patch-tmp.sh
 
 # --- Test stage ---
 FROM test-base AS test
@@ -45,12 +52,15 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+
 # Copy runtime files
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
+# Remove patch script if present (cleanup)
+RUN rm -f /patch-tmp.sh
 
 # Prune to production dependencies only, without running install scripts.
 RUN npm prune --omit=dev --ignore-scripts
