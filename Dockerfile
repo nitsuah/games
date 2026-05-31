@@ -7,7 +7,7 @@ WORKDIR /app
 COPY app/package*.json ./
 RUN npm ci --ignore-scripts
 # Patch tmp vulnerability after install
-COPY .github/tmp-vuln-fix/patch-tmp.sh /patch-tmp.sh
+COPY app/scripts/patch-tmp.sh /patch-tmp.sh
 RUN chmod +x /patch-tmp.sh && /patch-tmp.sh
 
 
