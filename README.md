@@ -210,10 +210,11 @@ All security overrides in `app/package.json` are pinned to **exact versions** ra
 
 ---
 
-Built with ❤️ using Next.js, Three.js, React Three Fiber
-## Community Standards
-
-Shared community policies are centralized in https://github.com/nitsuah/.github:
-- Contributing: https://github.com/nitsuah/.github/blob/main/CONTRIBUTING.md
-- Code of Conduct: https://github.com/nitsuah/.github/blob/main/CODE_OF_CONDUCT.md
+Built with ❤️ using Next.js, Three.js, React Three Fiber
+
+## Community Standards
+
+Shared community policies are centralized in https://github.com/nitsuah/.github:
+- Contributing: https://github.com/nitsuah/.github/blob/main/CONTRIBUTING.md
+- Code of Conduct: https://github.com/nitsuah/.github/blob/main/CODE_OF_CONDUCT.md
 - Security: https://github.com/nitsuah/.github/blob/main/SECURITY.md
