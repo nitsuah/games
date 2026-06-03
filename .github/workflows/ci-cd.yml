@@ -1,4 +1,4 @@
-name: Games CI/CD Pipeline
+name: CI
 
 on:
   push:
