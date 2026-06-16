@@ -57,7 +57,7 @@
     "jest-environment-jsdom": "^30.4.1",
     "lighthouse": "^13.3.0",
     "lint-staged": "^17.0.7",
-    "prettier": "^3.8.3",
+    "prettier": "^3.8.4",
     "typescript": "^6.0.3"
   },
   "overrides": {
