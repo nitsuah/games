@@ -20,6 +20,9 @@ Last Updated: 2026-06-08
 
 ## 2026 Q4 (Exploratory)
 
+- [ ] **Per-game achievement system** — unlockable badges per game (e.g., "Survived 10 waves" in Asteroid, "First to 11 in Pong") stored in localStorage and displayed on a cross-game profile page; no server required, drives replayability across the arcade without adding backend complexity.
+- [ ] **Federated leaderboard** — lightweight global top-score sharing via a Netlify Function or Cloudflare Worker; graceful localStorage-only fallback when offline; single shared endpoint serves all games via a `game` key.
+
 <!--
 1. Organize items by Quarter (Q1, Q2, etc.) or time period.
 2. Mark items as [x] when completed, move to appropriate section.
