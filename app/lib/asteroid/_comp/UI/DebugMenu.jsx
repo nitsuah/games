@@ -21,6 +21,7 @@ const DebugMenu = ({ trailQuality, setTrailQuality }) => {
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle debug menu"
         aria-expanded={isOpen}
+        title="Trail Quality"
       >
         ⚙️
       </button>

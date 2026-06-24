@@ -42,13 +42,13 @@ const FlappyPage = () => {
   const [showHowTo, setShowHowTo] = useState(true);
 
   return (
-    <ArcadeLayout>
+    <ArcadeLayout title="FLAPPY BIRD">
       <AudioController />
       <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
       <button
-        style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'1rem', padding:'2px 10px', borderRadius:8, border:'none', background:'#222', color:'#fff', cursor:'pointer' }}
+        style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'0.85rem', padding:'6px 14px', borderRadius:8, border:'2px solid #00ffff', background:'rgba(0,255,255,0.1)', color:'#00ffff', cursor:'pointer', fontFamily:"'Courier New', monospace", letterSpacing:'1px' }}
         onClick={() => setShowHowTo(true)}
-      >How to Play</button>
+      >HOW TO PLAY</button>
       {showHowTo && (
         <HowToPlayOverlay>
           <h2 style={{marginTop:0}}>How to Play Flappy Bird</h2>

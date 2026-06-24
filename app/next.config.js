@@ -71,6 +71,16 @@ const nextConfig = {
       // Provide a baseline CSP header to ensure a CSP is present for crawlers / Lighthouse.
       // _document.js will still set a per-request CSP with nonces for inline scripts/styles.
       {
+        // Allow iframe embedding for standalone HTML games served from /games/*
+        source: '/games/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'self';",
+          },
+        ],
+      },
+      {
         // Apply a stricter baseline CSP for all pages. This avoids allowing remote
         // scripts by default and disables plugin/object sources. If you need to allow
         // a trusted third-party script, prefer adding it explicitly or using a per-request nonce.

@@ -466,9 +466,10 @@ const MarqueeText = styled.h1`
 interface ArcadeLayoutProps {
   children: ReactNode;
   headerContent?: ReactNode;
+  title?: string;
 }
 
-export const ArcadeLayout = ({ children, headerContent }: ArcadeLayoutProps) => {
+export const ArcadeLayout = ({ children, headerContent, title }: ArcadeLayoutProps) => {
   return (
     <PageContainer>
       <ArcadeCabinet>
@@ -489,16 +490,22 @@ export const ArcadeLayout = ({ children, headerContent }: ArcadeLayoutProps) => 
           {headerContent}
           <Header>
             <Title>
-              <span>🕹️</span>
-              <span>PLAY</span>
-              <span>🕹️</span>
+              {title ? (
+                <span>{title}</span>
+              ) : (
+                <>
+                  <span>🕹️</span>
+                  <span>PLAY</span>
+                  <span>🕹️</span>
+                </>
+              )}
             </Title>
-            <Subtitle>Select Your Game</Subtitle>
+            {!title && <Subtitle>Select Your Game</Subtitle>}
           </Header>
 
           {children}
 
-          <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>
+          {!title && <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>}
         </ArcadeFrame>
       </ArcadeCabinet>
     </PageContainer>

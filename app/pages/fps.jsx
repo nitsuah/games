@@ -1,6 +1,7 @@
 // fps.jsx
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { AudioController } from '@/_components/home/AudioController';
 import styled from 'styled-components';
 
@@ -22,15 +23,32 @@ const HowToPlayOverlay = styled.div`
   text-align: left;
 `;
 
+const NeonButton = styled.button`
+  position: absolute;
+  z-index: 1001;
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 2px solid #00ffff;
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+
+  &:hover {
+    background: rgba(0, 255, 255, 0.25);
+  }
+`;
+
 export default function Range() {
+  const router = useRouter();
   const [showHowTo, setShowHowTo] = useState(true);
   return (
     <div style={{position:'relative',width:'100vw',height:'100vh',overflow:'hidden',background:'#000'}}>
       <AudioController />
-      <button
-        style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'1rem', padding:'2px 10px', borderRadius:8, border:'none', background:'#222', color:'#fff', cursor:'pointer' }}
-        onClick={() => setShowHowTo(true)}
-      >How to Play</button>
+      <NeonButton style={{ top: 20, left: 20 }} onClick={() => router.push('/')}>← BACK TO ARCADE</NeonButton>
+      <NeonButton style={{ top: 20, right: 20 }} onClick={() => setShowHowTo(true)}>HOW TO PLAY</NeonButton>
       {showHowTo && (
         <HowToPlayOverlay>
           <h2 style={{marginTop:0}}>How to Play FPS Tank Commander</h2>
