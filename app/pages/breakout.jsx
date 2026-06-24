@@ -29,7 +29,7 @@ export default function BreakoutPage() {
   return (
     <>
       <AudioController />
-      <ArcadeLayout>
+      <ArcadeLayout title="BREAKOUT">
         {!gameStarted ? (
           <div style={{
             width: '100%',
@@ -85,6 +85,12 @@ export default function BreakoutPage() {
           </div>
         ) : (
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 500 }}>
+            <ArcadeButton
+              onClick={() => setGameStarted(false)}
+              variant={VARIANTS.SECONDARY}
+              style={{ marginBottom: '1rem' }}>
+              ← BACK TO MENU
+            </ArcadeButton>
             <BreakoutGame />
           </div>
         )}

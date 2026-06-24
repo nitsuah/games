@@ -42,13 +42,13 @@ const SpaceInvadersPage = () => {
   const [showHowTo, setShowHowTo] = useState(true);
 
   return (
-    <ArcadeLayout>
+    <ArcadeLayout title="SPACE INVADERS">
       <AudioController />
       <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
       <button
-        style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'1rem', padding:'2px 10px', borderRadius:8, border:'none', background:'#222', color:'#fff', cursor:'pointer' }}
+        style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'0.85rem', padding:'6px 14px', borderRadius:8, border:'2px solid #00ffff', background:'rgba(0,255,255,0.1)', color:'#00ffff', cursor:'pointer', fontFamily:"'Courier New', monospace", letterSpacing:'1px' }}
         onClick={() => setShowHowTo(true)}
-      >How to Play</button>
+      >HOW TO PLAY</button>
       {showHowTo && (
         <HowToPlayOverlay>
           <h2 style={{marginTop:0}}>How to Play Space Invaders</h2>
@@ -66,9 +66,11 @@ const SpaceInvadersPage = () => {
           >Got it!</button>
         </HowToPlayOverlay>
       )}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', transform: 'scale(0.85)' }}>
-        <SpaceInvadersGame />
-      </div>
+      {!showHowTo && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', transform: 'scale(0.85)' }}>
+          <SpaceInvadersGame />
+        </div>
+      )}
     </ArcadeLayout>
   );
 };

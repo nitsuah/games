@@ -41,15 +41,6 @@ import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
 import { useScreenShake } from '@/lib/shared/ui/useScreenShake';
 
-const StatsPanel = ({ health, score, highScore, bestAccuracy }) => (
-  <div className={styles.statsDisplay}>
-    Health: {health} <br />
-    Score: {score} <br />
-    High Score: {highScore} <br />
-    Best Accuracy: {bestAccuracy.toFixed(1)}%
-  </div>
-);
-
 const Game = ({ onHit, onMiss }) => {
   const { musicEnabled } = useAudio();
   const { settings } = useSettings();
@@ -740,10 +731,6 @@ const Game = ({ onHit, onMiss }) => {
         />
       )}
       
-      {/* StatsPanel is kept but moved off-canvas by default; toggle in debug only */}
-      <div style={{ position: 'fixed', left: 12, bottom: 12, zIndex: 400, opacity: 0.9, pointerEvents: 'none' }}>
-        <StatsPanel health={health} score={score} highScore={highScore} bestAccuracy={bestAccuracy} />
-      </div>
       {gameOver && (
         <GameOverOverlay
           score={score}
