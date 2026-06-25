@@ -1,6 +1,6 @@
 # Roadmap
 
-Last Updated: 2026-06-08
+Last Updated: 2026-06-25
 
 ## 2025 Q4 – 2026 Q1 ✅
 

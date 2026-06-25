@@ -83,6 +83,8 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 - **ArcadeHeader**: Scanline-effect title headers with retro CRT aesthetic
 - **ArcadeMenu**: Overlay menu system with arcade styling
 - **Consistent Design**: Unified neon aesthetic across all games (cyan, magenta, yellow)
+- **Game Page Polish**: Each game route has a page title, back navigation to the arcade index, and neon-styled UI consistent with the shared design system
+- **CSP Iframe Fix**: Content Security Policy headers updated to allow iframe embedding where required
 
 ### 🔊 Audio System `[shipped with active runtime bug]`
 
