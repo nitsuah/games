@@ -11,7 +11,7 @@ import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
     position: relative;
-    width: 100%;
+    width: 100vw;
     max-width: 800px;
     aspect-ratio: 4/3;
     background: #000;
@@ -23,14 +23,17 @@ const GameContainer = styled.div`
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
+
+    @media (max-width: 600px) {
+        border-width: 2px;
+    }
 `;
 
 const Canvas = styled.canvas`
     display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
     max-width: 800px;
-    max-height: 600px;
     aspect-ratio: 4/3;
     background: #000;
     box-sizing: border-box;
@@ -52,9 +55,9 @@ const UIOverlay = styled.div`
     pointer-events: none;
     box-sizing: border-box;
     z-index: 2;
-    @media (max-width: 900px) {
-        font-size: 16px;
-        padding: 12px 8px 0 8px;
+    @media (max-width: 600px) {
+        font-size: 12px;
+        padding: 8px 12px 0 12px;
     }
 `;
 

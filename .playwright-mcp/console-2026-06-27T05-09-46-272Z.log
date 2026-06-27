@@ -1,0 +1,47 @@
+[     304ms] [LOG] ServiceWorker registered with scope / @ http://localhost:3000/register-sw.js:7
+[    3931ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    3933ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    3933ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    3933ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    3933ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    3933ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    3933ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4036ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4040ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4040ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4041ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4041ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4041ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4041ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4106ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/1m9yay70r86x-.js:0
+[    4380ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4381ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4387ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    4454ms] [LOG] ✅ Started background music @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    8040ms] [ERROR] THREE.PointerLockControls: Unable to use Pointer Lock API @ http://localhost:3000/_next/static/chunks/1zq179et2_ehf.js:0
+[    8047ms] The root document of this element is not valid for pointer lock.
+[    8045ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    8045ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    8045ms] [LOG] ✅ Played sound: shoot @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    9533ms] [LOG] ✅ Played sound: shoot @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    9533ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[    9533ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[   11514ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[   11514ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[   11514ms] [LOG] ✅ Played sound: shoot @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[   11548ms] [ERROR] THREE.PointerLockControls: Unable to use Pointer Lock API @ http://localhost:3000/_next/static/chunks/1zq179et2_ehf.js:0
+[   11549ms] Pointer lock cannot be acquired immediately after the user has exited the lock.
+[   13615ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[   13615ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0
+[   13615ms] [LOG] ✅ Played sound: shoot @ http://localhost:3000/_next/static/chunks/0piar6nhkfujs.js:0

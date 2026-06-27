@@ -1,0 +1,36 @@
+- generic [ref=e76]:
+  - generic [ref=e78]:
+    - generic: Click to lock pointer as camera, Esc to exit
+    - generic [ref=e79]:
+      - generic [ref=e83]:
+        - generic [ref=e84]: FPS
+        - generic [ref=e85]: "211"
+      - generic [ref=e86]:
+        - generic [ref=e88]: Wave 1
+        - generic [ref=e91]: "Score: 0"
+      - generic [ref=e92]:
+        - generic [ref=e93]:
+          - generic [ref=e94]: Health
+          - generic [ref=e95]:
+            - generic: 100 / 100
+        - generic [ref=e97]:
+          - generic [ref=e98]: SPREAD
+          - generic [ref=e101]: 9 / 30
+        - generic [ref=e102]:
+          - generic [ref=e103]: "Weapon: Spread Shot"
+          - generic [ref=e104]: "Ammo: 9 / 10"
+          - generic [ref=e106]:
+            - generic [ref=e107]: Reload
+            - generic [ref=e108]: Ready
+      - generic [ref=e111]:
+        - button "Toggle debug menu" [expanded] [active] [ref=e112] [cursor=pointer]: ⚙️
+        - generic [ref=e113]:
+          - generic [ref=e114]: Debug Controls
+          - generic [ref=e115]:
+            - generic [ref=e116]: "Trail Quality:"
+            - generic [ref=e117]:
+              - button "Trail quality off" [ref=e118] [cursor=pointer]: "Off"
+              - button "Trail quality low" [ref=e119] [cursor=pointer]: Low
+              - button "Trail quality high" [pressed] [ref=e120] [cursor=pointer]: High
+          - generic [ref=e121]: Press T to cycle
+  - alert [ref=e75]: Games
