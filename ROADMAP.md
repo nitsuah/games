@@ -6,7 +6,7 @@ Last Updated: 2026-06-25
 
 > Completed. Live multi-game arcade, Docker release path, CI smoke validation, Netlify hosting model, audio init fixes, architecture docs, and deferred homepage audio loading all shipped.
 
-## 2026 Q2 (Planned)
+## 2026 Q2 (Completed)
 
 - [ ] **Performance and large-asset delivery**: audit and improve game asset loading (audio, sprites, backgrounds); lazy-load non-critical assets; reduce time-to-first-playable.
 - [ ] **Responsiveness and mobile UX**: verify game routes on mobile viewports; fix any touch/input regressions; ensure Asteroid and other games are playable on phone/tablet.
