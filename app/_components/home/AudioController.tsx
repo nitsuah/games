@@ -86,7 +86,12 @@ export const AudioController = () => {
     };
 
     return (
-        <MuteButton onClick={toggleMute} $muted={muted} title={muted ? 'Unmute Music' : 'Mute Music'}>
+        <MuteButton
+            onClick={toggleMute}
+            $muted={muted}
+            title={muted ? 'Unmute Music' : 'Mute Music'}
+            aria-label={muted ? 'Unmute Music' : 'Mute Music'} // Add aria-label
+        >
             {muted ? '🔇' : '🔊'}
         </MuteButton>
     );
