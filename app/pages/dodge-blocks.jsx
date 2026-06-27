@@ -10,7 +10,7 @@ const DodgeBlocks = () => {
         <iframe
           src="/games/dodge-blocks/index.html"
           title="Dodge the Blocks"
-          sandbox="allow-scripts allow-same-origin"
+          sandbox="allow-scripts"
           style={{
             border: 'none',
             borderRadius: 12,
