@@ -29,6 +29,11 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
 
 [[headers]]
+  for = "/games/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+
+[[headers]]
   for = "/sounds/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
