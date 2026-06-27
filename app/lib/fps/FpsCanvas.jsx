@@ -113,7 +113,7 @@ export default function FpsCanvas() {
     <>
       <Canvas
         shadows
-        gl={{ alpha: false }}
+        gl={{ alpha: false, shadowMap: { type: THREE.PCFShadowMap } }}
         camera={{ position: [playerPosition[0], playerPosition[1] + 5, playerPosition[2] + 5], fov: 50 }}
         style={{ background: '#000000', width: '99vw', height: '98vh' }}
       >
