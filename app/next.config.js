@@ -80,21 +80,6 @@ const nextConfig = {
           },
         ],
       },
-      {
-        // Apply a stricter baseline CSP for all pages. This avoids allowing remote
-        // scripts by default and disables plugin/object sources. If you need to allow
-        // a trusted third-party script, prefer adding it explicitly or using a per-request nonce.
-        source: '/:path*',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value:
-              process.env.NODE_ENV === 'development'
-                ? "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: ws: wss: http://localhost:*; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self';"
-                : "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; worker-src 'self' blob:; manifest-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content;",
-          },
-        ],
-      },
     ];
   },
 };
