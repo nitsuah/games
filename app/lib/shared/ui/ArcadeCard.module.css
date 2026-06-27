@@ -14,6 +14,7 @@
   position: relative;
   overflow: hidden;
   font-family: 'Courier New', monospace;
+  color: white; /* Ensure text is visible on dark background */
 }
 
 .card::before {
@@ -102,7 +103,7 @@
 .title {
   font-size: 28px;
   font-weight: bold;
-  color: var(--ui-primary, #00ffff);
+  color: white; /* Changed from var(--ui-primary, #00ffff) to ensure contrast */
   text-transform: uppercase;
   letter-spacing: 3px;
   margin: 10px 0 0 0;

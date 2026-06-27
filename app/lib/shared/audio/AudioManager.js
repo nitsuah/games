@@ -24,7 +24,7 @@ class AudioManager {
 
     try {
       if (typeof window === 'undefined') return;
-      
+
       this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
       this.isInitialized = true;
 
@@ -53,9 +53,52 @@ class AudioManager {
    * @returns {Promise<HTMLAudioElement>}
    */
   async loadSound(name, src, options = {}) {
+    // Return a Promise that resolves immediately with a placeholder if lazy loading
+    // The actual audio element will be created/loaded in playSound
+    return new Promise((resolve) => {
+      // Set audio properties
+      const type = options.type || 'sound'; // 'sound' or 'music'
+      const baseVolume = options.volume !== undefined ? options.volume : 1.0;
+
+      const soundData = {
+        audio: null, // Will be an HTMLAudioElement once loaded
+        type,
+        baseVolume,
+        loop: options.loop || false,
+        src: process.env.NODE_ENV === 'development' && typeof window !== 'undefined'
+          ? `${window.location.origin}${src}`
+          : src,
+        _isLoaded: false, // Internal flag to track if the audio element is created and loaded
+      };
+
+      this.sounds.set(name, soundData);
+
+      // Eagerly load music, lazy load sound effects
+      if (type === 'music') {
+        this._createAndLoadAudio(name, soundData.src, soundData.loop, baseVolume).then((audio) => {
+          soundData.audio = audio;
+          soundData._isLoaded = true;
+          resolve(audio);
+        });
+      } else {
+        resolve(null); // Resolve immediately for lazy-loaded sound effects
+      }
+    });
+  }
+
+  /**
+   * Internal helper to create and load an HTMLAudioElement
+   * @param {string} name - Unique identifier for the sound
+   * @param {string} src - Path to audio file
+   * @param {boolean} loop - Whether the audio should loop
+   * @param {number} volume - Base volume
+   * @returns {Promise<HTMLAudioElement>}
+   * @private
+   */
+  _createAndLoadAudio(name, src, loop, volume) {
     return new Promise((resolve, reject) => {
       const audio = new Audio();
-      
+
       audio.addEventListener('canplaythrough', () => {
         console.log(`✅ Audio loaded: ${name} (${src})`);
         resolve(audio);
@@ -66,24 +109,10 @@ class AudioManager {
         reject(e);
       });
 
-      // Set audio properties
-      audio.loop = options.loop || false;
-      audio.volume = options.volume !== undefined ? options.volume : 1.0;
-      
-      // Use absolute path from public directory
-      // In development, use window.location.origin to avoid hardcoded localhost
-      audio.src = process.env.NODE_ENV === 'development' && typeof window !== 'undefined'
-        ? `${window.location.origin}${src}` 
-        : src;
-
+      audio.loop = loop;
+      audio.volume = volume;
+      audio.src = src; // Already absolute path from loadSound
       audio.load();
-
-      // Store in sounds map with metadata
-      this.sounds.set(name, {
-        audio,
-        type: options.type || 'sound', // 'sound' or 'music'
-        baseVolume: options.volume !== undefined ? options.volume : 1.0,
-      });
     });
   }
 
@@ -99,9 +128,9 @@ class AudioManager {
 
     try {
       await Promise.all(promises);
-      console.log('✅ All sounds loaded');
+      console.log('✅ All sounds processed (music loaded, effects set for lazy-load)');
     } catch (error) {
-      console.error('❌ Failed to load some sounds:', error);
+      console.error('❌ Failed to process some sounds:', error);
     }
   }
 
@@ -117,11 +146,35 @@ class AudioManager {
       return;
     }
 
-    const { audio, type, baseVolume } = soundData;
+    let { audio, type, baseVolume, loop, src, _isLoaded } = soundData;
+
+    // Lazy load sound effects if not already loaded
+    if (type === 'sound' && !_isLoaded) {
+      try {
+        audio = await this._createAndLoadAudio(name, src, loop, baseVolume);
+        soundData.audio = audio;
+        soundData._isLoaded = true;
+        console.log(`⚡ Lazy loaded sound: ${name}`);
+      } catch (error) {
+        console.error(`❌ Failed to lazy load sound ${name}:`, error);
+        return;
+      }
+    }
+
+    if (!audio) {
+        console.error(`❌ Audio element not available for ${name}`);
+        return;
+    }
 
     // Check if sound/music is enabled
-    if (type === 'music' && !this.musicEnabled) return;
-    if (type === 'sound' && !this.soundEnabled) return;
+    if (type === 'music' && !this.musicEnabled) {
+      audio.pause(); // Ensure music doesn't play if disabled
+      return;
+    }
+    if (type === 'sound' && !this.soundEnabled) {
+      audio.pause(); // Ensure sound doesn't play if disabled
+      return;
+    }
 
     try {
       // Resume audio context if suspended
@@ -131,8 +184,8 @@ class AudioManager {
 
       // Apply volume modifiers
       const volumeMultiplier = type === 'music' ? this.musicVolume : this.soundVolume;
-      audio.volume = (options.volume !== undefined ? options.volume : baseVolume) 
-        * volumeMultiplier 
+      audio.volume = (options.volume !== undefined ? options.volume : baseVolume)
+        * volumeMultiplier
         * this.masterVolume;
 
       // For background music, check if already playing
@@ -157,7 +210,7 @@ class AudioManager {
    */
   pauseSound(name) {
     const soundData = this.sounds.get(name);
-    if (soundData) {
+    if (soundData && soundData.audio) {
       soundData.audio.pause();
     }
   }
@@ -168,7 +221,7 @@ class AudioManager {
    */
   stopSound(name) {
     const soundData = this.sounds.get(name);
-    if (soundData) {
+    if (soundData && soundData.audio) {
       soundData.audio.pause();
       soundData.audio.currentTime = 0;
     }
@@ -181,7 +234,7 @@ class AudioManager {
    */
   setSoundVolume(name, volume) {
     const soundData = this.sounds.get(name);
-    if (soundData) {
+    if (soundData && soundData.audio) {
       const { type } = soundData;
       const volumeMultiplier = type === 'music' ? this.musicVolume : this.soundVolume;
       soundData.audio.volume = Math.max(0, Math.min(1, volume)) * volumeMultiplier * this.masterVolume;
@@ -221,9 +274,12 @@ class AudioManager {
    */
   updateAllVolumes() {
     this.sounds.forEach((soundData) => {
-      const { audio, type, baseVolume } = soundData;
-      const volumeMultiplier = type === 'music' ? this.musicVolume : this.soundVolume;
-      audio.volume = baseVolume * volumeMultiplier * this.masterVolume;
+      // Only update volume if audio element exists (i.e., it's loaded)
+      if (soundData.audio) {
+        const { audio, type, baseVolume } = soundData;
+        const volumeMultiplier = type === 'music' ? this.musicVolume : this.soundVolume;
+        audio.volume = baseVolume * volumeMultiplier * this.masterVolume;
+      }
     });
   }
 
@@ -236,7 +292,7 @@ class AudioManager {
     if (!enabled) {
       // Pause all sound effects
       this.sounds.forEach((soundData) => {
-        if (soundData.type === 'sound') {
+        if (soundData.type === 'sound' && soundData.audio) { // Check soundData.audio
           soundData.audio.pause();
         }
       });
@@ -252,7 +308,7 @@ class AudioManager {
     if (!enabled) {
       // Pause all music
       this.sounds.forEach((soundData) => {
-        if (soundData.type === 'music') {
+        if (soundData.type === 'music' && soundData.audio) { // Check soundData.audio
           soundData.audio.pause();
         }
       });
@@ -266,7 +322,7 @@ class AudioManager {
    */
   isPlaying(name) {
     const soundData = this.sounds.get(name);
-    return soundData ? !soundData.audio.paused : false;
+    return soundData && soundData.audio ? !soundData.audio.paused : false;
   }
 
   /**
@@ -276,7 +332,7 @@ class AudioManager {
    */
   getCurrentTime(name) {
     const soundData = this.sounds.get(name);
-    return soundData ? soundData.audio.currentTime : 0;
+    return soundData && soundData.audio ? soundData.audio.currentTime : 0;
   }
 
   /**
@@ -284,8 +340,10 @@ class AudioManager {
    */
   cleanup() {
     this.sounds.forEach((soundData) => {
-      soundData.audio.pause();
-      soundData.audio.src = '';
+      if (soundData.audio) { // Only clean up if audio element exists
+        soundData.audio.pause();
+        soundData.audio.src = '';
+      }
     });
     this.sounds.clear();
 
