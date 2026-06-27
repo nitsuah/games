@@ -11,7 +11,7 @@ Last Updated: 2026-06-25
 - [ ] **Performance and large-asset delivery**: audit and improve game asset loading (audio, sprites, backgrounds); lazy-load non-critical assets; reduce time-to-first-playable.
 - [ ] **Responsiveness and mobile UX**: verify game routes on mobile viewports; fix any touch/input regressions; ensure Asteroid and other games are playable on phone/tablet.
 - [ ] **Accessibility audit**: run and resolve core a11y issues (keyboard navigation, ARIA for game controls, color contrast on HUD/scoreboard).
-- [ ] **UX verification pass**: walk through all live game routes as a first-time user; document any friction or broken states found.
+- [x] **UX verification pass**: walk through all live game routes as a first-time user; document any friction or broken states found.
 
 ## 2026 Q3 (Planned)
 
