@@ -11,7 +11,7 @@ Last Updated: 2026-06-25
 - [x] **[Q2] Performance audit and asset optimization** — identify and fix the largest asset/load-time bottlenecks across game routes.
   - Priority: P1
   - Problem: audio, sprites, and backgrounds are loaded eagerly on some routes; this hurts time-to-first-playable especially on mobile.
-  - Acceptance Criteria: each game route loads its primary interactive surface within 3s on a simulated mid-tier mobile connection; large assets are lazy-loaded (sound effects and arcade music are handled); METRICS.md updated with measured values.
+  - Acceptance Criteria: each game route loads its primary interactive surface within 3s on a simulated mid-tier mobile connection; large assets are lazy-loaded (sound effects, arcade music, and FPS terrain heightmap are handled); METRICS.md updated with measured values.
 
 - [x] **[Q2] Mobile responsiveness and touch input** — verify all game routes work on phone/tablet viewports with touch input.
   - Priority: P1

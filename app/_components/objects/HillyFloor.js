@@ -66,41 +66,53 @@ const HillyFloor = forwardRef(
     ref
   ) => {
     const [heightData, setHeightData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
       if (!heightmapUrl) {
         setHeightData(null);
+        setIsLoading(false);
         return;
       }
+      setIsLoading(true);
       const loader = new EXRLoader();
-      loader.load(heightmapUrl, (texture) => {
-        const { width: imgW, height: imgH, data } = texture.image;
-        // Find min/max for normalization
-        let min = Infinity,
-          max = -Infinity;
-        for (let i = 0; i < data.length; i += 4) {
-          const h = data[i];
-          if (h < min) min = h;
-          if (h > max) max = h;
-        }
-        // Normalize and store as 2D array
-        const arr = [];
-        for (let z = 0; z < depth; z++) {
-          const row = [];
-          for (let x = 0; x < width; x++) {
-            const ix = Math.floor((x / (width - 1)) * (imgW - 1));
-            const iz = Math.floor((z / (depth - 1)) * (imgH - 1));
-            const idx = (iz * imgW + ix) * 4;
-            let h = data[idx];
-            // Normalize to 0..1
-            h = (h - min) / (max - min || 1);
-            row.push(h * hillHeight);
+      loader.load(
+        heightmapUrl,
+        (texture) => {
+          const { width: imgW, height: imgH, data } = texture.image;
+          // Find min/max for normalization
+          let min = Infinity,
+            max = -Infinity;
+          for (let i = 0; i < data.length; i += 4) {
+            const h = data[i];
+            if (h < min) min = h;
+            if (h > max) max = h;
           }
-          arr.push(row);
+          // Normalize and store as 2D array
+          const arr = [];
+          for (let z = 0; z < depth; z++) {
+            const row = [];
+            for (let x = 0; x < width; x++) {
+              const ix = Math.floor((x / (width - 1)) * (imgW - 1));
+              const iz = Math.floor((z / (depth - 1)) * (imgH - 1));
+              const idx = (iz * imgW + ix) * 4;
+              let h = data[idx];
+              // Normalize to 0..1
+              h = (h - min) / (max - min || 1);
+              row.push(h * hillHeight);
+            }
+            arr.push(row);
+          }
+          // Smooth the heightmap to enforce max gradient
+          setHeightData(smoothHeightmap(arr, maxGradient));
+          setIsLoading(false);
+        },
+        undefined,
+        (error) => {
+          console.error('An error occurred loading the EXR heightmap:', error);
+          setIsLoading(false);
         }
-        // Smooth the heightmap to enforce max gradient
-        setHeightData(smoothHeightmap(arr, maxGradient));
-      });
+      );
     }, [heightmapUrl, width, depth, hillHeight, maxGradient]);
 
     // Compute min/max for color mapping (tracked but not used directly)
@@ -121,48 +133,25 @@ const HillyFloor = forwardRef(
     }, [heightData]);
 
     const computedHeightData = useMemo(() => {
-      if (heightData) {
-        // Apply bell curve to EXR heightmap
-        const arr = [];
-        for (let z = 0; z < depth; z++) {
-          const row = [];
-          for (let x = 0; x < width; x++) {
-            row.push(heightData[z][x] * bellCurve(x, z, width, depth));
-          }
-          arr.push(row);
-        }
-        return arr;
+      if (isLoading || !heightData) { // Added isLoading check
+        return null;
       }
-      // Fallback: procedural noise, normalized and bell curved
-      let min = Infinity,
-        max = -Infinity;
-      const data = [];
+      // Apply bell curve to EXR heightmap
+      const arr = [];
       for (let z = 0; z < depth; z++) {
         const row = [];
         for (let x = 0; x < width; x++) {
-          const noiseVal = valueNoise(x * 0.1, z * 0.1);
-          const baseHeight = (noiseVal * 2 - 1) * 0.5 + 0.5; // Normalize to 0..1
-          const bell = bellCurve(x, z, width, depth);
-          const height = baseHeight * bell * hillHeight;
-          row.push(height);
-          if (height < min) min = height;
-          if (height > max) max = height;
+          row.push(heightData[z][x] * bellCurve(x, z, width, depth));
         }
-        data.push(row);
+        arr.push(row);
       }
-      // Scale and smooth
-      for (let z = 0; z < depth; z++) {
-        for (let x = 0; x < width; x++) {
-          data[z][x] = ((data[z][x] - min) / (max - min || 1)) * hillHeight;
-        }
-      }
-      return smoothHeightmap(data, maxGradient);
-    }, [heightData, width, depth, hillHeight, maxGradient]);
+      return arr;
+    }, [heightData, width, depth, hillHeight, maxGradient, isLoading]);
 
     const geometry = useMemo(() => {
-      const geometry = new THREE.PlaneGeometry(width, depth, width - 1, depth - 1);
-      const vertices = geometry.attributes.position.array;
-      const colors = [];
+      if (!computedHeightData) { // Also depend on computedHeightData
+        return null;
+      }
       // Use min/max from computedHeightData for color mapping
       let min = Infinity,
         max = -Infinity;
@@ -193,6 +182,10 @@ const HillyFloor = forwardRef(
       geometry.computeVertexNormals();
       return geometry;
     }, [width, depth, computedHeightData]);
+
+    if (isLoading || !computedHeightData) {
+      return null; // Or render a loading indicator / placeholder
+    }
 
     return (
       <mesh ref={ref} geometry={geometry} rotation={[-Math.PI / 2, 0, 0]}>
