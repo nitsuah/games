@@ -1,0 +1,25 @@
+[   40081ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/sessions:0
+[   40081ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/docker/status:0
+[   40083ms] [ERROR] Error fetching sessions: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   40084ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/system/services:0
+[   40084ms] [ERROR] Error fetching Docker status: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   40085ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/models/pull-status:0
+[   40085ms] [ERROR] Error fetching system services: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   40086ms] [ERROR] Error fetching model pull status: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   44444ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/tasks:0
+[   45604ms] [ERROR] WebSocket connection to 'ws://localhost:3000/ws/events' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   47399ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/sessions:0
+[   47399ms] [ERROR] Error fetching sessions: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   50952ms] [ERROR] WebSocket connection to 'ws://localhost:3000/ws/events' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   51389ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/tasks:0
+[   51664ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/sessions:0
+[   51664ms] [ERROR] Error fetching sessions: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   52406ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/docker/status:0
+[   52406ms] [ERROR] Error fetching Docker status: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   52407ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/system/services:0
+[   52407ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/models/pull-status:0
+[   52407ms] [ERROR] Error fetching system services: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   52408ms] [ERROR] Error fetching model pull status: SyntaxError: Unexpected token 'N', "Not found" is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   55082ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/sessions:0
+[   55083ms] [ERROR] Error fetching sessions: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON @ http://localhost:3000/assets/index-B-wZT8Pr.js:41
+[   56068ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/api/tasks:0

@@ -32,6 +32,7 @@
   for = "/games/*"
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'self';"
 
 [[headers]]
   for = "/sounds/*"

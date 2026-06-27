@@ -1,0 +1,61 @@
+- generic [active]:
+  - generic:
+    - button "🔇" [ref=e1] [cursor=pointer]
+    - generic [ref=e3]:
+      - heading "★ ARCADE ★" [level=1] [ref=e4]
+      - generic [ref=e6]: 25¢
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - heading "🕹️ PLAY 🕹️" [level=2] [ref=e15]:
+            - generic [ref=e16]: 🕹️
+            - generic [ref=e17]: PLAY
+            - generic [ref=e18]: 🕹️
+          - heading "Select Your Game" [level=3] [ref=e19]
+        - generic [ref=e20]:
+          - button "Asteroid" [ref=e21] [cursor=pointer]:
+            - generic [ref=e23]: 🎯
+            - generic [ref=e24]:
+              - generic [ref=e25]: ▶
+              - heading "Asteroid" [level=3] [ref=e26]
+          - button "FPS" [ref=e27] [cursor=pointer]:
+            - generic [ref=e29]: 🎮
+            - generic [ref=e30]:
+              - generic [ref=e31]: ▶
+              - heading "FPS" [level=3] [ref=e32]
+          - button "Breakout" [ref=e33] [cursor=pointer]:
+            - generic [ref=e35]: 🧱
+            - generic [ref=e36]:
+              - generic [ref=e37]: ▶
+              - heading "Breakout" [level=3] [ref=e38]
+          - button "Invaders" [ref=e39] [cursor=pointer]:
+            - generic [ref=e41]: 👾
+            - generic [ref=e42]:
+              - generic [ref=e43]: ▶
+              - heading "Invaders" [level=3] [ref=e44]
+          - button "Flappy" [ref=e45] [cursor=pointer]:
+            - generic [ref=e47]: 🐦
+            - generic [ref=e48]:
+              - generic [ref=e49]: ▶
+              - heading "Flappy" [level=3] [ref=e50]
+          - button "Snake" [ref=e51] [cursor=pointer]:
+            - generic [ref=e53]: 🐍
+            - generic [ref=e54]:
+              - generic [ref=e55]: ▶
+              - heading "Snake" [level=3] [ref=e56]
+          - button "Pong" [ref=e57] [cursor=pointer]:
+            - generic [ref=e59]: 🏓
+            - generic [ref=e60]:
+              - generic [ref=e61]: ▶
+              - heading "Pong" [level=3] [ref=e62]
+          - button "Memory Match" [ref=e63] [cursor=pointer]:
+            - generic [ref=e65]: 🧠
+            - generic [ref=e66]:
+              - generic [ref=e67]: ▶
+              - heading "Memory Match" [level=3] [ref=e68]
+          - button "Dodge Blocks" [ref=e69] [cursor=pointer]:
+            - generic [ref=e71]: ⬛
+            - generic [ref=e72]:
+              - generic [ref=e73]: ▶
+              - heading "Dodge Blocks" [level=3] [ref=e74]
+        - generic: INSERT COIN TO PLAY
+  - alert [ref=e75]
