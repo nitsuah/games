@@ -109,14 +109,14 @@ const ArcadeFrame = styled.div`
   padding: 40px 20px 80px; /* Reduced padding for smaller screens */
 
   @media (orientation: landscape) and (max-height: 500px) {
-    padding: 20px 10px 40px; /* Even smaller padding for very short landscape */
-    min-height: 90vh;
+    padding: 15px 5px 30px; /* Tightened for landscape */
+    min-height: 95vh;
   }
 
   @media (max-width: 768px) {
-    width: 95vw;
-    padding: 30px 15px 70px;
-    min-height: 70vh;
+    width: 98vw; /* Used more space */
+    padding: 20px 10px 50px;
+    min-height: 85vh;
   }
 `;
 
@@ -486,7 +486,7 @@ export const ArcadeLayout = ({ children, headerContent, title, fullscreenGame = 
   }
   return (
     <PageContainer>
-      <ArcadeCabinet>
+      <ArcadeCabinet data-testid="arcade-cabinet">
         <MarqueeText>ARCADE</MarqueeText>
         <Joystick />
         <CoinSlot />

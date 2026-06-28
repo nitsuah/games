@@ -46,6 +46,7 @@ const PongPage = () => {
       <AudioController />
       <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
       <button
+        aria-label="Open how to play instructions"
         style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'0.85rem', padding:'6px 14px', borderRadius:8, border:'2px solid #00ffff', background:'rgba(0,255,255,0.1)', color:'#00ffff', cursor:'pointer', fontFamily:"'Courier New', monospace", letterSpacing:'1px' }}
         onClick={() => setShowHowTo(true)}
       >HOW TO PLAY</button>
@@ -59,6 +60,7 @@ const PongPage = () => {
             <li>Try to beat the AI opponent!</li>
           </ul>
           <button
+            aria-label="Close instructions"
             style={{fontSize:'1rem',padding:'6px 18px',borderRadius:8,border:'none',background:'#00ffff',color:'#222',cursor:'pointer'}}
             onClick={() => setShowHowTo(false)}
           >Got it!</button>

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
+import keyboardManager from '@/lib/shared/input/KeyboardManager';
 
 const GameContainer = styled.div`
     position: relative;
@@ -113,15 +114,12 @@ export const SnakeGame = () => {
         setHighScore(state.highScoreManager.getHighScore());
 
         // Input
-        const handleKeyDown = (e: KeyboardEvent) => {
-            const dir = state.direction;
-            if (e.key === 'ArrowUp' && dir.y === 0) state.nextDirection = { x: 0, y: -1 };
-            if (e.key === 'ArrowDown' && dir.y === 0) state.nextDirection = { x: 0, y: 1 };
-            if (e.key === 'ArrowLeft' && dir.x === 0) state.nextDirection = { x: -1, y: 0 };
-            if (e.key === 'ArrowRight' && dir.x === 0) state.nextDirection = { x: 1, y: 0 };
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
+        keyboardManager.bindKeys({
+            'arrowup': () => { if (state.direction.y === 0) state.nextDirection = { x: 0, y: -1 }; },
+            'arrowdown': () => { if (state.direction.y === 0) state.nextDirection = { x: 0, y: 1 }; },
+            'arrowleft': () => { if (state.direction.x === 0) state.nextDirection = { x: -1, y: 0 }; },
+            'arrowright': () => { if (state.direction.x === 0) state.nextDirection = { x: 1, y: 0 }; },
+        });
 
         // Game loop
         const loop = (timestamp: number) => {
@@ -220,7 +218,7 @@ export const SnakeGame = () => {
 
         return () => {
             state.isRunning = false;
-            window.removeEventListener('keydown', handleKeyDown);
+            keyboardManager.unbindAll();
         };
         // Empty dependency array is intentional: this effect initializes the entire game
         // and all state functions (setScore, setGameOver, setHighScore) are stable from React
