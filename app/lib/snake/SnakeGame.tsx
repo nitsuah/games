@@ -230,6 +230,10 @@ export const SnakeGame = () => {
 
     return (
         <GameContainer>
+            <GameControls
+                onPause={() => { gameState.current.isRunning = !gameState.current.isRunning }}
+                onRestart={handleRestart}
+            />
             <Canvas ref={canvasRef} />
             <UIOverlay>
                 <div>SCORE: {score}</div>

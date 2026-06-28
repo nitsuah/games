@@ -114,9 +114,9 @@ const ArcadeFrame = styled.div`
   }
 
   @media (max-width: 768px) {
-    width: 98vw; /* Used more space */
-    padding: 20px 10px 50px;
-    min-height: 85vh;
+    width: 100vw; /* Extend to full width */
+    padding: 10px 5px 20px; /* Reduced bottom padding */
+    min-height: 80vh;
   }
 `;
 
@@ -164,9 +164,9 @@ const Title = styled.h2`
   gap: 12px;
   
   @media (max-width: 768px) {
-    font-size: 36px;
-    gap: 8px;
-    letter-spacing: 6px;
+    font-size: 28px; /* Reduced title size on mobile */
+    gap: 6px;
+    letter-spacing: 4px;
   }
 `;
 
@@ -482,26 +482,27 @@ interface ArcadeLayoutProps {
 
 export const ArcadeLayout = ({ children, headerContent, title, fullscreenGame = false }: ArcadeLayoutProps) => {
   if (fullscreenGame) {
-    return <PageContainer>{children}</PageContainer>;
+    return <PageContainer as="main">{children}</PageContainer>;
   }
   return (
     <PageContainer>
       <ArcadeCabinet data-testid="arcade-cabinet">
-        <MarqueeText>ARCADE</MarqueeText>
-        <Joystick />
-        <CoinSlot />
-        <ControlsContainer>
-          <ButtonDecoration>
-            <span />
-            <span />
-            <span />
-            <span />
-          </ButtonDecoration>
-        </ControlsContainer>
+        <main style={{ display: 'contents' }}>
+          <MarqueeText>ARCADE</MarqueeText>
+          <Joystick />
+          <CoinSlot />
+          <ControlsContainer>
+            <ButtonDecoration>
+              <span />
+              <span />
+              <span />
+              <span />
+            </ButtonDecoration>
+          </ControlsContainer>
 
-        <ArcadeFrame>
-          <Scanline />
-          {headerContent}
+          <ArcadeFrame>
+            <Scanline />
+            {headerContent}
           <Header>
             <Title>
               {title ? (

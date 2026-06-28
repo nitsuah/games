@@ -5,6 +5,7 @@ import { PipeManager } from './components/PipeManager';
 import { Background } from './components/Background';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
+import { GameControls } from '@/_components/shared/GameControls';
 
 const GameContainer = styled.div`
   position: relative;
@@ -235,6 +236,10 @@ export const FlappyGame = () => {
 
   return (
     <GameContainer>
+      <GameControls
+        onPause={() => setGameState(prev => prev === 'playing' ? 'ready' : 'playing')}
+        onRestart={handleRestart}
+      />
       <Canvas ref={canvasRef} />
       <UIOverlay>
         {score}
