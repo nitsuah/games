@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { AudioController } from '@/_components/home/AudioController';
 import styled from 'styled-components';
 import { ArcadeLayout } from '@/_components/home/ArcadeLayout'; // Import ArcadeLayout
+import { OrientationLock } from '@/_components/shared/OrientationLock';
 
 const FpsCanvas = dynamic(() => import('@/lib/fps/FpsCanvas'), { ssr: false });
 
@@ -47,6 +48,7 @@ export default function Range() {
   const [showHowTo, setShowHowTo] = useState(true);
   return (
     <ArcadeLayout fullscreenGame={true}> {/* Wrap with ArcadeLayout */}
+      <OrientationLock />
       <div style={{position:'relative',width:'100vw',height:'100vh',overflow:'hidden',background:'#000'}}>
         <AudioController />
         <NeonButton style={{ top: 20, left: 20 }} onClick={() => router.push('/')}>← BACK TO ARCADE</NeonButton>
