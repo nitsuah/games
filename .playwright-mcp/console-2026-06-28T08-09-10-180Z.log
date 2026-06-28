@@ -1,0 +1,36 @@
+[     226ms] [LOG] ServiceWorker registered with scope / @ http://localhost:3000/register-sw.js:7
+[   14194ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14196ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14196ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14196ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14196ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14196ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14196ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14264ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14266ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14267ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14267ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14267ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14267ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14267ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14325ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/1m9yay70r86x-.js:0
+[   14424ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14425ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14428ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14428ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14428ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14428ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14429ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14429ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14429ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14429ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14429ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14429ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14429ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14429ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   14488ms] [LOG] ✅ Started background music @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   27934ms] [ERROR] THREE.PointerLockControls: Unable to use Pointer Lock API @ http://localhost:3000/_next/static/chunks/1zq179et2_ehf.js:0
+[   27943ms] The root document of this element is not valid for pointer lock.
+[   27968ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   27968ms] [LOG] ✅ Played sound: miss @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0
+[   27969ms] [LOG] ✅ Played sound: shoot @ http://localhost:3000/_next/static/chunks/43d2a22npdoof.js:0

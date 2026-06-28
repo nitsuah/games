@@ -1,0 +1,16 @@
+- generic [active]:
+  - generic [ref=e76]:
+    - button "Unmute Music" [ref=e77] [cursor=pointer]: 🔇
+    - button "← BACK TO ARCADE" [ref=e78] [cursor=pointer]
+    - button "HOW TO PLAY" [ref=e79] [cursor=pointer]
+    - generic [ref=e80]:
+      - heading "How to Play Space Invaders" [level=2] [ref=e81]
+      - list [ref=e82]:
+        - listitem [ref=e83]: "Arrow Keys: Move left/right"
+        - listitem [ref=e84]: "Space: Shoot"
+        - listitem [ref=e85]: Defend your base from waves of invaders
+        - listitem [ref=e86]: Hide behind shields for protection
+        - listitem [ref=e87]: Score points for each enemy destroyed
+        - listitem [ref=e88]: Survive as long as you can!
+      - button "Got it!" [ref=e89] [cursor=pointer]
+  - alert [ref=e75]: Games

@@ -1,0 +1,23 @@
+- generic [active]:
+  - generic [ref=e77]:
+    - heading "★ ARCADE ★" [level=1] [ref=e78]
+    - generic [ref=e80]: 25¢
+    - generic [ref=e87]:
+      - heading "SNAKE" [level=2] [ref=e89]:
+        - generic [ref=e90]: SNAKE
+      - button "Unmute Music" [ref=e91] [cursor=pointer]: 🔇
+      - button "← BACK TO ARCADE" [ref=e92] [cursor=pointer]
+      - button "HOW TO PLAY" [ref=e93] [cursor=pointer]
+      - generic [ref=e94]:
+        - heading "How to Play Snake" [level=2] [ref=e95]
+        - list [ref=e96]:
+          - listitem [ref=e97]: "Arrow Keys: Move the snake"
+          - listitem [ref=e98]: Eat food to grow longer
+          - listitem [ref=e99]: Avoid running into walls or yourself
+          - listitem [ref=e100]: Try to beat your high score!
+        - button "Got it!" [ref=e101] [cursor=pointer]
+      - generic [ref=e103]:
+        - generic:
+          - generic: "SCORE: 0"
+          - generic: "HI: 0"
+  - alert [ref=e75]: Games

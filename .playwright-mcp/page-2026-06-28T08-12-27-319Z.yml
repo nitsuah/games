@@ -1,0 +1,24 @@
+- generic [active]:
+  - generic [ref=e77]:
+    - heading "★ ARCADE ★" [level=1] [ref=e78]
+    - generic [ref=e80]: 25¢
+    - generic [ref=e87]:
+      - heading "FLAPPY BIRD" [level=2] [ref=e89]:
+        - generic [ref=e90]: FLAPPY BIRD
+      - button "Unmute Music" [ref=e91] [cursor=pointer]: 🔇
+      - button "← BACK TO ARCADE" [ref=e92] [cursor=pointer]
+      - button "HOW TO PLAY" [ref=e93] [cursor=pointer]
+      - generic [ref=e94]:
+        - heading "How to Play Flappy Bird" [level=2] [ref=e95]
+        - list [ref=e96]:
+          - listitem [ref=e97]: Press Space or Click to flap
+          - listitem [ref=e98]: Fly through the gaps in the pipes
+          - listitem [ref=e99]: Don't hit the pipes or the ground!
+          - listitem [ref=e100]: Try to beat your high score
+        - button "Got it!" [ref=e101] [cursor=pointer]
+      - generic [ref=e103]:
+        - generic: "0"
+        - generic:
+          - heading "FLAPPY BIRD" [level=1]
+          - paragraph: Press Space or Click to Flap
+  - alert [ref=e75]: Games

@@ -1,0 +1,13 @@
+- generic [active]:
+  - generic:
+    - button "Unmute Music" [ref=e76] [cursor=pointer]: 🔇
+    - generic [ref=e78]:
+      - button "← BACK TO MENU" [ref=e93] [cursor=pointer]:
+        - generic [ref=e95]: ← BACK TO MENU
+      - generic [ref=e96]:
+        - generic:
+          - generic: "SCORE: 0"
+          - generic: "LEVEL: 1"
+          - generic: "LIVES: 3"
+          - generic: "HI: 0"
+  - alert [ref=e75]: Games

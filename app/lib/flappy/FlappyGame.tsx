@@ -8,9 +8,8 @@ import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
   position: relative;
-  width: 100vw;
-  max-width: 800px;
-  aspect-ratio: 4/3;
+  width: 100%;
+  height: 100%;
   background: #000;
   border: 4px solid #333;
   margin: 0 auto;
@@ -29,9 +28,7 @@ const GameContainer = styled.div`
 const Canvas = styled.canvas`
   display: block;
   width: 100%;
-  height: auto;
-  max-width: 800px;
-  aspect-ratio: 4/3;
+  height: 100%;
   background: #000;
   box-sizing: border-box;
 `;
@@ -238,7 +235,7 @@ export const FlappyGame = () => {
 
   return (
     <GameContainer>
-      <Canvas ref={canvasRef} width={800} height={600} />
+      <Canvas ref={canvasRef} />
       <UIOverlay>
         {score}
       </UIOverlay>

@@ -1,0 +1,18 @@
+- generic [active]:
+  - generic [ref=e76]:
+    - button "Unmute Music" [ref=e77] [cursor=pointer]: 🔇
+    - button "← BACK TO ARCADE" [ref=e78] [cursor=pointer]
+    - button "HOW TO PLAY" [ref=e79] [cursor=pointer]
+    - generic [ref=e80]:
+      - heading "How to Play Pong" [level=2] [ref=e81]
+      - list [ref=e82]:
+        - listitem [ref=e83]: "Arrow Keys or Mouse: Move your paddle"
+        - listitem [ref=e84]: Deflect the ball to score points
+        - listitem [ref=e85]: First to 11 points wins
+        - listitem [ref=e86]: Try to beat the AI opponent!
+      - button "Got it!" [ref=e87] [cursor=pointer]
+    - generic [ref=e89]:
+      - generic:
+        - generic: "0"
+        - generic: "0"
+  - alert [ref=e75]: Games
