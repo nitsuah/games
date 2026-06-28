@@ -143,11 +143,6 @@ export const SnakeGame = () => {
             requestAnimationFrame(loop);
         };
 
-        const loop = (timestamp: number) => {
-            // ... (game logic)
-            requestAnimationFrame(loop);
-        };
-
         startLoop();
 
         return () => {

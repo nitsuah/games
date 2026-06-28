@@ -102,6 +102,7 @@ export const FlappyGame = () => {
     highScoreManager: new HighScoreManager('flappy-bird'),
     soundSystem: new SimpleSoundSystem(),
     lastTime: 0,
+    isRunning: false,
   });
 
   const requestRef = useRef<number | undefined>(undefined);
@@ -141,7 +142,7 @@ export const FlappyGame = () => {
 
     // Game Loop
     const loop = (timestamp: number) => {
-      if (!state.isRunning || gameState === 'paused') {
+      if (!gameRef.current.isRunning || gameState === 'paused') {
           requestRef.current = requestAnimationFrame(loop);
           return;
       }

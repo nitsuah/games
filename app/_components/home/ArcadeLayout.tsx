@@ -109,13 +109,13 @@ const ArcadeFrame = styled.div`
   padding: 40px 20px 80px; /* Reduced padding for smaller screens */
 
   @media (orientation: landscape) and (max-height: 500px) {
-    padding: 15px 5px 30px; /* Tightened for landscape */
+    padding: 15px 5px 30px;
     min-height: 95vh;
   }
 
   @media (max-width: 768px) {
     width: 100vw;
-    padding: 10px 0 20px; /* Removed side padding, reduced bottom padding */
+    padding: 10px 0 20px;
     min-height: 80vh;
   }
 `;
