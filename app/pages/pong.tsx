@@ -42,7 +42,7 @@ const PongPage = () => {
   const [showHowTo, setShowHowTo] = useState(true);
 
   return (
-    <ArcadeLayout title="PONG">
+    <ArcadeLayout fullscreenGame={true} title="PONG">
       <AudioController />
       <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
       <button

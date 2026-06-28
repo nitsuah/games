@@ -16,9 +16,7 @@ const MemoryMatch = () => {
             borderRadius: 12,
             background: '#23293a',
             width: '100%',
-            height: '100%',
-            maxWidth: '400px',
-            maxHeight: '600px'
+            height: '100%'
           }}
         />
       </ArcadeLayout>

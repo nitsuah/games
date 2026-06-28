@@ -1,0 +1,23 @@
+- generic [active]:
+  - generic [ref=e2]:
+    - heading "★ ARCADE ★" [level=1] [ref=e3]
+    - generic [ref=e5]: 25¢
+    - generic [ref=e12]:
+      - heading "PONG" [level=2] [ref=e14]:
+        - generic [ref=e15]: PONG
+      - button "Unmute Music" [ref=e16] [cursor=pointer]: 🔇
+      - button "← BACK TO ARCADE" [ref=e17] [cursor=pointer]
+      - button "HOW TO PLAY" [ref=e18] [cursor=pointer]
+      - generic [ref=e19]:
+        - heading "How to Play Pong" [level=2] [ref=e20]
+        - list [ref=e21]:
+          - listitem [ref=e22]: "Arrow Keys or Mouse: Move your paddle"
+          - listitem [ref=e23]: Deflect the ball to score points
+          - listitem [ref=e24]: First to 11 points wins
+          - listitem [ref=e25]: Try to beat the AI opponent!
+        - button "Got it!" [ref=e26] [cursor=pointer]
+      - generic [ref=e28]:
+        - generic:
+          - generic: "0"
+          - generic: "0"
+  - alert [ref=e30]

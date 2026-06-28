@@ -29,7 +29,7 @@ export default function BreakoutPage() {
   return (
     <>
       <AudioController />
-      <ArcadeLayout title="BREAKOUT">
+      <ArcadeLayout fullscreenGame={true} title="BREAKOUT">
         {!gameStarted ? (
           <div style={{
             width: '100%',
