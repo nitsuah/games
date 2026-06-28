@@ -114,8 +114,8 @@ const ArcadeFrame = styled.div`
   }
 
   @media (max-width: 768px) {
-    width: 100vw; /* Extend to full width */
-    padding: 10px 5px 20px; /* Reduced bottom padding */
+    width: 100vw;
+    padding: 10px 0 20px; /* Removed side padding, reduced bottom padding */
     min-height: 80vh;
   }
 `;
