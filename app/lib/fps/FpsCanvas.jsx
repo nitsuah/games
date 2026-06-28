@@ -16,6 +16,8 @@ import Decal from '@/lib/fps/_comps/Decal';
 import ShootingHandler from '@/lib/fps/_comps/ShootingHandler';
 import PowerUp from '@/lib/fps/_comps/PowerUp';
 import Bot from '@/lib/fps/_comps/Bot';
+import { VirtualJoystick } from '@/_components/shared/gamepad/VirtualJoystick';
+import { ShootButton } from '@/_components/shared/gamepad/ShootButton';
 
 // Extend React Three Fiber's namespace to include BoxGeometry
 extend({ BoxGeometry: THREE.BoxGeometry });
@@ -189,6 +191,8 @@ export default function FpsCanvas() {
         </Physics>
       </Canvas>
       <Crosshair />
+      <VirtualJoystick onMove={(x, y) => console.log('move', x, y)} />
+      <ShootButton onShoot={() => console.log('shoot')} />
       <ComboDisplay combo={combo} />
       <div style={{ position: 'absolute', top: '50px', left: '10px', color: 'white', fontSize: '20px' }}>
         Score: {score}
