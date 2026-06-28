@@ -248,7 +248,7 @@ export const FlappyGame = () => {
       {gameState === 'ready' && (
         <StartScreen>
           <h1>FLAPPY BIRD</h1>
-          <p>Press Space or Click to Flap</p>
+          <Button onClick={() => setGameState('playing')}>START GAME</Button>
         </StartScreen>
       )}
 
