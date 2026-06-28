@@ -100,17 +100,23 @@ const ArcadeFrame = styled.div`
   z-index: 5;
   animation: ${slideIn} 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform, opacity;
-  width: 700px;
+  width: 90vw; /* Use viewport width */
   max-width: 95vw;
   box-sizing: border-box;
-  min-height: 700px;
+  min-height: 80vh; /* Use viewport height */
   display: flex;
   flex-direction: column;
-  
+  padding: 40px 20px 80px; /* Reduced padding for smaller screens */
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    padding: 20px 10px 40px; /* Even smaller padding for very short landscape */
+    min-height: 90vh;
+  }
+
   @media (max-width: 768px) {
     width: 95vw;
-    padding: 55px 35px 100px;
-    min-height: 650px;
+    padding: 30px 15px 70px;
+    min-height: 70vh;
   }
 `;
 
@@ -217,7 +223,7 @@ const ArcadeCabinet = styled.div`
     top: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: min(700px, 95vw);
+    width: min(90vw, 700px);
     height: 120px;
     background: linear-gradient(135deg, #ff1493 0%, #ff69b4 50%, #ff1493 100%);
     border-radius: 50% 50% 0 0 / 100% 100% 0 0;
@@ -235,7 +241,7 @@ const ArcadeCabinet = styled.div`
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: min(700px, 95vw);
+    width: min(90vw, 700px);
     height: 140px;
     background: linear-gradient(180deg, #ff8c00 0%, #ffa500 50%, #ff8c00 100%);
     border: 6px solid #ffaa00;
@@ -299,10 +305,10 @@ const ButtonDecoration = styled.div`
 
 const Joystick = styled.div`
   position: absolute;
-  bottom: 60px;
-  left: 60px;
-  width: 30px;
-  height: 30px;
+  bottom: 30px;
+  left: 30px; /* Adjusted for smaller screens */
+  width: 25px; /* Reduced size */
+  height: 25px; /* Reduced size */
   background: radial-gradient(circle at 30% 30%, #333, #000);
   border-radius: 50%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
@@ -343,23 +349,27 @@ const Joystick = styled.div`
 
 const ControlsContainer = styled.div`
   position: absolute;
-  bottom: 60px;
+  bottom: 30px; /* Adjusted for smaller screens */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 30px;
+  gap: 20px; /* Reduced gap */
   z-index: 15;
-  width: 700px;
-  max-width: 95vw;
-  padding: 0 20px;
+  width: 90vw;
+  max-width: 600px; /* Set a max-width to prevent buttons from spreading too much */
+  padding: 0 10px; /* Adjusted padding */
   box-sizing: border-box;
-  
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    bottom: 15px; /* Further adjust for very short landscape */
+    gap: 10px;
+  }
+
   @media (max-width: 768px) {
-    gap: 15px;
-    padding: 0 30px;
-    justify-content: center;
+    gap: 10px; /* Reduced gap for mobile */
+    padding: 0 10px; /* Adjusted padding for mobile */
     width: 95vw;
   }
 `;
@@ -372,8 +382,8 @@ const CoinSlot = styled.div`
   border-radius: 6px;
   box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.9);
   position: absolute;
-  bottom: 60px;
-  right: 60px;
+  bottom: 30px; /* Adjusted for smaller screens */
+  right: 30px; /* Adjusted for smaller screens */
   z-index: 15;
   
   @media (max-width: 768px) {
@@ -402,10 +412,10 @@ const MarqueeText = styled.h1`
   left: 50%;
   transform: translateX(-50%);
   color: #ffff00;
-  font-size: 58px;
+  font-size: 38px;
   font-weight: 900;
   font-family: 'Courier New', monospace;
-  text-shadow: 
+  text-shadow:
     0 0 4px #fff,
     0 0 11px #fff,
     0 0 19px #fff,
@@ -414,7 +424,7 @@ const MarqueeText = styled.h1`
     0 0 90px #ffff00,
     0 0 100px #ffff00,
     0 0 150px #ffff00;
-  letter-spacing: 16px;
+  letter-spacing: 10px;
   z-index: 15;
   animation: ${neonFlicker} 5s linear infinite;
   will-change: text-shadow;
@@ -467,9 +477,13 @@ interface ArcadeLayoutProps {
   children: ReactNode;
   headerContent?: ReactNode;
   title?: string;
+  fullscreenGame?: boolean; // New prop
 }
 
-export const ArcadeLayout = ({ children, headerContent, title }: ArcadeLayoutProps) => {
+export const ArcadeLayout = ({ children, headerContent, title, fullscreenGame = false }: ArcadeLayoutProps) => {
+  if (fullscreenGame) {
+    return <PageContainer>{children}</PageContainer>;
+  }
   return (
     <PageContainer>
       <ArcadeCabinet>

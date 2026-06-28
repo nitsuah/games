@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound';
 import { AudioProvider, useAudio } from '@/contexts/AudioContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
+import { ArcadeLayout } from '@/_components/home/ArcadeLayout'; // Import ArcadeLayout
 
 // Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
 const Game = dynamic(() => import('@/lib/asteroid/_comp/Game/Game'), { ssr: false });
@@ -37,7 +38,9 @@ const AsteroidPage = () => {
   return (
     <SettingsProvider>
       <AudioProvider>
-        <AsteroidContent />
+        <ArcadeLayout fullscreenGame={true}> {/* Wrap with ArcadeLayout */}
+          <AsteroidContent />
+        </ArcadeLayout>
       </AudioProvider>
     </SettingsProvider>
   );

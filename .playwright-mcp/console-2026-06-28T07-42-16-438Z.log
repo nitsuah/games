@@ -1,0 +1,35 @@
+[      58ms] [LOG] ServiceWorker registered with scope / @ http://localhost:3000/register-sw.js:7
+[     238ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     242ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     242ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     242ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     243ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     243ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     243ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     357ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     360ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     360ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     360ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     360ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     360ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     360ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     417ms] [WARNING] The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio @ http://localhost:3000/_next/static/chunks/3e8hv6kswv95_.js:0
+[     418ms] [WARNING] The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio @ http://localhost:3000/_next/static/chunks/3e8hv6kswv95_.js:0
+[     418ms] [WARNING] The AudioContext was not allowed to start. It must be resumed (or created) after a user gesture on the page. https://developer.chrome.com/blog/autoplay/#web_audio @ http://localhost:3000/_next/static/chunks/3e8hv6kswv95_.js:0
+[     471ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:3000/_next/static/chunks/1m9yay70r86x-.js:0
+[     848ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     849ms] [LOG] ✅ Audio context initialized @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/shoot.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/hit.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/miss.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/bgm.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/thruster.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[     854ms] [LOG] Attempting to load audio from: http://localhost:3000/sounds/empty.mp3 @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[    1134ms] [LOG] ✅ Audio context resumed before playing @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0
+[    1136ms] [LOG] ✅ Started background music @ http://localhost:3000/_next/static/chunks/0koo9chlwjl4o.js:0

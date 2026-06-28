@@ -1,0 +1,26 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic: Click to lock pointer as camera, Esc to exit
+    - generic [ref=e4]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: FPS
+        - generic [ref=e10]: "60"
+      - generic [ref=e11]:
+        - generic [ref=e13]: Wave 1
+        - generic [ref=e16]: "Score: 0"
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Health
+          - generic [ref=e20]:
+            - generic: 100 / 100
+        - generic [ref=e22]:
+          - generic [ref=e23]: SPREAD
+          - generic [ref=e26]: 10 / 30
+        - generic [ref=e27]:
+          - generic [ref=e28]: "Weapon: Spread Shot"
+          - generic [ref=e29]: "Ammo: 10 / 10"
+          - generic [ref=e31]:
+            - generic [ref=e32]: Reload
+            - generic [ref=e33]: Ready
+      - button "Toggle debug menu" [ref=e37] [cursor=pointer]: ⚙️
+  - alert [ref=e38]

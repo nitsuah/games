@@ -42,7 +42,7 @@ const SpaceInvadersPage = () => {
   const [showHowTo, setShowHowTo] = useState(true);
 
   return (
-    <ArcadeLayout title="SPACE INVADERS">
+    <ArcadeLayout fullscreenGame={true} title="SPACE INVADERS">
       <AudioController />
       <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
       <button
