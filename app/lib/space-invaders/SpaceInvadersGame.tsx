@@ -9,6 +9,9 @@ import { WaveManager } from '@/lib/shared/progression/WaveManager';
 import { LivesManager } from '@/lib/shared/progression/LivesManager';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
+import { GameControls } from '@/_components/shared/GameControls';
+import { VirtualJoystick } from '@/_components/shared/gamepad/VirtualJoystick';
+import { ShootButton } from '@/_components/shared/gamepad/ShootButton';
 
 const GameContainer = styled.div`
   position: relative;
@@ -302,6 +305,15 @@ export const SpaceInvadersGame = () => {
 
   return (
     <GameContainer>
+      <GameControls
+        onPause={() => { gameState.current.isRunning = !gameState.current.isRunning }}
+        onRestart={handleRestart}
+      />
+      <VirtualJoystick onMove={(x, y) => {
+        gameState.current.input.left = x < -0.5;
+        gameState.current.input.right = x > 0.5;
+      }} />
+      <ShootButton onShoot={() => { gameState.current.input.fire = true; setTimeout(() => gameState.current.input.fire = false, 100); }} />
       <Canvas ref={canvasRef} width={800} height={600} />
       <UIOverlay>
         <div>SCORE: {score}</div>
