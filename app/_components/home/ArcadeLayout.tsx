@@ -503,25 +503,26 @@ export const ArcadeLayout = ({ children, headerContent, title, fullscreenGame = 
           <ArcadeFrame>
             <Scanline />
             {headerContent}
-          <Header>
-            <Title>
-              {title ? (
-                <span>{title}</span>
-              ) : (
-                <>
-                  <span>🕹️</span>
-                  <span>PLAY</span>
-                  <span>🕹️</span>
-                </>
-              )}
-            </Title>
-            {!title && <Subtitle>Select Your Game</Subtitle>}
-          </Header>
+            <Header>
+              <Title>
+                {title ? (
+                  <span>{title}</span>
+                ) : (
+                  <>
+                    <span>🕹️</span>
+                    <span>PLAY</span>
+                    <span>🕹️</span>
+                  </>
+                )}
+              </Title>
+              {!title && <Subtitle>Select Your Game</Subtitle>}
+            </Header>
 
-          {children}
+            {children}
 
-          {!title && <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>}
-        </ArcadeFrame>
+            {!title && <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>}
+          </ArcadeFrame>
+        </main>
       </ArcadeCabinet>
     </PageContainer>
   );
