@@ -5,9 +5,8 @@ import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 
 const GameContainer = styled.div`
     position: relative;
-    width: 100vw;
-    max-width: 700px;
-    aspect-ratio: 4/3;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,9 +24,7 @@ const GameContainer = styled.div`
 const Canvas = styled.canvas`
     display: block;
     width: 100%;
-    height: auto;
-    max-width: 600px;
-    aspect-ratio: 4/3;
+    height: 100%;
     background: #000;
     box-shadow: 0 0 24px #000a;
     border-radius: 12px;
@@ -235,7 +232,7 @@ export const SnakeGame = () => {
 
     return (
         <GameContainer>
-            <Canvas ref={canvasRef} width={800} height={600} />
+            <Canvas ref={canvasRef} />
             <UIOverlay>
                 <div>SCORE: {score}</div>
                 <div>HI: {highScore}</div>
