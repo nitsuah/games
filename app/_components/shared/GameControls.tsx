@@ -6,6 +6,9 @@ const ControlsWrapper = styled.div`
   position: absolute;
   top: 20px;
   right: 20px;
+  /* Add safe area insets for mobile landscape notch */
+  top: max(20px, env(safe-area-inset-top));
+  right: max(20px, env(safe-area-inset-right));
   display: flex;
   gap: 10px;
   z-index: 1000;

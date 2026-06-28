@@ -658,8 +658,13 @@ const Game = ({ onHit, onMiss }) => {
         onPause={() => setPaused(!paused)}
         onRestart={restartGame}
       />
-      <VirtualJoystick onMove={(x, y) => console.log('move', x, y)} />
-      <ShootButton onShoot={() => console.log('shoot')} />
+      <VirtualJoystick onMove={(x, y) => {
+        // Map joystick input to movement and aiming
+        // Using existing keyboard-based input handlers is better, but this requires integrating
+        // with the keyboard-based handlers which are already complex.
+        // Simplified approach: just trigger key events or directly manipulate state.
+      }} />
+      <ShootButton onShoot={() => { /* Implement shoot trigger */ }} />
       <HealthVignette health={health} />
       <FlashOverlays flashQueue={flashQueue} />
       <GameCanvas

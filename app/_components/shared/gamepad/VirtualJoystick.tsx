@@ -23,8 +23,15 @@ const JoystickKnob = styled.div`
 `;
 
 export const VirtualJoystick = ({ onMove }: { onMove: (x: number, y: number) => void }) => {
+  const handleMove = (e: React.PointerEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+    onMove(x, y);
+  };
+
   return (
-    <JoystickContainer>
+    <JoystickContainer onPointerMove={handleMove} onPointerDown={handleMove}>
       <JoystickKnob />
     </JoystickContainer>
   );

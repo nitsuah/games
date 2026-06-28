@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ShootButton = styled.button`
+const StyledShootButton = styled.button`
   position: absolute;
   bottom: 100px;
   right: 50px;
@@ -21,5 +21,5 @@ const ShootButton = styled.button`
 `;
 
 export const ShootButton = ({ onShoot }: { onShoot: () => void }) => {
-  return <ShootButton onClick={onShoot}>FIRE</ShootButton>;
+  return <StyledShootButton onClick={onShoot}>FIRE</StyledShootButton>;
 };

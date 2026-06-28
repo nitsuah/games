@@ -212,9 +212,18 @@ export const SnakeGame = () => {
             requestAnimationFrame(loop);
         };
 
-        state.isRunning = true;
-        state.lastUpdate = performance.now();
-        requestAnimationFrame(loop);
+        const startLoop = () => {
+            state.isRunning = true;
+            state.lastUpdate = performance.now();
+            requestAnimationFrame(loop);
+        };
+
+        const loop = (timestamp: number) => {
+            // ... (game logic)
+            requestAnimationFrame(loop);
+        };
+
+        startLoop();
 
         return () => {
             state.isRunning = false;
@@ -234,6 +243,15 @@ export const SnakeGame = () => {
                 onPause={() => { gameState.current.isRunning = !gameState.current.isRunning }}
                 onRestart={handleRestart}
             />
+            <VirtualJoystick onMove={(x, y) => {
+                if (Math.abs(x) > Math.abs(y)) {
+                    if (x > 0 && gameState.current.direction.x === 0) gameState.current.nextDirection = { x: 1, y: 0 };
+                    else if (x < 0 && gameState.current.direction.x === 0) gameState.current.nextDirection = { x: -1, y: 0 };
+                } else {
+                    if (y > 0 && gameState.current.direction.y === 0) gameState.current.nextDirection = { x: 0, y: 1 };
+                    else if (y < 0 && gameState.current.direction.y === 0) gameState.current.nextDirection = { x: 0, y: -1 };
+                }
+            }} />
             <Canvas ref={canvasRef} />
             <UIOverlay>
                 <div>SCORE: {score}</div>

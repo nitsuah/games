@@ -93,7 +93,7 @@ export const FlappyGame = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [gameState, setGameState] = useState<'ready' | 'playing' | 'gameover'>('ready');
+  const [gameState, setGameState] = useState<'ready' | 'playing' | 'gameover' | 'paused'>('ready');
 
   const gameRef = useRef({
     bird: null as Bird | null,
@@ -141,6 +141,10 @@ export const FlappyGame = () => {
 
     // Game Loop
     const loop = (timestamp: number) => {
+      if (!state.isRunning || gameState === 'paused') {
+          requestRef.current = requestAnimationFrame(loop);
+          return;
+      }
       const dt = (timestamp - state.lastTime) / 1000;
       state.lastTime = timestamp;
 
@@ -237,7 +241,7 @@ export const FlappyGame = () => {
   return (
     <GameContainer>
       <GameControls
-        onPause={() => setGameState(prev => prev === 'playing' ? 'ready' : 'playing')}
+        onPause={() => setGameState(prev => prev === 'playing' ? 'paused' : 'playing')}
         onRestart={handleRestart}
       />
       <Canvas ref={canvasRef} />

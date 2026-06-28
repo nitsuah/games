@@ -14,7 +14,8 @@ test.describe('Mobile Landscape Optimization', () => {
 
   test('Asteroid game renders fullscreen in landscape mobile', async ({ page }) => {
     await page.goto('/asteroid');
-    // For fullscreen games, ArcadeCabinet should NOT be visible. Relying on its absence via screenshot for now.
+    // Ensure cabinet is NOT visible
+    await expect(page.locator('[data-testid="arcade-cabinet"]')).not.toBeVisible();
     await expect(page.locator('canvas').first()).toBeVisible();
   });
 
