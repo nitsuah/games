@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { Bird } from './components/Bird';
 import { PipeManager } from './components/PipeManager';
 import { Background } from './components/Background';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
-import { GameControls } from '@/_components/shared/GameControls';
+import { GameControls } from '../../_components/shared/GameControls';
 
 const GameContainer = styled.div`
   position: relative;
@@ -106,6 +106,7 @@ export const FlappyGame = () => {
   });
 
   const requestRef = useRef<number | undefined>(undefined);
+  const loopRef = useRef((timestamp: number) => {});
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -146,8 +147,8 @@ export const FlappyGame = () => {
 
     // Game Loop
     const loop = (timestamp: number) => {
-      if (!gameRef.current.isRunning || gameState === 'paused') {
-          requestRef.current = requestAnimationFrame(loop);
+      if (gameState === 'paused') {
+          requestRef.current = requestAnimationFrame(loopRef.current);
           return;
       }
       const dt = (timestamp - state.lastTime) / 1000;
@@ -219,11 +220,11 @@ export const FlappyGame = () => {
       ctx.fillStyle = '#75b85b'; // Grass top
       ctx.fillRect(0, canvas.height - 20, canvas.width, 4);
 
-      requestRef.current = requestAnimationFrame(loop);
+      requestRef.current = requestAnimationFrame(loopRef.current);
     };
 
-    state.lastTime = performance.now();
-    requestRef.current = requestAnimationFrame(loop);
+      state.lastTime = performance.now();
+      requestRef.current = requestAnimationFrame(loopRef.current);
 
     return () => {
       window.removeEventListener('keydown', handleInput);
