@@ -4,6 +4,7 @@ import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 import keyboardManager from '@/lib/shared/input/KeyboardManager';
 import { GameControls } from '../../_components/shared/GameControls';
+import { VirtualJoystick } from '../../_components/shared/gamepad/VirtualJoystick';
 
 const GameContainer = styled.div`
     position: relative;
@@ -236,19 +237,119 @@ export const SnakeGame = () => {
         // and all state functions (setScore, setGameOver, setHighScore) are stable from React
     }, [isPaused, gameOver]); // Re-run effect when isPaused or gameOver changes
 
-    const gameState = useRef({
-        snake: [{ x: 10, y: 10 }] as Point[],
-        food: { x: 15, y: 15 } as Point,
-        direction: { x: 1, y: 0 } as Point,
-        nextDirection: { x: 1, y: 0 } as Point,
-        gridSize: 20,
-        tileCount: 40,
-        speed: 100,
-        lastUpdate: 0,
-        highScoreManager: new HighScoreManager('snake'),
-        soundSystem: new SimpleSoundSystem(),
-        isRunning: false,
-    });
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        // Set canvas size from container
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const state = gameState.current;
+        setHighScore(state.highScoreManager.getHighScore());
+
+        // Input
+        keyboardManager.bindKeys({
+            'arrowup': () => { if (state.direction.y === 0) state.nextDirection = { x: 0, y: -1 }; },
+            'arrowdown': () => { if (state.direction.y === 0) state.nextDirection = { x: 0, y: 1 }; },
+            'arrowleft': () => { if (state.direction.x === 0) state.nextDirection = { x: -1, y: 0 }; },
+            'arrowright': () => { if (state.direction.x === 0) state.nextDirection = { x: 1, y: 0 }; },
+        });
+
+        // Game loop
+        const loop = (timestamp: number) => {
+            if (!state.isRunning || isPaused) {
+                requestAnimationFrame(loopRef.current);
+                return;
+            }
+
+            if (timestamp - state.lastUpdate < state.speed) {
+                requestAnimationFrame(loopRef.current);
+                return;
+            }
+
+            state.lastUpdate = timestamp;
+            state.direction = state.nextDirection;
+
+            // Move snake
+            const head = { x: state.snake[0].x + state.direction.x, y: state.snake[0].y + state.direction.y };
+
+            // Boundary collision
+            if (head.x < 0 || head.x >= state.tileCount || head.y < 0 || head.y >= state.tileCount) {
+                setGameOver(true);
+                state.isRunning = false;
+                state.soundSystem.gameOver();
+                return;
+            }
+
+            // Self-collision
+            for (let i = 0; i < state.snake.length; i++) {
+                if (head.x === state.snake[i].x && head.y === state.snake[i].y) {
+                    setGameOver(true);
+                    state.isRunning = false;
+                    state.soundSystem.gameOver();
+                    return;
+                }
+            }
+
+            // Food collision
+            if (head.x === state.food.x && head.y === state.food.y) {
+                setScore(prev => {
+                    const newScore = prev + 1;
+                    if (newScore > state.highScoreManager.getHighScore()) {
+                        state.highScoreManager.saveHighScore(newScore);
+                        setHighScore(newScore);
+                    }
+                    return newScore;
+                });
+                state.soundSystem.powerUp();
+                // Generate new food
+                state.food = {
+                    x: Math.floor(Math.random() * state.tileCount),
+                    y: Math.floor(Math.random() * state.tileCount),
+                };
+            } else {
+                // Remove tail if no food eaten
+                state.snake.pop();
+            }
+
+            state.snake.unshift(head);
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw snake
+            for (let i = 0; i < state.snake.length; i++) {
+                ctx.fillStyle = i === 0 ? 'green' : 'lime';
+                ctx.fillRect(state.snake[i].x * state.gridSize, state.snake[i].y * state.gridSize, state.gridSize - 1, state.gridSize - 1);
+            }
+
+            // Draw food
+            ctx.fillStyle = 'red';
+            ctx.fillRect(state.food.x * state.gridSize, state.food.y * state.gridSize, state.gridSize - 1, state.gridSize - 1);
+
+            requestAnimationFrame(loopRef.current);
+        };
+
+        loopRef.current = loop;
+
+        // Initial call to start the game loop
+        if (!gameOver) { // Ensure game doesn't start if already game over
+            gameState.current.isRunning = true;
+            gameState.current.lastUpdate = performance.now();
+            requestAnimationFrame(loopRef.current);
+        }
+
+        return () => {
+            gameState.current.isRunning = false;
+            keyboardManager.unbindAll();
+        };
+        // Empty dependency array is intentional: this effect initializes the entire game
+        // and all state functions (setScore, setGameOver, setHighScore) are stable from React
+    }, [isPaused, gameOver]); // Re-run effect when isPaused or gameOver changes
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -383,7 +484,7 @@ export const SnakeGame = () => {
                 onPause={togglePause}
                 onRestart={handleRestart}
             />
-            <VirtualJoystick onMove={(x, y) => {
+            <VirtualJoystick onMove={(x: number, y: number) => {
                 if (Math.abs(x) > Math.abs(y)) {
                     if (x > 0 && gameState.current.direction.x === 0) gameState.current.nextDirection = { x: 1, y: 0 };
                     else if (x < 0 && gameState.current.direction.x === 0) gameState.current.nextDirection = { x: -1, y: 0 };
