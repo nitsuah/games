@@ -109,14 +109,14 @@ export const SnakeGame = () => {
     const loopRef = useRef<number | undefined>(undefined); // loopRef now stores the animation frame ID
 
     // Game loop function defined here to be available to callbacks
-    const gameLoop = (timestamp: number) => {
+    const gameLoop = useCallback((timestamp: number) => {
         const state = gameState.current;
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
 
         if (!canvas || !ctx) return; // Ensure canvas and context exist
 
-        if (!state.isRunning || isPaused) {
+        if (!state.isRunning || isPaused || gameOver) { // Check isPaused and gameOver here
             loopRef.current = requestAnimationFrame(gameLoop); // Keep requesting until not paused/running
             return;
         }
@@ -187,7 +187,7 @@ export const SnakeGame = () => {
         ctx.fillRect(state.food.x * state.gridSize, state.food.y * state.gridSize, state.gridSize - 1, state.gridSize - 1);
 
         loopRef.current = requestAnimationFrame(gameLoop);
-    };
+    }, [isPaused, gameOver]); // Dependencies for useCallback
 
     const togglePause = useCallback(() => {
         setIsPaused(prev => {
@@ -203,7 +203,7 @@ export const SnakeGame = () => {
             }
             return newState;
         });
-    }, [gameOver]); // Depend on gameOver
+    }, [gameOver, gameLoop]); // Depend on gameLoop and gameOver
 
     const handleRestart = useCallback(() => {
         setIsPaused(false);
@@ -222,7 +222,7 @@ export const SnakeGame = () => {
             loopRef.current = undefined;
         }
         loopRef.current = requestAnimationFrame(gameLoop); // Start new loop
-    }, []);
+    }, [gameLoop]); // Depend on gameLoop
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -258,7 +258,7 @@ export const SnakeGame = () => {
             keyboardManager.unbindAll();
             if (loopRef.current !== undefined) cancelAnimationFrame(loopRef.current); // Clean up animation frame
         };
-    }, [gameOver]); // Depend only on gameOver for initial setup/cleanup
+    }, [gameOver, gameLoop]); // Depend on gameOver and gameLoop
 
     return (
         <GameContainer>
