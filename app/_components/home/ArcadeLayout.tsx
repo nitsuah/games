@@ -108,15 +108,15 @@ const ArcadeFrame = styled.div`
   flex-direction: column;
   padding: 40px 20px 80px; /* Reduced padding for smaller screens */
 
-  @media (orientation: landscape) and (max-height: 500px) {
-    padding: 15px 5px 30px;
-    min-height: 95vh;
-  }
-
   @media (max-width: 768px) {
     width: 100vw;
     padding: 10px 0 20px;
     min-height: 80vh;
+  }
+
+  @media (orientation: landscape) and (max-height: 500px) {
+    padding: 15px 5px 30px;
+    min-height: 95vh;
   }
 `;
 

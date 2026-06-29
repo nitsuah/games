@@ -107,6 +107,10 @@ export const SnakeGame = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
+        // Set canvas size from container
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
@@ -133,7 +137,11 @@ export const SnakeGame = () => {
             state.lastUpdate = timestamp;
             state.direction = state.nextDirection;
 
+            // Move snake
+            const head = { x: state.snake[0].x + state.direction.x, y: state.snake[0].y + state.direction.y };
+
             // ... (game logic)
+
             requestAnimationFrame(loop);
         };
 
@@ -144,6 +152,15 @@ export const SnakeGame = () => {
         };
 
         startLoop();
+
+        // Pause/Resume handling in GameControls
+        const togglePause = () => {
+            state.isRunning = !state.isRunning;
+            if (state.isRunning) {
+                state.lastUpdate = performance.now();
+                requestAnimationFrame(loop);
+            }
+        };
 
         return () => {
             state.isRunning = false;
@@ -160,7 +177,7 @@ export const SnakeGame = () => {
     return (
         <GameContainer>
             <GameControls
-                onPause={() => { gameState.current.isRunning = !gameState.current.isRunning }}
+                onPause={togglePause}
                 onRestart={handleRestart}
             />
             <VirtualJoystick onMove={(x, y) => {

@@ -111,6 +111,10 @@ export const FlappyGame = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Set canvas size from container
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
