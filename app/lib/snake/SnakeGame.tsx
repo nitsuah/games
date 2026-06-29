@@ -106,22 +106,104 @@ export const SnakeGame = () => {
         isRunning: false,
     });
 
-    const loopRef = useRef<((timestamp: number) => void) | undefined>(undefined);
+    const loopRef = useRef<number | undefined>(undefined); // loopRef now stores the animation frame ID
+
+    // Game loop function defined here to be available to callbacks
+    const gameLoop = (timestamp: number) => {
+        const state = gameState.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext('2d');
+
+        if (!canvas || !ctx) return; // Ensure canvas and context exist
+
+        if (!state.isRunning || isPaused) {
+            loopRef.current = requestAnimationFrame(gameLoop); // Keep requesting until not paused/running
+            return;
+        }
+
+        if (timestamp - state.lastUpdate < state.speed) {
+            loopRef.current = requestAnimationFrame(gameLoop);
+            return;
+        }
+
+        state.lastUpdate = timestamp;
+        state.direction = state.nextDirection;
+
+        // Move snake
+        const head = { x: state.snake[0].x + state.direction.x, y: state.snake[0].y + state.direction.y };
+
+        // Boundary collision
+        if (head.x < 0 || head.x >= state.tileCount || head.y < 0 || head.y >= state.tileCount) {
+            setGameOver(true);
+            state.isRunning = false;
+            state.soundSystem.gameOver();
+            return;
+        }
+
+        // Self-collision
+        for (let i = 0; i < state.snake.length; i++) {
+            if (head.x === state.snake[i].x && head.y === state.snake[i].y) {
+                setGameOver(true);
+                state.isRunning = false;
+                state.soundSystem.gameOver();
+                return;
+            }
+        }
+
+        // Food collision
+        if (head.x === state.food.x && head.y === state.food.y) {
+            setScore(prev => {
+                const newScore = prev + 1;
+                if (newScore > state.highScoreManager.getHighScore()) {
+                    state.highScoreManager.saveHighScore(newScore);
+                    setHighScore(newScore);
+                }
+                return newScore;
+            });
+            state.soundSystem.powerUp(); // Use powerUp for score sound
+            // Generate new food
+            state.food = {
+                x: Math.floor(Math.random() * state.tileCount),
+                y: Math.floor(Math.random() * state.tileCount),
+            };
+        } else {
+            // Remove tail if no food eaten
+            state.snake.pop();
+        }
+
+        state.snake.unshift(head);
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw snake
+        for (let i = 0; i < state.snake.length; i++) {
+            ctx.fillStyle = i === 0 ? 'green' : 'lime';
+            ctx.fillRect(state.snake[i].x * state.gridSize, state.snake[i].y * state.gridSize, state.gridSize - 1, state.gridSize - 1);
+        }
+
+        // Draw food
+        ctx.fillStyle = 'red';
+        ctx.fillRect(state.food.x * state.gridSize, state.food.y * state.gridSize, state.gridSize - 1, state.gridSize - 1);
+
+        loopRef.current = requestAnimationFrame(gameLoop);
+    };
 
     const togglePause = useCallback(() => {
         setIsPaused(prev => {
-            gameState.current.isRunning = !prev;
+            const newState = !prev;
+            gameState.current.isRunning = !newState; // Game is running if not paused
             if (loopRef.current !== undefined) {
                 cancelAnimationFrame(loopRef.current);
-                loopRef.current = undefined; // Clear the ref ID
+                loopRef.current = undefined;
             }
-            if (!prev && !gameOver) { // If was paused and game is not over, resume
+            if (newState === false && !gameOver) { // If resuming and game not over
                  gameState.current.lastUpdate = performance.now(); // Reset time to prevent large dt
                  loopRef.current = requestAnimationFrame(gameLoop);
             }
-            return !prev;
+            return newState;
         });
-    }, [gameOver]); // Depend on gameOver to correctly restart/cancel loop
+    }, [gameOver]); // Depend on gameOver
 
     const handleRestart = useCallback(() => {
         setIsPaused(false);
@@ -164,88 +246,11 @@ export const SnakeGame = () => {
             'arrowright': () => { if (state.direction.x === 0) state.nextDirection = { x: 1, y: 0 }; },
         });
 
-        // Game loop function
-        const gameLoop = (timestamp: number) => {
-            if (!state.isRunning || isPaused) {
-                requestAnimationFrame(gameLoop);
-                return;
-            }
-
-            if (timestamp - state.lastUpdate < state.speed) {
-                requestAnimationFrame(gameLoop);
-                return;
-            }
-
-            state.lastUpdate = timestamp;
-            state.direction = state.nextDirection;
-
-            // Move snake
-            const head = { x: state.snake[0].x + state.direction.x, y: state.snake[0].y + state.direction.y };
-
-            // Boundary collision
-            if (head.x < 0 || head.x >= state.tileCount || head.y < 0 || head.y >= state.tileCount) {
-                setGameOver(true);
-                state.isRunning = false;
-                state.soundSystem.gameOver();
-                return;
-            }
-
-            // Self-collision
-            for (let i = 0; i < state.snake.length; i++) {
-                if (head.x === state.snake[i].x && head.y === state.snake[i].y) {
-                    setGameOver(true);
-                    state.isRunning = false;
-                    state.soundSystem.gameOver();
-                    return;
-                }
-            }
-
-            // Food collision
-            if (head.x === state.food.x && head.y === state.food.y) {
-                setScore(prev => {
-                    const newScore = prev + 1;
-                    if (newScore > state.highScoreManager.getHighScore()) {
-                        state.highScoreManager.saveHighScore(newScore);
-                        setHighScore(newScore);
-                    }
-                    return newScore;
-                });
-                state.soundSystem.powerUp(); // Use powerUp for score sound
-                // Generate new food
-                state.food = {
-                    x: Math.floor(Math.random() * state.tileCount),
-                    y: Math.floor(Math.random() * state.tileCount),
-                };
-            } else {
-                // Remove tail if no food eaten
-                state.snake.pop();
-            }
-
-            state.snake.unshift(head);
-
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw snake
-            for (let i = 0; i < state.snake.length; i++) {
-                ctx.fillStyle = i === 0 ? 'green' : 'lime';
-                ctx.fillRect(state.snake[i].x * state.gridSize, state.snake[i].y * state.gridSize, state.gridSize - 1, state.gridSize - 1);
-            }
-
-            // Draw food
-            ctx.fillStyle = 'red';
-            ctx.fillRect(state.food.x * state.gridSize, state.food.y * state.gridSize, state.gridSize - 1, state.gridSize - 1);
-
-            requestAnimationFrame(gameLoop);
-        };
-
-        loopRef.current = gameLoop;
-
         // Initial call to start the game loop
         if (!gameOver) { // Ensure game doesn't start if already game over
             state.isRunning = true;
             state.lastUpdate = performance.now();
-            requestAnimationFrame(gameLoop);
+            loopRef.current = requestAnimationFrame(gameLoop);
         }
 
         return () => {
@@ -253,7 +258,7 @@ export const SnakeGame = () => {
             keyboardManager.unbindAll();
             if (loopRef.current !== undefined) cancelAnimationFrame(loopRef.current); // Clean up animation frame
         };
-    }, [isPaused, gameOver]); // Re-run effect when isPaused or gameOver changes
+    }, [gameOver]); // Depend only on gameOver for initial setup/cleanup
 
     return (
         <GameContainer>
