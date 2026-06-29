@@ -68,10 +68,18 @@ const nextConfig = {
           },
         ],
       },
-      // Provide a baseline CSP header to ensure a CSP is present for crawlers / Lighthouse.
-      // _document.js will still set a per-request CSP with nonces for inline scripts/styles.
+      // Baseline CSP header for the entire site
       {
-        // Allow iframe embedding for standalone HTML games served from /games/*
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';",
+          },
+        ],
+      },
+      // Allow iframe embedding for standalone HTML games served from /games/*
+      {
         source: '/games/:path*',
         headers: [
           {
