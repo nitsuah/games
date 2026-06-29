@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Change to the app directory where package.json lives
-cd "$(dirname "$0")/.."
-
-# Cross-platform pre-commit hook: try common node package managers, fall back safely.
-# Use test:ci to avoid watch mode issues on Windows
-if command -v npm >/dev/null 2>&1; then
+# Run tests in docker if available
+if command -v docker >/dev/null 2>&1; then
+	docker run --rm games-test npm run test:ci
+elif command -v npm >/dev/null 2>&1; then
 	npm --prefix app run test:ci
 elif command -v yarn >/dev/null 2>&1; then
 	yarn test:ci
@@ -16,5 +14,5 @@ elif command -v npx >/dev/null 2>&1; then
 	# Try to run the project's test script via npx without forcing an install
 	npx --no-install npm --prefix app run test:ci || true
 else
-	echo "Warning: no npm/yarn/pnpm/npx found in PATH — skipping pre-commit tests." >&2
+	echo "Warning: no npm/yarn/pnpm/npx/docker found in PATH — skipping pre-commit tests." >&2
 fi
