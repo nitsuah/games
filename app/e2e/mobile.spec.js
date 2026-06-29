@@ -15,6 +15,10 @@ test.describe('Mobile Landscape Optimization', () => {
   test('Asteroid game renders fullscreen in landscape mobile', async ({ page }) => {
     await page.goto('/asteroid');
     // Ensure cabinet is NOT visible
+    // This check is to confirm that the ArcadeLayout is not present,
+    // which indicates that fullscreenGame prop is working as expected.
+    // This check is to confirm that the ArcadeLayout is not present,
+    // which indicates that fullscreenGame prop is working as expected.
     await expect(page.locator('[data-testid="arcade-cabinet"]')).not.toBeVisible();
     await expect(page.locator('canvas').first()).toBeVisible();
   });
