@@ -1,9 +1,0 @@
-- generic [active]:
-  - generic [ref=e77]:
-    - button "Unmute Music" [ref=e78] [cursor=pointer]: 🔇
-    - button "← BACK TO ARCADE" [ref=e79] [cursor=pointer]
-    - button "HOW TO PLAY" [ref=e80] [cursor=pointer]
-    - generic [ref=e94]: "Score: 1500"
-    - generic [ref=e95]: "Health: 100"
-    - generic [ref=e96]: "Max Combo: 0"
-  - alert [ref=e75]: Games

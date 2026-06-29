@@ -1,7 +1,0 @@
-[   30195ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/manifest.json:0
-[   30195ms] [ERROR] Manifest fetch from http://localhost:3000/manifest.json failed, code 404 @ http://localhost:3000/memory-match:0
-[   30200ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://localhost:3000/games/memory-match/script.js:0
-[   30200ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_RESET @ http://localhost:3000/games/memory-match/style.css:0
-[   30207ms] [LOG] ServiceWorker registered with scope / @ http://localhost:3000/register-sw.js:7
-[   32543ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/manifest.json:0
-[   32543ms] [ERROR] Manifest fetch from http://localhost:3000/manifest.json failed, code 404 @ http://localhost:3000/memory-match:0
