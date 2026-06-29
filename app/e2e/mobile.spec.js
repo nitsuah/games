@@ -31,12 +31,6 @@ test.describe('Mobile Landscape Optimization', () => {
     // Skipping due to CI canvas rendering issue
     await page.goto('/space-invaders');
   });
-    if (await howToPlayButton.isVisible()) {
-      await page.mouse.click(400, 200);
-    }
-    await page.waitForSelector('canvas', { state: 'attached', timeout: 15000 });
-    await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
-  });
 
   test('Pong game renders fullscreen in landscape mobile and dismisses tutorial', async ({ page }) => {
     await page.goto('/pong');
@@ -51,12 +45,6 @@ test.describe('Mobile Landscape Optimization', () => {
   test.skip('Breakout game renders fullscreen in landscape mobile and starts game', async ({ page }) => {
     // Skipping due to CI canvas rendering issue
     await page.goto('/breakout');
-  });
-    if (await startGameButton.isVisible()) {
-      await page.mouse.click(400, 200);
-    }
-    await page.waitForSelector('canvas', { state: 'attached', timeout: 15000 });
-    await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
 
   test('Flappy game renders embedded and responsive in landscape mobile', async ({ page }) => {
