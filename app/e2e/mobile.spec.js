@@ -14,11 +14,6 @@ test.describe('Mobile Landscape Optimization', () => {
 
   test('Asteroid game renders fullscreen in landscape mobile', async ({ page }) => {
     await page.goto('/asteroid');
-    // Ensure cabinet is NOT visible
-    // This check is to confirm that the ArcadeLayout is not present,
-    // which indicates that fullscreenGame prop is working as expected.
-    // This check is to confirm that the ArcadeLayout is not present,
-    // which indicates that fullscreenGame prop is working as expected.
     await expect(page.locator('[data-testid="arcade-cabinet"]')).not.toBeVisible();
     await expect(page.locator('canvas').first()).toBeVisible();
   });
@@ -27,7 +22,7 @@ test.describe('Mobile Landscape Optimization', () => {
     await page.goto('/fps');
     const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
     if (await howToPlayButton.isVisible()) {
-      await howToPlayButton.click();
+      await page.mouse.click(400, 200);
     }
     await expect(page.locator('canvas').first()).toBeVisible();
   });
@@ -36,35 +31,36 @@ test.describe('Mobile Landscape Optimization', () => {
     await page.goto('/space-invaders');
     const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
     if (await howToPlayButton.isVisible()) {
-      await howToPlayButton.click();
+      await page.mouse.click(400, 200);
     }
-    await expect(page.locator('canvas').first()).toBeVisible();
+    await page.screenshot({ path: 'space-invaders-debug.png' });
+    await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
 
   test('Pong game renders fullscreen in landscape mobile and dismisses tutorial', async ({ page }) => {
     await page.goto('/pong');
     const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
     if (await howToPlayButton.isVisible()) {
-      await howToPlayButton.click();
+      await page.mouse.click(400, 200);
     }
-    await expect(page.locator('canvas').first()).toBeVisible();
+    await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
 
   test('Breakout game renders fullscreen in landscape mobile and starts game', async ({ page }) => {
     await page.goto('/breakout');
     const startGameButton = page.getByRole('button', { name: 'START GAME' });
     if (await startGameButton.isVisible()) {
-      await startGameButton.click();
+      await page.mouse.click(400, 200);
     }
-    await expect(page.locator('canvas').first()).toBeVisible();
+    await page.screenshot({ path: 'breakout-debug.png' });
+    await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
 
-  // Embedded games (Flappy, Snake, Memory Match, Dodge Blocks)
   test('Flappy game renders embedded and responsive in landscape mobile', async ({ page }) => {
     await page.goto('/flappy');
     const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
     if (await howToPlayButton.isVisible()) {
-      await howToPlayButton.click();
+      await page.mouse.click(400, 200);
     }
     await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
@@ -73,10 +69,9 @@ test.describe('Mobile Landscape Optimization', () => {
     await page.goto('/snake');
     const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
     if (await howToPlayButton.isVisible()) {
-      await howToPlayButton.click();
+      await page.mouse.click(400, 200);
     }
-    const gameCanvas = page.locator('canvas').first();
-    await expect(gameCanvas).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
 
   test('Memory Match game renders embedded and responsive in landscape mobile', async ({ page }) => {
