@@ -111,15 +111,17 @@ export const SnakeGame = () => {
     const togglePause = useCallback(() => {
         setIsPaused(prev => {
             gameState.current.isRunning = !prev;
-            if (!prev) { // If was not paused, now pausing
-                // Optionally stop audio or other continuous effects
-            } else { // If was paused, now resuming
-                gameState.current.lastUpdate = performance.now();
-                if (loopRef.current) requestAnimationFrame(loopRef.current);
+            if (loopRef.current !== undefined) {
+                cancelAnimationFrame(loopRef.current);
+                loopRef.current = undefined; // Clear the ref ID
+            }
+            if (!prev && !gameOver) { // If was paused and game is not over, resume
+                 gameState.current.lastUpdate = performance.now(); // Reset time to prevent large dt
+                 loopRef.current = requestAnimationFrame(gameLoop);
             }
             return !prev;
         });
-    }, []);
+    }, [gameOver]); // Depend on gameOver to correctly restart/cancel loop
 
     const handleRestart = useCallback(() => {
         setIsPaused(false);
@@ -133,7 +135,11 @@ export const SnakeGame = () => {
         gameState.current.lastUpdate = 0;
         gameState.current.isRunning = true;
         gameState.current.soundSystem = new SimpleSoundSystem(); // Re-initialize sound system
-        if (loopRef.current) requestAnimationFrame(loopRef.current);
+        if (loopRef.current !== undefined) {
+            cancelAnimationFrame(loopRef.current);
+            loopRef.current = undefined;
+        }
+        loopRef.current = requestAnimationFrame(gameLoop); // Start new loop
     }, []);
 
     useEffect(() => {
@@ -239,13 +245,13 @@ export const SnakeGame = () => {
         if (!gameOver) { // Ensure game doesn't start if already game over
             state.isRunning = true;
             state.lastUpdate = performance.now();
-            requestAnimationFrame(loopRef.current);
+            requestAnimationFrame(gameLoop);
         }
 
         return () => {
             state.isRunning = false;
             keyboardManager.unbindAll();
-            if (loopRef.current) cancelAnimationFrame(loopRef.current); // Clean up animation frame
+            if (loopRef.current !== undefined) cancelAnimationFrame(loopRef.current); // Clean up animation frame
         };
     }, [isPaused, gameOver]); // Re-run effect when isPaused or gameOver changes
 
