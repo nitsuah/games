@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
 import keyboardManager from '@/lib/shared/input/KeyboardManager';
+import { GameControls } from '../../_components/shared/GameControls';
 
 const GameContainer = styled.div`
     position: relative;
