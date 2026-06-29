@@ -1,14 +1,14 @@
 # Multi-stage Dockerfile for Next.js application
 
 
-FROM node:22.21.0-alpine AS deps
+FROM node:22.22.1-alpine AS deps
 WORKDIR /app
 # Keep install scripts disabled in container to avoid husky prepare failures.
 COPY app/package*.json ./
 RUN npm ci --ignore-scripts
 
 
-FROM node:22.21.0-alpine AS builder
+FROM node:22.22.1-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY app/ .
@@ -17,7 +17,7 @@ RUN npm run build
 
 
 # --- Shared test base stage ---
-FROM node:22.21.0 AS test-base
+FROM node:22.22.1 AS test-base
 WORKDIR /app
 COPY app/package*.json ./
 COPY app/ .
@@ -37,7 +37,7 @@ FROM test-base AS test-e2e
 RUN npx playwright install --with-deps
 
 # --- Production runner stage ---
-FROM node:22.21.0-alpine AS runner
+FROM node:22.22.1-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

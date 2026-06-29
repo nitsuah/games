@@ -16,9 +16,7 @@ const DodgeBlocks = () => {
             borderRadius: 12,
             background: '#23293a',
             width: '100%',
-            height: '100%',
-            maxWidth: '400px',
-            maxHeight: '650px'
+            height: '100%'
           }}
         />
       </ArcadeLayout>

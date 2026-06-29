@@ -1,16 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { Bird } from './components/Bird';
 import { PipeManager } from './components/PipeManager';
 import { Background } from './components/Background';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
+import { GameControls } from '../../_components/shared/GameControls';
 
 const GameContainer = styled.div`
   position: relative;
-  width: 100vw;
-  max-width: 800px;
-  aspect-ratio: 4/3;
+  width: 100%;
+  height: 100%;
   background: #000;
   border: 4px solid #333;
   margin: 0 auto;
@@ -29,9 +29,7 @@ const GameContainer = styled.div`
 const Canvas = styled.canvas`
   display: block;
   width: 100%;
-  height: auto;
-  max-width: 800px;
-  aspect-ratio: 4/3;
+  height: 100%;
   background: #000;
   box-sizing: border-box;
 `;
@@ -95,7 +93,7 @@ export const FlappyGame = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [gameState, setGameState] = useState<'ready' | 'playing' | 'gameover'>('ready');
+  const [gameState, setGameState] = useState<'ready' | 'playing' | 'gameover' | 'paused'>('ready');
 
   const gameRef = useRef({
     bird: null as Bird | null,
@@ -104,13 +102,19 @@ export const FlappyGame = () => {
     highScoreManager: new HighScoreManager('flappy-bird'),
     soundSystem: new SimpleSoundSystem(),
     lastTime: 0,
+    isRunning: false,
   });
 
   const requestRef = useRef<number | undefined>(undefined);
+  const loopRef = useRef((timestamp: number) => {});
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Set canvas size from container
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -143,6 +147,10 @@ export const FlappyGame = () => {
 
     // Game Loop
     const loop = (timestamp: number) => {
+      if (gameState === 'paused') {
+          requestRef.current = requestAnimationFrame(loopRef.current);
+          return;
+      }
       const dt = (timestamp - state.lastTime) / 1000;
       state.lastTime = timestamp;
 
@@ -212,11 +220,11 @@ export const FlappyGame = () => {
       ctx.fillStyle = '#75b85b'; // Grass top
       ctx.fillRect(0, canvas.height - 20, canvas.width, 4);
 
-      requestRef.current = requestAnimationFrame(loop);
+      requestRef.current = requestAnimationFrame(loopRef.current);
     };
 
-    state.lastTime = performance.now();
-    requestRef.current = requestAnimationFrame(loop);
+      state.lastTime = performance.now();
+      requestRef.current = requestAnimationFrame(loopRef.current);
 
     return () => {
       window.removeEventListener('keydown', handleInput);
@@ -238,7 +246,11 @@ export const FlappyGame = () => {
 
   return (
     <GameContainer>
-      <Canvas ref={canvasRef} width={800} height={600} />
+      <GameControls
+        onPause={() => setGameState(prev => prev === 'playing' ? 'paused' : 'playing')}
+        onRestart={handleRestart}
+      />
+      <Canvas ref={canvasRef} />
       <UIOverlay>
         {score}
       </UIOverlay>
@@ -246,7 +258,7 @@ export const FlappyGame = () => {
       {gameState === 'ready' && (
         <StartScreen>
           <h1>FLAPPY BIRD</h1>
-          <p>Press Space or Click to Flap</p>
+          <Button onClick={() => setGameState('playing')}>START GAME</Button>
         </StartScreen>
       )}
 

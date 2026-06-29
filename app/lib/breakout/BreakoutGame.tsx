@@ -8,6 +8,7 @@ import { WaveManager } from '@/lib/shared/progression/WaveManager';
 import { LivesManager } from '@/lib/shared/progression/LivesManager';
 import HighScoreManager from '@/lib/shared/scoring/HighScoreManager';
 import { SimpleSoundSystem } from '@/lib/shared/audio/SimpleSoundSystem';
+import { GameControls } from '@/_components/shared/GameControls';
 
 const GameContainer = styled.div`
     position: relative;
@@ -377,6 +378,10 @@ export const BreakoutGame = () => {
 
     return (
         <GameContainer data-testid="game-container">
+            <GameControls
+                onPause={() => { gameState.current.isRunning = !gameState.current.isRunning }}
+                onRestart={handleRestart}
+            />
             <Canvas ref={canvasRef} width={800} height={600} />
             <UIOverlay>
                 <div>SCORE: {score}</div>

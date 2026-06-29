@@ -24,6 +24,7 @@ playwright-report/
 **/playwright-report/
 playwright/.cache/
 **/playwright/.cache/
+.playwright-mcp
 .lighthouseci/
 **/.lighthouseci/
 lighthouse-report/
