@@ -7,7 +7,7 @@
     "next": "^16.2.9",
     "react": "^19.2.1",
     "react-dom": "^19.2.7",
-    "styled-components": "^6.4.2",
+    "styled-components": "^6.4.4",
     "three": "^0.185.0"
   },
   "scripts": {
