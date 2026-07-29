@@ -59,7 +59,7 @@
     "lighthouse": "^13.4.0",
     "lint-staged": "^17.0.8",
     "prettier": "^3.9.6",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "tmp": "0.2.7",
