@@ -4,11 +4,11 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "gsap": "^3.15.0",
-    "next": "^16.2.9",
+    "next": "^16.2.11",
     "react": "^19.2.1",
     "react-dom": "^19.2.7",
-    "styled-components": "^6.4.2",
-    "three": "^0.184.0"
+    "styled-components": "^6.4.4",
+    "three": "^0.185.1"
   },
   "scripts": {
     "dev": "next dev",
@@ -38,15 +38,15 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^26.0.0",
+    "@types/node": "^26.1.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@typescript-eslint/parser": "^8.61.1",
+    "@typescript-eslint/parser": "^8.64.0",
     "babel-plugin-styled-components": "^2.3.0",
-    "baseline-browser-mapping": "^2.10.38",
+    "baseline-browser-mapping": "^2.10.43",
     "chrome-launcher": "^1.2.1",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.2.9",
+    "eslint-config-next": "^16.2.11",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
@@ -58,7 +58,7 @@
     "jest-environment-jsdom": "^30.4.1",
     "lighthouse": "^13.4.0",
     "lint-staged": "^17.0.8",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.5",
     "typescript": "^6.0.3"
   },
   "overrides": {
