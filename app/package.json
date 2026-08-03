@@ -45,7 +45,7 @@
     "babel-plugin-styled-components": "^2.3.0",
     "baseline-browser-mapping": "^2.10.43",
     "chrome-launcher": "^1.2.1",
-    "eslint": "^9.39.2",
+    "eslint": "^10.8.0",
     "eslint-config-next": "^16.2.11",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
