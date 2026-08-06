@@ -10,28 +10,28 @@ import { getTargetColor } from './colorblindModes';
  */
 export const generateInitialTargets = (count = 10, wave = 1, colorblindMode = 'none') => {
   const patterns = [
-    // Pattern 1: Cardinal directions
-    { x: 15, y: 0, z: 0 },
-    { x: -15, y: 0, z: 0 },
-    { x: 0, y: 15, z: 0 },
-    { x: 0, y: -15, z: 0 },
+    // Cardinal directions — spread across the doubled boundary
+    { x: 50, y: 0, z: 0 },
+    { x: -50, y: 0, z: 0 },
+    { x: 0, y: 50, z: 0 },
+    { x: 0, y: -50, z: 0 },
 
-    // Pattern 2: Upper right quadrant
-    { x: 12, y: 15, z: 0 },
-    { x: 15, y: 17, z: 0 },
-    { x: 18, y: 19, z: 0 },
+    // Diagonal quadrants
+    { x: 55, y: 55, z: 10 },
+    { x: -55, y: 55, z: -10 },
+    { x: 55, y: -55, z: 10 },
+    { x: -55, y: -55, z: -10 },
 
-    // Pattern 3: Upper left quadrant
-    { x: -12, y: 15, z: 0 },
-    { x: -15, y: 17, z: 0 },
-    { x: -18, y: 19, z: 0 },
+    // Mid-depth positions
+    { x: 30, y: -40, z: 40 },
+    { x: -30, y: 40, z: -40 },
 
-    // Pattern 4: Additional random positions for higher waves
-    { x: -10, y: -12, z: 0 },
-    { x: 10, y: -12, z: 0 },
-    { x: -18, y: -15, z: 0 },
-    { x: 18, y: -15, z: 0 },
-    { x: -8, y: 8, z: 0 },
+    // Far corners with z variation
+    { x: 75, y: 20, z: -30 },
+    { x: -75, y: -20, z: 30 },
+    { x: 20, y: 75, z: 20 },
+    { x: -20, y: -75, z: -20 },
+    { x: 0, y: 0, z: 80 },
   ];
 
   // Calculate wave difficulty multipliers

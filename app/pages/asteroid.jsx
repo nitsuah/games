@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import { useSound } from '@/utils/audio/useSound';
 import { AudioProvider, useAudio } from '@/contexts/AudioContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
-import { ArcadeLayout } from '@/_components/home/ArcadeLayout'; // Import ArcadeLayout
+import { ArcadeLayout } from '@/_components/home/ArcadeLayout';
+import { HowToPlay } from '@/_components/shared/HowToPlay';
 
-// Load Game and Crosshair client-side only to avoid server-side R3F/runtime imports
 const Game = dynamic(() => import('@/lib/asteroid/_comp/Game/Game'), { ssr: false });
 const Crosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/Crosshair'), { ssr: false });
-
 
 const Instructions = styled.div`
   position: absolute;
@@ -34,12 +33,24 @@ const GameContainer = styled.div`
   padding: 0;
 `;
 
+const INSTRUCTIONS = [
+  'Click to lock pointer as camera',
+  'Mouse: Aim and look around',
+  'Click: Shoot at asteroids',
+  'Esc: Release pointer / pause',
+  'Destroy all asteroids to advance waves',
+  'Smaller asteroids are worth more points!',
+];
+
 const AsteroidPage = () => {
+  const [started, setStarted] = useState(false);
+
   return (
     <SettingsProvider>
       <AudioProvider>
-        <ArcadeLayout fullscreenGame={true}> {/* Wrap with ArcadeLayout */}
-          <AsteroidContent />
+        <ArcadeLayout fullscreenGame={true}>
+          {!started && <HowToPlay title="ASTEROID" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
+          {started && <AsteroidContent />}
         </ArcadeLayout>
       </AudioProvider>
     </SettingsProvider>
@@ -50,7 +61,6 @@ const AsteroidContent = () => {
   const { soundEnabled } = useAudio();
   const { playSound } = useSound();
 
-  // Sync SoundManager with audio settings
   useEffect(() => {
     import('@/utils/audio/SoundManager').then((module) => {
       module.default.setSoundEnabled(soundEnabled);
@@ -64,9 +74,7 @@ const AsteroidContent = () => {
       return '';
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
   const handleHit = () => playSound('hit');

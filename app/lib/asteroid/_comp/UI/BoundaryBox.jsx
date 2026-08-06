@@ -5,8 +5,8 @@ import * as THREE from 'three';
 const BoundaryBox = () => {
   const boxRef = useRef();
   
-  // Match the bounds from Target.jsx: { min: (-50, -50, -50), max: (50, 50, 50) }
-  const size = [100, 100, 100]; // width, height, depth
+  // Match the bounds from Target.jsx: { min: (-100, -100, -100), max: (100, 100, 100) }
+  const size = [200, 200, 200]; // width, height, depth
   
   return (
     <lineSegments ref={boxRef}>

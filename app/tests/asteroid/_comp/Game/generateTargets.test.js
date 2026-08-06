@@ -79,11 +79,11 @@ describe('generateTargets - Target Initialization', () => {
   test('generates targets at different positions', () => {
     const targets = generateInitialTargets(4);
 
-    // First 4 targets should be at cardinal directions
-    expect(targets[0]).toMatchObject({ x: 15, y: 0, z: 0 });
-    expect(targets[1]).toMatchObject({ x: -15, y: 0, z: 0 });
-    expect(targets[2]).toMatchObject({ x: 0, y: 15, z: 0 });
-    expect(targets[3]).toMatchObject({ x: 0, y: -15, z: 0 });
+    // First 4 targets should be at cardinal directions (doubled boundary: ±50)
+    expect(targets[0]).toMatchObject({ x: 50, y: 0, z: 0 });
+    expect(targets[1]).toMatchObject({ x: -50, y: 0, z: 0 });
+    expect(targets[2]).toMatchObject({ x: 0, y: 50, z: 0 });
+    expect(targets[3]).toMatchObject({ x: 0, y: -50, z: 0 });
   });
 
   test('generates targets with unique IDs', () => {
