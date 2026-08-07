@@ -158,6 +158,225 @@ function pushOutOfWalls(entity, walls, radius = 18) {
   entity.y = Math.max(30, Math.min(WORLD_H - 30, entity.y));
 }
 
+// ─── Pure drawing / particle helpers (module scope — no component closure) ────
+function spawnExplosion(state, x, y, color, count = 16) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const spd = 1.5 + Math.random() * 3;
+    state.particles.push({
+      x, y,
+      vx: Math.cos(angle) * spd,
+      vy: Math.sin(angle) * spd,
+      life: 30 + Math.random() * 25,
+      maxLife: 55,
+      color,
+      r: 2 + Math.random() * 4,
+    });
+  }
+}
+
+function drawTank(ctx, tank, shield = false, speedBoost = false, invuln = false) {
+  ctx.save();
+  ctx.translate(tank.x, tank.y);
+
+  if (speedBoost) {
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = '#00ccff';
+  }
+  if (invuln && Math.floor(Date.now() / 60) % 2 === 0) {
+    ctx.globalAlpha = 0.4;
+  }
+
+  ctx.rotate(tank.angle);
+  ctx.fillStyle = tank.dark || '#005533';
+  ctx.fillRect(-TANK_W / 2 - 2, -TANK_H / 2 - 2, TANK_W + 4, TANK_H + 4);
+  ctx.fillStyle = tank.color;
+  ctx.fillRect(-TANK_W / 2, -TANK_H / 2, TANK_W, TANK_H);
+
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.fillRect(-TANK_W / 2, -TANK_H / 2, TANK_W, 6);
+  ctx.fillRect(-TANK_W / 2, TANK_H / 2 - 6, TANK_W, 6);
+
+  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = tank.color;
+  ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI * 2); ctx.fill();
+
+  ctx.rotate(-tank.angle);
+  ctx.rotate(tank.turretAngle);
+  ctx.fillStyle = tank.dark || '#005533';
+  ctx.fillRect(-3, -13, 26, 8);
+  ctx.fillStyle = tank.type === 'heavy' ? '#cc88ff' : tank.color;
+  ctx.fillRect(-2, -11, TURRET_LEN, 6);
+  ctx.shadowBlur = 0;
+  ctx.restore();
+
+  if (shield) {
+    ctx.save();
+    ctx.translate(tank.x, tank.y);
+    ctx.strokeStyle = '#aa44ff';
+    ctx.lineWidth = 3;
+    ctx.shadowBlur = 16;
+    ctx.shadowColor = '#aa44ff';
+    ctx.beginPath();
+    ctx.arc(0, 0, 28, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawHealthBar(ctx, x, y, hp, maxHp, color) {
+  const bw = 36, bh = 5;
+  ctx.fillStyle = '#333';
+  ctx.fillRect(x - bw / 2, y, bw, bh);
+  const ratio = Math.max(0, hp / maxHp);
+  const barColor = ratio > 0.5 ? color : ratio > 0.25 ? '#ffaa00' : '#ff4444';
+  ctx.fillStyle = barColor;
+  ctx.fillRect(x - bw / 2, y, bw * ratio, bh);
+}
+
+function drawMiniMap(ctx, s, W, H) {
+  const mm = { x: W - 164, y: H - 124, w: 150, h: 110, scale: 150 / WORLD_W };
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
+  ctx.fillRect(mm.x - 2, mm.y - 2, mm.w + 4, mm.h + 4);
+  ctx.strokeStyle = '#444';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(mm.x, mm.y, mm.w, mm.h);
+
+  ctx.fillStyle = '#555';
+  for (const w of s.walls) {
+    ctx.fillRect(mm.x + w.x * mm.scale, mm.y + w.y * (mm.h / WORLD_H), w.w * mm.scale, w.h * (mm.h / WORLD_H));
+  }
+  for (const e of s.enemies) {
+    if (e.hp <= 0) continue;
+    ctx.fillStyle = e.color;
+    ctx.beginPath();
+    ctx.arc(mm.x + e.x * mm.scale, mm.y + e.y * (mm.h / WORLD_H), 3, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  for (const pu of s.powerUps) {
+    ctx.fillStyle = POWERUP_COLORS[pu.type];
+    ctx.fillRect(mm.x + pu.x * mm.scale - 1, mm.y + pu.y * (mm.h / WORLD_H) - 1, 3, 3);
+  }
+
+  ctx.fillStyle = '#00ff88';
+  const px = mm.x + s.player.x * mm.scale;
+  const py = mm.y + s.player.y * (mm.h / WORLD_H);
+  ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+}
+
+function drawFrame(canvas, s, paused) {
+  if (!s) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cam = s.camera;
+  const offX = W / 2 - cam.x;
+  const offY = H / 2 - cam.y;
+
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.save();
+  ctx.translate(offX, offY);
+
+  ctx.strokeStyle = '#2a2a2a';
+  ctx.lineWidth = 1;
+  const gridSize = 80;
+  const startGX = Math.floor((cam.x - W / 2) / gridSize) * gridSize;
+  const startGY = Math.floor((cam.y - H / 2) / gridSize) * gridSize;
+  for (let gx = startGX; gx < cam.x + W / 2; gx += gridSize) {
+    ctx.beginPath(); ctx.moveTo(gx, cam.y - H / 2); ctx.lineTo(gx, cam.y + H / 2); ctx.stroke();
+  }
+  for (let gy = startGY; gy < cam.y + H / 2; gy += gridSize) {
+    ctx.beginPath(); ctx.moveTo(cam.x - W / 2, gy); ctx.lineTo(cam.x + W / 2, gy); ctx.stroke();
+  }
+
+  for (const w of s.walls) {
+    ctx.fillStyle = '#4a4a5a';
+    ctx.fillRect(w.x, w.y, w.w, w.h);
+    ctx.strokeStyle = '#6a6a7a';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(w.x, w.y, w.w, w.h);
+  }
+
+  for (const pu of s.powerUps) {
+    const pulse = Math.sin(pu.pulse) * 3;
+    const r = 14 + pulse;
+    ctx.save();
+    ctx.translate(pu.x, pu.y);
+    ctx.shadowBlur = 14;
+    ctx.shadowColor = POWERUP_COLORS[pu.type];
+    ctx.fillStyle = POWERUP_COLORS[pu.type] + '44';
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = POWERUP_COLORS[pu.type];
+    ctx.beginPath(); ctx.arc(0, 0, r * 0.55, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.font = '14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(POWERUP_LABELS[pu.type], 0, 0);
+    ctx.restore();
+  }
+
+  for (const b of s.bullets) {
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(Math.atan2(b.vy, b.vx));
+    ctx.fillStyle = b.owner === 'player' ? '#ffff44' : '#ff6644';
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = ctx.fillStyle;
+    ctx.fillRect(-BULLET_R, -2, BULLET_R * 2, 4);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  for (const pt of s.particles) {
+    const a = pt.life / pt.maxLife;
+    ctx.globalAlpha = a;
+    ctx.fillStyle = pt.color;
+    ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.r * a, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  for (const e of s.enemies) {
+    if (e.hp <= 0) continue;
+    drawTank(ctx, e);
+    drawHealthBar(ctx, e.x, e.y - 28, e.hp, e.maxHp, e.color);
+  }
+
+  const p = s.player;
+  drawTank(ctx, p, p.shieldTimer > 0, p.speedTimer > 0, p.invulnTimer > 0);
+  drawHealthBar(ctx, p.x, p.y - 28, p.hp, p.maxHp, '#00ff88');
+
+  ctx.restore();
+
+  drawMiniMap(ctx, s, W, H);
+
+  if (s.gameOver) {
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#ff4444';
+    ctx.font = 'bold 64px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('GAME OVER', W / 2, H / 2 - 20);
+    ctx.fillStyle = '#fff';
+    ctx.font = '28px Courier New';
+    ctx.fillText(`SCORE: ${s.score}`, W / 2, H / 2 + 30);
+  }
+
+  if (paused && !s.gameOver) {
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#00ffff';
+    ctx.font = 'bold 52px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', W / 2, H / 2 - 10);
+    ctx.fillStyle = '#888';
+    ctx.font = '20px Courier New';
+    ctx.fillText('Press ESC to resume', W / 2, H / 2 + 36);
+  }
+}
+
 // ─── Main component ────────────────────────────────────────────────────────────
 export default function TankGame({ onGameOver, paused: externalPaused = false, onPauseToggle }) {
   const router    = useRouter();
@@ -212,23 +431,6 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
     setHud({ hp: 100, maxHp: 100, ammo: CONFIGS.player.ammo, maxAmmo: CONFIGS.player.ammo, score: 0, elapsed: 0, shield: false, speed: false, gameOver: false });
   }, []);
 
-  // ── Particles ──────────────────────────────────────────────────────────────
-  function spawnExplosion(x, y, color, count = 16) {
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const spd = 1.5 + Math.random() * 3;
-      stateRef.current.particles.push({
-        x, y,
-        vx: Math.cos(angle) * spd,
-        vy: Math.sin(angle) * spd,
-        life: 30 + Math.random() * 25,
-        maxLife: 55,
-        color,
-        r: 2 + Math.random() * 4,
-      });
-    }
-  }
-
   // ── Game loop ──────────────────────────────────────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -280,7 +482,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
 
       const s = stateRef.current;
       if (!s || pausedRef.current || s.gameOver) {
-        drawFrame(canvas, s, dt);
+        drawFrame(canvas, s, pausedRef.current);
         return;
       }
 
@@ -406,7 +608,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
         for (const w of s.walls) {
           if (circleRectOverlap(b.x, b.y, BULLET_R, w.x, w.y, w.w, w.h)) {
             hitWall = true;
-            spawnExplosion(b.x, b.y, '#888', 4);
+            spawnExplosion(s, b.x, b.y, '#888', 4);
             break;
           }
         }
@@ -420,15 +622,15 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
           if (Math.hypot(b.x - p.x, b.y - p.y) < 22) {
             if (p.shieldTimer <= 0) {
               p.hp -= b.damage;
-              spawnExplosion(b.x, b.y, '#ff4444', 8);
+              spawnExplosion(s, b.x, b.y, '#ff4444', 8);
             } else {
-              spawnExplosion(b.x, b.y, '#aa44ff', 6);
+              spawnExplosion(s, b.x, b.y, '#aa44ff', 6);
             }
             p.invulnTimer = 15; // brief invuln after hit
             s.bullets.splice(i, 1);
             if (p.hp <= 0) {
               s.gameOver = true;
-              spawnExplosion(p.x, p.y, '#ff8800', 30);
+              spawnExplosion(s, p.x, p.y, '#ff8800', 30);
             }
             continue;
           }
@@ -441,10 +643,10 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
             if (e.hp <= 0) continue;
             if (Math.hypot(b.x - e.x, b.y - e.y) < 22) {
               e.hp -= b.damage;
-              spawnExplosion(b.x, b.y, e.color, 8);
+              spawnExplosion(s, b.x, b.y, e.color, 8);
               s.bullets.splice(i, 1);
               if (e.hp <= 0) {
-                spawnExplosion(e.x, e.y, e.color, 24);
+                spawnExplosion(s, e.x, e.y, e.color, 24);
                 s.score += CONFIGS[e.type].score;
                 s.enemies.splice(j, 1);
               }
@@ -465,7 +667,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
             case 'speed':  p.speedTimer = 300; break;
             case 'shield': p.shieldTimer = 240; break;
           }
-          spawnExplosion(pu.x, pu.y, POWERUP_COLORS[pu.type], 10);
+          spawnExplosion(s, pu.x, pu.y, POWERUP_COLORS[pu.type], 10);
           s.powerUps.splice(i, 1);
           // Respawn another power-up elsewhere
           const pos = findSpawn(s.walls, p.x, p.y, 200);
@@ -531,7 +733,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
         }
       }
 
-      drawFrame(canvas, s, dt);
+      drawFrame(canvas, s, pausedRef.current);
     };
 
     rafRef.current = requestAnimationFrame(loop);
@@ -552,234 +754,6 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
       canvas.removeEventListener('touchmove',  onTouch);
     };
   }, [initGame]);
-
-  // ── Drawing ────────────────────────────────────────────────────────────────
-  function drawFrame(canvas, s, _dt) {
-    if (!s) return;
-    const ctx = canvas.getContext('2d');
-    const W = canvas.width, H = canvas.height;
-    const cam = s.camera;
-    const offX = W / 2 - cam.x;
-    const offY = H / 2 - cam.y;
-
-    // Background
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.save();
-    ctx.translate(offX, offY);
-
-    // Ground grid
-    ctx.strokeStyle = '#2a2a2a';
-    ctx.lineWidth = 1;
-    const gridSize = 80;
-    const startGX = Math.floor((cam.x - W / 2) / gridSize) * gridSize;
-    const startGY = Math.floor((cam.y - H / 2) / gridSize) * gridSize;
-    for (let gx = startGX; gx < cam.x + W / 2; gx += gridSize) {
-      ctx.beginPath(); ctx.moveTo(gx, cam.y - H / 2); ctx.lineTo(gx, cam.y + H / 2); ctx.stroke();
-    }
-    for (let gy = startGY; gy < cam.y + H / 2; gy += gridSize) {
-      ctx.beginPath(); ctx.moveTo(cam.x - W / 2, gy); ctx.lineTo(cam.x + W / 2, gy); ctx.stroke();
-    }
-
-    // Walls
-    for (const w of s.walls) {
-      ctx.fillStyle = '#4a4a5a';
-      ctx.fillRect(w.x, w.y, w.w, w.h);
-      ctx.strokeStyle = '#6a6a7a';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(w.x, w.y, w.w, w.h);
-    }
-
-    // Power-ups
-    for (const pu of s.powerUps) {
-      const pulse = Math.sin(pu.pulse) * 3;
-      const r = 14 + pulse;
-      ctx.save();
-      ctx.translate(pu.x, pu.y);
-      ctx.shadowBlur = 14;
-      ctx.shadowColor = POWERUP_COLORS[pu.type];
-      ctx.fillStyle = POWERUP_COLORS[pu.type] + '44';
-      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = POWERUP_COLORS[pu.type];
-      ctx.beginPath(); ctx.arc(0, 0, r * 0.55, 0, Math.PI * 2); ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.font = '14px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(POWERUP_LABELS[pu.type], 0, 0);
-      ctx.restore();
-    }
-
-    // Bullets
-    for (const b of s.bullets) {
-      ctx.save();
-      ctx.translate(b.x, b.y);
-      ctx.rotate(Math.atan2(b.vy, b.vx));
-      ctx.fillStyle = b.owner === 'player' ? '#ffff44' : '#ff6644';
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = ctx.fillStyle;
-      ctx.fillRect(-BULLET_R, -2, BULLET_R * 2, 4);
-      ctx.shadowBlur = 0;
-      ctx.restore();
-    }
-
-    // Particles
-    for (const pt of s.particles) {
-      const a = pt.life / pt.maxLife;
-      ctx.globalAlpha = a;
-      ctx.fillStyle = pt.color;
-      ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.r * a, 0, Math.PI * 2); ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-
-    // Draw enemies
-    for (const e of s.enemies) {
-      if (e.hp <= 0) continue;
-      drawTank(ctx, e);
-      drawHealthBar(ctx, e.x, e.y - 28, e.hp, e.maxHp, e.color);
-    }
-
-    // Draw player
-    const p = s.player;
-    drawTank(ctx, p, p.shieldTimer > 0, p.speedTimer > 0, p.invulnTimer > 0);
-    drawHealthBar(ctx, p.x, p.y - 28, p.hp, p.maxHp, '#00ff88');
-
-    ctx.restore();
-
-    // Mini-map
-    drawMiniMap(ctx, s, W, H);
-
-    // Game over overlay
-    if (s.gameOver) {
-      ctx.fillStyle = 'rgba(0,0,0,0.7)';
-      ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = '#ff4444';
-      ctx.font = 'bold 64px Courier New';
-      ctx.textAlign = 'center';
-      ctx.fillText('GAME OVER', W / 2, H / 2 - 20);
-      ctx.fillStyle = '#fff';
-      ctx.font = '28px Courier New';
-      ctx.fillText(`SCORE: ${s.score}`, W / 2, H / 2 + 30);
-    }
-
-    // Pause overlay
-    if (pausedRef.current && !s.gameOver) {
-      ctx.fillStyle = 'rgba(0,0,0,0.55)';
-      ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = '#00ffff';
-      ctx.font = 'bold 52px Courier New';
-      ctx.textAlign = 'center';
-      ctx.fillText('PAUSED', W / 2, H / 2 - 10);
-      ctx.fillStyle = '#888';
-      ctx.font = '20px Courier New';
-      ctx.fillText('Press ESC to resume', W / 2, H / 2 + 36);
-    }
-  }
-
-  function drawTank(ctx, tank, shield = false, speedBoost = false, invuln = false) {
-    ctx.save();
-    ctx.translate(tank.x, tank.y);
-
-    // Speed boost trail
-    if (speedBoost) {
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = '#00ccff';
-    }
-    // Invuln flash
-    if (invuln && Math.floor(Date.now() / 60) % 2 === 0) {
-      ctx.globalAlpha = 0.4;
-    }
-
-    // Body
-    ctx.rotate(tank.angle);
-    ctx.fillStyle = tank.dark || '#005533';
-    ctx.fillRect(-TANK_W / 2 - 2, -TANK_H / 2 - 2, TANK_W + 4, TANK_H + 4);
-    ctx.fillStyle = tank.color;
-    ctx.fillRect(-TANK_W / 2, -TANK_H / 2, TANK_W, TANK_H);
-
-    // Track marks
-    ctx.fillStyle = 'rgba(0,0,0,0.35)';
-    ctx.fillRect(-TANK_W / 2, -TANK_H / 2, TANK_W, 6);
-    ctx.fillRect(-TANK_W / 2, TANK_H / 2 - 6, TANK_W, 6);
-
-    // Hatch
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
-    ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = tank.color;
-    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI * 2); ctx.fill();
-
-    ctx.rotate(-tank.angle); // undo body rotation for turret
-
-    // Turret
-    ctx.rotate(tank.turretAngle);
-    ctx.fillStyle = tank.dark || '#005533';
-    ctx.fillRect(-3, -13, 26, 8); // shadow
-    ctx.fillStyle = tank.type === 'heavy' ? '#cc88ff' : tank.color;
-    ctx.fillRect(-2, -11, TURRET_LEN, 6);
-    ctx.shadowBlur = 0;
-    ctx.restore();
-
-    // Shield ring
-    if (shield) {
-      ctx.save();
-      ctx.translate(tank.x, tank.y);
-      ctx.strokeStyle = '#aa44ff';
-      ctx.lineWidth = 3;
-      ctx.shadowBlur = 16;
-      ctx.shadowColor = '#aa44ff';
-      ctx.beginPath();
-      ctx.arc(0, 0, 28, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.restore();
-    }
-  }
-
-  function drawHealthBar(ctx, x, y, hp, maxHp, color) {
-    const bw = 36, bh = 5;
-    ctx.fillStyle = '#333';
-    ctx.fillRect(x - bw / 2, y, bw, bh);
-    const ratio = Math.max(0, hp / maxHp);
-    const barColor = ratio > 0.5 ? color : ratio > 0.25 ? '#ffaa00' : '#ff4444';
-    ctx.fillStyle = barColor;
-    ctx.fillRect(x - bw / 2, y, bw * ratio, bh);
-  }
-
-  function drawMiniMap(ctx, s, W, H) {
-    const mm = { x: W - 164, y: H - 124, w: 150, h: 110, scale: 150 / WORLD_W };
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    ctx.fillRect(mm.x - 2, mm.y - 2, mm.w + 4, mm.h + 4);
-    ctx.strokeStyle = '#444';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(mm.x, mm.y, mm.w, mm.h);
-
-    // Walls
-    ctx.fillStyle = '#555';
-    for (const w of s.walls) {
-      ctx.fillRect(mm.x + w.x * mm.scale, mm.y + w.y * (mm.h / WORLD_H), w.w * mm.scale, w.h * (mm.h / WORLD_H));
-    }
-
-    // Enemies
-    for (const e of s.enemies) {
-      if (e.hp <= 0) continue;
-      ctx.fillStyle = e.color;
-      ctx.beginPath();
-      ctx.arc(mm.x + e.x * mm.scale, mm.y + e.y * (mm.h / WORLD_H), 3, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Power-ups
-    for (const pu of s.powerUps) {
-      ctx.fillStyle = POWERUP_COLORS[pu.type];
-      ctx.fillRect(mm.x + pu.x * mm.scale - 1, mm.y + pu.y * (mm.h / WORLD_H) - 1, 3, 3);
-    }
-
-    // Player
-    ctx.fillStyle = '#00ff88';
-    const px = mm.x + s.player.x * mm.scale;
-    const py = mm.y + s.player.y * (mm.h / WORLD_H);
-    ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
-  }
 
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60), s = sec % 60;
