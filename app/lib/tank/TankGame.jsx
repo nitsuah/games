@@ -167,8 +167,9 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
   const keysRef   = useRef({});
   const mouseRef  = useRef({ x: 0, y: 0, down: false });
   const pausedRef = useRef(false);
-  const onGameOverRef    = useRef(onGameOver);
-  const onPauseToggleRef = useRef(onPauseToggle);
+  const onGameOverRef      = useRef(onGameOver);
+  const onPauseToggleRef   = useRef(onPauseToggle);
+  const gameOverTimeoutRef = useRef(null);
   useEffect(() => { onGameOverRef.current    = onGameOver;    }, [onGameOver]);
   useEffect(() => { onPauseToggleRef.current = onPauseToggle; }, [onPauseToggle]);
 
@@ -181,6 +182,10 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
 
   // ── Init ───────────────────────────────────────────────────────────────────
   const initGame = useCallback(() => {
+    if (gameOverTimeoutRef.current) {
+      clearTimeout(gameOverTimeoutRef.current);
+      gameOverTimeoutRef.current = null;
+    }
     const walls = buildWalls();
     const startX = WORLD_W / 2;
     const startY = WORLD_H / 2;
@@ -518,8 +523,11 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
 
       if (s.gameOver) {
         setHud(h => ({ ...h, gameOver: true }));
-        if (onGameOverRef.current) {
-          setTimeout(() => onGameOverRef.current(s.score), 1500);
+        if (onGameOverRef.current && !gameOverTimeoutRef.current) {
+          gameOverTimeoutRef.current = setTimeout(() => {
+            onGameOverRef.current?.(s.score);
+            gameOverTimeoutRef.current = null;
+          }, 1500);
         }
       }
 
@@ -530,6 +538,10 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      if (gameOverTimeoutRef.current) {
+        clearTimeout(gameOverTimeoutRef.current);
+        gameOverTimeoutRef.current = null;
+      }
       window.removeEventListener('resize', resize);
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('keyup',   onKey);
