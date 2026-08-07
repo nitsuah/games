@@ -204,7 +204,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
       camera: { x: startX, y: startY }, // camera tracks world position (center)
       gameOver: false,
     };
-    setHud({ hp: 100, maxHp: 100, ammo: 30, score: 0, elapsed: 0, shield: false, speed: false, gameOver: false });
+    setHud({ hp: 100, maxHp: 100, ammo: CONFIGS.player.ammo, maxAmmo: CONFIGS.player.ammo, score: 0, elapsed: 0, shield: false, speed: false, gameOver: false });
   }, []);
 
   // ── Particles ──────────────────────────────────────────────────────────────
