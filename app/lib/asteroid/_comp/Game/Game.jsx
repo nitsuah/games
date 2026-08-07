@@ -543,11 +543,13 @@ const Game = ({ onHit, onMiss }) => {
 
   return (
     <div className={styles.gameContainer} style={shakeStyle}>
-      <GameControls
-        onPause={() => setPaused((p) => !p)}
-        onRestart={restartGame}
-        paused={paused}
-      />
+      {!paused && (
+        <GameControls
+          onPause={() => setPaused(true)}
+          onRestart={restartGame}
+          paused={false}
+        />
+      )}
       <VirtualJoystick onMove={(x, y) => {
         // Map joystick input to movement and aiming
         // Using existing keyboard-based input handlers is better, but this requires integrating

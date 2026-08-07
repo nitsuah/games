@@ -159,7 +159,7 @@ function pushOutOfWalls(entity, walls, radius = 18) {
 }
 
 // ─── Main component ────────────────────────────────────────────────────────────
-export default function TankGame({ onGameOver, paused: externalPaused = false }) {
+export default function TankGame({ onGameOver, paused: externalPaused = false, onPauseToggle }) {
   const router    = useRouter();
   const canvasRef = useRef(null);
   const stateRef  = useRef(null);   // mutable game state
@@ -167,16 +167,16 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
   const keysRef   = useRef({});
   const mouseRef  = useRef({ x: 0, y: 0, down: false });
   const pausedRef = useRef(false);
-  const onGameOverRef = useRef(onGameOver);
-  useEffect(() => { onGameOverRef.current = onGameOver; }, [onGameOver]);
+  const onGameOverRef    = useRef(onGameOver);
+  const onPauseToggleRef = useRef(onPauseToggle);
+  useEffect(() => { onGameOverRef.current    = onGameOver;    }, [onGameOver]);
+  useEffect(() => { onPauseToggleRef.current = onPauseToggle; }, [onPauseToggle]);
 
   // HUD values that trigger re-renders
   const [hud, setHud] = useState({ hp: 100, maxHp: 100, ammo: CONFIGS.player.ammo, maxAmmo: CONFIGS.player.ammo, score: 0, elapsed: 0, shield: false, speed: false, gameOver: false });
-  const [gamePaused, setGamePaused] = useState(false);
 
   useEffect(() => {
     pausedRef.current = externalPaused;
-    setGamePaused(externalPaused);
   }, [externalPaused]);
 
   // ── Init ───────────────────────────────────────────────────────────────────
@@ -240,8 +240,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
     const onKey = (e) => {
       keysRef.current[e.code] = e.type === 'keydown';
       if (e.code === 'Escape' && e.type === 'keydown') {
-        pausedRef.current = !pausedRef.current;
-        setGamePaused(p => !p);
+        onPauseToggleRef.current?.();
       }
       if (e.code === 'Space') e.preventDefault();
     };
@@ -539,11 +538,6 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
     };
   }, [initGame]);
 
-  // Sync pause ref
-  useEffect(() => {
-    pausedRef.current = gamePaused;
-  }, [gamePaused]);
-
   // ── Drawing ────────────────────────────────────────────────────────────────
   function drawFrame(canvas, s, _dt) {
     if (!s) return;
@@ -771,10 +765,6 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
     const py = mm.y + s.player.y * (mm.h / WORLD_H);
     ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
   }
-
-  const togglePause = () => {
-    setGamePaused(p => !p);
-  };
 
   const formatTime = (sec) => {
     const m = Math.floor(sec / 60), s = sec % 60;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useRouter } from 'next/router';
 
@@ -77,42 +77,21 @@ interface GameControlsProps {
   paused?: boolean;
 }
 
-export const GameControls = ({ onPause, onRestart }: GameControlsProps) => {
+export const GameControls = ({ onPause, onRestart, paused = false }: GameControlsProps) => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-
-  const handlePause = () => {
-    const nextOpen = !open;
-    setOpen(nextOpen);
-    onPause();
-  };
-
-  const handleResume = () => {
-    setOpen(false);
-    onPause();
-  };
-
-  const handleRestart = () => {
-    setOpen(false);
-    onRestart();
-  };
-
-  const handleHome = () => {
-    router.push('/');
-  };
 
   return (
     <Bar>
-      {!open && (
-        <PauseBtn onClick={handlePause} aria-label="Pause Game" title="Pause">
+      {!paused && (
+        <PauseBtn onClick={onPause} aria-label="Pause Game" title="Pause">
           ⏸
         </PauseBtn>
       )}
-      {open && (
+      {paused && (
         <Menu>
-          <MenuBtn onClick={handleResume} aria-label="Resume">▶ Resume</MenuBtn>
-          <MenuBtn onClick={handleRestart} aria-label="Restart">🔄 Restart</MenuBtn>
-          <MenuBtn onClick={handleHome} aria-label="Home">🏠 Home</MenuBtn>
+          <MenuBtn onClick={onPause} aria-label="Resume">▶ Resume</MenuBtn>
+          <MenuBtn onClick={onRestart} aria-label="Restart">🔄 Restart</MenuBtn>
+          <MenuBtn onClick={() => router.push('/')} aria-label="Home">🏠 Home</MenuBtn>
         </Menu>
       )}
     </Bar>

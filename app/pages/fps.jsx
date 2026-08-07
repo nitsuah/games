@@ -35,7 +35,7 @@ export default function TankBattlePage() {
             onRestart={handleRestart}
             paused={paused}
           />
-          <TankGame key={gameKey} paused={paused} />
+          <TankGame key={gameKey} paused={paused} onPauseToggle={() => setPaused((p) => !p)} />
         </>
       )}
     </ArcadeLayout>
