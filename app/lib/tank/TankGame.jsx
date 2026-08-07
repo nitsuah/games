@@ -516,8 +516,11 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
         });
       }
 
-      if (s.gameOver && onGameOverRef.current) {
-        setTimeout(() => onGameOverRef.current(s.score), 1500);
+      if (s.gameOver) {
+        setHud(h => ({ ...h, gameOver: true }));
+        if (onGameOverRef.current) {
+          setTimeout(() => onGameOverRef.current(s.score), 1500);
+        }
       }
 
       drawFrame(canvas, s, dt);

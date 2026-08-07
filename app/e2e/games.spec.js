@@ -1,11 +1,10 @@
 const { test, expect } = require('@playwright/test');
 
-// Helper: dismiss the shared HowToPlay overlay present on every game page
+// Helper: dismiss the shared HowToPlay overlay — enforces it is always present
 async function dismissHowToPlay(page) {
   const btn = page.getByRole('button', { name: /GOT IT/i });
-  if (await btn.isVisible({ timeout: 5000 }).catch(() => false)) {
-    await btn.click();
-  }
+  await expect(btn).toBeVisible({ timeout: 5000 });
+  await btn.click();
 }
 
 test.describe('Asteroid Game', () => {
