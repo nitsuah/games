@@ -151,9 +151,9 @@ export const PongGame = ({ paused = false }: { paused?: boolean }) => {
         // Game loop
         const loop = (timestamp: number) => {
             if (!state.isRunning) return;
-            if (pausedRef.current) { requestAnimationFrame(loop); return; }
+            if (pausedRef.current) { state.lastTime = timestamp; requestAnimationFrame(loop); return; }
 
-            const dt = (timestamp - state.lastTime) / 1000;
+            const dt = Math.min((timestamp - state.lastTime) / 1000, 0.1);
             state.lastTime = timestamp;
 
             // Update player paddle

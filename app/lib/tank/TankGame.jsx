@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/router';
 
 // ─── World constants ───────────────────────────────────────────────────────────
 const WORLD_W = 3200;
@@ -127,11 +128,13 @@ function scatterPowerUps(walls, count = 16) {
   const types = ['health', 'ammo', 'speed', 'shield'];
   const items = [];
   for (let i = 0; i < count; i++) {
-    let x, y;
-    do {
+    let x = 80 + Math.random() * (WORLD_W - 160);
+    let y = 80 + Math.random() * (WORLD_H - 160);
+    for (let attempt = 0; attempt < 80; attempt++) {
+      if (!walls.some(w => circleRectOverlap(x, y, 25, w.x, w.y, w.w, w.h))) break;
       x = 80 + Math.random() * (WORLD_W - 160);
       y = 80 + Math.random() * (WORLD_H - 160);
-    } while (walls.some(w => circleRectOverlap(x, y, 25, w.x, w.y, w.w, w.h)));
+    }
     items.push(makePowerUp(x, y, types[Math.floor(Math.random() * types.length)]));
   }
   return items;
@@ -157,15 +160,18 @@ function pushOutOfWalls(entity, walls, radius = 18) {
 
 // ─── Main component ────────────────────────────────────────────────────────────
 export default function TankGame({ onGameOver, paused: externalPaused = false }) {
+  const router    = useRouter();
   const canvasRef = useRef(null);
   const stateRef  = useRef(null);   // mutable game state
   const rafRef    = useRef(null);
   const keysRef   = useRef({});
   const mouseRef  = useRef({ x: 0, y: 0, down: false });
   const pausedRef = useRef(false);
+  const onGameOverRef = useRef(onGameOver);
+  useEffect(() => { onGameOverRef.current = onGameOver; }, [onGameOver]);
 
   // HUD values that trigger re-renders
-  const [hud, setHud] = useState({ hp: 100, maxHp: 100, ammo: 30, score: 0, elapsed: 0, shield: false, speed: false, gameOver: false });
+  const [hud, setHud] = useState({ hp: 100, maxHp: 100, ammo: CONFIGS.player.ammo, maxAmmo: CONFIGS.player.ammo, score: 0, elapsed: 0, shield: false, speed: false, gameOver: false });
   const [gamePaused, setGamePaused] = useState(false);
 
   useEffect(() => {
@@ -502,6 +508,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
           hp: Math.max(0, p.hp),
           maxHp: p.maxHp,
           ammo: p.ammo,
+          maxAmmo: CONFIGS.player.ammo,
           score: s.score,
           elapsed: Math.floor(s.elapsed),
           shield: p.shieldTimer > 0,
@@ -510,8 +517,8 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
         });
       }
 
-      if (s.gameOver && onGameOver) {
-        setTimeout(() => onGameOver(s.score), 1500);
+      if (s.gameOver && onGameOverRef.current) {
+        setTimeout(() => onGameOverRef.current(s.score), 1500);
       }
 
       drawFrame(canvas, s, dt);
@@ -527,8 +534,10 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
       window.removeEventListener('mousemove', onMouse);
       window.removeEventListener('mousedown', onMouse);
       window.removeEventListener('mouseup',   onMouse);
+      canvas.removeEventListener('touchstart', onTouch);
+      canvas.removeEventListener('touchmove',  onTouch);
     };
-  }, [initGame, onGameOver]);
+  }, [initGame]);
 
   // Sync pause ref
   useEffect(() => {
@@ -801,7 +810,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
             <span style={{ width: 20 }}>🔫</span>
             <div style={{ width: 120, height: 10, background: '#333', borderRadius: 4, overflow: 'hidden' }}>
               <div style={{
-                width: `${(hud.ammo / 30) * 100}%`, height: '100%',
+                width: `${(hud.ammo / hud.maxAmmo) * 100}%`, height: '100%',
                 background: '#ffdd00',
               }} />
             </div>
@@ -846,7 +855,7 @@ export default function TankGame({ onGameOver, paused: externalPaused = false })
             🔄 PLAY AGAIN
           </button>
           <button
-            onClick={() => window.location.href = '/'}
+            onClick={() => router.push('/')}
             style={{
               padding: '12px 28px', fontSize: 18, fontFamily: 'Courier New',
               background: 'rgba(0,255,255,0.1)', border: '2px solid #00ffff',
