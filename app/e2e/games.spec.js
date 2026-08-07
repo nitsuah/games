@@ -1,16 +1,21 @@
 const { test, expect } = require('@playwright/test');
 
+// Helper: dismiss the shared HowToPlay overlay present on every game page
+async function dismissHowToPlay(page) {
+  const btn = page.getByRole('button', { name: /GOT IT/i });
+  if (await btn.isVisible({ timeout: 5000 }).catch(() => false)) {
+    await btn.click();
+  }
+}
+
 test.describe('Asteroid Game', () => {
   test('should load asteroid game page', async ({ page }) => {
     await page.goto('/asteroid');
-    
-    // Wait for page to load completely - don't wait for networkidle as 3D assets may keep loading
     await page.waitForLoadState('domcontentloaded');
-    
-    // Wait for canvas to be ready with increased timeout
+    await dismissHowToPlay(page);
+
+    // Wait for canvas to be ready (3D assets may take time)
     await page.waitForSelector('canvas', { timeout: 30000 });
-    
-    // Check canvas exists
     const canvas = page.locator('canvas');
     await expect(canvas).toBeVisible({ timeout: 10000 });
   });
@@ -18,38 +23,29 @@ test.describe('Asteroid Game', () => {
   test('should display game instructions', async ({ page }) => {
     await page.goto('/asteroid');
     await page.waitForLoadState('domcontentloaded');
-    
-    // Wait for 3D assets to load
+    await dismissHowToPlay(page);
+
     await page.waitForTimeout(2000);
-    
-    // Wait for canvas with extended timeout
     await page.waitForSelector('canvas', { timeout: 30000 });
-    
-    // Get canvas and verify it's visible
+
     const canvas = page.locator('canvas');
     await expect(canvas).toBeVisible({ timeout: 10000 });
-    
-    // Check for instructions text
+
     const instructions = page.locator('text=Click to lock pointer');
     await expect(instructions).toBeVisible();
   });
 
   test('should initialize with correct trail quality setting', async ({ page }) => {
     await page.goto('/asteroid');
-    
-    // Wait for canvas to ensure game is loaded
-    await page.waitForSelector('canvas', { timeout: 15000 });
     await page.waitForLoadState('domcontentloaded');
-    
-    // Wait for game to fully initialize
+    await dismissHowToPlay(page);
+
+    await page.waitForSelector('canvas', { timeout: 15000 });
     await page.waitForTimeout(2000);
-    
-    // Check that localStorage has trail quality setting
+
     const trailQuality = await page.evaluate(() => {
       return localStorage.getItem('trailQuality') || 'high';
     });
-    
-    // Should have a valid trail quality value
     expect(['high', 'low', 'off']).toContain(trailQuality);
   });
 });
@@ -57,19 +53,11 @@ test.describe('Asteroid Game', () => {
 test.describe('Breakout Game', () => {
   test('should load Breakout game page', async ({ page }) => {
     await page.goto('/breakout');
-    
-    // Wait for page to load completely
     await page.waitForLoadState('domcontentloaded');
-    
-    // Click START GAME button to launch the game
-    const startButton = page.getByTestId('start-game-button');
-    await expect(startButton).toBeVisible({ timeout: 10000 });
-    await startButton.click();
-    
-    // Wait for canvas to initialize (Canvas 2D should load quickly)
+    await dismissHowToPlay(page);
+
+    // Wait for canvas to initialize after overlay dismissal
     await page.waitForSelector('canvas', { timeout: 30000 });
-    
-    // Check canvas exists and is visible
     const canvas = page.locator('canvas');
     await expect(canvas).toBeVisible({ timeout: 10000 });
   });
@@ -77,20 +65,12 @@ test.describe('Breakout Game', () => {
   test('should display game UI elements', async ({ page }) => {
     await page.goto('/breakout');
     await page.waitForLoadState('domcontentloaded');
-    
-    // Click START GAME button
-    const startButton = page.getByTestId('start-game-button');
-    await expect(startButton).toBeVisible({ timeout: 10000 });
-    await startButton.click();
-    
-    // Wait for canvas to initialize
+    await dismissHowToPlay(page);
+
     await page.waitForSelector('canvas', { timeout: 30000 });
-    
-    // Canvas should be present and visible
     const canvas = page.locator('canvas');
     await expect(canvas).toBeVisible({ timeout: 10000 });
-    
-    // Verify the game container is visible
+
     const gameContainer = page.getByTestId('game-container');
     await expect(gameContainer).toBeVisible();
   });

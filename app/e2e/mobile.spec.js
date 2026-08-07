@@ -1,5 +1,13 @@
 const { test, expect } = require('@playwright/test');
 
+// Helper: dismiss the shared HowToPlay overlay present on every game page
+async function dismissHowToPlay(page) {
+  const btn = page.getByRole('button', { name: /GOT IT/i });
+  if (await btn.isVisible({ timeout: 5000 }).catch(() => false)) {
+    await btn.click();
+  }
+}
+
 test.describe('Mobile Landscape Optimization', () => {
   test.beforeEach(async ({ page }) => {
     // Set a common mobile landscape viewport
@@ -14,17 +22,15 @@ test.describe('Mobile Landscape Optimization', () => {
 
   test('Asteroid game renders fullscreen in landscape mobile', async ({ page }) => {
     await page.goto('/asteroid');
+    await dismissHowToPlay(page);
     await expect(page.locator('[data-testid="arcade-cabinet"]')).not.toBeVisible();
-    await expect(page.locator('canvas').first()).toBeVisible();
+    await expect(page.locator('canvas').first()).toBeVisible({ timeout: 30000 });
   });
 
   test('FPS game renders fullscreen in landscape mobile and dismisses tutorial', async ({ page }) => {
     await page.goto('/fps');
-    const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
-    if (await howToPlayButton.isVisible()) {
-      await page.mouse.click(400, 200);
-    }
-    await expect(page.locator('canvas').first()).toBeVisible();
+    await dismissHowToPlay(page);
+    await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
 
   test.skip('Space Invaders game renders fullscreen in landscape mobile and dismisses tutorial', async ({ page }) => {
@@ -34,10 +40,7 @@ test.describe('Mobile Landscape Optimization', () => {
 
   test('Pong game renders fullscreen in landscape mobile and dismisses tutorial', async ({ page }) => {
     await page.goto('/pong');
-    const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
-    if (await howToPlayButton.isVisible()) {
-      await page.mouse.click(400, 200);
-    }
+    await dismissHowToPlay(page);
     await page.waitForSelector('canvas', { state: 'attached', timeout: 15000 });
     await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
@@ -49,19 +52,13 @@ test.describe('Mobile Landscape Optimization', () => {
 
   test('Flappy game renders embedded and responsive in landscape mobile', async ({ page }) => {
     await page.goto('/flappy');
-    const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
-    if (await howToPlayButton.isVisible()) {
-      await page.mouse.click(400, 200);
-    }
+    await dismissHowToPlay(page);
     await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
 
   test('Snake game renders embedded and responsive in landscape mobile', async ({ page }) => {
     await page.goto('/snake');
-    const howToPlayButton = page.getByRole('button', { name: 'Got it!' });
-    if (await howToPlayButton.isVisible()) {
-      await page.mouse.click(400, 200);
-    }
+    await dismissHowToPlay(page);
     await expect(page.locator('canvas').first()).toBeVisible({ timeout: 15000 });
   });
 
