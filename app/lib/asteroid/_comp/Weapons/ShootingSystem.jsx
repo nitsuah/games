@@ -37,9 +37,9 @@ const ShootingSystem = ({
   const autoFireIntervalRef = useRef(null);
   const aaShotCounterRef = useRef(0); // Track alternating shots for AA weapon
 
-  // Helper function to generate unique effect IDs using crypto.randomUUID()
   const generateEffectId = (prefix) => {
-    return `${prefix}-${crypto.randomUUID()}`;
+    const id = crypto.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    return `${prefix}-${id}`;
   };
 
   const handleShoot = () => {

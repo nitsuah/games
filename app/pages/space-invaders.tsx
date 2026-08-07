@@ -1,72 +1,26 @@
 import React, { useState } from 'react';
 import { ArcadeLayout } from '@/_components/home/ArcadeLayout';
 import { SpaceInvadersGame } from '@/lib/space-invaders/SpaceInvadersGame';
-import styled from 'styled-components';
-import { useRouter } from 'next/router';
+import { HowToPlay } from '@/_components/shared/HowToPlay';
 import { AudioController } from '@/_components/home/AudioController';
-const HowToPlayOverlay = styled.div`
-  position: absolute;
-  top: 120px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.85);
-  color: #fff;
-  padding: 24px 32px;
-  border-radius: 16px;
-  z-index: 1001;
-  box-shadow: 0 0 24px #000;
-  max-width: 90vw;
-  font-size: 1.1rem;
-  text-align: left;
-`;
 
-const BackButton = styled.button`
-  position: absolute;
-  top: 80px;
-  left: 20px;
-  background: rgba(0, 255, 255, 0.1);
-  border: 2px solid #00ffff;
-  color: #00ffff;
-  padding: 10px 20px;
-  font-family: 'Courier New', monospace;
-  cursor: pointer;
-  z-index: 100;
-  
-  &:hover {
-    background: rgba(0, 255, 255, 0.3);
-  }
-`;
+const INSTRUCTIONS = [
+  'Arrow Keys: Move left/right',
+  'Space: Shoot',
+  'Defend your base from waves of invaders',
+  'Hide behind shields for protection',
+  'Score points for each enemy destroyed',
+  'Survive as long as you can!',
+];
 
 const SpaceInvadersPage = () => {
-  const router = useRouter();
-  const [showHowTo, setShowHowTo] = useState(true);
+  const [started, setStarted] = useState(false);
 
   return (
     <ArcadeLayout fullscreenGame={true} title="SPACE INVADERS">
       <AudioController />
-      <BackButton onClick={() => router.push('/')}>← BACK TO ARCADE</BackButton>
-      <button
-        style={{ position:'absolute', top:20, right:20, zIndex:1001, fontSize:'0.85rem', padding:'6px 14px', borderRadius:8, border:'2px solid #00ffff', background:'rgba(0,255,255,0.1)', color:'#00ffff', cursor:'pointer', fontFamily:"'Courier New', monospace", letterSpacing:'1px' }}
-        onClick={() => setShowHowTo(true)}
-      >HOW TO PLAY</button>
-      {showHowTo && (
-        <HowToPlayOverlay>
-          <h2 style={{marginTop:0}}>How to Play Space Invaders</h2>
-          <ul style={{margin:'8px 0 16px 20px'}}>
-            <li>Arrow Keys: Move left/right</li>
-            <li>Space: Shoot</li>
-            <li>Defend your base from waves of invaders</li>
-            <li>Hide behind shields for protection</li>
-            <li>Score points for each enemy destroyed</li>
-            <li>Survive as long as you can!</li>
-          </ul>
-          <button
-            style={{fontSize:'1rem',padding:'6px 18px',borderRadius:8,border:'none',background:'#00ffff',color:'#222',cursor:'pointer'}}
-            onClick={() => setShowHowTo(false)}
-          >Got it!</button>
-        </HowToPlayOverlay>
-      )}
-      {!showHowTo && (
+      {!started && <HowToPlay title="SPACE INVADERS" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
+      {started && (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', transform: 'scale(0.85)' }}>
           <SpaceInvadersGame />
         </div>

@@ -90,23 +90,22 @@ const PageContainer = styled.div`
 
 const ArcadeFrame = styled.div`
   background: linear-gradient(135deg, rgba(20, 0, 40, 0.95), rgba(10, 0, 30, 0.95));
-  padding: 60px 50px 110px;
   border-radius: 20px;
   border: 4px solid #00ffff;
-  box-shadow: 
+  box-shadow:
     0 0 40px rgba(0, 255, 255, 0.6),
     inset 0 0 60px rgba(0, 255, 255, 0.1);
   position: relative;
   z-index: 5;
   animation: ${slideIn} 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform, opacity;
-  width: 90vw; /* Use viewport width */
-  max-width: 95vw;
+  width: 90vw;
+  max-width: 720px;
   box-sizing: border-box;
-  min-height: 80vh; /* Use viewport height */
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
-  padding: 40px 20px 80px; /* Reduced padding for smaller screens */
+  padding: 40px 20px 80px;
 
   @media (max-width: 768px) {
     width: 100vw;
@@ -208,7 +207,7 @@ const InsertCoinText = styled.div`
 
 const ArcadeCabinet = styled.div`
   position: relative;
-  max-width: 95vw;
+  width: min(95vw, 780px);
   padding-bottom: 90px;
   padding-top: 80px;
   margin: 0;
@@ -503,22 +502,27 @@ export const ArcadeLayout = ({ children, headerContent, title, fullscreenGame = 
           <ArcadeFrame>
             <Scanline />
             {headerContent}
-            <Header>
-              <Title>
-                {title ? (
-                  <span>{title}</span>
-                ) : (
+
+            {children}
+
+            {!title && (
+              <Header style={{ marginTop: '28px', marginBottom: 0 }}>
+                <Title>
                   <>
                     <span>🕹️</span>
                     <span>PLAY</span>
                     <span>🕹️</span>
                   </>
-                )}
-              </Title>
-              {!title && <Subtitle>Select Your Game</Subtitle>}
-            </Header>
+                </Title>
+                <Subtitle>Select Your Game</Subtitle>
+              </Header>
+            )}
 
-            {children}
+            {title && (
+              <Header>
+                <Title><span>{title}</span></Title>
+              </Header>
+            )}
 
             {!title && <InsertCoinText>INSERT COIN TO PLAY</InsertCoinText>}
           </ArcadeFrame>

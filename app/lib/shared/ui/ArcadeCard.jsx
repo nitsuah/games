@@ -48,10 +48,10 @@ export default function ArcadeCard({
       {displayMode === 'grid' ? (
         <div className={styles.titleRow}>
           <span className={styles.playIcon}>▶</span>
-          <h3 className={styles.title}>{title}</h3>
+          <p className={styles.title}>{title}</p>
         </div>
       ) : (
-        <h3 className={styles.title}>{title}</h3>
+        <p className={styles.title}>{title}</p>
       )}
       {displayMode !== 'grid' && <p className={styles.description}>{description}</p>}
       {displayMode !== 'grid' && (

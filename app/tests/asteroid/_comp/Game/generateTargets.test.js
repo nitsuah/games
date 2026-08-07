@@ -77,13 +77,43 @@ describe('generateTargets - Target Initialization', () => {
   });
 
   test('generates targets at different positions', () => {
-    const targets = generateInitialTargets(4);
+    const targets = generateInitialTargets(15);
 
-    // First 4 targets should be at cardinal directions
-    expect(targets[0]).toMatchObject({ x: 15, y: 0, z: 0 });
-    expect(targets[1]).toMatchObject({ x: -15, y: 0, z: 0 });
-    expect(targets[2]).toMatchObject({ x: 0, y: 15, z: 0 });
-    expect(targets[3]).toMatchObject({ x: 0, y: -15, z: 0 });
+    // Cardinal directions (patterns 0-3, boundary ±50)
+    expect(targets[0]).toMatchObject({ x: 50,  y: 0,   z: 0   });
+    expect(targets[1]).toMatchObject({ x: -50, y: 0,   z: 0   });
+    expect(targets[2]).toMatchObject({ x: 0,   y: 50,  z: 0   });
+    expect(targets[3]).toMatchObject({ x: 0,   y: -50, z: 0   });
+
+    // Diagonal quadrants (patterns 4-7)
+    expect(targets[4]).toMatchObject({ x:  55, y:  55, z:  10 });
+    expect(targets[5]).toMatchObject({ x: -55, y:  55, z: -10 });
+    expect(targets[6]).toMatchObject({ x:  55, y: -55, z:  10 });
+    expect(targets[7]).toMatchObject({ x: -55, y: -55, z: -10 });
+
+    // Mid-depth positions (patterns 8-9)
+    expect(targets[8]).toMatchObject({ x:  30, y: -40, z:  40 });
+    expect(targets[9]).toMatchObject({ x: -30, y:  40, z: -40 });
+
+    // Representative far-corner (pattern 10)
+    expect(targets[10]).toMatchObject({ x: 75, y: 20, z: -30 });
+
+    // Deepest-z position (pattern 14)
+    expect(targets[14]).toMatchObject({ x: 0, y: 0, z: 80 });
+  });
+
+  test('all spawn positions are within the game boundary', () => {
+    // Bounds from Target.jsx: { min: (-100,-100,-100), max: (100,100,100) }
+    const BOUNDARY = 100;
+    const targets = generateInitialTargets(15);
+    for (const t of targets) {
+      expect(t.x).toBeGreaterThanOrEqual(-BOUNDARY);
+      expect(t.x).toBeLessThanOrEqual(BOUNDARY);
+      expect(t.y).toBeGreaterThanOrEqual(-BOUNDARY);
+      expect(t.y).toBeLessThanOrEqual(BOUNDARY);
+      expect(t.z).toBeGreaterThanOrEqual(-BOUNDARY);
+      expect(t.z).toBeLessThanOrEqual(BOUNDARY);
+    }
   });
 
   test('generates targets with unique IDs', () => {

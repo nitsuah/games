@@ -35,10 +35,7 @@ export const useSound = () => {
         audio.addEventListener('canplaythrough', onCanPlay);
         audio.addEventListener('error', onError);
 
-        // Use absolute path from public directory
-        audio.src = process.env.NODE_ENV === 'development' ? `http://localhost:3000${src}` : src;
-
-        console.log('Attempting to load audio from:', audio.src);
+        audio.src = src;
         audio.load();
       });
     };
@@ -47,7 +44,6 @@ export const useSound = () => {
     const initAudioContext = async () => {
       try {
         audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
-        console.log('✅ Audio context initialized');
       } catch (e) {
         console.error('❌ Failed to initialize audio context:', e);
       }
@@ -89,7 +85,6 @@ export const useSound = () => {
         resumeAudio = async () => {
           if (audioContext.current && audioContext.current.state === 'suspended') {
             await audioContext.current.resume();
-            console.log('✅ Audio context resumed');
           }
         };
 
@@ -143,23 +138,18 @@ export const useSound = () => {
 
     try {
       // Resume audio context if needed
-        if (audioContext.current && audioContext.current.state === 'suspended') {
+      if (audioContext.current && audioContext.current.state === 'suspended') {
         await audioContext.current.resume();
-        console.log('✅ Audio context resumed before playing');
       }
 
       // Special handling for background music
       if (name === 'bgm') {
-        // Only play if it's not already playing
-          if (sound.paused) {
+        if (sound.paused) {
           await sound.play();
-          console.log('✅ Started background music');
         }
       } else {
-        // For other sounds, reset and play
         sound.currentTime = 0;
-  await sound.play();
-  console.log(`✅ Played sound: ${name}`);
+        await sound.play();
       }
     } catch (error) {
       console.error(`❌ Failed to play ${name}:`, error);

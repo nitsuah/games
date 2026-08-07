@@ -105,8 +105,10 @@ const Button = styled.button`
   }
 `;
 
-export const PongGame = () => {
+export const PongGame = ({ paused = false }: { paused?: boolean }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const pausedRef = useRef(paused);
+    useEffect(() => { pausedRef.current = paused; }, [paused]);
     const [playerScore, setPlayerScore] = useState(0);
     const [aiScore, setAiScore] = useState(0);
     const [gameOver, setGameOver] = useState(false);
@@ -149,8 +151,9 @@ export const PongGame = () => {
         // Game loop
         const loop = (timestamp: number) => {
             if (!state.isRunning) return;
+            if (pausedRef.current) { state.lastTime = timestamp; requestAnimationFrame(loop); return; }
 
-            const dt = (timestamp - state.lastTime) / 1000;
+            const dt = Math.min((timestamp - state.lastTime) / 1000, 0.1);
             state.lastTime = timestamp;
 
             // Update player paddle

@@ -18,7 +18,7 @@ const Target = ({ position, targetId, isHit, onHit, size = 10, color = '#00ff00'
   const hitTimeRef = useRef(null);
   // Phase 9: Use velocity prop instead of random speed
   const velocityRef = useRef(new THREE.Vector3(velocity.x, velocity.y, velocity.z));
-  const [bounds] = useState(() => ({ min: new THREE.Vector3(-50, -50, -50), max: new THREE.Vector3(50, 50, 50) }));
+  const [bounds] = useState(() => ({ min: new THREE.Vector3(-100, -100, -100), max: new THREE.Vector3(100, 100, 100) }));
   const lastUpdatePosRef = useRef(new THREE.Vector3(...position));
 
   useEffect(() => {
