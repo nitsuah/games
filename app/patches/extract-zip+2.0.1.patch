@@ -1,0 +1,17 @@
+diff --git a/node_modules/extract-zip/index.js b/node_modules/extract-zip/index.js
+index 23384ea..0000000 100644
+--- a/node_modules/extract-zip/index.js
++++ b/node_modules/extract-zip/index.js
+@@ -127,7 +127,11 @@ class Extractor {
+     if (symlink) {
+       const link = await getStream(readStream)
+       debug('creating symlink', link, dest)
+-      await fs.symlink(link, dest)
++      const symlinkFull = path.resolve(path.dirname(dest), link)
++      if (!symlinkFull.startsWith(this.opts.dir + path.sep) && symlinkFull !== this.opts.dir) {
++        throw new Error(`Symlink target "${link}" in "${entry.fileName}" is outside the target directory`)
++      }
++      await fs.symlink(link, dest)
+     } else {
+       await pipeline(readStream, createWriteStream(dest, { mode: procMode }))
+     }

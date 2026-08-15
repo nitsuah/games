@@ -11,6 +11,7 @@
     "three": "^0.185.1"
   },
   "scripts": {
+    "postinstall": "node scripts/patch-extract-zip.js",
     "dev": "next dev",
     "build": "next build",
     "prebuild": "node ./scripts/prebuild-check.js",
