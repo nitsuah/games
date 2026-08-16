@@ -18,11 +18,6 @@ if (!fs.existsSync(pkgFile)) {
 
 let src = fs.readFileSync(pkgFile, 'utf8');
 
-if (src.includes('symlinkFull')) {
-  // Already patched — idempotent.
-  process.exit(0);
-}
-
 // The vulnerable block creates a symlink from zip data without checking whether
 // the target escapes the extraction directory.
 const VULNERABLE = `      const link = await getStream(readStream)
@@ -33,10 +28,16 @@ const PATCHED = `      const link = await getStream(readStream)
       debug('creating symlink', link, dest)
       // Validate symlink target stays within extraction dir (Dependabot #121).
       const symlinkFull = path.resolve(path.dirname(dest), link)
-      if (!symlinkFull.startsWith(this.opts.dir + path.sep) && symlinkFull !== this.opts.dir) {
+      const relativeTarget = path.relative(this.opts.dir, symlinkFull)
+      if (relativeTarget === '..' || relativeTarget.startsWith('..' + path.sep) || path.isAbsolute(relativeTarget)) {
         throw new Error(\`Symlink target "\${link}" in "\${entry.fileName}" is outside the target directory\`)
       }
       await fs.symlink(link, dest)`;
+
+if (src.includes(PATCHED)) {
+  // Already patched — idempotent.
+  process.exit(0);
+}
 
 if (!src.includes(VULNERABLE)) {
   process.stderr.write(
