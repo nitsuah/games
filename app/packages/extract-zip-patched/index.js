@@ -1,3 +1,5 @@
+'use strict'
+
 const debug = require('debug')('extract-zip')
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
 const { createWriteStream, promises: fs } = require('fs')
@@ -9,15 +11,39 @@ const yauzl = require('yauzl')
 const openZip = promisify(yauzl.open)
 const pipeline = promisify(stream.pipeline)
 
+// 4 KiB is far more than any real symlink target needs
+const SYMLINK_MAX_BYTES = 4096
+
 // Read a readable stream into a string using only Node built-ins.
 // Replaces the get-stream@5 dependency to avoid a nested dep that
 // conflicts with the get-stream@6 already installed at the top level.
 function readStreamToString (readable) {
   return new Promise((resolve, reject) => {
     const chunks = []
-    readable.on('data', (chunk) => chunks.push(chunk))
-    readable.on('end', () => resolve(Buffer.concat(chunks).toString()))
-    readable.on('error', reject)
+    let totalBytes = 0
+    let settled = false
+    const fail = (err) => {
+      if (!settled) {
+        settled = true
+        readable.destroy()
+        reject(err)
+      }
+    }
+    readable.on('data', (chunk) => {
+      totalBytes += chunk.length
+      if (totalBytes > SYMLINK_MAX_BYTES) {
+        fail(new Error(`Symlink target exceeds maximum allowed size of ${SYMLINK_MAX_BYTES} bytes`))
+        return
+      }
+      chunks.push(chunk)
+    })
+    readable.on('end', () => {
+      if (!settled) {
+        settled = true
+        resolve(Buffer.concat(chunks).toString())
+      }
+    })
+    readable.on('error', (err) => fail(err))
   })
 }
 
@@ -62,6 +88,16 @@ class Extractor {
         }
 
         const destDir = path.dirname(path.join(this.opts.dir, entry.fileName))
+
+        // Reject traversal attempts before creating any directory on disk
+        const relativeDestDirEarly = path.relative(this.opts.dir, destDir)
+        if (relativeDestDirEarly === '..' || relativeDestDirEarly.startsWith('..' + path.sep)) {
+          const err = new Error(`Out of bound path "${destDir}" found while processing file ${entry.fileName}`)
+          this.canceled = true
+          this.zipfile.close()
+          reject(err)
+          return
+        }
 
         try {
           await fs.mkdir(destDir, { recursive: true })
