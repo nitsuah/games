@@ -1,0 +1,20 @@
+{
+  "name": "extract-zip",
+  "version": "2.0.1",
+  "description": "unzip a zip file into a directory using 100% javascript (patched: symlink path traversal fix for Dependabot #121)",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "bin": {
+    "extract-zip": "cli.js"
+  },
+  "license": "BSD-2-Clause",
+  "repository": "maxogden/extract-zip",
+  "engines": {
+    "node": ">= 10.17.0"
+  },
+  "dependencies": {
+    "@types/yauzl": "^2.9.1",
+    "debug": "^4.1.1",
+    "yauzl": "^2.10.0"
+  }
+}
