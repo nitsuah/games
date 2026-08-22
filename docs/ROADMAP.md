@@ -1,6 +1,6 @@
 # Roadmap
 
-Last Updated: 2026-06-25
+Last Updated: 2026-08-22
 
 ## 2025 Q4 – 2026 Q1 ✅
 
@@ -8,9 +8,9 @@ Last Updated: 2026-06-25
 
 ## 2026 Q2 (Completed)
 
-- [ ] **Performance and large-asset delivery**: audit and improve game asset loading (audio, sprites, backgrounds); lazy-load non-critical assets; reduce time-to-first-playable.
-- [ ] **Responsiveness and mobile UX**: verify game routes on mobile viewports; fix any touch/input regressions; ensure Asteroid and other games are playable on phone/tablet.
-- [ ] **Accessibility audit**: run and resolve core a11y issues (keyboard navigation, ARIA for game controls, color contrast on HUD/scoreboard).
+- [x] **Performance and large-asset delivery**: audit and improve game asset loading (audio, sprites, backgrounds); lazy-load non-critical assets; reduce time-to-first-playable.
+- [x] **Responsiveness and mobile UX**: verify game routes on mobile viewports; fix any touch/input regressions; ensure Asteroid and other games are playable on phone/tablet.
+- [x] **Accessibility audit**: run and resolve core a11y issues (keyboard navigation, ARIA for game controls, color contrast on HUD/scoreboard).
 - [x] **UX verification pass**: walk through all live game routes as a first-time user; document any friction or broken states found.
 
 ## 2026 Q3 (Planned)
