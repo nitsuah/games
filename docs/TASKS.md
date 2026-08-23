@@ -40,7 +40,7 @@ Last Updated: 2026-08-22
   - Priority: P2
   - Milestone: 2026 Q3
 
-- [ ] **Add unit/E2E tests for Memory Match and Dodge Blocks** — both iframe-hosted games are live but lack automated test coverage.
+- [ ] **Add unit/E2E tests for Memory Match and Dodge Blocks** — both iframe-hosted games are live and playable but lack unit-level or gameplay-level E2E automated test coverage; the existing Jest suite does not cover the standalone HTML bundles.
   - Priority: P2
   - Milestone: 2026 Q3
 
