@@ -36,7 +36,11 @@ Last Updated: 2026-08-22
 
 - [ ] Fix game selection UI to allow programmatic and keyboard navigation for accessibility and automated testing.
 
-- [ ] **Document Memory Match and Dodge Blocks** — these two games are live and listed in the arcade carousel but were omitted from README.md, FEATURES.md, ROADMAP.md, and API.md prior to the 2026-08-22 audit. Documentation has been corrected; follow-up: add unit/E2E tests for both iframe-hosted games.
+- [x] **Document Memory Match and Dodge Blocks** — documentation corrected across README.md, FEATURES.md, ROADMAP.md, and API.md in the 2026-08-22 audit.
+  - Priority: P2
+  - Milestone: 2026 Q3
+
+- [ ] **Add unit/E2E tests for Memory Match and Dodge Blocks** — both iframe-hosted games are live but lack automated test coverage.
   - Priority: P2
   - Milestone: 2026 Q3
 

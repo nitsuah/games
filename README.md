@@ -78,7 +78,7 @@
 - **Controls**: Click or Enter/Space to flip cards
 - **Features**: 8 pairs of fruit symbols (16 cards), shuffle on restart, win detection
 - **Mechanics**: Card-flip matching with timed reveal of non-matching pairs
-- **Rendering**: Standalone vanilla JS + HTML canvas (embedded via iframe)
+- **Rendering**: Standalone HTML (embedded via iframe)
 - **Goal**: Match all 8 pairs to win
 
 ### ⬛ Dodge Blocks
@@ -196,7 +196,7 @@ app/
 
 ### Recent Milestones
 
-- ✅ All 9 games fully playable and tested
+- ✅ All 9 games fully playable; Memory Match and Dodge Blocks have unit/E2E tests pending (see TASKS.md)
 - ✅ Code quality improvements (TypeScript types, documentation)
 - ✅ Performance optimizations (game loops, physics)
 - ✅ Comprehensive test coverage (481 unit tests, 95.41% statement coverage)
