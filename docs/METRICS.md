@@ -27,7 +27,7 @@ All Playwright E2E tests can be run in Docker:
 | Open Issues           | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Open PRs              | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Health Score          | TBD        | Replace self-rating with computed score source. |
-| Last Updated          | 2026-05-24 | Metrics updated from Docker-based test run. |
+| Last Updated          | 2026-08-22 | Metrics updated from Docker-based test run. |
 | Passing Unit Tests    | 481/481    | Latest Docker coverage run completed cleanly. |
 | Deploy Success Rate   | TBD        | Pull from provider and CI history. |
 
@@ -61,6 +61,8 @@ Coverage (statements/branches/functions/lines): 95.41% / 87.66% / 93.77% / 96.87
 | Pong           | 60      | ~0.4s     | ~45MB        |
 | Snake          | 60      | ~0.4s     | ~45MB        |
 | Space Invaders | 60      | ~0.6s     | ~60MB        |
+| Memory Match   | N/A     | ~0.3s     | ~20MB        |
+| Dodge Blocks   | 60      | ~0.3s     | ~20MB        |
 
 ## Code Quality
 
@@ -105,8 +107,8 @@ Coverage (statements/branches/functions/lines): 95.41% / 87.66% / 93.77% / 96.87
 
 ---
 
-**Last Updated**: May 24, 2026  
-**Data Source**: Latest Docker Jest coverage run plus previously validated Playwright Docker results.
+**Last Updated**: August 22, 2026  
+**Data Source**: Latest Docker Jest coverage run plus previously validated Playwright Docker results. Performance rows for Memory Match and Dodge Blocks are estimates (iframe-hosted standalone games; FPS column N/A for Memory Match as it is DOM-based).
 
 <!--
 AGENT INSTRUCTIONS:

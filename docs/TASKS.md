@@ -1,6 +1,6 @@
 # Tasks
 
-Last Updated: 2026-06-25
+Last Updated: 2026-08-22
 
 ## In Progress
 
@@ -36,8 +36,25 @@ Last Updated: 2026-06-25
 
 - [ ] Fix game selection UI to allow programmatic and keyboard navigation for accessibility and automated testing.
 
+- [x] **Document Memory Match and Dodge Blocks** — documentation corrected across README.md, FEATURES.md, ROADMAP.md, and API.md in the 2026-08-22 audit.
+  - Priority: P2
+  - Milestone: 2026 Q3
+
+- [ ] **Add unit/E2E tests for Memory Match and Dodge Blocks** — both iframe-hosted games are live and playable but lack unit-level or gameplay-level E2E automated test coverage; the existing Jest suite does not cover the standalone HTML bundles.
+  - Priority: P2
+  - Milestone: 2026 Q3
+
+- [ ] **Add high-score persistence to Memory Match** — the current implementation shows a win alert but does not persist a best-time or move-count score to localStorage.
+  - Priority: P3
+  - Milestone: 2026 Q3
+
+- [ ] **Mobile touch controls for Dodge Blocks** — the game uses only keyboard arrow keys; touch swipe or on-screen buttons are needed for mobile play.
+  - Priority: P3
+  - Milestone: 2026 Q3
+
 ## Audit Notes
 
 - Docker-first validation now succeeds locally, and CI has a dedicated Docker smoke workflow.
 - Deployment model is now consistently documented as Next.js runtime on Netlify.
 - The Asteroid route audio startup no longer emits repeated `Sound not found: bgm` errors after readiness gating and memoized sound controls.
+- 2026-08-22 audit: Arcade now has 9 live games (up from 7 documented). Memory Match and Dodge Blocks are iframe-hosted standalone vanilla JS games. Documentation corrected across README.md, FEATURES.md, ROADMAP.md, docs/API.md. Unit test count updated to 481 (35 suites). Version numbers updated to match package-lock.json.
