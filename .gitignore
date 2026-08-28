@@ -11,6 +11,7 @@ TODO.md
 
 .venv/
 env/
+.env
 app/out/
 .agent/
 
@@ -31,4 +32,3 @@ lighthouse-report/
 **/lighthouse-report/
 lhci-report/
 **/lhci-report/
-
