@@ -1,6 +1,6 @@
 # Roadmap
 
-Last Updated: 2026-08-22
+Last Updated: 2026-08-28
 
 ## 2025 Q4 – 2026 Q1 ✅
 
@@ -15,13 +15,17 @@ Last Updated: 2026-08-22
 
 ## 2026 Q3 (Planned)
 
-- [ ] Prioritize progression and platform features only after release reliability is stable.
-- [ ] Evaluate additional game work based on evidence, not backlog volume.
+- [ ] Fix game selection UI for keyboard/programmatic navigation (accessibility + automated testing).
+- [ ] Add unit/E2E test coverage for Memory Match and Dodge Blocks (iframe-hosted standalone games; not covered by the existing Jest suite).
+- [ ] Add high-score persistence to Memory Match (currently shows a win alert but doesn't save best time/moves to localStorage).
+- [ ] Add mobile touch controls to Dodge Blocks (keyboard-only today).
+- [ ] Evaluate additional game work only once the above release-reliability items are closed, not on backlog volume alone.
 
 ## 2026 Q4 (Exploratory)
 
 - [ ] **Per-game achievement system** — unlockable badges per game (e.g., "Survived 10 waves" in Asteroid, "First to 11 in Pong") stored in localStorage and displayed on a cross-game profile page; no server required, drives replayability across the arcade without adding backend complexity.
 - [ ] **Federated leaderboard** — lightweight global top-score sharing via a Netlify Function or Cloudflare Worker; graceful localStorage-only fallback when offline; single shared endpoint serves all games via a `game` key.
+- [ ] **Shared touch-control component** — new idea (2026-08-28): Dodge Blocks needs touch controls now (Q3 item above), and any future mobile game will hit the same gap. A single reusable on-screen d-pad/button component (rather than a one-off for Dodge Blocks) would pay for itself on the second game that needs it, and the achievement/leaderboard work above already assumes a shared cross-game component pattern.
 
 <!--
 1. Organize items by Quarter (Q1, Q2, etc.) or time period.
