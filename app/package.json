@@ -45,7 +45,7 @@
     "baseline-browser-mapping": "^2.11.20",
     "chrome-launcher": "^1.2.1",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.3.0",
+    "eslint-config-next": "^16.3.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
