@@ -24,6 +24,15 @@ const GameList = styled.div`
     max-width: 450px;
     gap: 15px;
   }
+  /* At narrow phone widths the frame's inner content area (~90-95vw, no
+     horizontal padding) is narrower than 3 * 130px + gaps, so the grid
+     overflowed the cyan frame and clipped both edges of the viewport.
+     Shrink columns to match ArcadeCard's own .gridMode mobile size (120px). */
+  @media (max-width: 400px) {
+    grid-template-columns: repeat(3, 100px);
+    max-width: 320px;
+    gap: 10px;
+  }
   @media (min-width: 1024px) {
     grid-template-columns: repeat(3, 160px);
     max-width: 580px;

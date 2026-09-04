@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useCallback, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const flicker = keyframes`
@@ -49,24 +49,29 @@ const neonFlicker = keyframes`
   }
 `;
 
-const PageContainer = styled.div`
+const PageContainer = styled.div<{ $fullscreen?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* Fullscreen games pin to the viewport and center; the cabinet/menu screen
+     top-aligns with breathing room so it can scroll instead of clipping
+     content off the top/bottom when the cabinet is taller than the viewport
+     (see ArcadeCabinet below — 9-game grid + neon hood + console). */
+  justify-content: ${({ $fullscreen }) => ($fullscreen ? 'center' : 'flex-start')};
   min-height: 100vh;
-  height: 100vh;
+  height: ${({ $fullscreen }) => ($fullscreen ? '100vh' : 'auto')};
   width: 100vw;
   max-width: 100vw;
   background: linear-gradient(135deg, #0a0015 0%, #1a0030 50%, #0a0015 100%);
   color: white;
   font-family: 'Courier New', monospace;
   margin: 0;
-  padding: 0;
-  position: fixed;
+  padding: ${({ $fullscreen }) => ($fullscreen ? '0' : '24px 0')};
+  position: ${({ $fullscreen }) => ($fullscreen ? 'fixed' : 'relative')};
   top: 0;
   left: 0;
-  overflow: hidden;
+  overflow-y: ${({ $fullscreen }) => ($fullscreen ? 'hidden' : 'auto')};
+  overflow-x: hidden;
   box-sizing: border-box;
 
   &::before {
@@ -108,7 +113,10 @@ const ArcadeFrame = styled.div`
   padding: 40px 20px 80px;
 
   @media (max-width: 768px) {
-    width: 100vw;
+    /* Was width: 100vw — wider than the ArcadeCabinet parent (min(95vw, 780px)),
+       which pushed the frame (and everything inside it) past the right edge
+       of the viewport. 100% keeps it sized to its parent instead. */
+    width: 100%;
     padding: 10px 0 20px;
     min-height: 80vh;
   }
@@ -116,6 +124,28 @@ const ArcadeFrame = styled.div`
   @media (orientation: landscape) and (max-height: 500px) {
     padding: 15px 5px 30px;
     min-height: 95vh;
+  }
+
+  /* Cosmetic wear: faint scuffs and a corner smudge, like a cabinet that's
+     seen a few thousand quarters. Subtle and static — never distracts from
+     content, never intercepts clicks. Negative z-index keeps it behind the
+     game grid / text (which are unpositioned, so they always paint above
+     positioned siblings) while still sitting above the frame's own
+     background gradient. */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background:
+      radial-gradient(ellipse 140px 60px at 12% 96%, rgba(0, 0, 0, 0.35), transparent 70%),
+      radial-gradient(ellipse 90px 160px at 96% 20%, rgba(255, 255, 255, 0.05), transparent 65%),
+      radial-gradient(ellipse 220px 90px at 85% 100%, rgba(0, 0, 0, 0.25), transparent 70%),
+      linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.03) 48%, transparent 56%);
   }
 `;
 
@@ -256,65 +286,94 @@ const ButtonDecoration = styled.div`
   display: flex;
   align-items: center;
   gap: 25px;
-  
+
   @media (max-width: 768px) {
     gap: 15px;
-    
-    span:first-child {
+
+    button:first-child {
       display: none;
     }
   }
 
-  span {
+  button {
     width: 45px;
     height: 45px;
+    padding: 0;
     border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, #ff0000, #aa0000);
     border: 4px solid #660000;
-    box-shadow: 
+    box-shadow:
       0 6px 18px rgba(0, 0, 0, 0.6),
       inset 0 -4px 10px rgba(0, 0, 0, 0.5),
       inset 0 4px 10px rgba(255, 255, 255, 0.4);
     animation: ${pulse} 3s ease-in-out infinite;
-    will-change: opacity;
+    will-change: opacity, transform;
+    cursor: pointer;
+    transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  span:nth-child(1) {
+  /* Physical press feedback: the button sinks and its highlight dims,
+     mimicking a real arcade button's travel. */
+  button:active {
+    transform: translateY(3px) scale(0.94);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.6),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.6),
+      inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    animation-play-state: paused;
+  }
+
+  button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  button:nth-child(1) {
     animation-delay: 0s;
   }
 
-  span:nth-child(2) {
+  button:nth-child(2) {
     background: radial-gradient(circle at 30% 30%, #00ff00, #00aa00);
     border-color: #006600;
     animation-delay: 0.5s;
   }
 
-  span:nth-child(3) {
+  button:nth-child(3) {
     background: radial-gradient(circle at 30% 30%, #0000ff, #0000aa);
     border-color: #000066;
     animation-delay: 1s;
   }
 
-  span:nth-child(4) {
+  button:nth-child(4) {
     background: radial-gradient(circle at 30% 30%, #ffff00, #aaaa00);
     border-color: #666600;
     animation-delay: 1.5s;
   }
 `;
 
-const Joystick = styled.div`
+const Joystick = styled.button`
   position: absolute;
   bottom: 30px;
   left: 30px; /* Adjusted for smaller screens */
   width: 25px; /* Reduced size */
   height: 25px; /* Reduced size */
+  padding: 0;
   background: radial-gradient(circle at 30% 30%, #333, #000);
+  border: none;
   border-radius: 50%;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
   z-index: 15;
-  
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
   @media (max-width: 768px) {
     left: 30px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 4px;
   }
 
   &::before {
@@ -328,6 +387,8 @@ const Joystick = styled.div`
     background: linear-gradient(180deg, #ff0000 0%, #aa0000 100%);
     border-radius: 20px 20px 5px 5px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    transition: transform 0.12s ease-out;
+    transform-origin: 50% 100%;
   }
 
   &::after {
@@ -340,9 +401,21 @@ const Joystick = styled.div`
     height: 25px;
     background: radial-gradient(circle at 30% 30%, #ff0000, #cc0000);
     border-radius: 50%;
-    box-shadow: 
+    box-shadow:
       0 3px 10px rgba(0, 0, 0, 0.8),
       inset 0 -2px 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.12s ease-out;
+    transform-origin: 50% 100%;
+  }
+
+  /* Physical press feedback: the stick tilts on its base like a real
+     joystick being nudged, instead of just sitting static. */
+  &:active::before {
+    transform: translateX(-50%) rotate(12deg);
+  }
+
+  &:active::after {
+    transform: translateX(-50%) rotate(12deg) translateY(2px);
   }
 `;
 
@@ -453,21 +526,42 @@ const MarqueeText = styled.h1`
     right: -50px;
   }
   
+  /* Was font-size: 48px / letter-spacing: 12px — larger than the 38px/10px
+     desktop base, which pushed "ARCADE" past the frame width and clipped it
+     off both edges on tablet/mobile. It needs to shrink, not grow. */
   @media (max-width: 768px) {
-    font-size: 48px;
-    letter-spacing: 12px;
-    
+    font-size: 24px;
+    letter-spacing: 5px;
+
     &::before,
     &::after {
-      font-size: 24px;
+      font-size: 18px;
     }
-    
+
     &::before {
-      left: -35px;
+      left: -22px;
     }
-    
+
     &::after {
-      right: -35px;
+      right: -22px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    font-size: 19px;
+    letter-spacing: 3px;
+
+    &::before,
+    &::after {
+      font-size: 14px;
+    }
+
+    &::before {
+      left: -16px;
+    }
+
+    &::after {
+      right: -16px;
     }
   }
 `;
@@ -479,23 +573,51 @@ interface ArcadeLayoutProps {
   fullscreenGame?: boolean; // New prop
 }
 
+// Short, quiet UI blip for the decorative buttons/joystick. Lazily created
+// (no network fetch until the first press) and intentionally independent of
+// AudioContext/useAudio — that provider isn't mounted on every page that
+// renders this cabinet (e.g. the home page), so this stays self-contained
+// and fails silently like AudioController's own playback does.
+const useArcadeClickSound = () => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  return useCallback(() => {
+    try {
+      if (!audioRef.current) {
+        const audio = new Audio('/sounds/shoot.mp3');
+        audio.volume = 0.25;
+        audioRef.current = audio;
+      }
+      const audio = audioRef.current;
+      audio.currentTime = 0;
+      void audio.play().catch(() => {
+        // Autoplay/interaction restrictions — ignore, it's purely cosmetic.
+      });
+    } catch {
+      // Audio unsupported in this environment — ignore.
+    }
+  }, []);
+};
+
 export const ArcadeLayout = ({ children, headerContent, title, fullscreenGame = false }: ArcadeLayoutProps) => {
+  const playClick = useArcadeClickSound();
+
   if (fullscreenGame) {
-    return <PageContainer as="main">{children}</PageContainer>;
+    return <PageContainer as="main" $fullscreen>{children}</PageContainer>;
   }
   return (
     <PageContainer>
       <ArcadeCabinet data-testid="arcade-cabinet">
         <main style={{ display: 'contents' }}>
           <MarqueeText>ARCADE</MarqueeText>
-          <Joystick />
+          <Joystick aria-label="Joystick" onClick={playClick} />
           <CoinSlot />
           <ControlsContainer>
             <ButtonDecoration>
-              <span />
-              <span />
-              <span />
-              <span />
+              <button aria-label="Arcade button 1" onClick={playClick} />
+              <button aria-label="Arcade button 2" onClick={playClick} />
+              <button aria-label="Arcade button 3" onClick={playClick} />
+              <button aria-label="Arcade button 4" onClick={playClick} />
             </ButtonDecoration>
           </ControlsContainer>
 
