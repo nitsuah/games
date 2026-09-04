@@ -70,14 +70,20 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 ### 🧠 Memory Match
 
 - **Standalone HTML5 Game**: Sandboxed (`allow-scripts` only) iframe embed under `public/games/memory-match/`, not a React/Three.js game
-- **8-Pair Emoji Grid**: Classic flip-and-match card gameplay
-- **Keyboard Accessible**: Cards are focusable and flip on Enter/Space, with ARIA labels for hidden/revealed state
+- **Card Matching**: 16-card grid (8 pairs of fruit symbols) served via iframe at `/memory-match`
+- **Accessible Controls**: Click or keyboard (Enter/Space) to flip cards; `aria-label` on every card
+- **Match Logic**: Non-matching pairs flip back after 800 ms; matched pairs stay revealed
+- **Restart**: Reshuffled deck on restart; win condition shows alert
+- **Rendering**: Standalone vanilla JS + HTML (no React/R3F dependency)
 
 ### ⬛ Dodge Blocks
 
 - **Standalone HTML5 Game**: Sandboxed (`allow-scripts` only) iframe embed under `public/games/dodge-blocks/`, not a React/Three.js game
-- **Canvas Rendering**: 2D canvas gameplay with randomly-spawned falling blocks
-- **Simple Controls**: Arrow Left/Right to dodge; score increments each surviving frame
+- **Dodge Gameplay**: Player paddle dodges randomly-sized blocks falling from the top of the screen
+- **Controls**: Arrow Left / Arrow Right to move; Restart button to reset
+- **Scoring**: Frame-based score counter runs while the player is alive
+- **Block Variation**: Blocks spawn with random width (40–80 px) and speed (2–5 px/frame)
+- **Rendering**: Standalone vanilla JS + HTML Canvas (no React/R3F dependency)
 
 ## 🎨 Shared Systems
 
@@ -98,7 +104,7 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 - **Game Page Polish**: Each game route has a page title, back navigation to the arcade index, and neon-styled UI consistent with the shared design system
 - **CSP Iframe Fix**: Content Security Policy headers updated to allow iframe embedding where required
 
-### 🔊 Audio System `[shipped with active runtime bug]`
+### 🔊 Audio System
 
 - **Sound Effects**: Comprehensive sound library for game actions (shoot, hit, explosion, power-up)
 - **Music Tracks**: Background music for each game
@@ -109,9 +115,9 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 📊 Testing Infrastructure
 
-- **Unit Tests**: 482 passing unit tests covering game logic and shared systems
+- **Unit Tests**: 482 passing unit tests across 35 suites covering game logic and shared systems
 - **E2E Testing**: Playwright tests for complete game flows
-- **Code Coverage**: ~85% test coverage with focus on pure logic
+- **Code Coverage**: 95.41% statement coverage (87.66% branch / 93.77% function / 96.87% line)
 - **CI/CD Pipeline**: Automated testing on every push with GitHub Actions
 - **Lighthouse Audits**: Performance and accessibility monitoring
 
@@ -135,19 +141,19 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 🌐 Framework & Libraries
 
-- **Next.js ^16.2.11**: React framework with App Router and server-side rendering
-- **Three.js ^0.185.1**: 3D graphics library for WebGL rendering
-- **React Three Fiber ^9.6.1**: React renderer for Three.js with declarative API
-- **React Three Cannon ^6.6.0**: Physics engine integration for React Three Fiber
-- **Styled Components ^6.4.4**: CSS-in-JS styling solution
-- **GSAP ^3.15.0**: Animation library for smooth transitions and effects
+- **Next.js 16.3.3**: React framework with server-side rendering
+- **Three.js 0.185.1**: 3D graphics library for WebGL rendering
+- **React Three Fiber 9.7.0**: React renderer for Three.js with declarative API
+- **React Three Cannon 6.6.0**: Physics engine integration for React Three Fiber
+- **Styled Components 6.5.3**: CSS-in-JS styling solution
+- **GSAP 3.15.0**: Animation library for smooth transitions and effects
 
 ### 🧪 Testing & Quality Tools
 
-- **Jest ^30.4.2**: JavaScript testing framework with coverage reporting
-- **Playwright ^1.62.1**: End-to-end testing framework for browser automation
-- **ESLint ^9.39.2**: JavaScript linter for code quality enforcement
-- **Prettier ^3.9.6**: Code formatter for consistent style
+- **Jest 30.5.0**: JavaScript testing framework with coverage reporting
+- **Playwright 1.62.1**: End-to-end testing framework for browser automation
+- **ESLint 9.39.2**: JavaScript linter for code quality enforcement
+- **Prettier 3.9.6**: Code formatter for consistent style
 - **Husky**: Git hooks for pre-commit validation
 
 ## 🚀 Deployment & CI/CD

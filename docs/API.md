@@ -1,6 +1,6 @@
 # API and Interfaces
 
-Last Updated: 2026-03-28
+Last Updated: 2026-08-22
 
 ## Scope
 
@@ -25,8 +25,8 @@ External interfaces that do exist today:
 - `/pong`
 - `/snake`
 - `/space-invaders`
-- `/memory-match` (embeds a standalone static game via sandboxed iframe)
-- `/dodge-blocks` (embeds a standalone static game via sandboxed iframe)
+- `/memory-match` (sandboxed iframe wrapper for `public/games/memory-match/index.html`)
+- `/dodge-blocks` (sandboxed iframe wrapper for `public/games/dodge-blocks/index.html`)
 
 2. Frontend runtime contracts
 - Route components consume shared context providers for settings/audio.
