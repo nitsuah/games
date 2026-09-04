@@ -67,6 +67,18 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 - **Score System**: Points for each enemy destroyed
 - **Arcade Authenticity**: Faithful recreation of original mechanics
 
+### 🧠 Memory Match
+
+- **Standalone HTML5 Game**: Sandboxed (`allow-scripts` only) iframe embed under `public/games/memory-match/`, not a React/Three.js game
+- **8-Pair Emoji Grid**: Classic flip-and-match card gameplay
+- **Keyboard Accessible**: Cards are focusable and flip on Enter/Space, with ARIA labels for hidden/revealed state
+
+### ⬛ Dodge Blocks
+
+- **Standalone HTML5 Game**: Sandboxed (`allow-scripts` only) iframe embed under `public/games/dodge-blocks/`, not a React/Three.js game
+- **Canvas Rendering**: 2D canvas gameplay with randomly-spawned falling blocks
+- **Simple Controls**: Arrow Left/Right to dodge; score increments each surviving frame
+
 ## 🎨 Shared Systems
 
 ### 🔧 Physics Engine
@@ -97,7 +109,7 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 📊 Testing Infrastructure
 
-- **Unit Tests**: 218 passing unit tests covering game logic and shared systems
+- **Unit Tests**: 482 passing unit tests covering game logic and shared systems
 - **E2E Testing**: Playwright tests for complete game flows
 - **Code Coverage**: ~85% test coverage with focus on pure logic
 - **CI/CD Pipeline**: Automated testing on every push with GitHub Actions
@@ -123,19 +135,19 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 🌐 Framework & Libraries
 
-- **Next.js 15.3.0**: React framework with App Router and server-side rendering
-- **Three.js 0.175.0**: 3D graphics library for WebGL rendering
-- **React Three Fiber 9.1.2**: React renderer for Three.js with declarative API
-- **React Three Cannon 6.6.0**: Physics engine integration for React Three Fiber
-- **Styled Components 6.1.17**: CSS-in-JS styling solution
-- **GSAP 3.12.2**: Animation library for smooth transitions and effects
+- **Next.js ^16.2.11**: React framework with App Router and server-side rendering
+- **Three.js ^0.185.1**: 3D graphics library for WebGL rendering
+- **React Three Fiber ^9.6.1**: React renderer for Three.js with declarative API
+- **React Three Cannon ^6.6.0**: Physics engine integration for React Three Fiber
+- **Styled Components ^6.4.4**: CSS-in-JS styling solution
+- **GSAP ^3.15.0**: Animation library for smooth transitions and effects
 
 ### 🧪 Testing & Quality Tools
 
-- **Jest 30.2.0**: JavaScript testing framework with coverage reporting
-- **Playwright 1.56.1**: End-to-end testing framework for browser automation
-- **ESLint 9.38.0**: JavaScript linter for code quality enforcement
-- **Prettier 3.6.2**: Code formatter for consistent style
+- **Jest ^30.4.2**: JavaScript testing framework with coverage reporting
+- **Playwright ^1.62.1**: End-to-end testing framework for browser automation
+- **ESLint ^9.39.2**: JavaScript linter for code quality enforcement
+- **Prettier ^3.9.6**: Code formatter for consistent style
 - **Husky**: Git hooks for pre-commit validation
 
 ## 🚀 Deployment & CI/CD

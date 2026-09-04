@@ -71,6 +71,24 @@
 - **Mechanics**: Enemy patterns, increasing difficulty, defensive shields
 - **Goal**: Destroy all enemies, survive waves, achieve high score
 
+### 🧠 Memory Match
+
+**Status**: ✅ Complete | **Playable**: `/memory-match`
+
+- **Controls**: Click/tap a card to flip it, or focus it and press Enter/Space
+- **Features**: 8-pair emoji card grid, keyboard-accessible cards with ARIA labels
+- **Mechanics**: Standalone sandboxed HTML5 game embedded via iframe (not a React/Three.js game like the others)
+- **Goal**: Flip cards to find all matching pairs
+
+### ⬛ Dodge Blocks
+
+**Status**: ✅ Complete | **Playable**: `/dodge-blocks`
+
+- **Controls**: Arrow Left/Right to move
+- **Features**: Canvas-based falling-block dodge gameplay, score increases per frame survived
+- **Mechanics**: Standalone sandboxed HTML5 game embedded via iframe (not a React/Three.js game like the others)
+- **Goal**: Dodge the falling blocks for as long as possible
+
 ## 🛠️ Development
 
 ### Quick Start
@@ -137,7 +155,9 @@ app/
 │   ├── flappy.tsx       # Flappy bird clone
 │   ├── pong.tsx         # Pong with AI
 │   ├── snake.tsx        # Classic snake
-│   └── space-invaders.tsx # Space invaders
+│   ├── space-invaders.tsx # Space invaders
+│   ├── memory-match.jsx # Memory Match (embeds public/games/memory-match via iframe)
+│   └── dodge-blocks.jsx  # Dodge Blocks (embeds public/games/dodge-blocks via iframe)
 ├── lib/             # Game-specific logic
 │   ├── asteroid/    # Asteroid game code
 │   ├── fps/         # FPS game code
@@ -147,6 +167,7 @@ app/
 │   ├── snake/       # Snake game code
 │   ├── space-invaders/ # Space invaders code
 │   └── shared/      # Shared systems (physics, audio, UI)
+├── public/games/    # Standalone HTML5 games (memory-match, dodge-blocks), sandboxed via iframe
 ├── _components/     # Global effects and reusable components
 ├── e2e/             # E2E tests (Playwright)
 └── scripts/         # Build/test scripts
@@ -154,7 +175,7 @@ app/
 
 ## 📊 Testing & Quality
 
-- **Unit Tests**: 218 passing (Jest)
+- **Unit Tests**: 482 passing (Jest)
 - **E2E Tests**: Full game flow coverage (Playwright)
 - **Test Coverage**: Core game logic covered
 - **CI/CD**: GitHub Actions (type-check, test, E2E, Lighthouse audits)
@@ -171,10 +192,10 @@ app/
 
 ### Recent Milestones
 
-- ✅ All 7 games fully playable and tested
+- ✅ All 9 games fully playable and tested (7 React/Three.js games, plus Memory Match and Dodge Blocks as sandboxed HTML5 embeds)
 - ✅ Code quality improvements (TypeScript types, documentation)
 - ✅ Performance optimizations (game loops, physics)
-- ✅ Comprehensive test coverage (218 unit tests)
+- ✅ Comprehensive test coverage (482 unit tests)
 - ✅ E2E testing for all game flows
 - ✅ Accessibility improvements (keyboard navigation, ARIA labels)
 - ✅ Asteroid audio startup race fixed (`bgm` readiness-gated on route init)
@@ -201,13 +222,16 @@ All security overrides in `app/package.json` are pinned to **exact versions** ra
 
 ## 🔧 Technical Stack
 
-- **Framework**: Next.js 16.1.6
-- **3D Graphics**: Three.js 0.182.0, React Three Fiber 9.5.0
-- **Physics**: @react-three/cannon 6.6.0
-- **Styling**: Styled Components 6.3.9
-- **Animation**: GSAP 3.14.2
-- **Testing**: Jest 30.2.0, Playwright 1.56.1
-- **Build Tools**: ESLint 9.38.0, Prettier 3.6.2
+- **Framework**: Next.js ^16.2.11
+- **3D Graphics**: Three.js ^0.185.1, React Three Fiber ^9.6.1
+- **Physics**: @react-three/cannon ^6.6.0
+- **Styling**: Styled Components ^6.4.4
+- **Animation**: GSAP ^3.15.0
+- **Testing**: Jest ^30.4.2, Playwright ^1.62.1
+- **Build Tools**: ESLint ^9.39.2, Prettier ^3.9.6
+
+_(Versions above are pinned ranges from `app/package.json`; Dependabot keeps
+these current, so check that file if this drifts again.)_
 
 ---
 

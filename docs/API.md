@@ -25,6 +25,8 @@ External interfaces that do exist today:
 - `/pong`
 - `/snake`
 - `/space-invaders`
+- `/memory-match` (embeds a standalone static game via sandboxed iframe)
+- `/dodge-blocks` (embeds a standalone static game via sandboxed iframe)
 
 2. Frontend runtime contracts
 - Route components consume shared context providers for settings/audio.
