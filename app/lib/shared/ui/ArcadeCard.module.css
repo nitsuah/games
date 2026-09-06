@@ -188,25 +188,25 @@
   transition: all 0.4s ease;
 }
 
-/* Grid mode - equal-sized squares */
+/* Grid mode - equal-sized squares.
+   Height was previously locked (height + max-height), so two-word titles
+   like "Tank Battle" wrapped to a second line that got clipped by the
+   card's `overflow: hidden` right at the card's bottom edge, reading as
+   if it collided with the row below. min-height lets the card grow just
+   enough to fit a wrapped title while keeping the width (and grid
+   alignment) fixed. */
 .gridMode {
   padding: 20px;
   width: 150px;
-  height: 150px;
-  min-width: 150px;
   min-height: 150px;
-  max-width: 150px;
-  max-height: 150px;
+  min-width: 150px;
 }
 
 @media (max-width: 768px) {
   .gridMode {
     width: 120px;
-    height: 120px;
-    min-width: 120px;
     min-height: 120px;
-    max-width: 120px;
-    max-height: 120px;
+    min-width: 120px;
     padding: 15px;
   }
 }
@@ -239,6 +239,34 @@
   font-size: 16px;
   letter-spacing: 1px;
   margin: 0;
+}
+
+/* Matches GameCarousel's narrow-phone grid-column size (100px) — the card
+   width must track the grid track width or it overflows its cell and
+   clips against the frame edge / neighboring cards. Placed after the base
+   .iconWrapper/.icon/.title rules above so it wins the cascade at this
+   breakpoint (equal specificity, later source order). */
+@media (max-width: 400px) {
+  .gridMode {
+    width: 100px;
+    min-height: 100px;
+    min-width: 100px;
+    padding: 10px;
+  }
+
+  .gridMode .iconWrapper {
+    width: 44px;
+    height: 44px;
+  }
+
+  .gridMode .icon {
+    font-size: 26px;
+  }
+
+  .gridMode .title {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
 }
 
 .gridMode .playPrompt {
