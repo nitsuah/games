@@ -60,8 +60,14 @@ const PageContainer = styled.div<{ $fullscreen?: boolean }>`
   justify-content: ${({ $fullscreen }) => ($fullscreen ? 'center' : 'flex-start')};
   min-height: 100vh;
   height: ${({ $fullscreen }) => ($fullscreen ? '100vh' : 'auto')};
-  width: 100vw;
-  max-width: 100vw;
+  /* 100vw includes the scrollbar gutter in browsers with a non-overlay
+     scrollbar and ignores this element's own ancestor box constraints,
+     which pushed the container ~8px past the visible viewport on the
+     right edge (confirmed via getBoundingClientRect at a 360px width —
+     html.scrollWidth was 368px). 100% correctly sizes to the actual
+     available content box in both the relative and fixed-position cases. */
+  width: 100%;
+  max-width: 100%;
   background: linear-gradient(135deg, #0a0015 0%, #1a0030 50%, #0a0015 100%);
   color: white;
   font-family: 'Courier New', monospace;
