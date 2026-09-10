@@ -69,6 +69,7 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 🧠 Memory Match
 
+- **Standalone HTML5 Game**: Sandboxed (`allow-scripts` only) iframe embed under `public/games/memory-match/`, not a React/Three.js game
 - **Card Matching**: 16-card grid (8 pairs of fruit symbols) served via iframe at `/memory-match`
 - **Accessible Controls**: Click or keyboard (Enter/Space) to flip cards; `aria-label` on every card
 - **Match Logic**: Non-matching pairs flip back after 800 ms; matched pairs stay revealed
@@ -77,6 +78,7 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### ⬛ Dodge Blocks
 
+- **Standalone HTML5 Game**: Sandboxed (`allow-scripts` only) iframe embed under `public/games/dodge-blocks/`, not a React/Three.js game
 - **Dodge Gameplay**: Player paddle dodges randomly-sized blocks falling from the top of the screen
 - **Controls**: Arrow Left / Arrow Right to move; Restart button to reset
 - **Scoring**: Frame-based score counter runs while the player is alive
@@ -113,7 +115,7 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 📊 Testing Infrastructure
 
-- **Unit Tests**: 481 passing unit tests across 35 suites covering game logic and shared systems
+- **Unit Tests**: 482 passing unit tests across 35 suites covering game logic and shared systems
 - **E2E Testing**: Playwright tests for complete game flows
 - **Code Coverage**: 95.41% statement coverage (87.66% branch / 93.77% function / 96.87% line)
 - **CI/CD Pipeline**: Automated testing on every push with GitHub Actions
@@ -139,19 +141,19 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 🌐 Framework & Libraries
 
-- **Next.js 16.3.1**: React framework with server-side rendering
+- **Next.js 16.3.3**: React framework with server-side rendering
 - **Three.js 0.185.1**: 3D graphics library for WebGL rendering
 - **React Three Fiber 9.7.0**: React renderer for Three.js with declarative API
 - **React Three Cannon 6.6.0**: Physics engine integration for React Three Fiber
-- **Styled Components 6.5.2**: CSS-in-JS styling solution
+- **Styled Components 6.5.3**: CSS-in-JS styling solution
 - **GSAP 3.15.0**: Animation library for smooth transitions and effects
 
 ### 🧪 Testing & Quality Tools
 
-- **Jest 30.4.2**: JavaScript testing framework with coverage reporting
+- **Jest 30.5.0**: JavaScript testing framework with coverage reporting
 - **Playwright 1.62.1**: End-to-end testing framework for browser automation
-- **ESLint 9.38.0**: JavaScript linter for code quality enforcement
-- **Prettier 3.6.2**: Code formatter for consistent style
+- **ESLint 9.39.2**: JavaScript linter for code quality enforcement
+- **Prettier 3.9.6**: Code formatter for consistent style
 - **Husky**: Git hooks for pre-commit validation
 
 ## 🚀 Deployment & CI/CD

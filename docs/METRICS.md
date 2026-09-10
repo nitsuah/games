@@ -13,7 +13,7 @@ All Playwright E2E tests can be run in Docker:
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
 | Code Coverage         | 95.41% | Docker-validated in latest unit coverage run. |
-| Unit Tests            | 481 passing    | 35/35 Jest suites passing in the latest Docker coverage run. |
+| Unit Tests            | 482 passing    | 35/35 Jest suites passing in the latest Docker coverage run. |
 | E2E Tests             | 8 passing      | Based on the last validated Playwright Docker run; not rerun in this refresh. |
 | Test Files            | 35             | Current `app/tests` file count. |
 | Build Time            | TBD            | Pending current run measurement. |
@@ -28,7 +28,7 @@ All Playwright E2E tests can be run in Docker:
 | Open PRs              | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Health Score          | TBD        | Replace self-rating with computed score source. |
 | Last Updated          | 2026-08-22 | Metrics updated from Docker-based test run. |
-| Passing Unit Tests    | 481/481    | Latest Docker coverage run completed cleanly. |
+| Passing Unit Tests    | 482/482    | Latest Docker coverage run completed cleanly. |
 | Deploy Success Rate   | TBD        | Pull from provider and CI history. |
 
 ## Test Distribution
@@ -36,7 +36,7 @@ All Playwright E2E tests can be run in Docker:
 | Test Group                | Count | Status     |
 | ------------------------- | ----- | ---------- |
 | Jest Test Suites          | 35    | ✅ Passing |
-| Jest Tests                | 481   | ✅ Passing |
+| Jest Tests                | 482   | ✅ Passing |
 | Playwright E2E Tests      | 8     | ✅ Last validated |
 | **Current Unit Coverage** | **95.41% statements** | **✅ Docker validated** |
 
@@ -46,7 +46,7 @@ All unit tests and coverage can be run in Docker:
 
 - Build test image: `docker build --target test-unit -t games-test .`
 - Run all unit tests with coverage: `docker run --rm -it games-test npm run test:coverage`
-- All 481 unit tests pass in Docker across 35 suites (latest validation)
+- All 482 unit tests pass in Docker across 35 suites (latest validation)
 
 Coverage (statements/branches/functions/lines): 95.41% / 87.66% / 93.77% / 96.87%
 

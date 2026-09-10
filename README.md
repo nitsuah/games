@@ -75,10 +75,10 @@
 
 **Status**: ✅ Complete | **Playable**: `/memory-match`
 
-- **Controls**: Click or Enter/Space to flip cards
-- **Features**: 8 pairs of fruit symbols (16 cards), shuffle on restart, win detection
+- **Controls**: Click/tap a card to flip it, or focus it and press Enter/Space
+- **Features**: 8 pairs of fruit symbols (16 cards), shuffle on restart, win detection, keyboard-accessible cards with ARIA labels
 - **Mechanics**: Card-flip matching with timed reveal of non-matching pairs
-- **Rendering**: Standalone HTML (embedded via iframe)
+- **Rendering**: Standalone sandboxed HTML5 game (not a React/Three.js game like the others), embedded via iframe
 - **Goal**: Match all 8 pairs to win
 
 ### ⬛ Dodge Blocks
@@ -88,7 +88,7 @@
 - **Controls**: Arrow Left / Arrow Right to move the paddle
 - **Features**: Randomly-sized falling blocks, score counter, game-over screen
 - **Mechanics**: Score increments each frame while alive; block speed varies randomly
-- **Rendering**: Standalone vanilla JS + HTML Canvas (embedded via iframe)
+- **Rendering**: Standalone sandboxed vanilla JS + HTML Canvas game (not a React/Three.js game like the others), embedded via iframe
 - **Goal**: Survive as long as possible and maximize score
 
 ## 🛠️ Development
@@ -158,8 +158,8 @@ app/
 │   ├── pong.tsx         # Pong with AI
 │   ├── snake.tsx        # Classic snake
 │   ├── space-invaders.tsx # Space invaders
-│   ├── memory-match.jsx  # Memory card match (iframe)
-│   └── dodge-blocks.jsx  # Dodge falling blocks (iframe)
+│   ├── memory-match.jsx  # Memory card match (embeds public/games/memory-match via iframe)
+│   └── dodge-blocks.jsx  # Dodge falling blocks (embeds public/games/dodge-blocks via iframe)
 ├── lib/             # Game-specific logic
 │   ├── asteroid/    # Asteroid game code
 │   ├── fps/         # FPS game code
@@ -169,9 +169,9 @@ app/
 │   ├── snake/       # Snake game code
 │   ├── space-invaders/ # Space invaders code
 │   └── shared/      # Shared systems (physics, audio, UI)
-├── public/games/    # Standalone iframe-hosted games
+├── public/games/    # Standalone HTML5 games, sandboxed via iframe
 │   ├── memory-match/    # Memory Match (vanilla JS)
-│   └── dodge-blocks/    # Dodge Blocks (vanilla JS, also in /games/)
+│   └── dodge-blocks/    # Dodge Blocks (vanilla JS; a stray duplicate also exists at repo-root games/, unused at runtime)
 ├── _components/     # Global effects and reusable components
 ├── e2e/             # E2E tests (Playwright)
 └── scripts/         # Build/test scripts
@@ -179,7 +179,7 @@ app/
 
 ## 📊 Testing & Quality
 
-- **Unit Tests**: 481 passing across 35 suites (Jest)
+- **Unit Tests**: 482 passing across 35 suites (Jest)
 - **E2E Tests**: Full game flow coverage (Playwright)
 - **Test Coverage**: Core game logic covered
 - **CI/CD**: GitHub Actions (type-check, test, E2E, Lighthouse audits)
@@ -196,10 +196,10 @@ app/
 
 ### Recent Milestones
 
-- ✅ All 9 games fully playable; Memory Match and Dodge Blocks have unit/E2E tests pending (see TASKS.md)
+- ✅ All 9 games fully playable (7 React/Three.js games, plus Memory Match and Dodge Blocks as sandboxed HTML5 embeds); Memory Match and Dodge Blocks have unit/E2E tests pending (see TASKS.md)
 - ✅ Code quality improvements (TypeScript types, documentation)
 - ✅ Performance optimizations (game loops, physics)
-- ✅ Comprehensive test coverage (481 unit tests, 95.41% statement coverage)
+- ✅ Comprehensive test coverage (482 unit tests, ~95% statement coverage)
 - ✅ E2E testing for all game flows
 - ✅ Accessibility improvements (keyboard navigation, ARIA labels)
 - ✅ Asteroid audio startup race fixed (`bgm` readiness-gated on route init)
@@ -226,13 +226,16 @@ All security overrides in `app/package.json` are pinned to **exact versions** ra
 
 ## 🔧 Technical Stack
 
-- **Framework**: Next.js 16.3.1
+- **Framework**: Next.js 16.3.3
 - **3D Graphics**: Three.js 0.185.1, React Three Fiber 9.7.0
 - **Physics**: @react-three/cannon 6.6.0
-- **Styling**: Styled Components 6.5.2
+- **Styling**: Styled Components 6.5.3
 - **Animation**: GSAP 3.15.0
-- **Testing**: Jest 30.4.2, Playwright 1.62.1
-- **Build Tools**: ESLint 9.38.0, Prettier 3.6.2
+- **Testing**: Jest 30.5.0, Playwright 1.62.1
+- **Build Tools**: ESLint 9.39.2, Prettier 3.9.6
+
+_(Versions above are the resolved versions in `app/package-lock.json`;
+Dependabot keeps these current, so check that file if this drifts again.)_
 
 ---
 
