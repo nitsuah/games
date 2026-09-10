@@ -53,6 +53,12 @@
           {
             "minScore": 0.9
           }
+        ],
+        "legacy-javascript-insight": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
         ]
       }
     }
