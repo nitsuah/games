@@ -59,6 +59,24 @@
           {
             "minScore": 0.9
           }
+        ],
+        "dom-size-insight": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "forced-reflow-insight": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "network-dependency-tree-insight": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
         ]
       }
     }
