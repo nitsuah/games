@@ -32,10 +32,19 @@ test.describe('Arcade cabinet responsive layout', () => {
 
     // Regression check: previously these were entirely clipped by the
     // page's overflow:hidden, so their bounding box was unreachable
-    // (either null or fell outside [0, viewport height]).
+    // (either null or fell outside [0, viewport height]). toBeVisible()
+    // alone doesn't check viewport intersection, so assert the full
+    // bounding box (top AND bottom edge) against the viewport height too.
+    const viewportHeight = page.viewportSize().height;
     const box = await joystick.boundingBox();
     expect(box).not.toBeNull();
     expect(box.y).toBeGreaterThanOrEqual(0);
+    expect(box.y + box.height).toBeLessThanOrEqual(viewportHeight);
+
+    const consoleBox = await consoleButton.boundingBox();
+    expect(consoleBox).not.toBeNull();
+    expect(consoleBox.y).toBeGreaterThanOrEqual(0);
+    expect(consoleBox.y + consoleBox.height).toBeLessThanOrEqual(viewportHeight);
   });
 
   test('console controls are visible and within the viewport at phone width', async ({ page }) => {
@@ -50,6 +59,7 @@ test.describe('Arcade cabinet responsive layout', () => {
     const box = await joystick.boundingBox();
     expect(box).not.toBeNull();
     expect(box.y).toBeGreaterThanOrEqual(0);
+    expect(box.y + box.height).toBeLessThanOrEqual(page.viewportSize().height);
   });
 
   test('game grid cards stay within the viewport horizontally at phone width', async ({ page }) => {

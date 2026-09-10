@@ -248,9 +248,15 @@
    breakpoint (equal specificity, later source order). */
 @media (max-width: 400px) {
   .gridMode {
-    width: 100px;
+    /* GameCarousel's grid track at this breakpoint is minmax(0, 100px), not
+       a fixed 100px, so it can shrink below 100px when the frame's content
+       box itself is under 320px. width: 100% (capped by max-width) lets the
+       card track that shrunk cell instead of forcing a fixed min-width that
+       overflows it. */
+    width: 100%;
     min-height: 100px;
-    min-width: 100px;
+    min-width: 0;
+    max-width: 100px;
     padding: 10px;
   }
 

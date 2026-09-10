@@ -27,9 +27,15 @@ const GameList = styled.div`
   /* At narrow phone widths the frame's inner content area (~90-95vw, no
      horizontal padding) is narrower than 3 * 130px + gaps, so the grid
      overflowed the cyan frame and clipped both edges of the viewport.
-     Shrink columns to match ArcadeCard's own .gridMode mobile size (120px). */
+     Shrink columns to match ArcadeCard's own .gridMode mobile size (120px).
+     minmax(0, 100px) (not a bare 100px) lets each track shrink below 100px
+     when the frame's content box itself is under 320px (e.g. a 320px-wide
+     viewport, whose frame content area nets out to ~296px after the frame's
+     4px border) instead of forcing a fixed 320px grid that overflows its
+     own container. ArcadeCard.module.css's .gridMode mirrors this with
+     width: 100%/max-width: 100px so the card tracks the shrunk cell. */
   @media (max-width: 400px) {
-    grid-template-columns: repeat(3, 100px);
+    grid-template-columns: repeat(3, minmax(0, 100px));
     max-width: 320px;
     gap: 10px;
   }
