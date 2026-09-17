@@ -4,6 +4,11 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  // three@0.186+ ships an ESM-only build; its `main` is a thin CJS shim that
+  // `require()`s the real ESM module at runtime, which breaks under both
+  // Jest's default node_modules exclusion and plain CJS bundling. Listing it
+  // here makes both Next.js and next/jest transpile it instead of skipping it.
+  transpilePackages: ['three'],
   turbopack: {},
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
