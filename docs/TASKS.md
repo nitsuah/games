@@ -8,11 +8,16 @@ _None._
 
 ## Todo
 
-_The Q2 2026 platform-reliability items (performance/asset audit, mobile
-responsiveness, accessibility pass, UX verification pass) are complete — see
-`docs/ROADMAP.md` 2026 Q2 and `docs/METRICS.md`. Client-side exception
-debugging that blocked Docker loads was also resolved; see `docs/INSTRUCTIONS.md`
-history if needed._
+_The Q2 2026 platform-reliability items (performance/asset audit, accessibility
+pass, UX verification pass) are complete — see `docs/ROADMAP.md` 2026 Q2.
+Mobile responsiveness work shipped, but `docs/METRICS.md`'s browser
+compatibility table still lists Mobile Safari/Mobile Chrome as
+partial/untested (⚠️) rather than confirmed — re-verify and update that table
+before treating mobile as fully validated. The client-side exception (`ReferenceError: Cannot access 'ev' before
+initialization`) that once blocked Docker loads is also resolved — Docker-first
+validation now succeeds locally and in CI (see Audit Notes below); the old
+handoff describing it as still in-progress was archived to
+`docs/archive/INSTRUCTIONS.md`._
 
 - [ ] Re-scope expansion work after platform issues are fixed.
   - Priority: P2
