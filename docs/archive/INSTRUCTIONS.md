@@ -1,3 +1,7 @@
+> **Archived 2026-09-23**: describes a client-side exception and Q2 2026
+> platform-reliability items as unfinished; both are long since resolved/shipped
+> (see `docs/TASKS.md`, `docs/ROADMAP.md`). Kept for historical reference only.
+
 # INSTRUCTIONS.md
 
 ## Where to Resume
