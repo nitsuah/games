@@ -24,6 +24,22 @@ updates:
         update-types:
           - 'minor'
           - 'patch'
+    ignore:
+      # @react-three/fiber@9.7.0 (latest stable) peer-caps react at ">=19 <19.3",
+      # and @react-three/drei re-asserts the same range. Unpin once fiber ships
+      # a stable 10.x with React 19.3 support — see #338.
+      - dependency-name: 'react'
+        versions:
+          - '>=19.3.0'
+      - dependency-name: 'react-dom'
+        versions:
+          - '>=19.3.0'
+      - dependency-name: '@types/react'
+        versions:
+          - '>=19.3.0'
+      - dependency-name: '@types/react-dom'
+        versions:
+          - '>=19.3.0'
     commit-message:
       prefix: 'chore(deps)'
 
