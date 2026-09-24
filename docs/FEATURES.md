@@ -115,9 +115,9 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 📊 Testing Infrastructure
 
-- **Unit Tests**: 482 passing unit tests across 35 suites covering game logic and shared systems
+- **Unit Tests**: 1017 passing unit tests across 71 suites covering game logic, shared systems, audio and UI
 - **E2E Testing**: Playwright tests for complete game flows
-- **Code Coverage**: 95.41% statement coverage (87.66% branch / 93.77% function / 96.87% line)
+- **Code Coverage**: 98.58% statement coverage (92.2% branch / 99.06% function / 99.47% line), including TypeScript modules; CI enforces 85%
 - **CI/CD Pipeline**: Automated testing on every push with GitHub Actions
 - **Lighthouse Audits**: Performance and accessibility monitoring
 

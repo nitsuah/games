@@ -15,9 +15,9 @@ export class LivesManager {
     lastHitTime: number;
 
     constructor(config: LivesConfig = {}) {
-        this.lives = config.initialLives || 3;
-        this.maxLives = config.maxLives || 5;
-        this.invincibilityDuration = config.invincibilityDuration || 2000;
+        this.lives = config.initialLives ?? 3;
+        this.maxLives = config.maxLives ?? 5;
+        this.invincibilityDuration = config.invincibilityDuration ?? 2000;
         this.lastHitTime = 0;
     }
 
@@ -69,7 +69,7 @@ export class LivesManager {
      * Reset to initial state
      */
     reset(initialLives?: number): void {
-        this.lives = initialLives || 3;
+        this.lives = initialLives ?? 3;
         this.lastHitTime = 0;
     }
 }

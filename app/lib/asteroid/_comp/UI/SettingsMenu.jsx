@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './SettingsMenu.module.css';
+import { DEFAULT_SETTINGS } from '@/contexts/SettingsContext';
 
 /**
  * Comprehensive settings menu for accessibility and player preferences
@@ -11,23 +12,13 @@ export default function SettingsMenu({ isOpen, onClose, onSave }) {
     try {
       const saved = localStorage.getItem('gameSettings');
       if (saved) {
-        return JSON.parse(saved);
+        // Merge over defaults so partial/older saves (or a stored "null") still render
+        return { ...DEFAULT_SETTINGS, ...JSON.parse(saved) };
       }
     } catch (e) {
       console.warn('Failed to load settings:', e);
     }
-    return {
-      mouseSensitivityX: 0.002,
-      mouseSensitivityY: 0.002,
-      invertY: false,
-      mouseSmoothing: true,
-      colorblindMode: 'none',
-      reduceMotion: false,
-      highContrast: false,
-      masterVolume: 0.7,
-      musicVolume: 0.5,
-      sfxVolume: 0.8,
-    };
+    return DEFAULT_SETTINGS;
   };
 
   const [settings, setSettings] = useState(loadSettings);
@@ -47,19 +38,7 @@ export default function SettingsMenu({ isOpen, onClose, onSave }) {
   };
 
   const handleReset = () => {
-    const defaults = {
-      mouseSensitivityX: 0.002,
-      mouseSensitivityY: 0.002,
-      invertY: false,
-      mouseSmoothing: true,
-      colorblindMode: 'none',
-      reduceMotion: false,
-      highContrast: false,
-      masterVolume: 0.7,
-      musicVolume: 0.5,
-      sfxVolume: 0.8,
-    };
-    setSettings(defaults);
+    setSettings(DEFAULT_SETTINGS);
   };
 
   if (!isOpen) return null;

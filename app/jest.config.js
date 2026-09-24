@@ -22,10 +22,11 @@ const customJestConfig = {
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
   testPathIgnorePatterns: ['/node_modules/', '/.next/', '/e2e/'],
   collectCoverageFrom: [
-    'lib/**/*.{js,jsx}',
-    'pages/**/*.{js,jsx}',
-    '_components/**/*.{js,jsx}',
-    'utils/**/*.{js,jsx}',
+    'lib/**/*.{js,jsx,ts,tsx}',
+    'pages/**/*.{js,jsx,ts,tsx}',
+    '_components/**/*.{js,jsx,ts,tsx}',
+    'utils/**/*.{js,jsx,ts,tsx}',
+    'contexts/**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
     '!**/.next/**',
@@ -34,11 +35,24 @@ const customJestConfig = {
     '!**/next.config.js',
     '!**/_document.js',
     '!**/pages/_app.js',
-    // Exclude page routes, 3D meshes, visual canvases/effects, and audio wrappers
+    // Everything below is a render shell: a page route, a canvas game loop,
+    // or a React Three Fiber/WebGL scene. jsdom can't run these meaningfully,
+    // so they're covered by Playwright (e2e/) instead. Game *logic* extracted
+    // from these shells (tankLogic, weaponHandler, the TS game components,
+    // shared managers, audio) is unit-tested and counted.
     '!pages/**/*',
     '!_components/objects/**/*',
     '!_components/effects/**/*.jsx',
-    '!lib/breakout/**/*',
+    // Canvas game loops (logic lives in lib/<game>/components/*.ts)
+    '!lib/breakout/BreakoutCanvas.jsx',
+    '!lib/breakout/BreakoutGame.{jsx,tsx}',
+    '!lib/breakout/components/*.jsx',
+    '!lib/flappy/FlappyGame.tsx',
+    '!lib/pong/PongGame.tsx',
+    '!lib/snake/SnakeGame.tsx',
+    '!lib/space-invaders/SpaceInvadersGame.tsx',
+    '!lib/tank/TankGame.jsx',
+    // R3F scenes / meshes
     '!lib/fps/FpsCanvas.jsx',
     '!lib/fps/_comps/Bot.jsx',
     '!lib/fps/_comps/Bullet.jsx',
@@ -58,22 +72,18 @@ const customJestConfig = {
     '!lib/asteroid/_comp/Target/Target.jsx',
     '!lib/asteroid/_comp/Target/CollisionDetection.jsx',
     '!lib/asteroid/_comp/Target/TargetCollisionHandler.jsx',
-    '!lib/asteroid/_comp/Target/TargetCollisionManager.js',
     '!lib/asteroid/_comp/Weapons/ShootingSystem.jsx',
-    '!lib/asteroid/_comp/Weapons/weaponHandler.js',
-    '!lib/asteroid/_comp/UI/**/*',
-    // Tank Battle: canvas/React component only. Its game logic lives in
-    // lib/tank/tankLogic.js, which is covered by tests/tank/.
-    '!lib/tank/TankGame.jsx',
-    '!utils/audio/**/*',
-    '!lib/shared/audio/**/*',
+    '!lib/asteroid/_comp/UI/BoundaryBox.jsx',
+    '!lib/asteroid/_comp/UI/InvincibilityEffect.jsx',
+    '!lib/asteroid/_comp/UI/PointerLockControls.js',
+    '!lib/asteroid/_comp/UI/ShieldEffect.jsx',
   ],
   coverageThreshold: {
     global: {
-      branches: 75,
-      functions: 75,
-      lines: 75,
-      statements: 75,
+      branches: 85,
+      functions: 85,
+      lines: 85,
+      statements: 85,
     },
   },
 };

@@ -20,6 +20,7 @@ Last Updated: 2026-09-24
 - [ ] Add high-score persistence to Memory Match (currently shows a win alert but doesn't save best time/moves to localStorage).
 - [ ] Add mobile touch controls to Dodge Blocks (keyboard-only today).
 - [x] Restore `npm run test:coverage` to passing (done 2026-09-24). Tank Battle's logic is now in the tested `lib/tank/tankLogic.js`, and coverage is back to 95.34% (threshold 75%), enforced in CI via `test:ci`. _History: the 2026-09-24 PMO audit measured 61% while `TankGame.jsx` was counted untested; see TASKS.md._
+- [x] Count TypeScript, audio and asteroid UI in coverage (done 2026-09-24). `collectCoverageFrom` previously matched only `.js/.jsx`, so every TS module was invisible. Now 3,804 statements are measured at 98.58% (1017 tests), and the CI threshold is raised to 85%.
 - [ ] Evaluate additional game work only once the above release-reliability items are closed, not on backlog volume alone.
 
 ## 2026 Q4 (Exploratory)

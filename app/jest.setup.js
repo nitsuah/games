@@ -43,8 +43,8 @@ afterAll(() => {
   console.error = originalError;
 });
 
-// Mock canvas and WebGL for Three.js tests
-HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
+// Mock canvas and WebGL for Three.js tests (skipped in @jest-environment node suites)
+if (typeof HTMLCanvasElement !== 'undefined') HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
   fillRect: jest.fn(),
   clearRect: jest.fn(),
   getImageData: jest.fn(),

@@ -19,8 +19,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Press feedback (button/joystick `:active` states) and a quiet click sound on
   the arcade cabinet's decorative console buttons and joystick, plus a subtle
   cosmetic wear/scuff overlay on the cabinet frame.
+- Unit coverage now counts `.ts/.tsx` files and `contexts/` (previously only
+  `.js/.jsx`). 507 new tests cover the TS game components (Breakout, Flappy,
+  Space Invaders), shared physics/progression/scoring/combat, the audio layer,
+  asteroid weapons/collisions/power-ups/UI, shared controls and contexts:
+  1017 tests, 98.58% statements / 92.2% branches. CI threshold raised to 85%.
 
 ### Fixed
+
+- Asteroid laser hits now spawn their impact effect at the target; the hit
+  test mutated the target position into a unit direction vector first.
+- `ProximityWarning` no longer re-renders endlessly when rendered without
+  `playerPosition`, and no longer recomputes on every parent render.
+- `SettingsMenu` merges saved settings over defaults, so older partial saves
+  no longer show `NaN` and a stored `"null"` no longer crashes the menu.
+- `LivesManager`/`WaveManager` honour explicit `0` config values instead of
+  silently replacing them with defaults.
 
 - Arcade cabinet (`ArcadeLayout`) no longer clips its neon hood/title or its
   joystick/buttons/coin-slot console when the cabinet is taller than the
