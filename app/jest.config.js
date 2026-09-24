@@ -62,6 +62,9 @@ const customJestConfig = {
     '!lib/asteroid/_comp/Weapons/ShootingSystem.jsx',
     '!lib/asteroid/_comp/Weapons/weaponHandler.js',
     '!lib/asteroid/_comp/UI/**/*',
+    // Tank Battle: canvas/React component only. Its game logic lives in
+    // lib/tank/tankLogic.js, which is covered by tests/tank/.
+    '!lib/tank/TankGame.jsx',
     '!utils/audio/**/*',
     '!lib/shared/audio/**/*',
   ],
