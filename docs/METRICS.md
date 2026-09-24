@@ -12,8 +12,8 @@ All Playwright E2E tests can be run in Docker:
 
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
-| Code Coverage         | 95.41% | Docker-validated in latest unit coverage run. |
-| Unit Tests            | 482 passing    | 35/35 Jest suites passing in the latest Docker coverage run. |
+| Code Coverage | 61.09% | Docker `npm run test:coverage` (2026-09-24 PMO audit): statements 61.09%, branches 59.13%, functions 80.99%, lines 62.55%. **Below the 75% threshold in `app/jest.config.js`, so the command exits 1.** Caused by `lib/tank/TankGame.jsx` (0%, 837 lines, added 2026-08-07). See TASKS.md. The earlier 95.41% figure predates Tank Battle. |
+| Unit Tests | 482 passing | 35/35 Jest suites pass in Docker (2026-09-24); suite time 10.7s. |
 | E2E Tests             | 8 passing      | Based on the last validated Playwright Docker run; not rerun in this refresh. |
 | Test Files            | 35             | Current `app/tests` file count. |
 | Build Time            | TBD            | Pending current run measurement. |
@@ -27,8 +27,8 @@ All Playwright E2E tests can be run in Docker:
 | Open Issues           | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Open PRs              | TBD        | Pull from current GitHub state during next metrics refresh. |
 | Health Score          | TBD        | Replace self-rating with computed score source. |
-| Last Updated          | 2026-08-22 | Metrics updated from Docker-based test run. |
-| Passing Unit Tests    | 482/482    | Latest Docker coverage run completed cleanly. |
+| Last Updated | 2026-09-24 | PMO audit: Docker unit coverage re-run. |
+| Passing Unit Tests | 482/482 | All tests pass; only the coverage threshold fails (2026-09-24). |
 | Deploy Success Rate   | TBD        | Pull from provider and CI history. |
 
 ## Test Distribution
