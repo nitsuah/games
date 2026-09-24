@@ -1,4 +1,4 @@
-import { Paddle } from '@/lib/breakout/components/Paddle.ts';
+import { Paddle } from '@/lib/breakout/components/Paddle';
 import { createMockCtx } from '../helpers/mockCtx';
 
 const make = () =>

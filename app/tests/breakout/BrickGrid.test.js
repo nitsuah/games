@@ -1,5 +1,5 @@
 import { BrickGrid } from '@/lib/breakout/components/BrickGrid';
-import { Ball } from '@/lib/breakout/components/Ball.ts';
+import { Ball } from '@/lib/breakout/components/Ball';
 import { createMockCtx } from '../helpers/mockCtx';
 
 const ball = (x, y, vx = 100, vy = -100) => new Ball({ x, y, radius: 5, velocity: { x: vx, y: vy }, color: '#fff' });

@@ -44,9 +44,7 @@ const customJestConfig = {
     '!_components/objects/**/*',
     '!_components/effects/**/*.jsx',
     // Canvas game loops (logic lives in lib/<game>/components/*.ts)
-    '!lib/breakout/BreakoutCanvas.jsx',
-    '!lib/breakout/BreakoutGame.{jsx,tsx}',
-    '!lib/breakout/components/*.jsx',
+    '!lib/breakout/BreakoutGame.tsx',
     '!lib/flappy/FlappyGame.tsx',
     '!lib/pong/PongGame.tsx',
     '!lib/snake/SnakeGame.tsx',

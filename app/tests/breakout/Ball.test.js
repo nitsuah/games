@@ -1,4 +1,4 @@
-import { Ball } from '@/lib/breakout/components/Ball.ts';
+import { Ball } from '@/lib/breakout/components/Ball';
 import { createMockCtx } from '../helpers/mockCtx';
 
 const make = () => new Ball({ x: 100, y: 100, radius: 8, velocity: { x: 200, y: -300 }, color: '#fff' });
