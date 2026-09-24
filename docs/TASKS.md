@@ -19,7 +19,7 @@ validation now succeeds locally and in CI (see Audit Notes below); the old
 handoff describing it as still in-progress was archived to
 `docs/archive/INSTRUCTIONS.md`._
 
-- [ ] **Bring `npm run test:coverage` back above its 75% threshold — Tank Battle is untested.**
+- [x] **Bring `npm run test:coverage` back above its 75% threshold — Tank Battle is untested.** Done 2026-09-24 with both options: (a) the pure logic moved unchanged to `lib/tank/tankLogic.js` with 38 tests (97% branch), and (b) the `TankGame.jsx` render shell is excluded. `test:ci` now runs `--coverage`, so CI enforces the thresholds.
   - Priority: P1 · Type: Tech Debt · Confidence: High
   - Milestone: 2026 Q3
   - Problem: the 2026-09-24 PMO audit ran `docker build --target test-unit -t games-test . && docker run --rm games-test npm run test:coverage`. All 482 tests in 35 suites pass, but global coverage is 61.09% statements, 59.13% branches, 80.99% functions and 62.55% lines, so the command **exits 1** against the 75% thresholds in `app/jest.config.js`. The only file under 75% is `app/lib/tank/TankGame.jsx` (837 lines, 0%), added in #284 on 2026-08-07. It is not in `collectCoverageFrom`'s exclusions, unlike the other canvas/3D files. CI runs `npm run test:ci` without `--coverage`, so this does not show in CI.
