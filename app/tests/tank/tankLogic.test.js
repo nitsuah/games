@@ -85,9 +85,19 @@ describe('buildWalls', () => {
 describe('findSpawn', () => {
   afterEach(() => jest.restoreAllMocks());
 
-  it('returns a point at least minDist from the player and clear of walls', () => {
-    const p = findSpawn([], WORLD_W / 2, WORLD_H / 2, 500);
-    expect(Math.hypot(p.x - WORLD_W / 2, p.y - WORLD_H / 2)).toBeGreaterThanOrEqual(500);
+  it('rejects a candidate inside a wall and returns the next clear one', () => {
+    // Candidate coord = 100 + r * (WORLD - 200). The first (x, y) roll lands at
+    // (1200, 1200), inside the wall. The second lands at (2800, 2800), clear of it.
+    const wall = { x: 1000, y: 1000, w: 400, h: 400 };
+    const first = (1200 - 100) / (WORLD_W - 200);
+    const rolls = [first, first, 0.9, 0.9];
+    let i = 0;
+    jest.spyOn(Math, 'random').mockImplementation(() => rolls[i++]);
+    const p = findSpawn([wall], 0, 0, 500);
+    expect(p.x).toBeCloseTo(2800);
+    expect(p.y).toBeCloseTo(2800);
+    expect(i).toBe(4); // exactly two attempts: one rejected, one accepted
+    expect(circleRectOverlap(p.x, p.y, 30, wall.x, wall.y, wall.w, wall.h)).toBe(false);
   });
 
   it('falls back to (200, 200) when every attempt is blocked', () => {

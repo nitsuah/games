@@ -13,7 +13,7 @@ All Playwright E2E tests can be run in Docker:
 | Metric                | Value          | Notes                     |
 | --------------------- | -------------- | ------------------------- |
 | Code Coverage | 95.34% | Docker `npm run test:coverage` (2026-09-24): statements 95.34%, branches 88.29%, functions 94.11%, lines 96.56%. Tank Battle's logic is in `lib/tank/tankLogic.js` (tested); its render shell is excluded like the other canvas files. CI (`test:ci`) now enforces the 75% thresholds. |
-| Unit Tests | 482 passing | 35/35 Jest suites pass in Docker (2026-09-24); suite time 10.7s. |
+| Unit Tests | 510 passing | 36/36 Jest suites pass in Docker (2026-09-24, after the Tank Battle coverage fix). |
 | E2E Tests             | 8 passing      | Based on the last validated Playwright Docker run; not rerun in this refresh. |
 | Test Files            | 35             | Current `app/tests` file count. |
 | Build Time            | TBD            | Pending current run measurement. |
@@ -35,8 +35,8 @@ All Playwright E2E tests can be run in Docker:
 
 | Test Group                | Count | Status     |
 | ------------------------- | ----- | ---------- |
-| Jest Test Suites          | 35    | ✅ Passing |
-| Jest Tests                | 482   | ✅ Passing |
+| Jest Test Suites          | 36    | ✅ Passing |
+| Jest Tests                | 510   | ✅ Passing |
 | Playwright E2E Tests      | 8     | ✅ Last validated |
 | **Current Unit Coverage** | **95.34% statements** | **✅ Above the 75% threshold; Docker `npm run test:coverage` exits 0 (2026-09-24)** |
 
@@ -46,9 +46,11 @@ All unit tests and coverage can be run in Docker:
 
 - Build test image: `docker build --target test-unit -t games-test .`
 - Run all unit tests with coverage: `docker run --rm -it games-test npm run test:coverage`
-- All 482 unit tests pass in Docker across 35 suites (latest validation)
+- All 510 unit tests pass in Docker across 36 suites (2026-09-24, latest validation)
 
-Coverage (statements/branches/functions/lines): 61.09% / 59.13% / 80.99% / 62.55% (Docker, 2026-09-24; previously 95.41% / 87.66% / 93.77% / 96.87% before Tank Battle was added)
+Coverage (statements/branches/functions/lines): 95.34% / 88.29% / 94.11% / 96.56% (Docker, 2026-09-24, after the Tank Battle fix).
+
+_History: 61.09% / 59.13% / 80.99% / 62.55% at the 2026-09-24 PMO audit, before the fix, while `TankGame.jsx` was counted untested. It was 95.41% / 87.66% / 93.77% / 96.87% before Tank Battle was added in #284._
 
 ## Performance Metrics
 
