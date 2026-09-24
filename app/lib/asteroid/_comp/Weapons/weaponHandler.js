@@ -40,7 +40,7 @@ export function weaponHandler({
         const targetPosition = new THREE.Vector3(target.x, target.y, target.z);
         const distance = from.distanceTo(targetPosition);
         const isIntersected =
-          forwardDirection.angleTo(targetPosition.sub(from).normalize()) < 0.04 && distance <= 400;
+          forwardDirection.angleTo(targetPosition.clone().sub(from).normalize()) < 0.04 && distance <= 400;
         if (isIntersected) {
           hitTargets.add(target.id);
           playSound('hit');

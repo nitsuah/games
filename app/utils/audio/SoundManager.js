@@ -91,6 +91,18 @@ class SoundManager {
   playExplosion(size = 1, pan = 0) {
     if (!this.soundEnabled) return; // Don't play if sound disabled
     if (typeof window === 'undefined') return;
+    // Guarded like the other one-shots: explosions fire from collision/game-loop
+    // handlers, so an unavailable AudioContext must not throw into them.
+    try {
+      this._playExplosion(size, pan);
+    } catch (error) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Failed to play explosion sound:', error.message);
+      }
+    }
+  }
+
+  _playExplosion(size, pan) {
     if (!this.audioCtx) this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     const ctx = this.audioCtx;

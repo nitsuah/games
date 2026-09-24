@@ -25,10 +25,10 @@ export class WaveManager {
     maxEnemies: number;
 
     constructor(config: WaveConfig = {}) {
-        this.currentWave = config.initialWave || 1;
-        this.difficultyMultiplier = config.difficultyMultiplier || 1.2;
-        this.baseEnemyCount = config.baseEnemyCount || 5;
-        this.maxEnemies = config.maxEnemies || 50;
+        this.currentWave = config.initialWave ?? 1;
+        this.difficultyMultiplier = config.difficultyMultiplier ?? 1.2;
+        this.baseEnemyCount = config.baseEnemyCount ?? 5;
+        this.maxEnemies = config.maxEnemies ?? 50;
     }
 
     /**

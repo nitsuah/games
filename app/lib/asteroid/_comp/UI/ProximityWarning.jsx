@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import styles from './ProximityWarning.module.css';
 
+const ORIGIN = [0, 0, 0];
+const dangerRadius = 15; // units
+const criticalRadius = 8; // units - very close
+
 /**
- * Visual/audio warning when targets get dangerously close to player
+ * Visual warning when targets get dangerously close to player
  * Shows directional indicators pointing toward nearby threats
  */
-export default function ProximityWarning({ targets, playerPosition = [0, 0, 0] }) {
-  const [nearbyTargets, setNearbyTargets] = useState([]);
-  const dangerRadius = 15; // units
-  const criticalRadius = 8; // units - very close
-  
-  useEffect(() => {
-    if (!targets || targets.length === 0) {
-      setNearbyTargets([]);
-      return;
-    }
-    
+export default function ProximityWarning({ targets, playerPosition = ORIGIN }) {
+  // Depend on the coordinates, not the array identity: callers pass inline arrays.
+  const [px, py, pz] = playerPosition;
+
+  const nearbyTargets = useMemo(() => {
+    if (!targets || targets.length === 0) return [];
+
     // Find targets within danger radius
-    const nearby = targets
+    return targets
       .filter(target => !target.isHit)
       .map(target => {
-        const dx = target.x - playerPosition[0];
-        const dy = target.y - playerPosition[1];
-        const dz = target.z - playerPosition[2];
+        const dx = target.x - px;
+        const dy = target.y - py;
+        const dz = target.z - pz;
         const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
         
         // Calculate angle for directional indicator (in screen space, approximate)
@@ -38,19 +38,7 @@ export default function ProximityWarning({ targets, playerPosition = [0, 0, 0] }
       .filter(t => t.distance < dangerRadius)
       .sort((a, b) => a.distance - b.distance) // Closest first
       .slice(0, 6); // Limit to 6 indicators max
-    
-    setNearbyTargets(nearby);
-    
-    // Play warning sound if any critical threats
-    const hasCritical = nearby.some(t => t.isCritical);
-    if (hasCritical && nearby.length > 0) {
-      // Trigger audio warning (will implement in parent or via soundManager)
-      import('@/utils/audio/SoundManager').then((_module) => {
-        // Could add a specific proximity alert sound here
-        // soundManager.playProximityAlert();
-      });
-    }
-  }, [targets, playerPosition, dangerRadius, criticalRadius]);
+  }, [targets, px, py, pz]);
   
   if (nearbyTargets.length === 0) return null;
   
