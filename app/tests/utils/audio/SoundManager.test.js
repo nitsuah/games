@@ -128,13 +128,8 @@ describe('SoundManager', () => {
       window.AudioContext = jest.fn(() => {
         throw new Error('broken');
       });
-      if (method === 'playExplosion') {
-        // playExplosion has no try/catch: an unavailable AudioContext propagates.
-        expect(() => sm[method](...args)).toThrow('broken');
-      } else {
-        expect(() => sm[method](...args)).not.toThrow();
-        expect(warn).toHaveBeenCalled();
-      }
+      expect(() => sm[method](...args)).not.toThrow();
+      expect(warn).toHaveBeenCalled();
       process.env.NODE_ENV = env;
     });
   });
