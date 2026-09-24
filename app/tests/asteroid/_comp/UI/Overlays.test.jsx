@@ -1,3 +1,4 @@
+import { Profiler } from 'react';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 
 jest.mock('@/utils/audio/SoundManager', () => ({
@@ -151,14 +152,21 @@ describe('ProximityWarning', () => {
   });
 
   it('does not re-render endlessly when using the default player position', () => {
-    const renders = jest.fn();
-    const Probe = (props) => {
-      renders();
-      return <ProximityWarning {...props} />;
-    };
-    const { rerender } = render(<Probe targets={[t(1, 3)]} />);
-    rerender(<Probe targets={[t(1, 3)]} />);
-    expect(renders).toHaveBeenCalledTimes(2);
+    // Profiler counts every commit in its subtree, including ones caused by
+    // state updates inside ProximityWarning itself (where the old loop lived).
+    // Throwing past a small cap turns a would-be hang into a fast failure.
+    const onRender = jest.fn(() => {
+      if (onRender.mock.calls.length > 10) throw new Error('ProximityWarning render loop');
+    });
+    const targets = [t(1, 3)];
+    const tree = () => (
+      <Profiler id="pw" onRender={onRender}>
+        <ProximityWarning targets={targets} />
+      </Profiler>
+    );
+    const { rerender } = render(tree());
+    rerender(tree());
+    expect(onRender).toHaveBeenCalledTimes(2); // one mount + one parent re-render
     expect(screen.getByText('PROXIMITY ALERT')).toBeInTheDocument();
   });
 
