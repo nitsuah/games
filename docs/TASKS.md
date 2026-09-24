@@ -1,6 +1,6 @@
 # Tasks
 
-Last Updated: 2026-09-23
+Last Updated: 2026-09-24
 
 ## In Progress
 
@@ -18,6 +18,13 @@ initialization`) that once blocked Docker loads is also resolved — Docker-firs
 validation now succeeds locally and in CI (see Audit Notes below); the old
 handoff describing it as still in-progress was archived to
 `docs/archive/INSTRUCTIONS.md`._
+
+- [ ] **Bring `npm run test:coverage` back above its 75% threshold — Tank Battle is untested.**
+  - Priority: P1 · Type: Tech Debt · Confidence: High
+  - Milestone: 2026 Q3
+  - Problem: the 2026-09-24 PMO audit ran `docker build --target test-unit -t games-test . && docker run --rm games-test npm run test:coverage`. All 482 tests in 35 suites pass, but global coverage is 61.09% statements, 59.13% branches, 80.99% functions and 62.55% lines, so the command **exits 1** against the 75% thresholds in `app/jest.config.js`. The only file under 75% is `app/lib/tank/TankGame.jsx` (837 lines, 0%), added in #284 on 2026-08-07. It is not in `collectCoverageFrom`'s exclusions, unlike the other canvas/3D files. CI runs `npm run test:ci` without `--coverage`, so this does not show in CI.
+  - Why it matters: `docs/METRICS.md` has reported 95.41% since 2026-08-22, and the documented coverage command is red.
+  - Acceptance Criteria: either (a) extract Tank Battle's pure logic (movement, collision, scoring) into a tested module, or (b) exclude only the rendering shell in `collectCoverageFrom` with a comment, matching the existing FPS/breakout exclusions. Then `npm run test:coverage` exits 0 in Docker and `docs/METRICS.md` is updated with the new numbers.
 
 - [ ] Re-scope expansion work after platform issues are fixed.
   - Priority: P2
