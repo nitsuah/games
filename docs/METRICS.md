@@ -1,5 +1,7 @@
 # Metrics
 
+> 🧭 [games](../README.md) · [Features](./FEATURES.md) · [Roadmap](./ROADMAP.md) · [Tasks](./TASKS.md) · [Changelog](./CHANGELOG.md) · **Metrics** <!-- nav -->
+
 ## Docker-based E2E Test Workflow
 
 All Playwright E2E tests can be run in Docker:
