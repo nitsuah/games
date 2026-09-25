@@ -145,7 +145,7 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 - **Next.js 16.3.3**: React framework with server-side rendering
 - **Three.js 0.185.1**: 3D graphics library for WebGL rendering
-- **React Three Fiber 9.7.0**: React renderer for Three.js with declarative API
+- **React Three Fiber 9.8.0**: React renderer for Three.js with declarative API
 - **React Three Cannon 6.6.0**: Physics engine integration for React Three Fiber
 - **Styled Components 6.5.3**: CSS-in-JS styling solution
 - **GSAP 3.15.0**: Animation library for smooth transitions and effects

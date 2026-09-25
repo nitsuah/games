@@ -1,7 +1,7 @@
 # Games Collection
 
 > 🧭 **games** · [Features](./docs/FEATURES.md) · [Roadmap](./docs/ROADMAP.md) · [Tasks](./docs/TASKS.md) · [Changelog](./docs/CHANGELOG.md) · [Metrics](./docs/METRICS.md) <!-- nav -->
-
+>
 > Browser arcade collection built with Next.js, Three.js, and React Three Fiber. Nine games are live at [nitsuah-arcade.netlify.app](https://nitsuah-arcade.netlify.app); the current work is release-path reliability and runtime cleanup.
 
 [![CI](https://github.com/nitsuah/games/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/nitsuah/games/actions)

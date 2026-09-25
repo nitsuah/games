@@ -16,12 +16,12 @@ Last Updated: 2026-09-24
 - [ ] Fix game selection UI for keyboard/programmatic navigation (accessibility + automated testing).
 - [ ] Add unit/E2E test coverage for Memory Match and Dodge Blocks (iframe-hosted standalone games; not covered by the existing Jest suite).
 - [ ] Add high-score persistence to Memory Match (currently shows a win alert but doesn't save best time/moves to localStorage).
-- [ ] Add mobile touch controls to Dodge Blocks (keyboard-only today) — build it as the **shared touch-control component** below rather than a one-off.
+- [ ] Add mobile touch controls to Dodge Blocks (keyboard-only today), built as the shared touch-control component below rather than a one-off.
+- [ ] **Shared touch-control component** — a single reusable on-screen d-pad/button component; Dodge Blocks is the first consumer, any future mobile game the second. *(moved up from 2026 Q4 exploratory — Dodge Blocks depends on it)*
 - [ ] Re-verify Mobile Safari / Mobile Chrome and update the ⚠️ rows in `docs/METRICS.md`'s browser compatibility table.
 
 ### Exploratory *(carried from 2026 Q4)*
 
-- [ ] **Shared touch-control component** — a single reusable on-screen d-pad/button component; Dodge Blocks is the first consumer, any future mobile game the second.
 - [ ] **Per-game achievement system** — unlockable badges per game (e.g. "Survived 10 waves" in Asteroid, "First to 11" in Pong) in localStorage, shown on a cross-game profile page; no server required.
 - [ ] **Federated leaderboard** — lightweight global top-score sharing via a Netlify Function or Cloudflare Worker with localStorage-only fallback; one endpoint keyed by `game`.
 - [ ] Evaluate additional game work only once the committed items above are closed, not on backlog volume alone.
