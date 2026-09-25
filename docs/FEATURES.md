@@ -1,5 +1,7 @@
 # Games Collection Features
 
+> 🧭 [games](../README.md) · **Features** · [Roadmap](./ROADMAP.md) · [Tasks](./TASKS.md) · [Changelog](./CHANGELOG.md) · [Metrics](./METRICS.md) <!-- nav -->
+
 Status guide: all game entries below are `[shipped]` unless otherwise noted. Planned platform work is called out inline.
 
 ## 🎮 Arcade Games

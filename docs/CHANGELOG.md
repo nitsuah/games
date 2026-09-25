@@ -1,11 +1,21 @@
 # Changelog
 
+> 🧭 [games](../README.md) · [Features](./FEATURES.md) · [Roadmap](./ROADMAP.md) · [Tasks](./TASKS.md) · **Changelog** · [Metrics](./METRICS.md) <!-- nav -->
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Maintenance (2026-09)
+
+- Tank Battle logic extracted to tested `lib/tank/tankLogic.js`; coverage restored above the 75% threshold and `test:ci` now runs `--coverage` so CI enforces it (#341, #342).
+- Coverage now counts TypeScript, audio and asteroid UI: 1017 tests / 98.58% statements, CI threshold raised to 85%; 5 edge-case bugs fixed along the way (#343).
+- Removed the dead React Three Fiber Breakout implementation (#344).
+- Security: patched `sharp` and `js-yaml` (#335). React / React DOM 19.3.0 and `@react-three/fiber` 9.8.0 (#340); Lighthouse CI action 12.6.2 (#329); grouped minor/patch bumps (#330, #334, #337).
+- Planning docs reset for 2027 (`pmo-ff`): completed roadmap/TASKS items condensed into FEATURES/CHANGELOG, open 2026 Q3/Q4 items carried into 2027 Q1, breadcrumb navigation + README docs index added.
 
 ### Added
 

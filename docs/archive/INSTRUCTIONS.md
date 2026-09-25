@@ -4,6 +4,8 @@
 
 # INSTRUCTIONS.md
 
+> 🧭 [games](../../README.md) · [Features](../FEATURES.md) · [Roadmap](../ROADMAP.md) · [Tasks](../TASKS.md) · [Changelog](../CHANGELOG.md) · [Metrics](../METRICS.md) <!-- nav -->
+
 ## Where to Resume
 
 The previous agent was actively debugging a global client-side exception (`ReferenceError: Cannot access 'ev' before initialization`) that prevented all games from loading in Docker. The error is not present in server-side logs or Next.js build traces, indicating a runtime/browser-side issue. The last step was to capture browser console logs from the Dockerized app to obtain the actual client-side error and stack trace.
