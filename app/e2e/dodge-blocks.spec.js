@@ -34,7 +34,8 @@ test.describe('Dodge Blocks', () => {
 
   test('restart resets the score and running state', async ({ page }) => {
     await page.waitForFunction('score > 0');
-    await page.evaluate('running = false');
+    // A known high score: only a real reset can bring it back under 10 (score keeps ticking after restart)
+    await page.evaluate('score = 500; running = false');
     await page.getByRole('button', { name: 'Restart' }).click();
     expect(await page.evaluate('running')).toBe(true);
     expect(await page.evaluate('score')).toBeLessThan(10);
