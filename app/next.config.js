@@ -68,6 +68,11 @@ const nextConfig = {
       {
         source: '/(.*)',
         headers: [
+          // Security headers carried over from netlify.toml so they survive the move to Vercel.
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           {
             key: 'Content-Security-Policy',
             value:
@@ -79,6 +84,8 @@ const nextConfig = {
       {
         source: '/games/:path*',
         headers: [
+          // Later entries win in Next.js, so this relaxes the global DENY for same-origin iframes.
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           {
             key: 'Content-Security-Policy',
             value:
