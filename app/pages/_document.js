@@ -36,8 +36,19 @@ class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <meta name="theme-color" content="#000000" />
-          <meta name="description" content="A small collection of tiny 3D games" />
+          <meta
+            name="description"
+            content="Browser arcade collection built with Next.js, Three.js, and React Three Fiber."
+          />
           <title>Games</title>
+          <link rel="canonical" href="https://arcade.nitsuah.io/" />
+          <meta property="og:url" content="https://arcade.nitsuah.io" />
+          <meta property="og:site_name" content="Games" />
+          <meta property="og:title" content="Games" />
+          <meta
+            property="og:description"
+            content="Browser arcade collection built with Next.js, Three.js, and React Three Fiber."
+          />
           <link rel="icon" type="image/svg+xml" href="/favicon-home.svg" />
           <link rel="manifest" href="/manifest.json" />
           <script src="/register-sw.js" nonce={nonce} defer />
