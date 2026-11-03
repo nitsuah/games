@@ -31,8 +31,26 @@ describe('CollisionDetection', () => {
       const posB = new THREE.Vector3(5, 0, 0);
       const radiusA = 2.5;
       const radiusB = 2.5;
-      
+
       expect(checkSphereCollision(posA, radiusA, posB, radiusB)).toBe(true);
+    });
+
+    it('should detect collision for two zero-radius spheres at same position', () => {
+      const posA = new THREE.Vector3(0, 0, 0);
+      const posB = new THREE.Vector3(0, 0, 0);
+      const radiusA = 0;
+      const radiusB = 0;
+
+      expect(checkSphereCollision(posA, radiusA, posB, radiusB)).toBe(true);
+    });
+
+    it('should not detect collision for zero-radius spheres with positive separation', () => {
+      const posA = new THREE.Vector3(0, 0, 0);
+      const posB = new THREE.Vector3(1, 0, 0);
+      const radiusA = 0;
+      const radiusB = 0;
+
+      expect(checkSphereCollision(posA, radiusA, posB, radiusB)).toBe(false);
     });
   });
   
