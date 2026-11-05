@@ -253,6 +253,13 @@ describe('KeyboardManager', () => {
       window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
       expect(cb).toHaveBeenCalledTimes(1);
     });
+
+    it('leaves key state empty when keydown fires while disabled', () => {
+      km.setEnabled(false);
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'a' }));
+      expect(km.getPressedKeys()).toEqual([]);
+      expect(km.isKeyPressed('a')).toBe(false);
+    });
   });
 
   // ─── reset() ──────────────────────────────────────────────────────────────
