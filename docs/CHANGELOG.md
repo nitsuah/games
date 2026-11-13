@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Maintenance (2026-11)
+
+- `/app` dependency refresh: next / eslint-config-next 16.4.6, prettier 3.10.1, @testing-library/user-event 14.6.10, @typescript-eslint/parser 8.72.2, baseline-browser-mapping 2.11.37. Added a `glob` 14.0.6 override for GHSA-3g3m-2fjr-6pw4 (moderate, dev-only via jest/lighthouse); `npm audit` now reports only the unpatched low-severity `deepmerge` advisory pulled in by jest-config.
+
 ### Maintenance (2026-10)
 
 - Dependabot ignores eslint major-version bumps in `/app` until `eslint-plugin-react` supports eslint 10, so it stops opening an eslint 10 PR that fails `npm ci` with ERESOLVE (#333).

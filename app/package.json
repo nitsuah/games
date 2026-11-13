@@ -4,7 +4,7 @@
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.2",
     "gsap": "^3.15.1",
-    "next": "^16.4.5",
+    "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "sharp": "0.35.5",
@@ -36,17 +36,17 @@
     "@playwright/test": "^1.65.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.8",
+    "@testing-library/user-event": "^14.6.10",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@typescript-eslint/parser": "^8.72.1",
+    "@typescript-eslint/parser": "^8.72.2",
     "axe-playwright": "^2.2.2",
     "babel-plugin-styled-components": "^2.4.0",
-    "baseline-browser-mapping": "^2.11.34",
+    "baseline-browser-mapping": "^2.11.37",
     "chrome-launcher": "^1.2.3",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.4.5",
+    "eslint-config-next": "^16.4.6",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.7",
     "eslint-plugin-react": "^7.37.5",
@@ -58,7 +58,7 @@
     "jest-environment-jsdom": "^30.5.2",
     "lighthouse": "^13.6.0",
     "lint-staged": "^17.6.0",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.1",
     "typescript": "^6.0.3"
   },
   "overrides": {
@@ -73,7 +73,8 @@
     "uuid": "11.1.1",
     "sharp": "0.35.5",
     "minimatch": "11.0.1",
-    "deepmerge": "4.3.1"
+    "deepmerge": "4.3.1",
+    "glob": "14.0.6"
   },
   "engines": {
     "node": "22.x"
