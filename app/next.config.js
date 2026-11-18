@@ -25,14 +25,14 @@ const nextConfig = {
             framework: {
               name: 'framework',
               chunks: 'all',
-              test: /[\/]node_modules[\/](react|react-dom|scheduler|next)[\/]/,
+              test: /[/]node_modules[/](react|react-dom|scheduler|next)[/]/,
               priority: 40,
               enforce: true,
             },
             lib: {
-              test: /[\/]node_modules[\/]/,
+              test: /[/]node_modules[/]/,
               name(module) {
-                const packageName = module.context.match(/[\/]node_modules[\/](.*?)([\/]|$)/)[1];
+                const packageName = module.context.match(/[/]node_modules[/](.*?)([/]|$)/)[1];
                 return `npm.${packageName.replace('@', '')}`;
               },
               priority: 30,

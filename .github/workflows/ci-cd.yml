@@ -37,6 +37,11 @@ jobs:
         cd app
         npx playwright install --with-deps chromium
     
+    - name: Run lint
+      run: |
+        cd app
+        npm run lint
+
     - name: Run type checking
       run: |
         cd app

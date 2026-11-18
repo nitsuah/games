@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+const { test } = require('@playwright/test');
 const { injectAxe, checkA11y } = require('axe-playwright');
 
 test.describe('Accessibility Audit', () => {

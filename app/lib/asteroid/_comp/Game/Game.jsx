@@ -12,7 +12,6 @@ const FlashOverlays = dynamic(() => import('@/lib/asteroid/_comp/UI/FlashOverlay
 const GameOverOverlay = dynamic(() => import('@/lib/asteroid/_comp/UI/GameOverOverlay'), { ssr: false });
 const ScoreDisplay = dynamic(() => import('@/lib/asteroid/_comp/UI/ScoreDisplay'), { ssr: false });
 const WeaponDisplay = dynamic(() => import('@/lib/asteroid/_comp/UI/WeaponDisplay'), { ssr: false });
-import { now } from '@/utils/time';
 import { handleTargetHit as handleTargetHitFn } from '@/lib/asteroid/_comp/Game/handleTargetHit';
 import { handleMiss as handleMissFn } from '@/lib/asteroid/_comp/Game/handleMiss';
 import { restartGame as restartGameFn } from '@/lib/asteroid/_comp/Game/restartGame';
@@ -550,7 +549,7 @@ const Game = ({ onHit, onMiss }) => {
           paused={false}
         />
       )}
-      <VirtualJoystick onMove={(x, y) => {
+      <VirtualJoystick onMove={(_x, _y) => {
         // Map joystick input to movement and aiming
         // Using existing keyboard-based input handlers is better, but this requires integrating
         // with the keyboard-based handlers which are already complex.
