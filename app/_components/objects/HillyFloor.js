@@ -2,12 +2,6 @@ import { useMemo, forwardRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
 
-// Simple value noise function (fallback)
-function valueNoise(x, z, seed = 0) {
-  const n = Math.sin(x * 12.9898 + z * 78.233 + seed) * 43758.5453;
-  return n - Math.floor(n);
-}
-
 // 2D Gaussian bell curve factor (centered at middle)
 function bellCurve(x, z, width, depth, sigma = 0.35) {
   const cx = (width - 1) / 2;
@@ -51,6 +45,45 @@ function smoothHeightmap(data, maxDelta = 1) {
     }
   }
   return data;
+}
+
+// Build a width x depth vertex grid whose z (pre-rotation) is the height at
+// heightData[z][x], with vertex colors from dark green (low) to yellow-green
+// (high). Exported for unit tests.
+export function buildHillyGeometry(heightData, width, depth) {
+  const geometry = new THREE.PlaneGeometry(width, depth, width - 1, depth - 1);
+  const vertices = geometry.attributes.position.array;
+  const colors = [];
+
+  let min = Infinity,
+    max = -Infinity;
+  for (let z = 0; z < heightData.length; z++) {
+    for (let x = 0; x < heightData[z].length; x++) {
+      const h = heightData[z][x];
+      if (h < min) min = h;
+      if (h > max) max = h;
+    }
+  }
+
+  const color = new THREE.Color();
+  for (let i = 0, j = 0; i < vertices.length; i += 3, j++) {
+    const z = Math.floor(j / width);
+    const x = j % width;
+    const h = heightData[z][x];
+    vertices[i + 2] = h;
+    // Map height to t in [0,1]
+    const t = (h - min) / (max - min || 1);
+    color.setRGB(
+      0.1 + 0.5 * t, // R: more yellow at high
+      0.4 + 0.5 * t, // G: brighter at high
+      0.1 + 0.2 * (1 - t) // B: less blue at high
+    );
+    colors.push(color.r, color.g, color.b);
+  }
+  geometry.attributes.position.needsUpdate = true;
+  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  geometry.computeVertexNormals();
+  return geometry;
 }
 
 const HillyFloor = forwardRef(
@@ -149,38 +182,10 @@ const HillyFloor = forwardRef(
     }, [heightData, width, depth, hillHeight, maxGradient, isLoading]);
 
     const geometry = useMemo(() => {
-      if (!computedHeightData) { // Also depend on computedHeightData
+      if (!computedHeightData) {
         return null;
       }
-      // Use min/max from computedHeightData for color mapping
-      let min = Infinity,
-        max = -Infinity;
-      for (let z = 0; z < computedHeightData.length; z++) {
-        for (let x = 0; x < computedHeightData[z].length; x++) {
-          const h = computedHeightData[z][x];
-          if (h < min) min = h;
-          if (h > max) max = h;
-        }
-      }
-      for (let i = 0, j = 0; i < vertices.length; i += 3, j++) {
-        const z = Math.floor(j / width);
-        const x = j % width;
-        const h = computedHeightData[z][x];
-        vertices[i + 2] = h;
-        // Map height to t in [0,1]
-        const t = (h - min) / (max - min || 1);
-        // Interpolate from dark green (low) to yellow-green (high)
-        const color = new THREE.Color();
-        color.setRGB(
-          0.1 + 0.5 * t, // R: more yellow at high
-          0.4 + 0.5 * t, // G: brighter at high
-          0.1 + 0.2 * (1 - t) // B: less blue at high
-        );
-        colors.push(color.r, color.g, color.b);
-      }
-      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-      geometry.computeVertexNormals();
-      return geometry;
+      return buildHillyGeometry(computedHeightData, width, depth);
     }, [width, depth, computedHeightData]);
 
     if (isLoading || !computedHeightData) {
