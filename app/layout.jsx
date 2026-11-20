@@ -2,7 +2,7 @@ import './globals.css';
 
 export const metadata = {
   metadataBase: new URL('https://arcade.nitsuah.io'),
-  title: 'Games',
+  title: 'Arcade',
   description:
     'Browser arcade collection built with Next.js, Three.js, and React Three Fiber.',
   alternates: {
@@ -10,8 +10,8 @@ export const metadata = {
   },
   openGraph: {
     url: 'https://arcade.nitsuah.io',
-    siteName: 'Games',
-    title: 'Games',
+    siteName: 'Arcade',
+    title: 'Arcade',
     description:
       'Browser arcade collection built with Next.js, Three.js, and React Three Fiber.',
   },

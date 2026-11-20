@@ -8,7 +8,7 @@ test.describe('Home Page', () => {
     await page.waitForLoadState('networkidle', { timeout: 30000 });
     
     // Check title
-    await expect(page).toHaveTitle(/Games/i);
+    await expect(page).toHaveTitle(/Arcade/i);
     
     // Check main arcade heading with timeout
     const heading = page.getByRole('heading', { name: /ARCADE/i });

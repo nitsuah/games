@@ -40,15 +40,17 @@ class MyDocument extends Document {
             name="description"
             content="Browser arcade collection built with Next.js, Three.js, and React Three Fiber."
           />
-          <title>Games</title>
+          <title>Arcade</title>
           <link rel="canonical" href="https://arcade.nitsuah.io/" />
           <meta property="og:url" content="https://arcade.nitsuah.io" />
-          <meta property="og:site_name" content="Games" />
-          <meta property="og:title" content="Games" />
+          <meta property="og:site_name" content="Arcade" />
+          <meta property="og:title" content="Arcade" />
           <meta
             property="og:description"
             content="Browser arcade collection built with Next.js, Three.js, and React Three Fiber."
           />
+          <meta property="og:image" content="https://arcade.nitsuah.io/icon-512.png" />
+          <meta name="twitter:card" content="summary" />
           <link rel="icon" type="image/svg+xml" href="/favicon-home.svg" />
           <link rel="manifest" href="/manifest.json" />
           <script src="/register-sw.js" nonce={nonce} defer />
