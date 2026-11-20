@@ -5,7 +5,6 @@
 > Browser arcade collection built with Next.js, Three.js, and React Three Fiber. Nine games are live at [arcade.nitsuah.io](https://arcade.nitsuah.io); the current work is release-path reliability and runtime cleanup.
 
 [![CI](https://github.com/nitsuah/games/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/nitsuah/games/actions)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/25a0a90d-195b-4e53-9d94-9a4107321939/deploy-status)](https://app.netlify.com/projects/nitsuah-arcade/deploys)
 
 ## 🎮 Games
 
@@ -115,11 +114,10 @@ Open `http://localhost:3000`
 
 ### Deployment & Hosting
 
-This project is currently deployed as a **Next.js runtime build on Netlify**, not a static export.
+This project is deployed as a **Next.js runtime build on Vercel**, not a static export.
 
-- **Local Production Check**: Use `npm run build && npm start` from `app/` to verify the current runtime deployment path locally.
-- **Hosting Provider**: `netlify.toml` uses `@netlify/plugin-nextjs`, publishes `.next`, and pins Node 22 for the deployed build.
-- **CI Model**: GitHub Actions validates tests, build, E2E, Lighthouse, and Docker smoke checks; production deployment is handled by Netlify.
+- **Production**: Next.js runtime build on **Vercel** (project root `app/`, config `app/vercel.json`), deployed from `main` (the `ignoreCommand` in `app/vercel.json` skips builds when only tests or docs changed).
+- **CI Model**: GitHub Actions runs tests, build, E2E, Lighthouse and Docker smoke checks.
 
 ### Key Commands
 
@@ -220,7 +218,7 @@ app/
 - 📝 Documentation updates and consolidation
 - 🔧 Tech debt management (see CONTRIBUTING.md for current guidelines; TECH_DEBT.md retained for legacy reference)
 - 🎨 Performance monitoring and optimization
-- 🚀 Continuous deployment to Netlify
+- 🚀 Continuous deployment to Vercel
 
 ## 🛡️ Security & Dependencies
 
