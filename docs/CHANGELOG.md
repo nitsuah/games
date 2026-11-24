@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (2026-11)
+
+- Start-and-play e2e journeys for Breakout, Pong and Snake (`app/e2e/{breakout,pong,snake}.spec.js`, shared `helpers.js`): each starts the game, sends a key press, asserts an outcome (score, lives or GAME OVER, never fixed timing) with no page errors, and checks the pause menu Home control returns to `/` (#401).
+
+### Fixed (2026-11)
+
+- Snake now renders in the fullscreen layout like Pong and Breakout: the cabinet no longer covers the pause button and the canvas no longer collapses to 150px high with the snake drawn off-canvas (#401).
+- Snake and Breakout pass `paused` to the shared game controls so the pause menu (Resume, Restart, Home) actually appears; Breakout's render loop now survives a pause so Resume continues the game instead of freezing it (#401).
+
 ### Fixed (2026-11)
 
 - FPS `HillyFloor` no longer throws a ReferenceError once its EXR heightmap loads: the lost `PlaneGeometry`/position/color setup is restored in an exported `buildHillyGeometry` helper with unit tests (#391). CI now runs `npm run lint` so `no-undef` errors like this fail the build; the remaining lint errors (unused vars, useless regex escapes) are fixed.
