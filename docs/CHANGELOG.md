@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (2026-11)
+
+- Nightly live crawl of arcade.nitsuah.io (`.github/workflows/live-crawl.yml`, `app/e2e-live/crawl.spec.js`, `app/playwright.live.config.js`): all 10 routes must return 200 with no console or page errors and an unknown path must 404; failures file deduplicated `bot:journey` issues (#399).
+
 ### Fixed (2026-11)
 
 - FPS `HillyFloor` no longer throws a ReferenceError once its EXR heightmap loads: the lost `PlaneGeometry`/position/color setup is restored in an exported `buildHillyGeometry` helper with unit tests (#391). CI now runs `npm run lint` so `no-undef` errors like this fail the build; the remaining lint errors (unused vars, useless regex escapes) are fixed.
