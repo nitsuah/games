@@ -28,8 +28,13 @@ for (const route of ROUTES) {
       expect(response?.status()).toBe(200);
     });
     await test.step('no console or page errors', async () => {
-      // Let late client-side errors (hydration, asset loads) surface.
-      await page.waitForLoadState('networkidle').catch(() => {});
+      // Let late client-side errors (hydration, asset loads) surface. Games keep
+      // animation/asset traffic going, so networkidle may never settle: bound it,
+      // record when it didn't, then hold a short fixed window for stragglers.
+      await page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => {
+        test.info().annotations.push({ type: 'note', description: `${route}: networkidle not reached in 10s` });
+      });
+      await page.waitForTimeout(1_000);
       expect(problems).toEqual([]);
     });
   });
