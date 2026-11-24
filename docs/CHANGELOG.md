@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (2026-11)
+
+- Nightly live crawl of arcade.nitsuah.io (`.github/workflows/live-crawl.yml`, `app/e2e-live/crawl.spec.js`, `app/playwright.live.config.js`): all 10 routes must return 200 with no console or page errors and an unknown path must 404; failures file deduplicated `bot:journey` issues (#399).
 ### Changed (2026-11)
 
 - Home game tiles are real `<a href>` links (`ArcadeCard` takes an `href`), so crawlers can find the games and users can open them in a new tab; added `robots.txt` and `sitemap.xml`; removed the stray `app/e2e/debug-space-invaders.js` (#394).

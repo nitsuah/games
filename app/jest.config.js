@@ -20,7 +20,7 @@ const customJestConfig = {
     '^.+\\.(jpg|jpeg|png|gif|webp|avif|svg)$': '<rootDir>/__mocks__/fileMock.js',
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
-  testPathIgnorePatterns: ['/node_modules/', '/.next/', '/e2e/'],
+  testPathIgnorePatterns: ['/node_modules/', '/.next/', '/e2e/', '/e2e-live/'],
   collectCoverageFrom: [
     'lib/**/*.{js,jsx,ts,tsx}',
     'pages/**/*.{js,jsx,ts,tsx}',

@@ -1,0 +1,33 @@
+name: Live crawl
+
+# Nightly crawl of the deployed arcade: every route answers 200 with no console
+# or page errors, and an unknown path is a 404. Failures become deduplicated
+# `bot:journey` issues via the shared harness in nitsuah/.github
+# (journeys/STANDARD.md); issues auto-close after 3 green runs. Not a PR check:
+# it tests production, so only schedule and manual runs.
+
+on:
+  schedule:
+    - cron: '17 8 * * *' # 08:17 UTC nightly
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-crawl
+  cancel-in-progress: true
+
+jobs:
+  crawl:
+    uses: nitsuah/.github/.github/workflows/journeys.yml@75e0607d9cd8401b2bbdd0ca46aa499c669f6834
+    permissions:
+      contents: write # bot/journeys branch only (BUGS.md, metrics)
+      issues: write
+    with:
+      kit-ref: 75e0607d9cd8401b2bbdd0ca46aa499c669f6834
+      # Keep in step with @playwright/test in app/package-lock.json.
+      image: mcr.microsoft.com/playwright:v1.65.1-jammy
+      setup: cd app && npm ci --no-audit --no-fund
+      command: cd app && npx playwright test -c playwright.live.config.js
+      repro: cd app && npm ci && npx playwright install chromium && npx playwright test -c playwright.live.config.js
