@@ -53,6 +53,10 @@ handoff describing it as still in-progress was archived to
   - Priority: P2
   - Done 2026-11-24: `app/e2e/{breakout,pong,snake}.spec.js` start the game, press keys, assert a score/lives/GAME OVER outcome with no page errors, and check the pause menu Home control returns to `/`. Surfaced and fixed Snake's covered pause button/collapsed canvas and Breakout's frozen resume. Follow-up: Asteroid, Tank Battle, Invaders and Flappy journeys; Breakout TRY AGAIN after game over does not restart the render loop.
 
+- [x] **Nightly live crawl of arcade.nitsuah.io** (#399) — scheduled `.github/workflows/live-crawl.yml` runs `app/e2e-live/crawl.spec.js` against production: the 10 routes answer 200 with no console or page errors, an unknown path is a 404. Failures file deduplicated `bot:journey` issues through the shared reporter.
+  - Priority: P2
+  - Done 2026-11-24.
+
 - [x] **Add unit/E2E tests for Memory Match and Dodge Blocks** — both iframe-hosted games are live and playable but lack unit-level or gameplay-level E2E automated test coverage; the existing Jest suite does not cover the standalone HTML bundles.
   - Priority: P2
   - Milestone: 2027 Q1
