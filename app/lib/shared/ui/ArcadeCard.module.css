@@ -15,6 +15,7 @@
   overflow: hidden;
   font-family: 'Courier New', monospace;
   color: white; /* Ensure text is visible on dark background */
+  text-decoration: none; /* when rendered as a link */
 }
 
 .card::before {

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styles from './ArcadeCard.module.css';
 
 /**
@@ -22,7 +23,8 @@ export default function ArcadeCard({
   title,
   icon,
   description,
-  onClick,
+  onClick = undefined,
+  href = '',
   className = '',
   badge = null,
   displayMode = 'carousel',
@@ -33,14 +35,15 @@ export default function ArcadeCard({
   const modeClass = getDisplayModeClass(displayMode);
   const positionClass = displayMode === 'carousel' && carouselPosition ? styles[carouselPosition] : '';
 
+  const classes = `${styles.card} ${className} ${modeClass} ${positionClass}`;
+  // With an href the tile is a real link (crawlable, middle-clickable); otherwise a button.
+  const Wrapper = href ? Link : 'button';
+  const wrapperProps = href
+    ? { href, className: classes, 'aria-label': title, tabIndex, 'data-testid': testId }
+    : { className: classes, onClick, 'aria-label': title, tabIndex, 'data-testid': testId };
+
   return (
-    <button
-      className={`${styles.card} ${className} ${modeClass} ${positionClass}`}
-      onClick={onClick}
-      aria-label={title}
-      tabIndex={tabIndex}
-      data-testid={testId}
-    >
+    <Wrapper {...wrapperProps}>
       {badge && <div className={styles.badge}>{badge}</div>}
       <div className={styles.iconWrapper}>
         <span className={styles.icon}>{icon}</span>
@@ -60,6 +63,6 @@ export default function ArcadeCard({
           {displayMode !== 'list' && <span>PLAY</span>}
         </div>
       )}
-    </button>
+    </Wrapper>
   );
 }

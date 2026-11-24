@@ -1,9 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { render, screen, fireEvent } from '@testing-library/react';
-
-const mockPush = jest.fn();
-jest.mock('next/router', () => ({ useRouter: () => ({ push: mockPush }) }));
+import { render, screen } from '@testing-library/react';
 
 import { GameCarousel } from '@/_components/home/GameCarousel';
 
@@ -20,17 +17,15 @@ const EXPECTED = [
 ];
 
 describe('GameCarousel', () => {
-  beforeEach(() => mockPush.mockClear());
-
   it('lists every game once', () => {
     render(<GameCarousel />);
     EXPECTED.forEach(([title]) => expect(screen.getByText(title)).toBeInTheDocument());
   });
 
-  it.each(EXPECTED)('%s navigates to %s', (title, route) => {
+  it.each(EXPECTED)('%s is a real link to %s', (title, route) => {
     render(<GameCarousel />);
-    fireEvent.click(screen.getByText(title));
-    expect(mockPush).toHaveBeenCalledWith(route);
+    const link = screen.getByRole('link', { name: title });
+    expect(link).toHaveAttribute('href', route);
   });
 
   it.each(EXPECTED)('%s route %s has a page', (_title, route) => {
