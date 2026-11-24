@@ -27,9 +27,10 @@ handoff describing it as still in-progress was archived to
   - Type: Tech Debt · Confidence: High
   - Problem: `npm ci` fails with ERESOLVE because `eslint-plugin-react@7.37.5`, the latest release, peers on `eslint@^3 … ^9.7`. Re-checked 2026-10-01 with `npm view`: still 7.37.5, still no eslint 10 in the peer range. The issue was open but not tracked here.
   - Acceptance Criteria: once a plugin release accepts eslint 10, bump eslint, `npm run lint` passes in Docker, the eslint major-version `ignore` rule in `.github/dependabot.yml` is removed, and #333 is closed.
-  - Status: Dependabot now ignores eslint major bumps for `/app` so it stops reopening a failing eslint 10 PR; #333 stays open as the watch item (canonical tracker: nitsuah/vigil#212).
+  - Status: Dependabot now ignores eslint major bumps for `/app` so it stops reopening a failing eslint 10 PR; #333 was closed as not planned (2026-11-18) and the watch moved to nitsuah/vigil#212, the canonical tracker.
 
-- [ ] Re-scope expansion work after platform issues are fixed.
+- [x] Re-scope expansion work after platform issues are fixed.
+  - Done 2026-11-24: the platform items are closed (see the Todo preamble: Q2 reliability, Q3 coverage and the Docker initialization error), no open issues remain in nitsuah/games, CI/docker-smoke are green, and `docs/ROADMAP.md` keeps expansion work sequenced behind the committed 2027 Q1 items ("Evaluate additional game work only once the committed items above are closed").
   - Priority: P2
   - Milestone: 2027 Q1
   - Problem: feature growth should not outrun packaging, deployment, and runtime stability work.

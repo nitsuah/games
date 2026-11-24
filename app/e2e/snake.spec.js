@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { startGame, trackPageErrors, canvasHasPaint, pauseAndGoHome } = require('./helpers');
 
-test.describe('Snake start-and-play', () => {
+test.describe('Snake start-and-play', { tag: '@feature:snake' }, () => {
   test('starts, renders and ends in GAME OVER after steering into a wall', async ({ page }) => {
     const errors = trackPageErrors(page);
     await page.goto('/snake');

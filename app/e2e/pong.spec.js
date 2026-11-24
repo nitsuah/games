@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { startGame, trackPageErrors, canvasHasPaint, pauseAndGoHome } = require('./helpers');
 
-test.describe('Pong start-and-play', () => {
+test.describe('Pong start-and-play', { tag: '@feature:pong' }, () => {
   test('starts, renders, reacts to input and a point is scored', async ({ page }) => {
     const errors = trackPageErrors(page);
     await page.goto('/pong');
