@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { startGame, trackPageErrors, canvasHasPaint, pauseAndGoHome } = require('./helpers');
 
-test.describe('Breakout start-and-play', () => {
+test.describe('Breakout start-and-play', { tag: '@feature:breakout' }, () => {
   test('starts, renders, reacts to input and scores or loses a life', async ({ page }) => {
     const errors = trackPageErrors(page);
     await page.goto('/breakout');
@@ -19,9 +19,14 @@ test.describe('Breakout start-and-play', () => {
 
     // Outcome, not timing: the ball either breaks a brick (score up) or drops (a life lost).
     await expect
-      .poll(async () => /SCORE: [1-9]/.test(await hud.innerText()) || /LIVES: [0-2]\b/.test(await hud.innerText()), {
-        timeout: 20000,
-      })
+      .poll(
+        async () =>
+          /SCORE: [1-9]/.test(await hud.innerText()) ||
+          /LIVES: [0-2]\b/.test(await hud.innerText()),
+        {
+          timeout: 20000,
+        }
+      )
       .toBe(true);
     expect(errors).toEqual([]);
   });
@@ -40,9 +45,14 @@ test.describe('Breakout start-and-play', () => {
     await expect(page.getByRole('button', { name: 'Pause Game' })).toBeVisible();
     const hud = page.getByTestId('game-container');
     await expect
-      .poll(async () => /SCORE: [1-9]/.test(await hud.innerText()) || /LIVES: [0-2]\b/.test(await hud.innerText()), {
-        timeout: 20000,
-      })
+      .poll(
+        async () =>
+          /SCORE: [1-9]/.test(await hud.innerText()) ||
+          /LIVES: [0-2]\b/.test(await hud.innerText()),
+        {
+          timeout: 20000,
+        }
+      )
       .toBe(true);
   });
 });

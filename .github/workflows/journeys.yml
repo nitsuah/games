@@ -1,0 +1,58 @@
+name: Journeys
+
+# Nightly "AI user": the start-and-play journeys (app/e2e: Breakout, Pong, Snake)
+# against the production build, in the pinned Playwright image. Failures become
+# deduplicated `bot:journey` issues (no AI) via the shared harness in
+# nitsuah/.github (journeys/STANDARD.md); issues auto-close after 3 green runs.
+# The deployed site is covered separately by live-crawl.yml.
+
+on:
+  schedule:
+    - cron: '41 7 * * *' # 07:41 UTC nightly
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/e2e/**'
+      - 'app/playwright.journeys.config.js'
+      - 'app/_components/**'
+      - 'app/pages/**'
+      - '.github/workflows/journeys.yml'
+
+permissions: {}
+
+concurrency:
+  group: journeys-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Pull requests run repo code (npm ci, the journeys) and only print a summary,
+  # so they get a read-only token.
+  journeys-pr:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      issues: read
+    uses: nitsuah/.github/.github/workflows/journeys.yml@75e0607d9cd8401b2bbdd0ca46aa499c669f6834
+    with:
+      kit-ref: 75e0607d9cd8401b2bbdd0ca46aa499c669f6834 # same commit as the workflow ref above; bump both together
+      # Keep in step with @playwright/test in app/package-lock.json.
+      image: mcr.microsoft.com/playwright:v1.65.1-jammy
+      setup: cd app && npm ci --no-audit --no-fund
+      command: cd app && npm run test:journeys
+      repro: cd app && npm ci && npx playwright install chromium && npm run test:journeys
+
+  # Nightly and manual runs file and close bot:journey issues and update the
+  # bot/journeys branch (BUGS.md, metrics).
+  journeys:
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: write # bot/journeys branch only
+      issues: write
+    uses: nitsuah/.github/.github/workflows/journeys.yml@75e0607d9cd8401b2bbdd0ca46aa499c669f6834
+    with:
+      kit-ref: 75e0607d9cd8401b2bbdd0ca46aa499c669f6834 # same commit as the workflow ref above; bump both together
+      image: mcr.microsoft.com/playwright:v1.65.1-jammy
+      setup: cd app && npm ci --no-audit --no-fund
+      command: cd app && npm run test:journeys
+      repro: cd app && npm ci && npx playwright install chromium && npm run test:journeys

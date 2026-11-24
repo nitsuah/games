@@ -1,0 +1,93 @@
+{
+  "product": "games",
+  "live": "https://arcade.nitsuah.io",
+  "page": null,
+  "pagesDir": "app/public",
+  "frontend": true,
+  "features": [
+    {
+      "id": "asteroid",
+      "title": "Asteroid Space Shooter",
+      "category": "Arcade Games",
+      "screenshots": ["docs/screenshots/asteroid-gameplay-screenshot.png"],
+      "spots": []
+    },
+    {
+      "id": "tank-commander",
+      "title": "FPS Tank Commander",
+      "category": "Arcade Games",
+      "screenshots": ["docs/screenshots/fps-gameplay-screenshot.png"],
+      "spots": []
+    },
+    {
+      "id": "breakout",
+      "title": "Breakout Classic",
+      "category": "Arcade Games",
+      "screenshots": ["docs/screenshots/breakout-gameplay-screenshot.png"],
+      "spots": []
+    },
+    {
+      "id": "flappy-bird",
+      "title": "Flappy Bird",
+      "category": "Arcade Games",
+      "screenshots": ["docs/screenshots/flappy-gameplay-screenshot.png"],
+      "spots": []
+    },
+    {
+      "id": "pong",
+      "title": "Pong",
+      "category": "Arcade Games",
+      "screenshots": ["docs/screenshots/pong-gameplay-screenshot.png"],
+      "spots": []
+    },
+    {
+      "id": "snake",
+      "title": "Snake",
+      "category": "Arcade Games",
+      "screenshots": ["docs/screenshots/snake-gameplay-screenshot.png"],
+      "spots": []
+    },
+    {
+      "id": "space-invaders",
+      "title": "Space Invaders",
+      "category": "Arcade Games",
+      "screenshots": [
+        "docs/screenshots/space-invaders-gameplay-screenshot.png"
+      ],
+      "spots": []
+    },
+    {
+      "id": "dodge-blocks",
+      "title": "Dodge Blocks",
+      "category": "Arcade Games",
+      "screenshots": ["docs/screenshots/dodge-blocks-gameplay-screenshot.png"],
+      "spots": []
+    },
+    {
+      "id": "memory-match",
+      "title": "Memory Match",
+      "category": "Arcade Games",
+      "screenshots": ["docs/screenshots/memory-match-gameplay-screenshot.png"],
+      "spots": []
+    },
+    {
+      "id": "arcade-platform",
+      "title": "Shared arcade shell, scoring and PWA",
+      "category": "Platform",
+      "visual": "none"
+    }
+  ],
+  "spots": [],
+  "reels": [
+    {
+      "id": "hero",
+      "spots": [],
+      "published": null
+    }
+  ],
+  "brand": {
+    "source": null,
+    "derived": [],
+    "manual": []
+  }
+}
