@@ -1,5 +1,4 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import ArcadeCard from '@/lib/shared/ui/ArcadeCard';
 
@@ -47,7 +46,6 @@ const GameList = styled.div`
 `;
 
 export const GameCarousel = () => {
-  const router = useRouter();
   const games: Game[] = [
     { title: 'Asteroid', icon: '🎯', description: 'Blast asteroids in space', route: '/asteroid' },
     { title: 'Tank Battle', icon: '🪖', description: '2D top-down tank combat', route: '/fps' },
@@ -68,7 +66,7 @@ export const GameCarousel = () => {
           title={game.title}
           icon={game.icon}
           description={game.description}
-          onClick={() => router.push(game.route)}
+          href={game.route}
           displayMode="grid"
           tabIndex={0}
         />

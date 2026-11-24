@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed (2026-11)
+
+- Home game tiles are real `<a href>` links (`ArcadeCard` takes an `href`), so crawlers can find the games and users can open them in a new tab; added `robots.txt` and `sitemap.xml`; removed the stray `app/e2e/debug-space-invaders.js` (#394).
+
 ### Fixed (2026-11)
 
 - FPS `HillyFloor` no longer throws a ReferenceError once its EXR heightmap loads: the lost `PlaneGeometry`/position/color setup is restored in an exported `buildHillyGeometry` helper with unit tests (#391). CI now runs `npm run lint` so `no-undef` errors like this fail the build; the remaining lint errors (unused vars, useless regex escapes) are fixed.

@@ -108,4 +108,10 @@ describe('ArcadeCard', () => {
     const card = screen.getByTestId('arcade-card');
     expect(card).toHaveAttribute('tabindex', '2');
   });
+
+  it('renders a link instead of a button when given an href', () => {
+    render(<ArcadeCard {...defaultProps} href="/asteroid" />);
+    expect(screen.getByRole('link')).toHaveAttribute('href', '/asteroid');
+    expect(screen.queryByRole('button')).toBeNull();
+  });
 });
