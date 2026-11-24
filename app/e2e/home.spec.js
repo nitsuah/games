@@ -14,9 +14,9 @@ test.describe('Home Page', () => {
     const heading = page.getByRole('heading', { name: /ARCADE/i });
     await expect(heading).toBeVisible({ timeout: 10000 });
     
-    // Check game buttons exist (using ArcadeCard components which render as buttons)
-    const asteroidButton = page.getByRole('button').filter({ hasText: /Asteroid/ });
-    const breakoutButton = page.getByRole('button').filter({ hasText: /Breakout/ });
+    // Check game buttons exist (ArcadeCard renders links when given an href)
+    const asteroidButton = page.getByRole('link').filter({ hasText: /Asteroid/ });
+    const breakoutButton = page.getByRole('link').filter({ hasText: /Breakout/ });
     
     await expect(asteroidButton).toBeVisible({ timeout: 10000 });
     await expect(breakoutButton).toBeVisible({ timeout: 10000 });
@@ -28,8 +28,8 @@ test.describe('Home Page', () => {
     // Wait for page to be fully loaded with increased timeout
     await page.waitForLoadState('networkidle', { timeout: 30000 });
     
-    // Click Asteroid button - ArcadeCard renders a button containing the text
-    const asteroidButton = page.getByRole('button').filter({ hasText: /Asteroid/ });
+    // Click Asteroid button - ArcadeCard renders a link containing the text
+    const asteroidButton = page.getByRole('link').filter({ hasText: /Asteroid/ });
     await expect(asteroidButton).toBeVisible({ timeout: 10000 });
     await asteroidButton.click();
     
@@ -46,8 +46,8 @@ test.describe('Home Page', () => {
     // Wait for page to be fully loaded with increased timeout
     await page.waitForLoadState('networkidle', { timeout: 30000 });
     
-    // Click Breakout button - ArcadeCard renders a button containing the text
-    const breakoutButton = page.getByRole('button').filter({ hasText: /Breakout/ });
+    // Click Breakout button - ArcadeCard renders a link containing the text
+    const breakoutButton = page.getByRole('link').filter({ hasText: /Breakout/ });
     await expect(breakoutButton).toBeVisible({ timeout: 10000 });
     await breakoutButton.click();
     
