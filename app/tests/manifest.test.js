@@ -44,3 +44,14 @@ describe('manifest.json', () => {
     });
   });
 });
+describe('crawler files', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const pub = path.join(__dirname, '..', 'public');
+  it('robots.txt points at the sitemap, which lists every game route', () => {
+    expect(fs.readFileSync(path.join(pub, 'robots.txt'), 'utf8')).toContain('Sitemap: https://arcade.nitsuah.io/sitemap.xml');
+    const sitemap = fs.readFileSync(path.join(pub, 'sitemap.xml'), 'utf8');
+    ['asteroid', 'fps', 'breakout', 'space-invaders', 'flappy', 'snake', 'pong', 'memory-match', 'dodge-blocks'].forEach((r) =>
+      expect(sitemap).toContain(`https://arcade.nitsuah.io/${r}</loc>`));
+  });
+});

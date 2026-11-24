@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Snake now renders in the fullscreen layout like Pong and Breakout: the cabinet no longer covers the pause button and the canvas no longer collapses to 150px high with the snake drawn off-canvas (#401).
 - Snake and Breakout pass `paused` to the shared game controls so the pause menu (Resume, Restart, Home) actually appears; Breakout's render loop now survives a pause so Resume continues the game instead of freezing it (#401).
+### Changed (2026-11)
+
+- Home game tiles are real `<a href>` links (`ArcadeCard` takes an `href`), so crawlers can find the games and users can open them in a new tab; added `robots.txt` and `sitemap.xml`; removed the stray `app/e2e/debug-space-invaders.js` (#394).
 
 ### Fixed (2026-11)
 

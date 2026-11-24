@@ -67,7 +67,7 @@ test.describe('Arcade cabinet responsive layout', () => {
     await page.goto('/', { timeout: 60000 });
     await page.waitForLoadState('networkidle', { timeout: 30000 });
 
-    const asteroidCard = page.getByRole('button', { name: 'Asteroid' });
+    const asteroidCard = page.getByRole('link', { name: 'Asteroid' });
     await expect(asteroidCard).toBeVisible({ timeout: 10000 });
 
     const box = await asteroidCard.boundingBox();
