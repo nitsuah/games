@@ -11,13 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added (2026-11)
 
+- Start-and-play e2e journeys for Breakout, Pong and Snake (`app/e2e/{breakout,pong,snake}.spec.js`, shared `helpers.js`): each starts the game, sends a key press, asserts an outcome (score, lives or GAME OVER, never fixed timing) with no page errors, and checks the pause menu Home control returns to `/` (#401).
 - Nightly live crawl of arcade.nitsuah.io (`.github/workflows/live-crawl.yml`, `app/e2e-live/crawl.spec.js`, `app/playwright.live.config.js`): all 10 routes must return 200 with no console or page errors and an unknown path must 404; failures file deduplicated `bot:journey` issues (#399).
+
 ### Changed (2026-11)
 
 - Home game tiles are real `<a href>` links (`ArcadeCard` takes an `href`), so crawlers can find the games and users can open them in a new tab; added `robots.txt` and `sitemap.xml`; removed the stray `app/e2e/debug-space-invaders.js` (#394).
 
 ### Fixed (2026-11)
 
+- Snake now renders in the fullscreen layout like Pong and Breakout: the cabinet no longer covers the pause button and the canvas no longer collapses to 150px high with the snake drawn off-canvas (#401).
+- Snake and Breakout pass `paused` to the shared game controls so the pause menu (Resume, Restart, Home) actually appears; Breakout's render loop now survives a pause so Resume continues the game instead of freezing it (#401).
 - FPS `HillyFloor` no longer throws a ReferenceError once its EXR heightmap loads: the lost `PlaneGeometry`/position/color setup is restored in an exported `buildHillyGeometry` helper with unit tests (#391). CI now runs `npm run lint` so `no-undef` errors like this fail the build; the remaining lint errors (unused vars, useless regex escapes) are fixed.
 
 ### Maintenance (2026-11)

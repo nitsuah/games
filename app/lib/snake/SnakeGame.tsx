@@ -265,6 +265,7 @@ export const SnakeGame = () => {
             <GameControls
                 onPause={togglePause}
                 onRestart={handleRestart}
+                paused={isPaused}
             />
             <VirtualJoystick onMove={(x: number, y: number) => {
                 if (Math.abs(x) > Math.abs(y)) {

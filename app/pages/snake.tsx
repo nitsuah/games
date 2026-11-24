@@ -15,7 +15,7 @@ const SnakePage = () => {
   const [started, setStarted] = useState(false);
 
   return (
-    <ArcadeLayout title="SNAKE">
+    <ArcadeLayout fullscreenGame={true} title="SNAKE">
       <AudioController />
       {!started && <HowToPlay title="SNAKE" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
       {started && (

@@ -97,6 +97,9 @@ export const BreakoutGame = () => {
     const [level, setLevel] = useState(1);
     const [gameOver, setGameOver] = useState(false);
     const [highScore, setHighScore] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const pausedRef = useRef(false);
+    useEffect(() => { pausedRef.current = paused; }, [paused]);
 
     // Game state refs (to avoid closure staleness in loop)
     const gameState = useRef({
@@ -167,6 +170,8 @@ export const BreakoutGame = () => {
         // Game Loop
         const loop = (timestamp: number) => {
             if (!state.isRunning) return;
+            // Keep the loop alive while paused so resuming actually continues the game
+            if (pausedRef.current) { state.lastTime = timestamp; requestAnimationFrame(loop); return; }
 
             const dt = (timestamp - state.lastTime) / 1000;
             state.lastTime = timestamp;
@@ -344,6 +349,7 @@ export const BreakoutGame = () => {
         setScore(0);
         setLevel(1);
         setGameOver(false);
+        setPaused(false);
 
         if (state.brickGrid) state.brickGrid.init(1);
         if (state.paddle) state.paddle.reset(350);
@@ -379,8 +385,9 @@ export const BreakoutGame = () => {
     return (
         <GameContainer data-testid="game-container">
             <GameControls
-                onPause={() => { gameState.current.isRunning = !gameState.current.isRunning }}
+                onPause={() => setPaused(p => !p)}
                 onRestart={handleRestart}
+                paused={paused}
             />
             <Canvas ref={canvasRef} width={800} height={600} />
             <UIOverlay>
