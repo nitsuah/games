@@ -36,7 +36,8 @@ handoff describing it as still in-progress was archived to
   - Problem: feature growth should not outrun packaging, deployment, and runtime stability work.
   - Acceptance Criteria: larger feature initiatives stay sequenced behind the release-path fixes.
 
-- [ ] **[2027-Q1]** Fix game selection UI to allow programmatic and keyboard navigation for accessibility and automated testing.
+- [x] **[2027-Q1]** Fix game selection UI to allow programmatic and keyboard navigation for accessibility and automated testing.
+  - Done: links are real anchors with tabIndex 0, covered by `GameCarousel.test.jsx` (#408).
   - Priority: P1
   - Type: Bug
 
