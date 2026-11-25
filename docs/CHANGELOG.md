@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Start-and-play e2e journeys for Breakout, Pong and Snake (`app/e2e/{breakout,pong,snake}.spec.js`, shared `helpers.js`): each starts the game, sends a key press, asserts an outcome (score, lives or GAME OVER, never fixed timing) with no page errors, and checks the pause menu Home control returns to `/` (#401).
 - Nightly live crawl of arcade.nitsuah.io (`.github/workflows/live-crawl.yml`, `app/e2e-live/crawl.spec.js`, `app/playwright.live.config.js`): all 10 routes must return 200 with no console or page errors and an unknown path must 404; failures file deduplicated `bot:journey` issues (#399).
 - Unit tests for the FPS `HealthVignette` overlay (#415).
+- Unit tests for FPS `ShootingHandler` cooldown, rapid-fire, and cleanup behavior (#416).
 
 ### Changed (2026-11)
 
