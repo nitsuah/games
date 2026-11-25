@@ -36,15 +36,16 @@ handoff describing it as still in-progress was archived to
   - Problem: feature growth should not outrun packaging, deployment, and runtime stability work.
   - Acceptance Criteria: larger feature initiatives stay sequenced behind the release-path fixes.
 
-- [ ] **[2027-Q1]** Fix game selection UI to allow programmatic and keyboard navigation for accessibility and automated testing.
+- [x] **[2027-Q1]** Fix game selection UI to allow programmatic and keyboard navigation for accessibility and automated testing.
+  - Done: links are real anchors with `tabIndex=0`, covered by `GameCarousel.test.jsx` (#408).
   - Priority: P1
   - Type: Bug
 
-- [ ] **Add high-score persistence to Memory Match** — the current implementation shows a win alert but does not persist a best-time or move-count score to localStorage.
+- [x] **Add high-score persistence to Memory Match** — best score (fewest moves, then time) is saved to localStorage and shown below the board (#406).
   - Priority: P3
   - Milestone: 2027 Q1
 
-- [ ] **Mobile touch controls for Dodge Blocks** — the game uses only keyboard arrow keys; touch swipe or on-screen buttons are needed for mobile play.
+- [x] **Mobile touch controls for Dodge Blocks** — tapping the left or right half of the canvas steers the player (#407); on-screen buttons remain a separate follow-up (#409).
   - Priority: P3
   - Milestone: 2027 Q1
 
