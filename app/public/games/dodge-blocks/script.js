@@ -57,6 +57,11 @@ document.addEventListener('keydown', e => {
   player.x = Math.max(0, Math.min(320 - player.w, player.x));
 });
 
+canvas.addEventListener('pointerdown', e => {
+  const r = canvas.getBoundingClientRect();
+  player.x = DodgeTouch.steerFromPointer(e.clientX, r.left, r.width, player.x, player.w, 320, 24);
+});
+
 document.getElementById('restart').onclick = () => { reset(); };
 
 reset();
