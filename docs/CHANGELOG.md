@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added (2026-11)
 
+- Memory Match now displays and persists the best score (fewest moves, then time) in localStorage (#406).
+- Dodge Blocks supports tap-to-steer on touch screens (#407).
+- Added keyboard-focus coverage for the game selection grid (#408).
 - Memory Match best-score helper (`app/public/games/memory-match/score.js`, `MemoryScore`): loads and saves the best result to localStorage (fewer moves, then lower time) and never throws on bad or blocked storage; wiring into the game follows in #406 (#405).
 - Nightly journeys (`.github/workflows/journeys.yml`, `app/playwright.journeys.config.js`, `npm run test:journeys`): the Breakout, Pong and Snake start-and-play specs run against the production build in the pinned Playwright image, tagged `@feature:<id>`; failures become deduplicated `bot:journey` issues. No screenshot baselines (the canvases are not pixel-stable). `promo/spots.json` records the feature map for the showcase standard.
 - Start-and-play e2e journeys for Breakout, Pong and Snake (`app/e2e/{breakout,pong,snake}.spec.js`, shared `helpers.js`): each starts the game, sends a key press, asserts an outcome (score, lives or GAME OVER, never fixed timing) with no page errors, and checks the pause menu Home control returns to `/` (#401).
