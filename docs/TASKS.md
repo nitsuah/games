@@ -40,7 +40,8 @@ handoff describing it as still in-progress was archived to
   - Priority: P1
   - Type: Bug
 
-- [ ] **Add high-score persistence to Memory Match** — the current implementation shows a win alert but does not persist a best-time or move-count score to localStorage.
+- [x] **Add high-score persistence to Memory Match** — the game saves the best move count and time to localStorage and displays it under the board.
+  - Done: #406.
   - Priority: P3
   - Milestone: 2027 Q1
 
