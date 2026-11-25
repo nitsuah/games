@@ -34,6 +34,10 @@ h1 {
   grid-gap: 12px;
   margin-bottom: 16px;
 }
+.best {
+  margin: 0.5rem 0;
+  text-align: center;
+}
 .card {
   width: 56px;
   height: 56px;
