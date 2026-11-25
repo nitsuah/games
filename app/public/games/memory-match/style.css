@@ -92,3 +92,8 @@ button:hover {
   padding-left: 18px;
   font-size: 1rem;
 }
+
+.best {
+  margin: 0.5rem 0;
+  text-align: center;
+}
