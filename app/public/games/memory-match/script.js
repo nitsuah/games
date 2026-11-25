@@ -1,3 +1,4 @@
+/* global MemoryScore */
 const gameEl = document.getElementById('game');
 const restartBtn = document.getElementById('restart');
 const symbols = ['🍎','🍌','🍒','🍇','🍉','🍋','🍓','🍍'];
