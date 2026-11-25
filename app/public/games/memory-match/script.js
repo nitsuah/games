@@ -1,7 +1,8 @@
+/* global MemoryScore */
 const gameEl = document.getElementById('game');
 const restartBtn = document.getElementById('restart');
 const symbols = ['🍎','🍌','🍒','🍇','🍉','🍋','🍓','🍍'];
-let cards = [], flipped = [], matched = 0, lock = false;
+let cards = [], flipped = [], matched = 0, lock = false, moves = 0, startedAt = 0;
 
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
@@ -17,6 +18,9 @@ function setup() {
   flipped = [];
   matched = 0;
   lock = false;
+  moves = 0;
+  startedAt = 0;
+  showBest();
   render();
 }
 
@@ -34,20 +38,40 @@ function render() {
   });
 }
 
+function showBest() {
+  const el = document.getElementById('best');
+  try {
+    const best = MemoryScore.loadBest(window.localStorage);
+    el.textContent = best ? `Best: ${best.moves} moves in ${Math.round(best.ms / 1000)}s` : '';
+  } catch {
+    el.textContent = '';
+  }
+}
+
 function flip(id) {
   if (lock) return;
   const card = cards[id];
   if (card.flipped || card.matched) return;
   card.flipped = true;
+  if (startedAt === 0) startedAt = Date.now();
   flipped.push(card);
   render();
   if (flipped.length === 2) {
+    moves++;
     lock = true;
     setTimeout(() => {
       if (flipped[0].symbol === flipped[1].symbol) {
         flipped[0].matched = flipped[1].matched = true;
         matched += 2;
-        if (matched === cards.length) setTimeout(() => alert('You win!'), 200);
+        if (matched === cards.length) {
+          try {
+            MemoryScore.saveBest(window.localStorage, { moves, ms: Date.now() - startedAt });
+          } catch {
+            // Private browsing may block localStorage access.
+          }
+          showBest();
+          setTimeout(() => alert('You win! ' + moves + ' moves'), 200);
+        }
       } else {
         flipped[0].flipped = flipped[1].flipped = false;
       }

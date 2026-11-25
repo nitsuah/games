@@ -1,3 +1,4 @@
+/* global DodgeTouch */
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 let player, blocks, score, running, frame;
@@ -55,6 +56,11 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') player.x -= 24;
   if (e.key === 'ArrowRight') player.x += 24;
   player.x = Math.max(0, Math.min(320 - player.w, player.x));
+});
+
+canvas.addEventListener('pointerdown', e => {
+  const r = canvas.getBoundingClientRect();
+  player.x = DodgeTouch.steerFromPointer(e.clientX, r.left, r.width, player.x, player.w, 320, 24);
 });
 
 document.getElementById('restart').onclick = () => { reset(); };
