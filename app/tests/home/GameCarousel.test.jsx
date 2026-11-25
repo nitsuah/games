@@ -37,9 +37,8 @@ describe('GameCarousel', () => {
     for (const link of links) {
       expect(link).not.toHaveAttribute('tabindex', '-1');
     }
-    links[0].focus();
-    expect(document.activeElement).toBe(links[0]);
     await user.tab();
+    expect(links).toContain(document.activeElement);
   });
 
   it.each(EXPECTED)('%s route %s has a page', (_title, route) => {
