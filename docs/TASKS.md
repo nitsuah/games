@@ -44,7 +44,8 @@ handoff describing it as still in-progress was archived to
   - Priority: P3
   - Milestone: 2027 Q1
 
-- [ ] **Mobile touch controls for Dodge Blocks** — the game uses only keyboard arrow keys; touch swipe or on-screen buttons are needed for mobile play.
+- [x] **Mobile touch controls for Dodge Blocks** — tap the left or right half of the board to steer on touch screens.
+  - Done: tap-to-steer (#407); on-screen buttons tracked in #409.
   - Priority: P3
   - Milestone: 2027 Q1
 
