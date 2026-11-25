@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { GameCarousel } from '@/_components/home/GameCarousel';
 
@@ -17,6 +18,18 @@ const EXPECTED = [
 ];
 
 describe('GameCarousel', () => {
+  it('every game link is reachable by keyboard', async () => {
+    const user = userEvent.setup();
+    render(<GameCarousel />);
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(EXPECTED.length);
+    for (const link of links) {
+      expect(link).not.toHaveAttribute('tabindex', '-1');
+    }
+    await user.tab();
+    expect(links).toContain(document.activeElement);
+  });
+
   it('lists every game once', () => {
     render(<GameCarousel />);
     EXPECTED.forEach(([title]) => expect(screen.getByText(title)).toBeInTheDocument());
