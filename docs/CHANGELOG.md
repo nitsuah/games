@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Nightly live crawl of arcade.nitsuah.io (`.github/workflows/live-crawl.yml`, `app/e2e-live/crawl.spec.js`, `app/playwright.live.config.js`): all 10 routes must return 200 with no console or page errors and an unknown path must 404; failures file deduplicated `bot:journey` issues (#399).
 - Unit tests for the FPS `HealthVignette` overlay (#415).
 - Unit tests for FPS `ShootingHandler` cooldown, rapid-fire, and cleanup behavior (#416).
+- The Lighthouse parse scripts expose their extractors (CLI behaviour unchanged) and have unit tests (#419).
 - `prebuild-check.js` exposes `collectErrors` (CLI behaviour unchanged) and has unit tests (#418).
 - `contrast-check.js` exports its pure WCAG helpers (CLI behaviour unchanged) and has unit tests (#417).
 
