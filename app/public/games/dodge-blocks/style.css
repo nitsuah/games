@@ -54,7 +54,13 @@ canvas {
   aspect-ratio: 4/3;
 }
 .controls {
+  display: flex;
+  gap: 12px;
   margin-bottom: 16px;
+}
+#move-left, #move-right {
+  min-width: 48px;
+  min-height: 48px;
 }
 button {
   background: #00ffff;

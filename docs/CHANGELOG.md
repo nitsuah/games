@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added (2026-11)
 
+- Dodge Blocks on-screen move buttons (#425).
 - Memory Match now displays and persists the best score (fewest moves, then time) in localStorage (#406).
 - Dodge Blocks supports tap-to-steer on touch screens (#407).
 - Added keyboard-focus coverage for the game selection grid (#408).

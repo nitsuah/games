@@ -51,6 +51,7 @@ handoff describing it as still in-progress was archived to
 
 ## Done
 
+- [x] **Dodge Blocks on-screen move buttons (#425).**
 - [x] **Start-and-play e2e journeys for Breakout, Pong and Snake (#401)** — only Memory Match and Dodge Blocks had dedicated specs; these three were smoke-tested at best.
   - Priority: P2
   - Done 2026-11-24: `app/e2e/{breakout,pong,snake}.spec.js` start the game, press keys, assert a score/lives/GAME OVER outcome with no page errors, and check the pause menu Home control returns to `/`. Surfaced and fixed Snake's covered pause button/collapsed canvas and Breakout's frozen resume. Follow-up: Asteroid, Tank Battle, Invaders and Flappy journeys; Breakout TRY AGAIN after game over does not restart the render loop.
