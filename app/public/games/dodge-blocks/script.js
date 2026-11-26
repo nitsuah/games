@@ -52,10 +52,13 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
+function move(dx) {
+  player.x = Math.max(0, Math.min(320 - player.w, player.x + dx));
+}
+
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft') player.x -= 24;
-  if (e.key === 'ArrowRight') player.x += 24;
-  player.x = Math.max(0, Math.min(320 - player.w, player.x));
+  if (e.key === 'ArrowLeft') move(-24);
+  if (e.key === 'ArrowRight') move(24);
 });
 
 canvas.addEventListener('pointerdown', e => {
@@ -63,6 +66,8 @@ canvas.addEventListener('pointerdown', e => {
   player.x = DodgeTouch.steerFromPointer(e.clientX, r.left, r.width, player.x, player.w, 320, 24);
 });
 
+document.getElementById('move-left').onclick = () => move(-24);
+document.getElementById('move-right').onclick = () => move(24);
 document.getElementById('restart').onclick = () => { reset(); };
 
 reset();

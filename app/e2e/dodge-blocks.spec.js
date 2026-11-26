@@ -40,4 +40,23 @@ test.describe('Dodge Blocks', () => {
     expect(await page.evaluate('running')).toBe(true);
     expect(await page.evaluate('score')).toBeLessThan(10);
   });
+
+  test('on-screen move-left and move-right buttons move the player', async ({ page }) => {
+    expect(await playerX(page)).toBe(140);
+    await page.getByRole('button', { name: 'Move left' }).click();
+    expect(await playerX(page)).toBe(116);
+    await page.getByRole('button', { name: 'Move right' }).click();
+    expect(await playerX(page)).toBe(140);
+  });
+
+  test('move buttons have minimum 48x48 touch target', async ({ page }) => {
+    const leftBtn = page.getByRole('button', { name: 'Move left' });
+    const rightBtn = page.getByRole('button', { name: 'Move right' });
+    const leftBox = await leftBtn.boundingBox();
+    const rightBox = await rightBtn.boundingBox();
+    expect(leftBox.width).toBeGreaterThanOrEqual(48);
+    expect(leftBox.height).toBeGreaterThanOrEqual(48);
+    expect(rightBox.width).toBeGreaterThanOrEqual(48);
+    expect(rightBox.height).toBeGreaterThanOrEqual(48);
+  });
 });
