@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests for the FPS `HealthVignette` overlay (#415).
 - Unit tests for FPS `ShootingHandler` cooldown, rapid-fire, and cleanup behavior (#416).
 - The Lighthouse parse scripts expose their extractors (CLI behaviour unchanged) and have unit tests (#419).
+- `prebuild-check.js` exposes `collectErrors` (CLI behaviour unchanged) and has unit tests (#418).
 - `contrast-check.js` exports its pure WCAG helpers (CLI behaviour unchanged) and has unit tests (#417).
 
 ### Changed (2026-11)
