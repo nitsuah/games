@@ -100,6 +100,8 @@ _History: 61.09% / 59.13% / 80.99% / 62.55% at the 2026-09-24 PMO audit, before 
 
 **Legend**: ✅ Full Support | ⚠️ Partial/Untested | ❌ Not Supported
 
+The standalone games are covered on emulated iPhone 13 and Pixel 7 viewports in Chromium by `app/e2e/standalone-mobile.spec.js`; the Mobile Safari and Mobile Chrome rows still need real devices.
+
 ## User Engagement (Production)
 
 | Metric                | Value      | Notes                        |

@@ -51,6 +51,7 @@ handoff describing it as still in-progress was archived to
 
 ## Done
 
+- [x] **Emulated-phone spec for the standalone games (#426); real-device check still open.**
 - [x] **Dodge Blocks on-screen move buttons (#425).**
 - [x] **Start-and-play e2e journeys for Breakout, Pong and Snake (#401)** — only Memory Match and Dodge Blocks had dedicated specs; these three were smoke-tested at best.
   - Priority: P2
