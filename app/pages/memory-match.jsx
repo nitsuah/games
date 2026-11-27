@@ -57,6 +57,8 @@ const MemoryMatch = () => {
           style={{
             border: 'none',
             borderRadius: 12,
+            // Clear of the cabinet's marquee hood.
+            marginTop: 44,
             background: '#23293a',
             width: '100%',
             height: 520,

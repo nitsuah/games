@@ -84,6 +84,8 @@ const Button = styled.button`
   font-size: 18px;
   cursor: pointer;
   margin-top: 20px;
+  /* The start overlay ignores the pointer; its button must not. */
+  pointer-events: auto;
   font-family: 'Courier New', monospace;
   
   &:hover {
@@ -166,7 +168,8 @@ export const FlappyGame = () => {
           requestRef.current = requestAnimationFrame(loopRef.current);
           return;
       }
-      const dt = (timestamp - state.lastTime) / 1000;
+      // Clamped so a backgrounded tab does not fling the bird on return.
+      const dt = Math.min(Math.max((timestamp - state.lastTime) / 1000, 0), 0.05);
       state.lastTime = timestamp;
 
       // Clear canvas
@@ -238,6 +241,8 @@ export const FlappyGame = () => {
       requestRef.current = requestAnimationFrame(loopRef.current);
     };
 
+    // Without this the frame callback is the empty placeholder and nothing is ever drawn.
+    loopRef.current = loop;
       state.lastTime = performance.now();
       requestRef.current = requestAnimationFrame(loopRef.current);
 
