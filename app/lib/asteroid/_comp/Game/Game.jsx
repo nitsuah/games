@@ -40,6 +40,7 @@ import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
 import { useScreenShake } from '@/lib/shared/ui/useScreenShake';
+import { pauseComboTimer, resumeComboTimer } from './comboTimer';
 
 const Game = ({ onHit, onMiss }) => {
   const { musicEnabled } = useAudio();
@@ -51,9 +52,29 @@ const Game = ({ onHit, onMiss }) => {
   const [combo, setCombo] = useState(0);
   const [comboMultiplier, setComboMultiplier] = useState(1);
   const comboTimerRef = useRef(null);
+  const comboDeadlineRef = useRef(null);
+  const comboRemainingRef = useRef(null);
   const [gameOver, setGameOver] = useState(false);
   const [paused, setPaused] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  // Settings pause the active combo window instead of letting it expire while
+  // the player is unable to shoot. Resume with the exact remaining duration.
+  useEffect(() => {
+    if (showSettings) {
+      pauseComboTimer(comboTimerRef, comboDeadlineRef, comboRemainingRef);
+      return;
+    }
+    resumeComboTimer(
+      comboTimerRef,
+      comboDeadlineRef,
+      comboRemainingRef,
+      () => {
+        setCombo(0);
+        setComboMultiplier(1);
+      },
+    );
+  }, [showSettings]);
+
   const [highScore, setHighScore] = useState(0);
   const [bestAccuracy, setBestAccuracy] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
@@ -347,6 +368,8 @@ const Game = ({ onHit, onMiss }) => {
         setCombo,
         setComboMultiplier,
         comboTimerRef,
+        comboDeadlineRef,
+        comboRemainingRef,
         setScorePopups, // Add score popup creation
       });
       
@@ -370,6 +393,8 @@ const Game = ({ onHit, onMiss }) => {
         setCombo,
         setComboMultiplier,
         comboTimerRef,
+        comboDeadlineRef,
+        comboRemainingRef,
       }),
     [setMisses, onMiss, setCombo, setComboMultiplier, comboTimerRef]
   );
@@ -435,6 +460,8 @@ const Game = ({ onHit, onMiss }) => {
       setCombo,
       setComboMultiplier,
       comboTimerRef,
+      comboDeadlineRef,
+      comboRemainingRef,
       setCurrentWave,
       setShowWaveTransition,
       colorblindMode: settings.colorblindMode,
@@ -625,7 +652,7 @@ const Game = ({ onHit, onMiss }) => {
       {!paused && !gameOver && !showSettings && (
         <button
           type="button"
-          onClick={() => { document.exitPointerLock?.(); setShowSettings(true); }}
+          onClick={(e) => { e.stopPropagation(); document.exitPointerLock?.(); setShowSettings(true); }}
           onMouseDown={(e) => e.stopPropagation()}
           aria-label="Open settings"
           title="Settings (O)"
@@ -691,6 +718,8 @@ const Game = ({ onHit, onMiss }) => {
               setCombo,
               setComboMultiplier,
               comboTimerRef,
+              comboDeadlineRef,
+              comboRemainingRef,
               setCurrentWave,
               setShowWaveTransition,
               colorblindMode: settings.colorblindMode,
