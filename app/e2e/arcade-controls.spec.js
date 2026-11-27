@@ -1,15 +1,15 @@
 const { test, expect } = require('@playwright/test');
 const { startGame } = require('./helpers');
 
-test('Snake accepts WASD without errors and keeps running', async ({ page }) => {
+test('Snake turns with WASD', async ({ page }) => {
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/snake');
   await startGame(page);
-  await page.keyboard.press('s');
-  // Turning down avoids the right wall, so the run is still alive a moment later.
-  await page.waitForTimeout(800);
-  await expect(page.getByText('GAME OVER')).toHaveCount(0);
+  await page.keyboard.press('w');
+  // Heading up from row 10 reaches the top wall in about 1.1s. Without the turn the
+  // snake keeps going right, and on a 1280px board that wall is over 4s away.
+  await expect(page.getByText('GAME OVER')).toBeVisible({ timeout: 3000 });
   expect(errors).toEqual([]);
 });
 
