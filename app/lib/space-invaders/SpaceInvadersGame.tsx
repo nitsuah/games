@@ -97,6 +97,9 @@ export const SpaceInvadersGame = () => {
   const [level, setLevel] = useState(1);
   const [gameOver, setGameOver] = useState(false);
   const [highScore, setHighScore] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+  useEffect(() => { pausedRef.current = paused; }, [paused]);
 
   const gameState = useRef({
     player: null as PlayerShip | null,
@@ -152,6 +155,8 @@ export const SpaceInvadersGame = () => {
     // Game Loop
     const loop = (timestamp: number) => {
       if (!state.isRunning) return;
+      // Keep the loop alive while paused so Resume continues the same game.
+      if (pausedRef.current) { state.lastTime = timestamp; requestAnimationFrame(loop); return; }
 
       const dt = (timestamp - state.lastTime) / 1000;
       state.lastTime = timestamp;
@@ -306,8 +311,9 @@ export const SpaceInvadersGame = () => {
   return (
     <GameContainer>
       <GameControls
-        onPause={() => { gameState.current.isRunning = !gameState.current.isRunning }}
+        onPause={() => setPaused(p => !p)}
         onRestart={handleRestart}
+        paused={paused}
       />
       <VirtualJoystick onMove={(x, y) => {
         gameState.current.input.left = x < -0.5;

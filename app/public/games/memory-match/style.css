@@ -97,3 +97,16 @@ button:hover {
   margin: 0.5rem 0;
   text-align: center;
 }
+
+.status {
+  margin: 0;
+  min-height: 1.4em;
+  font-weight: bold;
+  color: #00ffff;
+}
+
+/* Embedded in the arcade page, which supplies the title and How to Play. */
+html.embedded body { min-height: 0; }
+html.embedded .container { margin: 0 auto; padding: 16px 8px; aspect-ratio: auto; box-shadow: none; }
+html.embedded h1,
+html.embedded .how-to-play { display: none; }

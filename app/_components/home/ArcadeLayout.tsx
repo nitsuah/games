@@ -616,14 +616,14 @@ export const ArcadeLayout = ({ children, headerContent, title, fullscreenGame = 
       <ArcadeCabinet data-testid="arcade-cabinet">
         <main style={{ display: 'contents' }}>
           <MarqueeText>ARCADE</MarqueeText>
-          <Joystick aria-label="Joystick" onClick={playClick} />
+          <Joystick aria-label="Joystick" aria-hidden="true" tabIndex={-1} onClick={playClick} />
           <CoinSlot />
           <ControlsContainer>
             <ButtonDecoration>
-              <button aria-label="Arcade button 1" onClick={playClick} />
-              <button aria-label="Arcade button 2" onClick={playClick} />
-              <button aria-label="Arcade button 3" onClick={playClick} />
-              <button aria-label="Arcade button 4" onClick={playClick} />
+              <button aria-label="Arcade button 1" aria-hidden="true" tabIndex={-1} onClick={playClick} />
+              <button aria-label="Arcade button 2" aria-hidden="true" tabIndex={-1} onClick={playClick} />
+              <button aria-label="Arcade button 3" aria-hidden="true" tabIndex={-1} onClick={playClick} />
+              <button aria-label="Arcade button 4" aria-hidden="true" tabIndex={-1} onClick={playClick} />
             </ButtonDecoration>
           </ControlsContainer>
 

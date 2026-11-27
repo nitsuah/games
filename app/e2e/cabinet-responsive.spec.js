@@ -24,8 +24,8 @@ test.describe('Arcade cabinet responsive layout', () => {
     const heading = page.getByRole('heading', { name: /ARCADE/i });
     await expect(heading).toBeVisible({ timeout: 10000 });
 
-    const joystick = page.getByRole('button', { name: 'Joystick' });
-    const consoleButton = page.getByRole('button', { name: 'Arcade button 2' });
+    const joystick = page.locator('[aria-label="Joystick"]');
+    const consoleButton = page.locator('[aria-label="Arcade button 2"]');
     await joystick.scrollIntoViewIfNeeded();
     await expect(joystick).toBeVisible({ timeout: 10000 });
     await expect(consoleButton).toBeVisible({ timeout: 10000 });
@@ -52,7 +52,7 @@ test.describe('Arcade cabinet responsive layout', () => {
     await page.goto('/', { timeout: 60000 });
     await page.waitForLoadState('networkidle', { timeout: 30000 });
 
-    const joystick = page.getByRole('button', { name: 'Joystick' });
+    const joystick = page.locator('[aria-label="Joystick"]');
     await joystick.scrollIntoViewIfNeeded();
     await expect(joystick).toBeVisible({ timeout: 10000 });
 

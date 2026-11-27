@@ -20,6 +20,7 @@ function setup() {
   lock = false;
   moves = 0;
   startedAt = 0;
+  document.getElementById('status').textContent = '';
   showBest();
   render();
 }
@@ -38,10 +39,31 @@ function render() {
   });
 }
 
+// The arcade page embeds this game in a sandbox without localStorage, so fall back to
+// an in-memory copy that the page loads and saves through messages.
+const embedded = window.self !== window.top;
+const remembered = {};
+const bridgeStorage = {
+  getItem: key => remembered[key] ?? null,
+  setItem: (key, value) => {
+    remembered[key] = value;
+    window.parent.postMessage({ type: 'memory:best-save', value }, '*');
+  },
+};
+
+function bestStorage() {
+  try {
+    window.localStorage.getItem(MemoryScore.KEY);
+    return window.localStorage;
+  } catch {
+    return bridgeStorage;
+  }
+}
+
 function showBest() {
   const el = document.getElementById('best');
   try {
-    const best = MemoryScore.loadBest(window.localStorage);
+    const best = MemoryScore.loadBest(bestStorage());
     el.textContent = best ? `Best: ${best.moves} moves in ${Math.round(best.ms / 1000)}s` : '';
   } catch {
     el.textContent = '';
@@ -64,13 +86,10 @@ function flip(id) {
         flipped[0].matched = flipped[1].matched = true;
         matched += 2;
         if (matched === cards.length) {
-          try {
-            MemoryScore.saveBest(window.localStorage, { moves, ms: Date.now() - startedAt });
-          } catch {
-            // Private browsing may block localStorage access.
-          }
+          MemoryScore.saveBest(bestStorage(), { moves, ms: Date.now() - startedAt });
           showBest();
-          setTimeout(() => alert('You win! ' + moves + ' moves'), 200);
+          // The sandbox blocks alert(), so announce the win in the page.
+          document.getElementById('status').textContent = 'You win! ' + moves + ' moves';
         }
       } else {
         flipped[0].flipped = flipped[1].flipped = false;
@@ -84,3 +103,13 @@ function flip(id) {
 
 restartBtn.onclick = setup;
 setup();
+
+if (embedded) {
+  document.documentElement.classList.add('embedded');
+  window.addEventListener('message', e => {
+    if (e.source !== window.parent || e.data?.type !== 'memory:best-load') return;
+    if (typeof e.data.value === 'string') remembered[MemoryScore.KEY] = e.data.value;
+    showBest();
+  });
+  window.parent.postMessage({ type: 'memory:ready' }, '*');
+}

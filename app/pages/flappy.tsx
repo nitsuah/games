@@ -15,15 +15,14 @@ const FlappyPage = () => {
   const [started, setStarted] = useState(false);
 
   return (
-    <ArcadeLayout title="FLAPPY BIRD">
+    <>
       <AudioController />
+      {/* Outside the cabinet so its scanlines and transform don't dim the panel. */}
       {!started && <HowToPlay title="FLAPPY BIRD" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
-      {started && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', transform: 'scale(0.85)' }}>
-          <FlappyGame />
-        </div>
-      )}
-    </ArcadeLayout>
+      <ArcadeLayout title="FLAPPY BIRD">
+        {started && <FlappyGame />}
+      </ArcadeLayout>
+    </>
   );
 };
 
