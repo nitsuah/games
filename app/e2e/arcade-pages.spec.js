@@ -37,6 +37,7 @@ test('an unknown URL returns 404 with a way back', async ({ page }) => {
 
 test('/flappy draws the game and starts from its button', async ({ page }) => {
   await page.goto('/flappy');
+  // startGame only dismisses How to Play; Flappy's own START GAME button is still showing after it.
   await startGame(page);
   await expect.poll(() => canvasHasPaint(page)).toBe(true);
   await page.getByRole('button', { name: 'START GAME' }).click();
