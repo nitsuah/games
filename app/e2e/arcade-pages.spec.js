@@ -18,7 +18,7 @@ for (const [width, height] of [[1024, 768], [375, 812]]) {
   });
 }
 
-for (const route of ['/space-invaders', '/flappy', '/dodge-blocks']) {
+for (const route of ['/space-invaders', '/flappy', '/dodge-blocks', '/memory-match']) {
   test(`${route} can pause and resume`, async ({ page }) => {
     await page.goto(route);
     await startGame(page);
