@@ -11,6 +11,22 @@ function shuffle(arr) {
   }
 }
 
+// The arcade page can pause the game: no flips, no pair resolution, no clock.
+let paused = false, pausedAt = 0, pendingResolve = null;
+
+function setPaused(next) {
+  if (next === paused) return;
+  paused = next;
+  if (paused) {
+    pausedAt = Date.now();
+    return;
+  }
+  if (startedAt !== 0) startedAt += Date.now() - pausedAt;
+  const resume = pendingResolve;
+  pendingResolve = null;
+  if (resume) resume();
+}
+
 function setup() {
   const deck = [...symbols, ...symbols];
   shuffle(deck);
@@ -71,7 +87,7 @@ function showBest() {
 }
 
 function flip(id) {
-  if (lock) return;
+  if (lock || paused) return;
   const card = cards[id];
   if (card.flipped || card.matched) return;
   card.flipped = true;
@@ -81,7 +97,11 @@ function flip(id) {
   if (flipped.length === 2) {
     moves++;
     lock = true;
-    setTimeout(() => {
+    const resolvePair = () => {
+      if (paused) {
+        pendingResolve = resolvePair;
+        return;
+      }
       if (flipped[0].symbol === flipped[1].symbol) {
         flipped[0].matched = flipped[1].matched = true;
         matched += 2;
@@ -97,7 +117,8 @@ function flip(id) {
       flipped = [];
       lock = false;
       render();
-    }, 800);
+    };
+    setTimeout(resolvePair, 800);
   }
 }
 
@@ -107,7 +128,9 @@ setup();
 if (embedded) {
   document.documentElement.classList.add('embedded');
   window.addEventListener('message', e => {
-    if (e.source !== window.parent || e.data?.type !== 'memory:best-load') return;
+    if (e.source !== window.parent) return;
+    if (e.data?.type === 'memory:pause') setPaused(!!e.data.paused);
+    if (e.data?.type !== 'memory:best-load') return;
     if (typeof e.data.value === 'string') remembered[MemoryScore.KEY] = e.data.value;
     showBest();
   });
