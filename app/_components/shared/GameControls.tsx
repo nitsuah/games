@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import styled, { keyframes } from 'styled-components';
 import { useRouter } from 'next/router';
@@ -78,11 +78,13 @@ interface GameControlsProps {
   paused?: boolean;
 }
 
+const noSubscribe = () => () => {};
+
 export const GameControls = ({ onPause, onRestart, paused = false }: GameControlsProps) => {
   const router = useRouter();
   // Rendered on <body>: inside the cabinet, its transform and artwork cover a "fixed" bar.
-  const [body, setBody] = useState<HTMLElement | null>(null);
-  useEffect(() => setBody(document.body), []);
+  // null on the server; document.body from the first client render, so the bar never skips a frame.
+  const body = useSyncExternalStore<HTMLElement | null>(noSubscribe, () => document.body, () => null);
   if (!body) return null;
 
   return createPortal(
