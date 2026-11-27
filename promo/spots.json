@@ -14,7 +14,7 @@
     },
     {
       "id": "tank-commander",
-      "title": "FPS Tank Commander",
+      "title": "Tank Battle",
       "category": "Arcade Games",
       "screenshots": ["docs/screenshots/fps-gameplay-screenshot.png"],
       "spots": []
