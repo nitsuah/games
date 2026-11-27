@@ -5,6 +5,12 @@ import { HowToPlay } from '@/_components/shared/HowToPlay';
 import { GameControls } from '@/_components/shared/GameControls';
 import { AudioController } from '@/_components/home/AudioController';
 
+const TOUCH_INSTRUCTIONS = [
+  'Drag up and down on the board to move your paddle',
+  'Deflect the ball to score points',
+  'First to 5 points wins',
+];
+
 const INSTRUCTIONS = [
   'Arrow Keys or Mouse: Move your paddle',
   'Deflect the ball to score points',
@@ -24,8 +30,8 @@ const PongPage = () => {
 
   return (
     <ArcadeLayout fullscreenGame={true} title="PONG">
-      <AudioController />
-      {!started && <HowToPlay title="PONG" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
+      <AudioController inGame />
+      {!started && <HowToPlay title="PONG" instructions={INSTRUCTIONS} touchInstructions={TOUCH_INSTRUCTIONS} onStart={() => setStarted(true)} />}
       {started && (
         <>
           <GameControls

@@ -36,7 +36,7 @@ const MemoryMatch = () => {
 
   return (
     <>
-      <AudioController />
+      <AudioController inGame />
       {!started && <HowToPlay title="MEMORY MATCH" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
       {started && (
         <GameControls

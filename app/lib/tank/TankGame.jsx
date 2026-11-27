@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { createCanvasTouchTracker } from './touchAim';
 
 import {
   WORLD_W,
@@ -21,6 +22,8 @@ import {
   pushOutOfWalls,
   spawnExplosion,
 } from './tankLogic';
+import { VirtualJoystick } from '@/_components/shared/gamepad/VirtualJoystick';
+import { ShootButton } from '@/_components/shared/gamepad/ShootButton';
 
 
 function drawTank(ctx, tank, shield = false, speedBoost = false, invuln = false) {
@@ -226,6 +229,26 @@ function drawFrame(canvas, s, paused) {
 }
 
 // ─── Main component ────────────────────────────────────────────────────────────
+function TouchControls({ keysRef }) {
+  const drive = (x, y) => {
+    const keys = keysRef.current;
+    keys.KeyA = x < -0.35;
+    keys.KeyD = x > 0.35;
+    keys.KeyW = y < -0.35;
+    keys.KeyS = y > 0.35;
+  };
+  return (
+    <div className="tank-touch">
+      <style>{`
+        .tank-touch > div { position: fixed; left: 16px; bottom: 72px; }
+        .tank-touch > button { position: fixed; right: 24px; bottom: 150px; }
+      `}</style>
+      <VirtualJoystick onMove={drive} />
+      <ShootButton onHold={(held) => { keysRef.current.Space = held; }} />
+    </div>
+  );
+}
+
 export default function TankGame({ onGameOver, paused: externalPaused = false, onPauseToggle }) {
   const router    = useRouter();
   const canvasRef = useRef(null);
@@ -300,25 +323,34 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
       if (e.code === 'Space') e.preventDefault();
     };
     const onMouse = (e) => {
+      // A release anywhere stops firing, even over the touch controls.
+      if (e.type === 'mouseup') mouseRef.current.down = false;
+      // A press on the joystick or FIRE must not swing the turret there.
+      if (e.target?.closest?.('[data-touch-control]')) return;
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
       if (e.type === 'mousedown') mouseRef.current.down = true;
       if (e.type === 'mouseup')   mouseRef.current.down = false;
     };
-    const onTouch = (e) => {
-      if (e.touches.length) {
-        mouseRef.current.x = e.touches[0].clientX;
-        mouseRef.current.y = e.touches[0].clientY;
-      }
+    const touchAim = createCanvasTouchTracker();
+    const updateTouchAim = (touch) => {
+      if (!touch) return;
+      mouseRef.current.x = touch.clientX;
+      mouseRef.current.y = touch.clientY;
     };
+    const onTouchStart = (e) => updateTouchAim(touchAim.start(e));
+    const onTouchMove = (e) => updateTouchAim(touchAim.move(e));
+    const onTouchEnd = (e) => updateTouchAim(touchAim.end(e));
 
     window.addEventListener('keydown', onKey);
     window.addEventListener('keyup',   onKey);
     window.addEventListener('mousemove', onMouse);
     window.addEventListener('mousedown', onMouse);
     window.addEventListener('mouseup',   onMouse);
-    canvas.addEventListener('touchstart', onTouch, { passive: true });
-    canvas.addEventListener('touchmove',  onTouch, { passive: true });
+    canvas.addEventListener('touchstart', onTouchStart, { passive: true });
+    canvas.addEventListener('touchmove', onTouchMove, { passive: true });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: true });
+    canvas.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
     let lastTime = performance.now();
     let hudTimer = 0;
@@ -598,8 +630,10 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
       window.removeEventListener('mousemove', onMouse);
       window.removeEventListener('mousedown', onMouse);
       window.removeEventListener('mouseup',   onMouse);
-      canvas.removeEventListener('touchstart', onTouch);
-      canvas.removeEventListener('touchmove',  onTouch);
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('touchmove', onTouchMove);
+      canvas.removeEventListener('touchend', onTouchEnd);
+      canvas.removeEventListener('touchcancel', onTouchEnd);
     };
   }, [initGame]);
 
@@ -610,7 +644,8 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden', background: '#000' }}>
-      <canvas ref={canvasRef} style={{ display: 'block' }} />
+      <canvas ref={canvasRef} style={{ display: 'block', touchAction: 'none' }} />
+      <TouchControls keysRef={keysRef} />
 
       {/* HUD */}
       {!hud.gameOver && (

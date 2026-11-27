@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-const MuteButton = styled.button<{ $muted: boolean }>`
+const MuteButton = styled.button<{ $muted: boolean; $inGame: boolean }>`
   position: fixed;
   top: 20px;
   left: 20px;
@@ -20,6 +20,8 @@ const MuteButton = styled.button<{ $muted: boolean }>`
   align-items: center;
   justify-content: center;
   will-change: transform;
+  /* In a game the top corners belong to the score and health HUD. */
+  ${props => props.$inGame && 'top: auto; bottom: 10px; left: 10px; width: 40px; height: 40px; font-size: 20px;'}
 
   &:hover {
     transform: scale(1.1);
@@ -31,7 +33,7 @@ const MuteButton = styled.button<{ $muted: boolean }>`
   }
 `;
 
-export const AudioController = () => {
+export const AudioController = ({ inGame = false }: { inGame?: boolean }) => {
     const [muted, setMuted] = useState(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -89,6 +91,7 @@ export const AudioController = () => {
         <MuteButton
             onClick={toggleMute}
             $muted={muted}
+            $inGame={inGame}
             title={muted ? 'Unmute Music' : 'Mute Music'}
             aria-label={muted ? 'Unmute Music' : 'Mute Music'} // Add aria-label
         >

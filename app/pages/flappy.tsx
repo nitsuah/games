@@ -4,6 +4,12 @@ import { FlappyGame } from '@/lib/flappy/FlappyGame';
 import { HowToPlay } from '@/_components/shared/HowToPlay';
 import { AudioController } from '@/_components/home/AudioController';
 
+const TOUCH_INSTRUCTIONS = [
+  'Tap to flap',
+  'Fly through the gaps in the pipes',
+  "Don't hit the pipes or the ground!",
+];
+
 const INSTRUCTIONS = [
   'Press Space or Click to flap',
   'Fly through the gaps in the pipes',
@@ -16,9 +22,9 @@ const FlappyPage = () => {
 
   return (
     <>
-      <AudioController />
+      <AudioController inGame />
       {/* Outside the cabinet so its scanlines and transform don't dim the panel. */}
-      {!started && <HowToPlay title="FLAPPY BIRD" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
+      {!started && <HowToPlay title="FLAPPY BIRD" instructions={INSTRUCTIONS} touchInstructions={TOUCH_INSTRUCTIONS} onStart={() => setStarted(true)} />}
       <ArcadeLayout title="FLAPPY BIRD">
         {started && <FlappyGame />}
       </ArcadeLayout>

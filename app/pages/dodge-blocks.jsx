@@ -23,7 +23,7 @@ const DodgeBlocks = () => {
 
   return (
     <>
-      <AudioController />
+      <AudioController inGame />
       {!started && (
         <HowToPlay
           title="DODGE THE BLOCKS"

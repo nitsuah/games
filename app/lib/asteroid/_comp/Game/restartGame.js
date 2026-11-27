@@ -19,6 +19,8 @@ export const restartGame = ({
   setCombo,
   setComboMultiplier,
   comboTimerRef,
+  comboDeadlineRef,
+  comboRemainingRef,
   setCurrentWave,
   setShowWaveTransition,
   colorblindMode = 'none',
@@ -42,9 +44,10 @@ export const restartGame = ({
   // Reset combo
   setCombo(0);
   setComboMultiplier(1);
-  if (comboTimerRef.current) {
-    clearTimeout(comboTimerRef.current);
-  }
+  if (comboTimerRef.current) clearTimeout(comboTimerRef.current);
+  comboTimerRef.current = null;
+  if (comboDeadlineRef) comboDeadlineRef.current = null;
+  if (comboRemainingRef) comboRemainingRef.current = null;
 
   // Reset to wave 1
   if (setCurrentWave) {

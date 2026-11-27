@@ -15,14 +15,13 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 - **High Score Tracking**: LocalStorage-based score persistence across sessions
 - **Physics-Based Combat**: Realistic projectile ballistics and collision detection
 
-### 🎯 FPS Tank Commander
+### 🎯 Tank Battle
 
-- **First-Person Shooter**: Immersive FPS perspective with mouse-aim controls
-- **Tokyo Drift Physics**: Inertia-based movement system for realistic tank handling
-- **Destructible Targets**: Dynamic target spawning with health systems
-- **Speed Boost**: Shift key for temporary speed increase
-- **Power-Up Collection**: Health, shield, and weapon upgrades
-- **Dynamic Terrain**: 3D terrain navigation with collision detection
+- **Top-down Tank Combat**: Drive and turn the tank; the turret aims at the mouse or a touch point
+- **Controls**: W/A/S/D or arrows to drive, click or Space to shoot; joystick and FIRE button on touch devices
+- **Enemy Tanks**: Multiple enemy types that patrol, chase and retreat
+- **Power-Up Collection**: Drive over power-ups to collect them
+- **Minimap and Walls**: Cover and obstacles with collision detection
 
 ### 🧱 Breakout Classic
 
@@ -44,16 +43,15 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### 🏓 Pong
 
-- **AI Opponent**: Adjustable difficulty AI paddle with realistic behavior
+- **AI Opponent**: AI paddle that tracks the ball
 - **Classic Mechanics**: Traditional Pong physics with ball acceleration
 - **Paddle Spin**: Ball direction influenced by paddle movement
-- **Score System**: First to 11 points wins
-- **Dual Control Options**: Arrow keys or mouse control
-- **Progressive Difficulty**: Ball speed increases throughout match
+- **Score System**: First to 5 points wins
+- **Control Options**: Arrow keys, mouse or touch
 
 ### 🐍 Snake
 
-- **Classic Snake Gameplay**: Grid-based movement with arrow key controls
+- **Classic Snake Gameplay**: Grid-based movement with arrow keys, WASD or an on-screen joystick on touch devices
 - **Growth System**: Snake grows longer with each food consumption
 - **Progressive Difficulty**: Speed increases as snake grows
 - **High Score Tracking**: Best score persistence
@@ -110,7 +108,7 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 - **Sound Effects**: Comprehensive sound library for game actions (shoot, hit, explosion, power-up)
 - **Music Tracks**: Background music for each game
-- **Volume Control**: Adjustable sound and music levels
+- **Volume Control**: Sound and music sliders in Asteroid settings; other games have a mute button
 - **Sound Management**: Centralized audio handling with Web Audio API
 
 ## 🛠️ Development & Quality
@@ -133,11 +131,10 @@ Status guide: all game entries below are `[shipped]` unless otherwise noted. Pla
 
 ### ♿ Accessibility
 
-- **Keyboard Navigation**: Full keyboard support for all games
+- **Keyboard Navigation**: The action games are playable by keyboard (Asteroid also needs a mouse)
 - **ARIA Labels**: Semantic HTML with proper ARIA attributes
 - **High Contrast**: Clear visual elements with strong color contrast
 - **Screen Reader Support**: Basic screen reader compatibility
-- **Lighthouse A11y Score**: 100/100 accessibility score
 
 ## 🔧 Technical Stack
 

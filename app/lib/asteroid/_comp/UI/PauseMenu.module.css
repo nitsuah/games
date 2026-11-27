@@ -410,3 +410,7 @@
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
 }
+
+/* A menu taller than the window must scroll, not lose its top. */
+.overlay { align-items: flex-start; overflow-y: auto; padding: 16px 0; }
+.menu { margin: auto; }

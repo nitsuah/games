@@ -21,6 +21,11 @@ const Instructions = styled.div`
   pointer-events: none;
   font-weight: bold;
   text-shadow: 0 0 8px #000;
+
+  /* No pointer lock on touch screens. */
+  @media (pointer: coarse) {
+    display: none;
+  }
 `;
 
 const GameContainer = styled.div`
@@ -33,6 +38,11 @@ const GameContainer = styled.div`
   padding: 0;
 `;
 
+const TOUCH_INSTRUCTIONS = [
+  'Best with a mouse and keyboard',
+  'Touch controls are not supported yet',
+];
+
 const INSTRUCTIONS = [
   'Click to lock pointer as camera',
   'Mouse: Aim and look around',
@@ -40,6 +50,7 @@ const INSTRUCTIONS = [
   'Esc: Release pointer / pause',
   'Destroy all asteroids to advance waves',
   'Smaller asteroids are worth more points!',
+  'O or the gear button: settings',
 ];
 
 const AsteroidPage = () => {
@@ -49,7 +60,7 @@ const AsteroidPage = () => {
     <SettingsProvider>
       <AudioProvider>
         <ArcadeLayout fullscreenGame={true}>
-          {!started && <HowToPlay title="ASTEROID" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
+          {!started && <HowToPlay title="ASTEROID" instructions={INSTRUCTIONS} touchInstructions={TOUCH_INSTRUCTIONS} onStart={() => setStarted(true)} />}
           {started && <AsteroidContent />}
         </ArcadeLayout>
       </AudioProvider>

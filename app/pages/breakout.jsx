@@ -15,9 +15,15 @@ const BreakoutGame = dynamic(() => import('@/lib/breakout/BreakoutGame.tsx').the
   ),
 });
 
+const TOUCH_INSTRUCTIONS = [
+  'Drag on the board to move the paddle',
+  'Break all the bricks to win the level',
+  'Catch power-ups for bonuses',
+];
+
 const INSTRUCTIONS = [
-  'Arrow Keys: Move paddle left/right',
-  'Space: Launch the ball',
+  'Arrow Keys or Mouse: Move paddle left/right',
+  'The ball is in play as soon as you start',
   'Break all the bricks to win the level',
   'Catch power-ups for bonuses',
   "Don't let the ball fall below the paddle!",
@@ -28,8 +34,8 @@ export default function BreakoutPage() {
 
   return (
     <>
-      <AudioController />
-      {!started && <HowToPlay title="BREAKOUT" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
+      <AudioController inGame />
+      {!started && <HowToPlay title="BREAKOUT" instructions={INSTRUCTIONS} touchInstructions={TOUCH_INSTRUCTIONS} onStart={() => setStarted(true)} />}
       <ArcadeLayout fullscreenGame={true} title="BREAKOUT">
         {started && (
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 500 }}>

@@ -38,7 +38,7 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#000000" />
           <meta
             name="description"
-            content="Browser arcade collection built with Next.js, Three.js, and React Three Fiber."
+            content="Nine free browser games, no sign-up: Asteroid, Tank Battle, Breakout, Snake, Pong and more."
           />
           <title>Arcade</title>
           <link rel="canonical" href="https://arcade.nitsuah.io/" />
@@ -47,7 +47,7 @@ class MyDocument extends Document {
           <meta property="og:title" content="Arcade" />
           <meta
             property="og:description"
-            content="Browser arcade collection built with Next.js, Three.js, and React Three Fiber."
+            content="Nine free browser games, no sign-up: Asteroid, Tank Battle, Breakout, Snake, Pong and more."
           />
           <meta property="og:image" content="https://arcade.nitsuah.io/icon-512.png" />
           <meta name="twitter:card" content="summary" />

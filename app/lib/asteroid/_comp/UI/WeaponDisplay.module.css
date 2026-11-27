@@ -1,7 +1,5 @@
 .weaponDisplay {
-  position: absolute;
-  top: 50px;
-  right: 10px;
+  position: static;
   color: var(--ui-text-primary);
   background: var(--ui-bg-dark);
   padding: var(--ui-space-md) var(--ui-space-md);

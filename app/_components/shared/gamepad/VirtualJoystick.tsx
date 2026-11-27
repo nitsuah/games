@@ -13,6 +13,11 @@ const JoystickContainer = styled.div`
   align-items: center;
   justify-content: center;
   touch-action: none;
+  z-index: 1000;
+  /* Mouse and keyboard users don't need on-screen controls. */
+  @media (hover: hover) and (pointer: fine) {
+    display: none;
+  }
 `;
 
 const JoystickKnob = styled.div`
@@ -30,8 +35,17 @@ export const VirtualJoystick = ({ onMove }: { onMove: (x: number, y: number) => 
     onMove(x, y);
   };
 
+  const release = () => onMove(0, 0);
+
   return (
-    <JoystickContainer onPointerMove={handleMove} onPointerDown={handleMove}>
+    <JoystickContainer
+      data-touch-control
+      onPointerMove={handleMove}
+      onPointerDown={handleMove}
+      onPointerUp={release}
+      onPointerCancel={release}
+      onPointerLeave={release}
+    >
       <JoystickKnob />
     </JoystickContainer>
   );

@@ -6,6 +6,8 @@
 
 [![CI](https://github.com/nitsuah/games/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/nitsuah/games/actions)
 
+**[▶ Play now at arcade.nitsuah.io](https://arcade.nitsuah.io)** — nine free browser games, no sign-up.
+
 ## 🎮 Games
 
 ### 🎯 Asteroid Space Shooter
@@ -18,20 +20,19 @@
 - **Features**: Wave system, multiple weapon types, power-up system, high score tracking
 - **Goal**: Destroy targets, survive waves, achieve high score
 
-### 🎮 FPS Tank Commander
+### 🎮 Tank Battle
 
 **Status**: ✅ Complete | **Playable**: `/fps`
 
-- **Controls**: `W A S D` to move, Mouse to aim/shoot, Shift for speed boost
-- **Features**: First-person shooter, destructible targets, power-ups, dynamic terrain, health system
-- **Physics**: Tokyo drift inertia, realistic projectile ballistics
-- **Goal**: Destroy targets, survive, collect power-ups
+- **Controls**: `W A S D` or arrows to drive, mouse to aim, click or Space to shoot; joystick and FIRE button on touch devices
+- **Features**: Top-down tank combat, enemy tanks, power-ups, minimap, health system
+- **Goal**: Destroy enemy tanks, collect power-ups, survive
 
 ### 🧱 Breakout Classic
 
 **Status**: ✅ Complete | **Playable**: `/breakout`
 
-- **Controls**: Mouse to move paddle, Click to launch ball, Space to restart
+- **Controls**: Arrow keys, mouse or touch to move the paddle
 - **Features**: Classic brick-breaking gameplay, power-ups, score tracking, lives system
 - **Mechanics**: Wave management, brick patterns, paddle physics
 - **Goal**: Clear all bricks, progress through waves, set high scores
@@ -50,15 +51,15 @@
 **Status**: ✅ Complete | **Playable**: `/pong`
 
 - **Controls**: Arrow keys or Mouse to move paddle
-- **Features**: AI opponent with adjustable difficulty, score tracking, classic arcade feel
+- **Features**: AI opponent, score tracking, classic arcade feel
 - **Mechanics**: Ball physics with paddle spin, progressive difficulty
-- **Goal**: First to 11 points wins
+- **Goal**: First to 5 points wins
 
 ### 🐍 Snake
 
 **Status**: ✅ Complete | **Playable**: `/snake`
 
-- **Controls**: Arrow keys to change direction
+- **Controls**: Arrow keys or WASD; joystick on touch devices
 - **Features**: Classic snake mechanics, high score tracking, progressive difficulty
 - **Mechanics**: Grid-based movement, growth system, collision detection
 - **Goal**: Eat food, grow longer, avoid walls and self
@@ -96,9 +97,10 @@
 
 | | | |
 |---|---|---|
-| <img src="screenshots/home.png" alt="Home" width="280"><br>Home | <img src="screenshots/asteroid-game.png" alt="Asteroid" width="280"><br>Asteroid | <img src="screenshots/tank-game.png" alt="Tank Commander" width="280"><br>Tank Commander |
+| <img src="screenshots/home.png" alt="Home" width="280"><br>Home | <img src="screenshots/asteroid-game.png" alt="Asteroid" width="280"><br>Asteroid | <img src="screenshots/tank-game.png" alt="Tank Battle" width="280"><br>Tank Battle |
 | <img src="screenshots/breakout-game.png" alt="Breakout" width="280"><br>Breakout | <img src="screenshots/flappy-game.png" alt="Flappy Bird" width="280"><br>Flappy Bird | <img src="screenshots/pong-game.png" alt="Pong" width="280"><br>Pong |
 | <img src="screenshots/snake-game.png" alt="Snake" width="280"><br>Snake | <img src="screenshots/invaders-game.png" alt="Space Invaders" width="280"><br>Space Invaders | <img src="docs/screenshots/memory-match-gameplay-screenshot.png" alt="Memory Match" width="280"><br>Memory Match |
+| <img src="docs/screenshots/dodge-blocks-gameplay-screenshot.png" alt="Dodge Blocks" width="280"><br>Dodge Blocks | | |
 
 ## 🛠️ Development
 

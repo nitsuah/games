@@ -153,3 +153,8 @@
 .flash {
   animation: flash 0.2s ease-out;
 }
+
+/* Phones: sit above the health and weapon stack instead of across it. */
+@media (max-width: 600px) {
+  .container { bottom: auto; top: 96px; left: 12px; transform: none; padding: 8px 12px; }
+}

@@ -7,7 +7,29 @@ type Game = {
   icon: string;
   description: string;
   route: string;
+  desktopOnly?: boolean;
 };
+
+const GameTile = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+  text-align: center;
+`;
+
+const Blurb = styled.p`
+  margin: 6px 0 2px;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #d8d8ee;
+`;
+
+const InputBadge = styled.span`
+  font-size: 10px;
+  color: #8be9ff;
+`;
 
 const GameList = styled.div`
   display: grid;
@@ -47,7 +69,7 @@ const GameList = styled.div`
 
 export const GameCarousel = () => {
   const games: Game[] = [
-    { title: 'Asteroid', icon: '🎯', description: 'Blast asteroids in space', route: '/asteroid' },
+    { title: 'Asteroid', icon: '🎯', description: '3D mouse-aim space shooter', route: '/asteroid', desktopOnly: true },
     { title: 'Tank Battle', icon: '🪖', description: '2D top-down tank combat', route: '/fps' },
     { title: 'Breakout', icon: '🧱', description: 'Classic brick breaking action', route: '/breakout' },
     { title: 'Invaders', icon: '👾', description: 'Defend Earth from aliens', route: '/space-invaders' },
@@ -61,15 +83,18 @@ export const GameCarousel = () => {
   return (
     <GameList>
       {games.map((game) => (
-        <ArcadeCard
-          key={game.title}
-          title={game.title}
-          icon={game.icon}
-          description={game.description}
-          href={game.route}
-          displayMode="grid"
-          tabIndex={0}
-        />
+        <GameTile key={game.title}>
+          <ArcadeCard
+            title={game.title}
+            icon={game.icon}
+            description={game.description}
+            href={game.route}
+            displayMode="grid"
+            tabIndex={0}
+          />
+          <Blurb>{game.description}</Blurb>
+          <InputBadge>{game.desktopOnly ? '⌨️ keys + mouse' : '📱 touch · ⌨️ keys'}</InputBadge>
+        </GameTile>
       ))}
     </GameList>
   );
