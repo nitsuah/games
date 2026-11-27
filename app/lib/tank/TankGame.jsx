@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import { createCanvasTouchTracker } from './touchAim';
 
 import {
   WORLD_W,
@@ -331,20 +332,25 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
       if (e.type === 'mousedown') mouseRef.current.down = true;
       if (e.type === 'mouseup')   mouseRef.current.down = false;
     };
-    const onTouch = (e) => {
-      if (e.touches.length) {
-        mouseRef.current.x = e.touches[0].clientX;
-        mouseRef.current.y = e.touches[0].clientY;
-      }
+    const touchAim = createCanvasTouchTracker();
+    const updateTouchAim = (touch) => {
+      if (!touch) return;
+      mouseRef.current.x = touch.clientX;
+      mouseRef.current.y = touch.clientY;
     };
+    const onTouchStart = (e) => updateTouchAim(touchAim.start(e));
+    const onTouchMove = (e) => updateTouchAim(touchAim.move(e));
+    const onTouchEnd = (e) => updateTouchAim(touchAim.end(e));
 
     window.addEventListener('keydown', onKey);
     window.addEventListener('keyup',   onKey);
     window.addEventListener('mousemove', onMouse);
     window.addEventListener('mousedown', onMouse);
     window.addEventListener('mouseup',   onMouse);
-    canvas.addEventListener('touchstart', onTouch, { passive: true });
-    canvas.addEventListener('touchmove',  onTouch, { passive: true });
+    canvas.addEventListener('touchstart', onTouchStart, { passive: true });
+    canvas.addEventListener('touchmove', onTouchMove, { passive: true });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: true });
+    canvas.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
     let lastTime = performance.now();
     let hudTimer = 0;
@@ -624,8 +630,10 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
       window.removeEventListener('mousemove', onMouse);
       window.removeEventListener('mousedown', onMouse);
       window.removeEventListener('mouseup',   onMouse);
-      canvas.removeEventListener('touchstart', onTouch);
-      canvas.removeEventListener('touchmove',  onTouch);
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('touchmove', onTouchMove);
+      canvas.removeEventListener('touchend', onTouchEnd);
+      canvas.removeEventListener('touchcancel', onTouchEnd);
     };
   }, [initGame]);
 
