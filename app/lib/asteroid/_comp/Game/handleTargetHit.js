@@ -16,6 +16,8 @@ export const handleTargetHit = ({
   setCombo,
   setComboMultiplier,
   comboTimerRef,
+  comboDeadlineRef,
+  comboRemainingRef,
   setScorePopups,
 }) => {
   if (cooldowns[weapon] > 0 || ammo[weapon] <= 0) {
@@ -119,13 +121,15 @@ export const handleTargetHit = ({
     }
   }
 
-  // Reset combo timer
-  if (comboTimerRef.current) {
-    clearTimeout(comboTimerRef.current);
-  }
+  // Reset combo timer and record its deadline so settings can pause it.
+  if (comboTimerRef.current) clearTimeout(comboTimerRef.current);
+  if (comboRemainingRef) comboRemainingRef.current = null;
+  if (comboDeadlineRef) comboDeadlineRef.current = Date.now() + 3000;
   comboTimerRef.current = setTimeout(() => {
     setCombo(0);
     setComboMultiplier(1);
+    comboTimerRef.current = null;
+    if (comboDeadlineRef) comboDeadlineRef.current = null;
   }, 3000); // 3 seconds to maintain combo
 
   if (onHit) onHit();
