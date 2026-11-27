@@ -2,6 +2,7 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 let player, blocks, score, running, frame;
+let paused = false;
 
 function reset() {
   player = { x: 140, y: 440, w: 40, h: 20 };
@@ -17,7 +18,7 @@ function spawnBlock() {
 }
 
 function update() {
-  if (!running) return;
+  if (!running || paused) return;
   frame++;
   if (frame % 30 === 0) spawnBlock();
   blocks.forEach(b => b.y += b.speed);
@@ -53,6 +54,7 @@ function loop() {
 }
 
 function move(dx) {
+  if (paused) return;
   player.x = Math.max(0, Math.min(320 - player.w, player.x + dx));
 }
 
@@ -62,6 +64,7 @@ document.addEventListener('keydown', e => {
 });
 
 canvas.addEventListener('pointerdown', e => {
+  if (paused) return;
   const r = canvas.getBoundingClientRect();
   player.x = DodgeTouch.steerFromPointer(e.clientX, r.left, r.width, player.x, player.w, 320, 24);
 });
@@ -72,3 +75,13 @@ document.getElementById('restart').onclick = () => { reset(); };
 
 reset();
 loop();
+
+// Inside the arcade page: fit the frame and obey the page's pause and restart controls.
+if (window.self !== window.top) {
+  document.documentElement.classList.add('embedded');
+  window.addEventListener('message', e => {
+    if (e.source !== window.parent) return;
+    if (e.data?.type === 'dodge:pause') paused = !!e.data.paused;
+    if (e.data?.type === 'dodge:restart') reset();
+  });
+}

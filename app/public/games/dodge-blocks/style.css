@@ -113,3 +113,15 @@ button:hover {
   padding-left: 18px;
   font-size: 1rem;
 }
+
+/* Embedded in the arcade page, which supplies the title and How to Play. */
+html.embedded body { min-height: 0; }
+html.embedded .container { margin: 0; padding: 8px; box-shadow: none; }
+html.embedded .game-panel { aspect-ratio: auto; border: 0; }
+html.embedded h1,
+html.embedded .how-to-play { display: none; }
+/* As wide as fits both the frame and its height. */
+html.embedded canvas { width: min(100%, 320px, calc((100vh - 90px) * 2 / 3)); height: auto; aspect-ratio: 2 / 3; }
+html.embedded .container,
+html.embedded .game-side-layout { width: 100%; box-sizing: border-box; }
+html.embedded .controls { margin-bottom: 0; }

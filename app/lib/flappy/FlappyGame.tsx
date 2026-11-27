@@ -10,7 +10,9 @@ import { GameControls } from '../../_components/shared/GameControls';
 const GameContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  /* A definite height: the arcade frame gives percentages nothing to resolve against. */
+  height: min(70vh, 640px);
+  min-height: 440px;
   background: #000;
   border: 4px solid #333;
   margin: 0 auto;
@@ -93,7 +95,7 @@ export const FlappyGame = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [gameState, setGameState] = useState<'ready' | 'playing' | 'gameover' | 'paused'>('ready');
+  const [gameState, setGameState] = useState<'ready' | 'playing' | 'gameover'>('ready');
 
   const gameRef = useRef({
     bird: null as Bird | null,
@@ -105,9 +107,14 @@ export const FlappyGame = () => {
     isRunning: false,
   });
 
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+  useEffect(() => { pausedRef.current = paused; }, [paused]);
+
   const requestRef = useRef<number | undefined>(undefined);
   const loopRef = useRef((timestamp: number) => {});
 
+  // Create the game objects once, so state changes and pausing don't reset them.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -115,9 +122,6 @@ export const FlappyGame = () => {
     // Set canvas size from container
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
 
     const state = gameRef.current;
 
@@ -127,10 +131,20 @@ export const FlappyGame = () => {
     state.background = new Background(canvas.width, canvas.height);
 
     setHighScore(state.highScoreManager.getHighScore());
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    const state = gameRef.current;
 
     // Input handling
     const handleInput = (e: KeyboardEvent | MouseEvent) => {
       if (e instanceof KeyboardEvent && e.key !== ' ') return;
+      // A press on a button (pause menu, Start) is not a flap.
+      if (pausedRef.current || (e.target as Element | null)?.closest?.('button')) return;
 
       if (gameState === 'ready') {
         setGameState('playing');
@@ -147,7 +161,8 @@ export const FlappyGame = () => {
 
     // Game Loop
     const loop = (timestamp: number) => {
-      if (gameState === 'paused') {
+      if (pausedRef.current) {
+          state.lastTime = timestamp;
           requestRef.current = requestAnimationFrame(loopRef.current);
           return;
       }
@@ -241,14 +256,16 @@ export const FlappyGame = () => {
     if (state.bird) state.bird.reset(300);
     if (state.pipeManager) state.pipeManager.reset();
     setScore(0);
+    setPaused(false);
     setGameState('ready');
   };
 
   return (
     <GameContainer>
       <GameControls
-        onPause={() => setGameState(prev => prev === 'playing' ? 'paused' : 'playing')}
+        onPause={() => setPaused(p => !p)}
         onRestart={handleRestart}
+        paused={paused}
       />
       <Canvas ref={canvasRef} />
       <UIOverlay>

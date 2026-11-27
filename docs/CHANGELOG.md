@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed (arcade review, 2026-11)
+
+- Flappy, Memory Match and Dodge Blocks get a full-height game area, a How to Play panel and working pause menus; Space Invaders pause can resume again (#438).
+- Memory Match shows the win message in the page and keeps the best score when embedded (#438).
+- Branded 404 page; decorative cabinet controls are no longer in the tab order (#438).
+
 ### CI
 
 - CI: adopt the shared risk guard workflow (#429).
