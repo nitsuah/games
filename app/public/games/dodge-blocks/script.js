@@ -54,6 +54,7 @@ function loop() {
 }
 
 function move(dx) {
+  if (paused) return;
   player.x = Math.max(0, Math.min(320 - player.w, player.x + dx));
 }
 
@@ -63,6 +64,7 @@ document.addEventListener('keydown', e => {
 });
 
 canvas.addEventListener('pointerdown', e => {
+  if (paused) return;
   const r = canvas.getBoundingClientRect();
   player.x = DodgeTouch.steerFromPointer(e.clientX, r.left, r.width, player.x, player.w, 320, 24);
 });

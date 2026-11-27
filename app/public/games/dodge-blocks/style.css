@@ -120,5 +120,8 @@ html.embedded .container { margin: 0; padding: 8px; box-shadow: none; }
 html.embedded .game-panel { aspect-ratio: auto; border: 0; }
 html.embedded h1,
 html.embedded .how-to-play { display: none; }
-html.embedded canvas { width: auto; height: min(calc(100vh - 90px), 480px); aspect-ratio: 2 / 3; }
+/* As wide as fits both the frame and its height. */
+html.embedded canvas { width: min(100%, 320px, calc((100vh - 90px) * 2 / 3)); height: auto; aspect-ratio: 2 / 3; }
+html.embedded .container,
+html.embedded .game-side-layout { width: 100%; box-sizing: border-box; }
 html.embedded .controls { margin-bottom: 0; }

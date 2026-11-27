@@ -40,7 +40,7 @@ const MemoryMatch = () => {
       {!started && <HowToPlay title="MEMORY MATCH" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
       {started && (
         <GameControls
-          onPause={() => setPaused((p) => !p)}
+          onPause={() => { send({ type: 'memory:pause', paused: !paused }); setPaused(!paused); }}
           onRestart={() => { setPaused(false); setGameKey((k) => k + 1); }}
           paused={paused}
         />

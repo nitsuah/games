@@ -33,8 +33,13 @@ const DodgeBlocks = () => {
       )}
       {started && (
         <GameControls
-          onPause={() => { setRunning(paused); setPaused(!paused); }}
-          onRestart={() => { send({ type: 'dodge:restart' }); setRunning(true); setPaused(false); }}
+          onPause={() => {
+            setRunning(paused);
+            setPaused(!paused);
+            // Arrow keys only reach the game while its frame has focus.
+            if (paused) frameRef.current?.focus();
+          }}
+          onRestart={() => { send({ type: 'dodge:restart' }); setRunning(true); setPaused(false); frameRef.current?.focus(); }}
           paused={paused}
         />
       )}
