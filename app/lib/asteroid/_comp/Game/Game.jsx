@@ -622,7 +622,7 @@ const Game = ({ onHit, onMiss }) => {
       {process.env.NODE_ENV === 'development' && (
         <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
       )}
-      {!paused && !gameOver && (
+      {!paused && !gameOver && !showSettings && (
         <button
           type="button"
           onClick={() => { document.exitPointerLock?.(); setShowSettings(true); }}
