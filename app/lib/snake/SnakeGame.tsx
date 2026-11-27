@@ -242,6 +242,8 @@ export const SnakeGame = () => {
 
         const state = gameState.current;
         // The board is however many whole tiles fit on screen.
+        // Shrink the tiles on small screens so at least 16 always fit each way.
+        state.gridSize = Math.max(1, Math.min(20, Math.floor(Math.min(canvas.width, canvas.height) / 16)));
         state.cols = Math.max(16, Math.floor(canvas.width / state.gridSize));
         state.rows = Math.max(16, Math.floor(canvas.height / state.gridSize));
         state.food = { x: Math.min(state.food.x, state.cols - 1), y: Math.min(state.food.y, state.rows - 1) };

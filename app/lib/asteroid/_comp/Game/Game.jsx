@@ -551,7 +551,8 @@ const Game = ({ onHit, onMiss }) => {
       <FlashOverlays flashQueue={flashQueue} />
       <GameCanvas
         gameOver={gameOver}
-        paused={paused}
+        // Settings halt the simulation too, so nothing can hit the player behind the menu.
+        paused={paused || showSettings}
         showWaveTransition={showWaveTransition}
         health={health}
         targets={targets}

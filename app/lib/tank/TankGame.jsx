@@ -322,6 +322,8 @@ export default function TankGame({ onGameOver, paused: externalPaused = false, o
       if (e.code === 'Space') e.preventDefault();
     };
     const onMouse = (e) => {
+      // A release anywhere stops firing, even over the touch controls.
+      if (e.type === 'mouseup') mouseRef.current.down = false;
       // A press on the joystick or FIRE must not swing the turret there.
       if (e.target?.closest?.('[data-touch-control]')) return;
       mouseRef.current.x = e.clientX;
