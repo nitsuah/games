@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { startGame } = require('./helpers');
+const { startGame, canvasHasPaint } = require('./helpers');
 
 for (const [width, height] of [[1024, 768], [375, 812]]) {
   test.describe(`full-height games at ${width}x${height}`, () => {
@@ -33,4 +33,13 @@ test('an unknown URL returns 404 with a way back', async ({ page }) => {
   const response = await page.goto('/this-page-does-not-exist');
   expect(response.status()).toBe(404);
   await expect(page.getByRole('link', { name: 'Back to the arcade' })).toHaveAttribute('href', '/');
+});
+
+test('/flappy draws the game and starts from its button', async ({ page }) => {
+  await page.goto('/flappy');
+  // startGame only dismisses How to Play; Flappy's own START GAME button is still showing after it.
+  await startGame(page);
+  await expect.poll(() => canvasHasPaint(page)).toBe(true);
+  await page.getByRole('button', { name: 'START GAME' }).click();
+  await expect(page.getByRole('button', { name: 'START GAME' })).toHaveCount(0);
 });

@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed (Flappy and screenshots)
+
+- Flappy Bird runs again: the animation loop was never attached, so the canvas stayed black. Its start button is clickable (#438).
+- Asteroid pointer hint and the embedded games clear the pause button and marquee; README and gameplay screenshots recaptured (#439).
+
 ### Fixed (arcade review, 2026-11)
 
 - Flappy, Memory Match and Dodge Blocks get a full-height game area, a How to Play panel and working pause menus; Space Invaders pause can resume again (#438).

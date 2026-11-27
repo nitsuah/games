@@ -12,7 +12,8 @@ const Crosshair = dynamic(() => import('@/lib/asteroid/_comp/UI/Crosshair'), { s
 
 const Instructions = styled.div`
   position: absolute;
-  top: 20px;
+  /* Below the pause button at the top centre. */
+  top: 52px;
   left: 0;
   width: 100%;
   text-align: center;
