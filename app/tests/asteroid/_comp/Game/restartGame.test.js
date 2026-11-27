@@ -12,9 +12,13 @@ jest.mock('../../../../lib/asteroid/_comp/Game/generateTargets', () => ({
 describe('restartGame', () => {
   let mockSetters;
   let mockComboTimerRef;
+  let mockComboDeadlineRef;
+  let mockComboRemainingRef;
 
   beforeEach(() => {
     mockComboTimerRef = { current: setTimeout(() => {}, 1000) };
+    mockComboDeadlineRef = { current: Date.now() + 1000 };
+    mockComboRemainingRef = { current: 500 };
     
     mockSetters = {
       setScore: jest.fn(),
@@ -34,6 +38,8 @@ describe('restartGame', () => {
       setCombo: jest.fn(),
       setComboMultiplier: jest.fn(),
       comboTimerRef: mockComboTimerRef,
+      comboDeadlineRef: mockComboDeadlineRef,
+      comboRemainingRef: mockComboRemainingRef,
       setCurrentWave: jest.fn(),
       setShowWaveTransition: jest.fn(),
     };
@@ -104,11 +110,15 @@ describe('restartGame', () => {
 
   test('should clear combo timer if active', () => {
     const clearTimeoutSpy = jest.spyOn(global, 'clearTimeout');
-    
+    const activeTimer = mockComboTimerRef.current;
+
     restartGame(mockSetters);
 
-    expect(clearTimeoutSpy).toHaveBeenCalledWith(mockComboTimerRef.current);
-    
+    expect(clearTimeoutSpy).toHaveBeenCalledWith(activeTimer);
+    expect(mockComboTimerRef.current).toBeNull();
+    expect(mockComboDeadlineRef.current).toBeNull();
+    expect(mockComboRemainingRef.current).toBeNull();
+
     clearTimeoutSpy.mockRestore();
   });
 
