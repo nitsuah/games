@@ -36,8 +36,6 @@ const ProximityWarning = dynamic(() => import('@/lib/asteroid/_comp/UI/Proximity
 const KillStreakAnnouncement = dynamic(() => import('@/lib/asteroid/_comp/UI/KillStreakAnnouncement'), { ssr: false });
 const SettingsMenu = dynamic(() => import('@/lib/asteroid/_comp/UI/SettingsMenu'), { ssr: false });
 import { GameControls } from '@/_components/shared/GameControls';
-import { VirtualJoystick } from '@/_components/shared/gamepad/VirtualJoystick';
-import { ShootButton } from '@/_components/shared/gamepad/ShootButton';
 import usePowerUps from '../../../../_components/effects/usePowerUps';
 import { INITIAL_AMMO, INITIAL_HEALTH } from '@/lib/asteroid/_comp/config';
 import { generateInitialTargets, getTargetCountForWave } from '@/lib/asteroid/_comp/Game/generateTargets';
@@ -549,13 +547,6 @@ const Game = ({ onHit, onMiss }) => {
           paused={false}
         />
       )}
-      <VirtualJoystick onMove={(_x, _y) => {
-        // Map joystick input to movement and aiming
-        // Using existing keyboard-based input handlers is better, but this requires integrating
-        // with the keyboard-based handlers which are already complex.
-        // Simplified approach: just trigger key events or directly manipulate state.
-      }} />
-      <ShootButton onShoot={() => { /* Implement shoot trigger */ }} />
       <HealthVignette health={health} />
       <FlashOverlays flashQueue={flashQueue} />
       <GameCanvas
@@ -593,9 +584,11 @@ const Game = ({ onHit, onMiss }) => {
       {/* HUD Layout - Organized in 4 corners */}
       
       {/* TOP LEFT - FPS */}
-      <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 500 }}>
-        <FPSCounter />
-      </div>
+      {process.env.NODE_ENV === 'development' && (
+        <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 500 }}>
+          <FPSCounter />
+        </div>
+      )}
       
       {/* TOP RIGHT - Wave, Score & Combo */}
       <div style={{ position: 'fixed', top: 16, right: 16, zIndex: 500, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
@@ -625,7 +618,24 @@ const Game = ({ onHit, onMiss }) => {
       </div>
 
       {/* BOTTOM LEFT - Debug menu */}
-      <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
+      {process.env.NODE_ENV === 'development' && (
+        <DebugMenu trailQuality={trailQuality} setTrailQuality={setTrailQuality} />
+      )}
+      {!paused && !gameOver && (
+        <button
+          type="button"
+          onClick={() => { document.exitPointerLock?.(); setShowSettings(true); }}
+          onMouseDown={(e) => e.stopPropagation()}
+          aria-label="Open settings"
+          title="Settings (O)"
+          style={{
+            position: 'fixed', bottom: 16, left: 16, zIndex: 600, width: 44, height: 44, fontSize: 22,
+            borderRadius: '50%', border: '2px solid #00ffff', background: 'rgba(0,0,0,0.8)', cursor: 'pointer',
+          }}
+        >
+          ⚙️
+        </button>
+      )}
       
       {/* Dynamic Crosshair - replaces ShotReticle */}
       {!gameOver && !paused && (

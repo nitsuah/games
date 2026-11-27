@@ -4,7 +4,7 @@ export const metadata = {
   metadataBase: new URL('https://arcade.nitsuah.io'),
   title: 'Arcade',
   description:
-    'Browser arcade collection built with Next.js, Three.js, and React Three Fiber.',
+    'Nine free browser games, no sign-up: Asteroid, Tank Battle, Breakout, Snake, Pong and more.',
   alternates: {
     canonical: '/',
   },
@@ -13,7 +13,7 @@ export const metadata = {
     siteName: 'Arcade',
     title: 'Arcade',
     description:
-      'Browser arcade collection built with Next.js, Three.js, and React Three Fiber.',
+      'Nine free browser games, no sign-up: Asteroid, Tank Battle, Breakout, Snake, Pong and more.',
   },
 };
 

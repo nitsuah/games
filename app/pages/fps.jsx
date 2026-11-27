@@ -5,6 +5,13 @@ import { ArcadeLayout } from '@/_components/home/ArcadeLayout';
 import { HowToPlay } from '@/_components/shared/HowToPlay';
 import { GameControls } from '@/_components/shared/GameControls';
 
+const TOUCH_INSTRUCTIONS = [
+  'Joystick: drive and turn your tank',
+  'Touch the battlefield to aim',
+  'Hold FIRE to shoot',
+  'Drive over power-ups to collect them',
+];
+
 const INSTRUCTIONS = [
   'WASD / Arrow Keys: Move tank',
   'Mouse: Aim turret',
@@ -26,8 +33,8 @@ export default function TankBattlePage() {
 
   return (
     <ArcadeLayout fullscreenGame={true}>
-      <AudioController />
-      {!started && <HowToPlay title="TANK BATTLE" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
+      <AudioController inGame />
+      {!started && <HowToPlay title="TANK BATTLE" instructions={INSTRUCTIONS} touchInstructions={TOUCH_INSTRUCTIONS} onStart={() => setStarted(true)} />}
       {started && (
         <>
           <GameControls

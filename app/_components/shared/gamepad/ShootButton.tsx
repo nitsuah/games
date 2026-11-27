@@ -15,11 +15,34 @@ const StyledShootButton = styled.button`
   cursor: pointer;
   z-index: 1000;
 
+  touch-action: none;
+
+  @media (hover: hover) and (pointer: fine) {
+    display: none;
+  }
+
   &:active {
     background: rgba(255, 0, 0, 0.8);
   }
 `;
 
-export const ShootButton = ({ onShoot }: { onShoot: () => void }) => {
-  return <StyledShootButton onClick={onShoot}>FIRE</StyledShootButton>;
+interface ShootButtonProps {
+  onShoot?: () => void;
+  /** For hold-to-fire games: called on press and on release. */
+  onHold?: (held: boolean) => void;
+}
+
+export const ShootButton = ({ onShoot, onHold }: ShootButtonProps) => {
+  return (
+    <StyledShootButton
+      data-touch-control
+      onClick={onShoot}
+      onPointerDown={() => onHold?.(true)}
+      onPointerUp={() => onHold?.(false)}
+      onPointerCancel={() => onHold?.(false)}
+      onPointerLeave={() => onHold?.(false)}
+    >
+      FIRE
+    </StyledShootButton>
+  );
 };

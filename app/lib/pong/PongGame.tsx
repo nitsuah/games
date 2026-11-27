@@ -58,6 +58,7 @@ const Canvas = styled.canvas`
     aspect-ratio: 4/3;
     background: #000;
     box-sizing: border-box;
+    touch-action: none;
 `;
 
 const UIOverlay = styled.div`
@@ -147,6 +148,17 @@ export const PongGame = ({ paused = false }: { paused?: boolean }) => {
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
+
+        // Mouse or finger: the paddle follows the pointer.
+        const handlePointer = (e: PointerEvent) => {
+            const rect = canvas.getBoundingClientRect();
+            if (pausedRef.current || !rect.height) return;
+            const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+            const { height } = state.playerPaddle;
+            state.playerPaddle.y = Math.max(0, Math.min(canvas.height - height, y - height / 2));
+        };
+        canvas.addEventListener('pointerdown', handlePointer);
+        canvas.addEventListener('pointermove', handlePointer);
 
         // Game loop
         const loop = (timestamp: number) => {
@@ -275,6 +287,8 @@ export const PongGame = ({ paused = false }: { paused?: boolean }) => {
             state.isRunning = false;
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
+            canvas.removeEventListener('pointerdown', handlePointer);
+            canvas.removeEventListener('pointermove', handlePointer);
         };
         // Empty dependency array is intentional: this effect initializes the entire game
         // and all state functions (setPlayerScore, setAiScore, setGameOver, setWinner) are stable from React

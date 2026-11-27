@@ -98,7 +98,8 @@ export const SnakeGame = () => {
         direction: { x: 1, y: 0 } as Point,
         nextDirection: { x: 1, y: 0 } as Point,
         gridSize: 20,
-        tileCount: 40,
+        cols: 40,
+        rows: 40,
         speed: 100,
         lastUpdate: 0,
         highScoreManager: new HighScoreManager('snake'),
@@ -133,7 +134,7 @@ export const SnakeGame = () => {
         const head = { x: state.snake[0].x + state.direction.x, y: state.snake[0].y + state.direction.y };
 
         // Boundary collision
-        if (head.x < 0 || head.x >= state.tileCount || head.y < 0 || head.y >= state.tileCount) {
+        if (head.x < 0 || head.x >= state.cols || head.y < 0 || head.y >= state.rows) {
             setGameOver(true);
             state.isRunning = false;
             state.soundSystem.gameOver();
@@ -163,8 +164,8 @@ export const SnakeGame = () => {
             state.soundSystem.powerUp(); // Use powerUp for score sound
             // Generate new food
             state.food = {
-                x: Math.floor(Math.random() * state.tileCount),
-                y: Math.floor(Math.random() * state.tileCount),
+                x: Math.floor(Math.random() * state.cols),
+                y: Math.floor(Math.random() * state.rows),
             };
         } else {
             // Remove tail if no food eaten
@@ -181,6 +182,10 @@ export const SnakeGame = () => {
             ctx.fillStyle = i === 0 ? 'green' : 'lime';
             ctx.fillRect(state.snake[i].x * state.gridSize, state.snake[i].y * state.gridSize, state.gridSize - 1, state.gridSize - 1);
         }
+
+        // Show where the walls are.
+        ctx.strokeStyle = '#555';
+        ctx.strokeRect(0.5, 0.5, state.cols * state.gridSize - 1, state.rows * state.gridSize - 1);
 
         // Draw food
         ctx.fillStyle = 'red';
@@ -236,10 +241,22 @@ export const SnakeGame = () => {
         if (!ctx) return;
 
         const state = gameState.current;
+        // The board is however many whole tiles fit on screen.
+        state.cols = Math.max(16, Math.floor(canvas.width / state.gridSize));
+        state.rows = Math.max(16, Math.floor(canvas.height / state.gridSize));
+        state.food = { x: Math.min(state.food.x, state.cols - 1), y: Math.min(state.food.y, state.rows - 1) };
         setHighScore(state.highScoreManager.getHighScore());
 
         // Input
+        const up = () => { if (state.direction.y === 0) state.nextDirection = { x: 0, y: -1 }; };
+        const down = () => { if (state.direction.y === 0) state.nextDirection = { x: 0, y: 1 }; };
+        const left = () => { if (state.direction.x === 0) state.nextDirection = { x: -1, y: 0 }; };
+        const right = () => { if (state.direction.x === 0) state.nextDirection = { x: 1, y: 0 }; };
         keyboardManager.bindKeys({
+            w: up,
+            s: down,
+            a: left,
+            d: right,
             'arrowup': () => { if (state.direction.y === 0) state.nextDirection = { x: 0, y: -1 }; },
             'arrowdown': () => { if (state.direction.y === 0) state.nextDirection = { x: 0, y: 1 }; },
             'arrowleft': () => { if (state.direction.x === 0) state.nextDirection = { x: -1, y: 0 }; },

@@ -38,6 +38,7 @@ const Canvas = styled.canvas`
     aspect-ratio: 4/3;
     background: #000;
     box-sizing: border-box;
+    touch-action: none;
 `;
 
 const UIOverlay = styled.div`
@@ -166,6 +167,17 @@ export const BreakoutGame = () => {
 
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
+
+        // Mouse or finger: the paddle follows the pointer.
+        const handlePointer = (e: PointerEvent) => {
+            const rect = canvas.getBoundingClientRect();
+            if (pausedRef.current || !state.paddle || !rect.width) return;
+            const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const width = state.paddle.getCurrentWidth();
+            state.paddle.x = Math.max(0, Math.min(canvas.width - width, x - width / 2));
+        };
+        canvas.addEventListener('pointerdown', handlePointer);
+        canvas.addEventListener('pointermove', handlePointer);
 
         // Game Loop
         const loop = (timestamp: number) => {
@@ -328,6 +340,8 @@ export const BreakoutGame = () => {
             state.isRunning = false;
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
+            canvas.removeEventListener('pointerdown', handlePointer);
+            canvas.removeEventListener('pointermove', handlePointer);
             // Clear any pending timeouts
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);

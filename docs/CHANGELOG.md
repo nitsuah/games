@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed (arcade review, 2026-11)
 
+- Touch controls for Tank Battle, mouse and touch paddles in Breakout and Pong, touch instructions in How to Play, WASD in Snake with a board that fits the screen, and on-screen controls only on touch devices (#438).
+- Asteroid: no dead touch buttons, the gear opens Settings, debug and FPS panels are development-only, HUD and pause menu no longer overlap or clip. Mute moves out of the game HUD. The home page says what the arcade is (#438).
 - Flappy, Memory Match and Dodge Blocks get a full-height game area, a How to Play panel and working pause menus; Space Invaders pause can resume again (#438).
 - Memory Match shows the win message in the page and keeps the best score when embedded (#438).
 - Branded 404 page; decorative cabinet controls are no longer in the tab order (#438).

@@ -4,6 +4,12 @@ import { SnakeGame } from '@/lib/snake/SnakeGame';
 import { HowToPlay } from '@/_components/shared/HowToPlay';
 import { AudioController } from '@/_components/home/AudioController';
 
+const TOUCH_INSTRUCTIONS = [
+  'Use the joystick to steer',
+  'Eat food to grow longer',
+  'Avoid the walls and yourself',
+];
+
 const INSTRUCTIONS = [
   'Arrow Keys or WASD: Move the snake',
   'Eat food to grow longer',
@@ -16,8 +22,8 @@ const SnakePage = () => {
 
   return (
     <ArcadeLayout fullscreenGame={true} title="SNAKE">
-      <AudioController />
-      {!started && <HowToPlay title="SNAKE" instructions={INSTRUCTIONS} onStart={() => setStarted(true)} />}
+      <AudioController inGame />
+      {!started && <HowToPlay title="SNAKE" instructions={INSTRUCTIONS} touchInstructions={TOUCH_INSTRUCTIONS} onStart={() => setStarted(true)} />}
       {started && (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
           <SnakeGame />

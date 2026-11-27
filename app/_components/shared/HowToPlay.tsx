@@ -1,12 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface HowToPlayProps {
   title: string;
   instructions: string[];
+  /** Shown instead of `instructions` on touch devices. */
+  touchInstructions?: string[];
   onStart: () => void;
 }
 
-export const HowToPlay = ({ title, instructions, onStart }: HowToPlayProps) => {
+export const HowToPlay = ({ title, instructions, touchInstructions, onStart }: HowToPlayProps) => {
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch(!!window.matchMedia?.('(pointer: coarse)').matches);
+  }, []);
+  const shown = isTouch && touchInstructions ? touchInstructions : instructions;
   const dialogRef = useRef<HTMLDivElement>(null);
   const btnRef    = useRef<HTMLButtonElement>(null);
 
@@ -46,9 +53,10 @@ export const HowToPlay = ({ title, instructions, onStart }: HowToPlayProps) => {
         background: '#0a0a1a',
         border: '2px solid #00ffff',
         borderRadius: 16,
-        padding: '32px 40px',
+        padding: 'clamp(16px, 6vw, 32px) clamp(16px, 7vw, 40px)',
         maxWidth: 480,
-        width: '90vw',
+        width: 'calc(100vw - 32px)',
+        boxSizing: 'border-box',
         color: '#fff',
         fontFamily: "'Courier New', monospace",
         boxShadow: '0 0 48px rgba(0,255,255,0.12)',
@@ -57,7 +65,7 @@ export const HowToPlay = ({ title, instructions, onStart }: HowToPlayProps) => {
           HOW TO PLAY: {title}
         </h2>
         <ul style={{ margin: '0 0 24px 20px', lineHeight: 2.0, fontSize: 15 }}>
-          {instructions.map((item, i) => <li key={i}>{item}</li>)}
+          {shown.map((item, i) => <li key={i}>{item}</li>)}
         </ul>
         <button
           ref={btnRef}

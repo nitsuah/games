@@ -32,6 +32,22 @@ const GameContainer = styled.div`
   }
 `;
 
+/* On-screen controls sit under the board so they never cover the game. */
+const TouchRow = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  height: 150px;
+  margin: 0 auto;
+
+  > div { left: 16px; bottom: 12px; }
+  > button { right: 16px; bottom: 32px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    display: none;
+  }
+`;
+
 const Canvas = styled.canvas`
   display: block;
   width: 100%;
@@ -309,17 +325,13 @@ export const SpaceInvadersGame = () => {
   };
 
   return (
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <GameContainer>
       <GameControls
         onPause={() => setPaused(p => !p)}
         onRestart={handleRestart}
         paused={paused}
       />
-      <VirtualJoystick onMove={(x, y) => {
-        gameState.current.input.left = x < -0.5;
-        gameState.current.input.right = x > 0.5;
-      }} />
-      <ShootButton onShoot={() => { gameState.current.input.fire = true; setTimeout(() => gameState.current.input.fire = false, 100); }} />
       <Canvas ref={canvasRef} width={800} height={600} />
       <UIOverlay>
         <div>SCORE: {score}</div>
@@ -336,5 +348,13 @@ export const SpaceInvadersGame = () => {
         </GameOverScreen>
       )}
     </GameContainer>
+    <TouchRow>
+      <VirtualJoystick onMove={(x, y) => {
+        gameState.current.input.left = x < -0.5;
+        gameState.current.input.right = x > 0.5;
+      }} />
+      <ShootButton onShoot={() => { gameState.current.input.fire = true; setTimeout(() => gameState.current.input.fire = false, 100); }} />
+    </TouchRow>
+    </div>
   );
 };
