@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### CI
+
+- CI: adopt the shared risk guard workflow (#429).
+
 ### Added (2026-11)
 
 - Emulated-phone spec for the standalone games (#426).
