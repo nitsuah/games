@@ -11,7 +11,13 @@ interface HowToPlayProps {
 export const HowToPlay = ({ title, instructions, touchInstructions, onStart }: HowToPlayProps) => {
   const [isTouch, setIsTouch] = useState(false);
   useEffect(() => {
-    setIsTouch(!!window.matchMedia?.('(pointer: coarse)').matches);
+    const query = window.matchMedia?.('(pointer: coarse)');
+    if (!query) return;
+    const update = () => setIsTouch(query.matches);
+    update();
+    // A 2-in-1 can change its primary pointer while the panel is open.
+    query.addEventListener?.('change', update);
+    return () => query.removeEventListener?.('change', update);
   }, []);
   const shown = isTouch && touchInstructions ? touchInstructions : instructions;
   const dialogRef = useRef<HTMLDivElement>(null);
