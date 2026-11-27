@@ -36,7 +36,8 @@ export const ShootButton = ({ onShoot, onHold }: ShootButtonProps) => {
   return (
     <StyledShootButton
       data-touch-control
-      onClick={onShoot}
+      // Hold-to-fire wins, so one press never fires through both callbacks.
+      onClick={onHold ? undefined : onShoot}
       onPointerDown={() => onHold?.(true)}
       onPointerUp={() => onHold?.(false)}
       onPointerCancel={() => onHold?.(false)}
